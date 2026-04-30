@@ -1,0 +1,8 @@
+# MindLayer local/private memory
+.mindlayer/memory.md
+.mindlayer/local.md
+.mindlayer/private/
+.mindlayer/sessions/
+.mindlayer/cache/
+.mindlayer/tmp/
+
