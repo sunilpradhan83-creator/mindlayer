@@ -6,3 +6,5 @@
 .mindlayer/cache/
 .mindlayer/tmp/
 
+# Local Codex marker
+.codex
