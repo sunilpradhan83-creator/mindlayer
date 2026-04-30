@@ -21,7 +21,7 @@
   scope: project
   type: progress
   tags: [v1, installer]
-  summary: V1 seed is validated, committed, and ready for push/publish plus real project usage.
+  summary: V1 seed is validated, committed, published to GitHub, and ready for real project usage.
   importance: high
   status: active
   last_updated: 2026-04-30

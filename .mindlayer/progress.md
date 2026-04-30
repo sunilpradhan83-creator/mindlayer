@@ -13,7 +13,7 @@ status: active
 source: manual
 
 ### Summary
-Current phase: installer-first V1 seed committed and ready for real project usage.
+Current phase: installer-first V1 seed published and ready for real project usage.
 
 ### Details
 - Current phase: installer-first V1 seed project.
@@ -25,7 +25,8 @@ Current phase: installer-first V1 seed committed and ready for real project usag
 - Completed: `/m-init` behavior refined and validated; it skips scaffold-only files and `local.md` by default.
 - Completed: installer validated across local and fresh dummy project.
 - Completed: seed repo committed as `2f0d64d Seed MindLayer V1`.
-- Next step: push or publish the repo and begin real project usage.
+- Completed: GitHub repo published at `https://github.com/sunilpradhan83-creator/mindlayer`.
+- Next step: begin real project usage and refine V1 from practical feedback.
 
 ### When to use
 Use during `/m-init` to understand the current project state.
