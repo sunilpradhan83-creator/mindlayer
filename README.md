@@ -2,40 +2,31 @@
 
 Memory as intelligence for AI-native developers.
 
-MindLayer is a markdown-first memory system for AI coding agents. It helps agents decide what to remember, where to store it, how to retrieve it efficiently, and how to avoid memory drift, duplication, unsafe overwrites, and hidden token bloat.
+MindLayer is a markdown-first memory system for AI coding agents. It gives agents a safe, predictable way to remember durable preferences, project context, decisions, progress, risks, and next steps without stuffing everything into chat history or tool-specific instruction files.
 
-V1 is intentionally small: markdown files, prompt files, thin tool adapters, and a safe installer. No backend, no vector database, no embeddings, no editor extension.
+V1 is intentionally small: markdown files, prompt files, thin tool adapters, and a safe installer. No backend, no embeddings, no vector database, and no editor extension.
 
-## The Problem
+## Why MindLayer
 
-AI coding agents are good at local reasoning but weak at durable project memory. Important decisions, preferences, risks, and current work often disappear into chat history or get duplicated across tool-specific instruction files.
+AI coding agents are useful in the moment, but they often lose the durable context that makes a project coherent over time.
 
-MindLayer separates memory from adapters:
+MindLayer helps by:
 
-- Memory lives in predictable markdown files.
-- Tool files only tell agents how to use that memory.
-- Retrieval starts with compact indexes before loading full sections.
-- Writes require explicit approval.
+- separating memory from tool adapters
+- keeping global preferences separate from project facts
+- using indexes before loading full memory files
+- requiring explicit approval before memory writes
+- preserving existing files during install
+- reducing token bloat, duplication, and memory drift
 
-## Philosophy
+Good memory is not a chat dump. It is curated, routed, indexed, compact, and maintained.
 
-Memory is not a dump of everything that happened. Memory is curation, routing, retrieval, and lifecycle.
-
-Good memory should be:
-
-- durable enough to matter later
-- compact enough to keep token usage low
-- routed to the right file
-- indexed for discovery
-- updated instead of duplicated
-- safe to commit when it belongs to the project
-
-## Quick Install
+## Install
 
 Remote install:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/<USER>/mindlayer/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/sunilpradhan83-creator/mindlayer/main/install.sh | bash
 ```
 
 Local install:
@@ -50,21 +41,20 @@ Then open your AI coding tool and run:
 /m-init
 ```
 
-## What Gets Installed
+## How It Works
 
-Global memory is created at:
-
-```text
-~/.mindlayer/
-```
-
-Project memory is created at:
+MindLayer creates two memory layers:
 
 ```text
-./.mindlayer/
+~/.mindlayer/      global memory shared across projects
+./.mindlayer/      project memory for the current repo
 ```
 
-Adapters are created or updated safely:
+Global memory stores stable cross-project preferences, habits, principles, reusable workflows, anti-patterns, and prompt patterns.
+
+Project memory stores project identity, progress, decisions, context, backlog, risks, and an index.
+
+Tool adapters stay thin:
 
 ```text
 AGENTS.md
@@ -72,41 +62,41 @@ CLAUDE.md
 .github/copilot-instructions.md
 ```
 
-The installer only creates missing memory files. Existing files are preserved. Adapter files are updated only inside the `<!-- mindlayer:start -->` and `<!-- mindlayer:end -->` block.
-
-## Global vs Project Memory
-
-Global memory is for stable cross-project preferences, habits, reusable workflows, principles, anti-patterns, and prompt templates.
-
-Project memory is for the current project: identity, progress, decisions, context, backlog, risks, and index.
-
-MindLayer tries to link project `.mindlayer/memory.md` to `~/.mindlayer/memory.md`. If the symlink fails, it writes a pointer file instead. It never duplicates global memory into project memory.
+They tell tools how to use MindLayer, but they are not memory stores.
 
 ## Commands
 
 MindLayer V1 uses prompt files, not a CLI runtime:
 
-- `/m-init` initializes an AI session with minimal useful memory context.
-- `/m-retrieve <query>` fetches specific memory using indexes first.
-- `/m-save` proposes memory writes and waits for approval.
-- `/m-status` checks memory health and suggests fixes.
+- `/m-init`: initialize the session with minimal useful memory context.
+- `/m-retrieve <query>`: fetch specific memory using indexes first.
+- `/m-save`: propose durable memory writes and wait for approval.
+- `/m-status`: check memory health and suggest fixes.
 
 Prompt sources live in [`prompts/`](prompts/).
 
-## File Structure
+## Effective Use
 
-```text
-global-template/      starter files for ~/.mindlayer/
-project-template/     starter files for project .mindlayer/
-prompts/              command prompts for AI tools
-docs/                 concepts and operating guidance
-examples/             sample project memory
-.mindlayer/           MindLayer's own project memory
-```
+Start a session with `/m-init` when project memory matters.
 
-## Git Strategy
+Use `/m-retrieve <query>` instead of loading every memory file. Retrieval should start from indexes and load only relevant sections.
 
-Commit project intelligence:
+Use `/m-save` after durable learning happens: new decisions, stable preferences, meaningful progress, risks, reusable workflows, or backlog items. MindLayer should propose writes first and only save after approval.
+
+Use `/m-status` when memory feels stale, duplicated, oversized, or inconsistent.
+
+## Best Practices
+
+- Do not use `README.md` as memory input.
+- Do not dump raw conversations into memory.
+- Prefer updating existing memory over creating duplicates.
+- Keep global preferences in `~/.mindlayer/`.
+- Keep project facts in `.mindlayer/`.
+- Keep tool-specific files thin.
+- Commit shared project memory.
+- Ignore personal, private, generated, and session memory.
+
+Commit:
 
 ```text
 .mindlayer/project.md
@@ -118,10 +108,9 @@ Commit project intelligence:
 .mindlayer/index.md
 ```
 
-Ignore personal, private, generated, and session memory:
+Ignore:
 
 ```text
-.mindlayer/memory.md
 .mindlayer/local.md
 .mindlayer/private/
 .mindlayer/sessions/
@@ -129,60 +118,36 @@ Ignore personal, private, generated, and session memory:
 .mindlayer/tmp/
 ```
 
-Do not ignore the entire `.mindlayer` directory.
+Do not ignore the entire `.mindlayer/` directory.
 
-## Tool Usage
+## Safety
 
-Codex and other agentic coding tools should read [`AGENTS.md`](AGENTS.md).
+The installer creates missing files and preserves existing content. Adapter files are updated only inside the MindLayer marker block:
 
-Claude Code should use [`CLAUDE.md`](CLAUDE.md) as a thin adapter that points back to `AGENTS.md`.
-
-GitHub Copilot should use [`.github/copilot-instructions.md`](.github/copilot-instructions.md) as a thin adapter and avoid modifying memory files unless explicitly requested.
-
-## Safety Guarantees
-
-The installer does not:
-
-- overwrite existing memory files
-- overwrite existing adapter files
-- overwrite `.gitignore`
-- delete files
-- move files
-- clean or archive files
-- modify content outside MindLayer marker blocks
-- duplicate global memory into project memory
-
-## V1 Limitations
-
-- No CLI command implementation.
-- No backend service.
-- No vector search or embeddings.
-- No VS Code extension.
-- No automatic archive or cleanup behavior.
-- Memory quality still depends on agent discipline and user approval.
-
-## Roadmap
-
-- V2 CLI for project initialization, status checks, and memory routing.
-- Optional archive workflow.
-- Optional local search helpers.
-- VS Code extension later.
-- Optional vector search later.
-- SaaS/product exploration later.
-
-## Testing
-
-Run:
-
-```sh
-bash install.sh --project .
-bash install.sh --project . --no-onboard
+```text
+<!-- mindlayer:start -->
+...
+<!-- mindlayer:end -->
 ```
 
-Expected behavior:
+The installer does not overwrite memory files, delete files, move files, clean/archive memory, or duplicate global memory into project memory.
 
-- first run creates missing global and project files
-- repeated runs preserve existing memory
-- adapter files contain exactly one MindLayer marked block
-- `.gitignore` contains the local/private MindLayer rules once
+## Validation
 
+Run the local validation suite before release or deploy:
+
+```sh
+tools/test.sh
+```
+
+It runs memory/adapters linting and a sandboxed install readiness test for fresh and existing projects.
+
+## Learn More
+
+- [Concepts](docs/concepts.md)
+- [Install](docs/install.md)
+- [File routing](docs/file-routing.md)
+- [Git strategy](docs/git-strategy.md)
+- [Lifecycle](docs/lifecycle.md)
+- [Token strategy](docs/token-strategy.md)
+- [Tool adapters](docs/tool-adapters.md)

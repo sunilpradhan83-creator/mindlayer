@@ -59,6 +59,9 @@ fi
 
 GLOBAL_DIR="${HOME}/.mindlayer"
 DATE="$(date +%Y-%m-%d 2>/dev/null || printf 'YYYY-MM-DD')"
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+GLOBAL_TEMPLATE_DIR="$SCRIPT_DIR/global-template"
+PROJECT_TEMPLATE_DIR="$SCRIPT_DIR/project-template"
 
 mkdir_p() {
   mkdir -p "$1"
@@ -71,6 +74,40 @@ write_if_missing() {
     dir=$(dirname "$file")
     mkdir_p "$dir"
     printf "%s\n" "$content" > "$file"
+  fi
+}
+
+render_template_file() {
+  template_path="$1"
+  date_id="${DATE//-/}"
+  awk -v date="$DATE" -v date_id="$date_id" '
+    {
+      gsub(/YYYYMMDD/, date_id)
+      gsub(/YYYY-MM-DD/, date)
+      print
+    }
+  ' "$template_path"
+}
+
+write_template_if_missing() {
+  file="$1"
+  template_path="$2"
+  fallback_content="$3"
+  if [ -e "$file" ]; then
+    return
+  fi
+  dir=$(dirname "$file")
+  mkdir_p "$dir"
+  if [ -f "$template_path" ]; then
+    render_template_file "$template_path" > "$file"
+  else
+    printf "%s\n" "$fallback_content" | awk -v date="$DATE" -v date_id="${DATE//-/}" '
+      {
+        gsub(/YYYYMMDD/, date_id)
+        gsub(/YYYY-MM-DD/, date)
+        print
+      }
+    ' > "$file"
   fi
 }
 
@@ -146,13 +183,19 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 
 - Never write memory without explicit approval.
 - Read indexes before full memory files.
+- During /m-init, always check project .mindlayer/project.md for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.
+- Do not use README.md or docs/ as memory input; they are human-facing documentation.
+- Treat tool adapters such as AGENTS.md, CLAUDE.md, and Copilot instructions as thin instructions, not durable memory stores or retrieval sources.
 - Do not load empty scaffold files or local.md by default.
 - Load scaffold files or local.md only when an index marks them as relevant, the user task needs them, or they contain non-placeholder content.
+- Go outside MindLayer memory only when necessary for the current task.
 - Prefer updating existing entries over creating duplicates.
 - Do not store raw chat logs.
 - Route global preferences to ~/.mindlayer/.
 - Route project decisions, context, progress, backlog, and risks to project .mindlayer/.
 - Use active, experimental, deprecated, and archived lifecycle statuses.
+- Warn when memory files are nearing their size budget, not only after they overflow.
+- Prompt for cleanup, merge, compression, or archive before adding more memory to near-limit files.
 - Use index-first retrieval and keep token usage transparent."
 
 global_index="# Global Memory Index
@@ -161,30 +204,42 @@ Use this file as the compact search map for ~/.mindlayer/.
 
 ## Entries
 
-- id: ml-${DATE//-/}-001
-  title: MindLayer global memory starter
-  file: memory.md
+- id: ml-global-YYYYMMDD-000
+  title: MindLayer Memory System
+  file: memory-system.md
+  section: MindLayer Memory System
+  scope: global
+  type: system
+  tags: [mindlayer, memory-system, commands, retrieval]
+  summary: Core MindLayer command behavior, read/write rules, routing, token discipline, approval rules, lifecycle statuses, and index-first retrieval.
+  importance: high
+  status: active
+  last_updated: YYYY-MM-DD
+
+- id: ml-global-YYYYMMDD-001
+  title: MindLayer global preferences starter
+  file: preferences.md
   section: Starter Preferences
   scope: global
   type: preference
-  tags: [mindlayer, memory]
-  summary: Starter preferences for safe, approval-based memory use.
+  tags: [mindlayer, preferences]
+  summary: Starter always-loaded preferences for safe, approval-based memory use.
   importance: high
   status: active
-  last_updated: $DATE"
+  last_updated: YYYY-MM-DD"
 
-global_memory="# Global Memory
+global_preferences="# Global Preferences
 
-Stable cross-project user preferences, habits, tool choices, and constraints.
+Always-loaded cross-project user preferences, habits, tool choices, and constraints.
 
 ## Starter Preferences
 
-id: ml-${DATE//-/}-001
-created: $DATE
-updated: $DATE
+id: ml-global-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
 scope: global
 type: preference
-tags: [mindlayer, memory, approval]
+tags: [mindlayer, preferences, approval]
 confidence: medium
 status: active
 source: manual
@@ -196,11 +251,15 @@ Use MindLayer memory cautiously and require approval before writes.
 The user prefers transparent memory behavior, low token usage, and explicit approval before durable memory changes.
 
 ### When to use
-Use when deciding whether to save or update long-term memory.
+Use in every session as always-on global preference context.
 
 ### Related"
 
-entry_template_global="# Entry Template
+global_playbook="# Global Playbook
+
+Reusable workflows and procedures.
+
+## Entry Template
 
 id: ml-YYYYMMDD-001
 created: YYYY-MM-DD
@@ -219,7 +278,88 @@ Short summary.
 Useful details.
 
 ### When to use
-When this memory should be retrieved.
+When this workflow applies.
+
+### Related"
+
+global_principles="# Global Principles
+
+Stable engineering and product beliefs.
+
+## Entry Template
+
+id: ml-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+scope: global
+type: principle
+tags: []
+confidence: high
+status: active
+source: manual
+
+### Summary
+Short summary.
+
+### Details
+Useful details.
+
+### When to use
+When this principle should influence decisions.
+
+### Related"
+
+global_anti_patterns="# Global Anti-Patterns
+
+Mistakes and behaviors to avoid.
+
+## Entry Template
+
+id: ml-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+scope: global
+type: anti-pattern
+tags: []
+confidence: high
+status: active
+source: manual
+
+### Summary
+Short summary.
+
+### Details
+Useful details.
+
+### When to use
+When this mistake might recur.
+
+### Related"
+
+global_prompts="# Global Prompts
+
+Reusable prompt templates.
+
+## Entry Template
+
+id: ml-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+scope: global
+type: playbook
+tags: [prompt]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Short summary.
+
+### Details
+Prompt template and usage notes.
+
+### When to use
+When this prompt pattern applies.
 
 ### Related"
 
@@ -229,7 +369,7 @@ Use this file as the compact search map for project .mindlayer/.
 
 ## Entries
 
-- id: ml-YYYYMMDD-001
+- id: ml-project-YYYYMMDD-001
   title: Project starter context
   file: project.md
   section: Entry Template
@@ -247,7 +387,7 @@ Stable project identity: what this project is, users, goals, stack, architecture
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: ml-project-YYYYMMDD-001
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: project
@@ -264,7 +404,7 @@ Short summary.
 Useful details.
 
 ### When to use
-When this memory should be retrieved.
+When this project context matters.
 
 ### Related"
 
@@ -422,30 +562,38 @@ config_json='{
 
 install_global() {
   mkdir_p "$GLOBAL_DIR"
-  write_if_missing "$GLOBAL_DIR/memory-system.md" "$global_memory_system"
-  write_if_missing "$GLOBAL_DIR/index.md" "$global_index"
-  write_if_missing "$GLOBAL_DIR/memory.md" "$global_memory"
-  write_if_missing "$GLOBAL_DIR/playbook.md" "# Global Playbook
+  write_template_if_missing "$GLOBAL_DIR/memory-system.md" "$GLOBAL_TEMPLATE_DIR/memory-system.md" "$global_memory_system"
+  write_template_if_missing "$GLOBAL_DIR/index.md" "$GLOBAL_TEMPLATE_DIR/index.md" "$global_index"
+  ensure_global_memory_system_index
+  write_template_if_missing "$GLOBAL_DIR/preferences.md" "$GLOBAL_TEMPLATE_DIR/preferences.md" "$global_preferences"
+  write_template_if_missing "$GLOBAL_DIR/playbook.md" "$GLOBAL_TEMPLATE_DIR/playbook.md" "$global_playbook"
+  write_template_if_missing "$GLOBAL_DIR/principles.md" "$GLOBAL_TEMPLATE_DIR/principles.md" "$global_principles"
+  write_template_if_missing "$GLOBAL_DIR/anti-patterns.md" "$GLOBAL_TEMPLATE_DIR/anti-patterns.md" "$global_anti_patterns"
+  write_template_if_missing "$GLOBAL_DIR/prompts.md" "$GLOBAL_TEMPLATE_DIR/prompts.md" "$global_prompts"
+  write_template_if_missing "$GLOBAL_DIR/config.json" "$GLOBAL_TEMPLATE_DIR/config.json" "$config_json"
+}
 
-Reusable workflows and procedures.
+ensure_global_memory_system_index() {
+  index_file="$GLOBAL_DIR/index.md"
+  [ -f "$index_file" ] || return
+  if grep -Fq "file: memory-system.md" "$index_file"; then
+    return
+  fi
 
-$entry_template_global"
-  write_if_missing "$GLOBAL_DIR/principles.md" "# Global Principles
+  cat >> "$index_file" <<EOF
 
-Stable engineering and product beliefs.
-
-$entry_template_global"
-  write_if_missing "$GLOBAL_DIR/anti-patterns.md" "# Global Anti-Patterns
-
-Mistakes and behaviors to avoid.
-
-$entry_template_global"
-  write_if_missing "$GLOBAL_DIR/prompts.md" "# Global Prompts
-
-Reusable prompt templates.
-
-$entry_template_global"
-  write_if_missing "$GLOBAL_DIR/config.json" "$config_json"
+- id: ml-global-${DATE//-/}-000
+  title: MindLayer Memory System
+  file: memory-system.md
+  section: MindLayer Memory System
+  scope: global
+  type: system
+  tags: [mindlayer, memory-system, commands, retrieval]
+  summary: Core MindLayer command behavior, read/write rules, routing, token discipline, approval rules, lifecycle statuses, and index-first retrieval.
+  importance: high
+  status: active
+  last_updated: $DATE
+EOF
 }
 
 install_project_memory() {
@@ -456,28 +604,14 @@ install_project_memory() {
   mkdir_p "$pmem/cache"
   mkdir_p "$pmem/tmp"
 
-  write_if_missing "$pmem/project.md" "$project_template"
-  write_if_missing "$pmem/progress.md" "$progress_template"
-  write_if_missing "$pmem/decisions.md" "$decision_template"
-  write_if_missing "$pmem/context.md" "$context_template"
-  write_if_missing "$pmem/backlog.md" "$backlog_template"
-  write_if_missing "$pmem/risks.md" "$risk_template"
-  write_if_missing "$pmem/index.md" "$project_index"
-  write_if_missing "$pmem/local.md" "$local_template"
-
-  if [ ! -e "$pmem/memory.md" ] && [ ! -L "$pmem/memory.md" ]; then
-    if ln -s "$GLOBAL_DIR/memory.md" "$pmem/memory.md" 2>/dev/null; then
-      :
-    else
-      write_if_missing "$pmem/memory.md" "# Global Memory Pointer
-
-Global memory lives at:
-
-~/.mindlayer/memory.md
-
-Do not duplicate global memory into the project."
-    fi
-  fi
+  write_template_if_missing "$pmem/project.md" "$PROJECT_TEMPLATE_DIR/project.md" "$project_template"
+  write_template_if_missing "$pmem/progress.md" "$PROJECT_TEMPLATE_DIR/progress.md" "$progress_template"
+  write_template_if_missing "$pmem/decisions.md" "$PROJECT_TEMPLATE_DIR/decisions.md" "$decision_template"
+  write_template_if_missing "$pmem/context.md" "$PROJECT_TEMPLATE_DIR/context.md" "$context_template"
+  write_template_if_missing "$pmem/backlog.md" "$PROJECT_TEMPLATE_DIR/backlog.md" "$backlog_template"
+  write_template_if_missing "$pmem/risks.md" "$PROJECT_TEMPLATE_DIR/risks.md" "$risk_template"
+  write_template_if_missing "$pmem/index.md" "$PROJECT_TEMPLATE_DIR/index.md" "$project_index"
+  write_template_if_missing "$pmem/local.md" "$PROJECT_TEMPLATE_DIR/local.md" "$local_template"
 }
 
 install_adapters() {
@@ -495,19 +629,21 @@ Use `/m-save` only to propose memory writes; never write without approval.
 Use `/m-status` to check memory health.
 
 Rules:
-- Do not use `README.md` as memory input.
+- Do not use `README.md` or `docs/` as memory input.
 - Use index files before full files.
 - Prefer update over duplicate.
 - Keep token usage transparent.
 - Do not dump raw conversations into memory.
+- Keep adapters thin; do not store or retrieve durable memory here.
+- Go outside MindLayer memory only when necessary for the task.
 <!-- mindlayer:end -->'
 
   claude_block='<!-- mindlayer:start -->
 Follow `AGENTS.md`.
 
-MindLayer memory sources of truth are `~/.mindlayer/` and project `.mindlayer/`.
+MindLayer memory sources of truth are `~/.mindlayer/` and project `.mindlayer/`. `README.md` and `docs/` are human documentation, not default AI memory input.
 
-Do not duplicate memory into `CLAUDE.md`. Do not write memory without approval. Use `/m-init` behavior at session start when requested.
+Do not duplicate memory into `CLAUDE.md` or retrieve durable context from this adapter. Do not write memory without approval. Use `/m-init` behavior at session start when requested.
 <!-- mindlayer:end -->'
 
   copilot_block='<!-- mindlayer:start -->
@@ -515,7 +651,7 @@ Follow `AGENTS.md`.
 
 Use project `.mindlayer/` for project context. Use `~/.mindlayer/` for global user memory when available.
 
-Do not modify memory files unless explicitly requested. Keep generated changes minimal and safe.
+Do not use `README.md` or `docs/` as memory input. Do not retrieve durable context from this adapter. Do not modify memory files unless explicitly requested. Keep generated changes minimal and safe.
 <!-- mindlayer:end -->'
 
   case "$TOOL" in
@@ -538,7 +674,6 @@ install_gitignore() {
   elif ! grep -Fxq "# MindLayer local/private memory" "$file"; then
     printf "\n# MindLayer local/private memory\n" >> "$file"
   fi
-  append_gitignore_rule "$file" ".mindlayer/memory.md"
   append_gitignore_rule "$file" ".mindlayer/local.md"
   append_gitignore_rule "$file" ".mindlayer/private/"
   append_gitignore_rule "$file" ".mindlayer/sessions/"

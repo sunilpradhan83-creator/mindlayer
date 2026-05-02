@@ -13,6 +13,8 @@ Useful memory has four jobs:
 - retrieval: start from compact indexes
 - lifecycle: mark memory as active, experimental, deprecated, or archived
 
+Useful memory also needs maintenance. If the files or indexes become too large, token savings disappear and retrieval quality degrades.
+
 ## Layers
 
 Global user memory lives in `~/.mindlayer/` and follows the developer across projects.
@@ -20,4 +22,3 @@ Global user memory lives in `~/.mindlayer/` and follows the developer across pro
 Project memory lives in `project/.mindlayer/` and captures project-specific identity, progress, decisions, context, backlog, and risks.
 
 Tool adapters such as `AGENTS.md`, `CLAUDE.md`, and Copilot instructions are thin instructions. They are not memory stores.
-

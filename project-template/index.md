@@ -4,7 +4,7 @@ Use this file as the compact search map for project `.mindlayer/`.
 
 ## Entries
 
-- id: ml-YYYYMMDD-001
+- id: ml-project-YYYYMMDD-001
   title: Project starter context
   file: project.md
   section: Entry Template
@@ -15,4 +15,3 @@ Use this file as the compact search map for project `.mindlayer/`.
   importance: low
   status: active
   last_updated: YYYY-MM-DD
-

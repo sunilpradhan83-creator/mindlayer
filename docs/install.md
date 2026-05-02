@@ -31,3 +31,23 @@ bash install.sh --project .
 
 The installer creates missing memory files and directories. It does not overwrite existing memory files. Existing adapter files are updated only inside MindLayer marker blocks.
 
+## Deploy Readiness
+
+Run the full local validation suite before release or deploy:
+
+```sh
+tools/test.sh
+```
+
+This runs:
+
+- `tools/lint.sh` for project memory and adapter invariants.
+- `tests/local-install/test-install.sh` for sandboxed fresh-project and existing-project installer checks.
+
+The readiness test overrides `HOME` inside temporary directories, so it does not write to the user's real `~/.mindlayer/`.
+
+Expected final result:
+
+```text
+Verdict: READY TO DEPLOY
+```

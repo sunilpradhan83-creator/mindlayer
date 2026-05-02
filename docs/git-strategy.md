@@ -19,7 +19,6 @@ These files preserve project intelligence for collaborators and future agents.
 ## Ignore
 
 ```text
-.mindlayer/memory.md
 .mindlayer/local.md
 .mindlayer/private/
 .mindlayer/sessions/
@@ -30,4 +29,3 @@ These files preserve project intelligence for collaborators and future agents.
 These files may contain personal, private, generated, session, cache, or temporary memory.
 
 Do not ignore the entire `.mindlayer` directory.
-

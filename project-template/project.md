@@ -4,7 +4,7 @@ Stable project identity: what this project is, users, goals, stack, architecture
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: ml-project-YYYYMMDD-001
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: project
@@ -24,4 +24,3 @@ Useful details.
 When this project context matters.
 
 ### Related
-

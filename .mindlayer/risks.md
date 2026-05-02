@@ -20,6 +20,8 @@ MindLayer must stay safe, compact, and trustworthy.
 - Wrong routing may reduce trust.
 - Installer must avoid destructive behavior.
 - Installer safety depends on testing local installs, idempotent reruns, global memory creation, adapter marker updates, and fresh dummy projects.
+- Deployment confidence depends on a maintained sandbox test suite that checks fresh install, existing project install, idempotence, preservation of user files, global/project memory integrity, adapter block duplication, index integrity, and `/m-init` contract alignment.
+- Readiness tests must verify discoverability through indexes and `/m-init` reporting paths, not only file existence. A memory file can exist but still be effectively unavailable if the relevant index omits it.
 - Scaffold files may cause token waste and false confidence if treated as real memory.
 - Tool-specific files may drift if duplicated.
 

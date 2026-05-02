@@ -1,15 +1,15 @@
-# Global Memory
+# Global Preferences
 
-Stable cross-project user preferences, habits, tool choices, and constraints.
+Always-loaded cross-project user preferences, habits, tool choices, and constraints.
 
 ## Starter Preferences
 
-id: ml-20260430-001
-created: 2026-04-30
-updated: 2026-04-30
+id: ml-global-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
 scope: global
 type: preference
-tags: [mindlayer, memory, approval]
+tags: [mindlayer, preferences, approval]
 confidence: medium
 status: active
 source: manual
@@ -21,7 +21,6 @@ Use MindLayer memory cautiously and require approval before writes.
 The user prefers transparent memory behavior, low token usage, and explicit approval before durable memory changes.
 
 ### When to use
-Use when deciding whether to save or update long-term memory.
+Use in every session as always-on global preference context.
 
 ### Related
-

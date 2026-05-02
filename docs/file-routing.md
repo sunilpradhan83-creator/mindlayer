@@ -6,7 +6,7 @@ Use the narrowest durable destination.
 
 - `memory-system.md`: MindLayer operating rules.
 - `index.md`: compact search map for global memory.
-- `memory.md`: stable cross-project user preferences and constraints.
+- `preferences.md`: always-loaded cross-project user preferences and constraints.
 - `playbook.md`: reusable workflows.
 - `principles.md`: stable engineering and product beliefs.
 - `anti-patterns.md`: mistakes and behaviors to avoid.
@@ -23,7 +23,8 @@ Use the narrowest durable destination.
 - `index.md`: compact search map for project memory.
 - `local.md`: personal local notes ignored by Git.
 
+Global memory does not need a mirrored project file. Read and write it directly from `~/.mindlayer/`.
+
 ## Rule of Thumb
 
 If it applies across projects, route it global. If it only makes sense in this repository, route it project.
-

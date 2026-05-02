@@ -15,6 +15,7 @@ Load only operating rules and essential indexes:
 Use compact index entries and section summaries to decide whether more context is needed.
 
 Indexes should include title, file, section, scope, type, tags, summary, importance, status, and last updated date.
+Indexes should stay short enough to route retrieval, not replace the files they point to.
 
 ## L2 Full Sections on Demand
 
@@ -25,3 +26,12 @@ Do not load empty scaffold files or `.mindlayer/local.md` by default. Load them 
 ## Transparency
 
 Agents should state what they loaded, what they skipped, and why.
+
+## Budget Discipline
+
+Token savings depend on active maintenance, not just index-first retrieval.
+
+- Set soft budgets for important memory files and warn before they are full.
+- When a file nears its limit, prompt the user to clean up, compress, merge, or archive before adding more.
+- Roll up old progress into summaries instead of keeping every step active forever.
+- Keep indexes compact enough that reading them does not become equivalent to reading the memory itself.
