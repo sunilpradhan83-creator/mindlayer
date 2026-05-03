@@ -624,7 +624,34 @@ MindLayer memory is stored outside this adapter.
 Global memory: `~/.mindlayer/`
 Project memory: `.mindlayer/`
 
-At the first meaningful interaction in this project, initialize minimal useful MindLayer context automatically. Read command rules and indexes first, then load only essential global preferences, project identity, and current progress. Report a compact context receipt with loaded, skipped, missing, current understanding, current progress, and rough word or token cost.
+At the first meaningful interaction in this project, initialize minimal useful MindLayer context automatically. Read command rules and indexes first, then load only essential global preferences, project identity, and current progress.
+
+Use this exact first-interaction receipt format:
+
+```text
+MindLayer context loaded.
+
+Loaded:
+- ...
+
+Skipped:
+- ...
+
+Missing:
+- ...
+
+Current understanding:
+...
+
+Current progress:
+...
+
+Context cost:
+Approx. N words loaded.
+
+Ready.
+What would you like to work on?
+```
 
 Use `/m-init` when the user asks to refresh or show initialization context.
 Use `/m-retrieve <query>` when specific memory is needed.

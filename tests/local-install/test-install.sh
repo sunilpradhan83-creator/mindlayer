@@ -162,7 +162,7 @@ check assert_contains "$fresh_project/.github/copilot-instructions.md" "<!-- min
 check assert_contains "$fresh_project/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/AGENTS.md" "Keep adapters thin; do not store or retrieve durable memory here."
 check assert_contains "$fresh_project/AGENTS.md" "first meaningful interaction"
-check assert_contains "$fresh_project/AGENTS.md" "compact context receipt"
+check assert_contains "$fresh_project/AGENTS.md" "Use this exact first-interaction receipt format"
 check assert_contains "$fresh_project/CLAUDE.md" '`README.md` and `docs/` are human documentation'
 check assert_contains "$fresh_project/CLAUDE.md" "Do not duplicate memory into"
 check assert_contains "$fresh_project/CLAUDE.md" "automatic first-interaction initialization"
@@ -280,6 +280,7 @@ check assert_not_exists "$fresh_home/.mindlayer/memory.md"
 check assert_contains "$fresh_project/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/AGENTS.md" "Use index files before full files."
 check assert_contains "$fresh_project/AGENTS.md" 'Use `/m-init` when the user asks to refresh or show initialization context.'
+check assert_contains "$fresh_project/AGENTS.md" "Context cost:"
 
 printf "\nMindLayer Local Install Readiness Summary\n"
 printf "Passed checks: %s\n" "$PASS_COUNT"

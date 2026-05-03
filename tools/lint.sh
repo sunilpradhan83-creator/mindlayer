@@ -272,7 +272,7 @@ lint_repo() {
   require_contains "$PROJECT_DIR/AGENTS.md" "Keep adapters thin; do not store or retrieve durable memory here." "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Go outside MindLayer memory only when necessary for the task." "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "first meaningful interaction" "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "compact context receipt" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "Use this exact first-interaction receipt format" "AGENTS.md"
 
   require_contains "$PROJECT_DIR/CLAUDE.md" '`README.md` and `docs/` are human documentation' "CLAUDE.md"
   require_contains "$PROJECT_DIR/CLAUDE.md" "Do not duplicate memory into" "CLAUDE.md"
@@ -299,7 +299,7 @@ lint_repo() {
   require_contains "$PROJECT_DIR/install.sh" 'Do not use `README.md` or `docs/` as memory input.' "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Keep adapters thin; do not store or retrieve durable memory here." "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "first meaningful interaction" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "compact context receipt" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "Use this exact first-interaction receipt format" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer memory-system fallback"
   require_contains "$PROJECT_DIR/install.sh" "always check project .mindlayer/project.md" "installer memory-system fallback"
 }
