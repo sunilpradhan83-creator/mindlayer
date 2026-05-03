@@ -175,6 +175,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 ## Command Behavior
 
 - /m-init loads the minimum useful context for the current session.
+- On the first meaningful interaction in a project, initialize minimal useful MindLayer context automatically and report a compact context receipt.
 - /m-retrieve <query> searches indexes first and loads only relevant sections.
 - /m-save proposes memory writes from durable learnings and waits for approval.
 - /m-status checks memory health and suggests fixes without writing.
@@ -623,7 +624,9 @@ MindLayer memory is stored outside this adapter.
 Global memory: `~/.mindlayer/`
 Project memory: `.mindlayer/`
 
-Use `/m-init` when the user asks to initialize memory context.
+At the first meaningful interaction in this project, initialize minimal useful MindLayer context automatically. Read command rules and indexes first, then load only essential global preferences, project identity, and current progress. Report a compact context receipt with loaded, skipped, missing, current understanding, current progress, and rough word or token cost.
+
+Use `/m-init` when the user asks to refresh or show initialization context.
 Use `/m-retrieve <query>` when specific memory is needed.
 Use `/m-save` only to propose memory writes; never write without approval.
 Use `/m-status` to check memory health.
@@ -643,13 +646,15 @@ Follow `AGENTS.md`.
 
 MindLayer memory sources of truth are `~/.mindlayer/` and project `.mindlayer/`. `README.md` and `docs/` are human documentation, not default AI memory input.
 
-Do not duplicate memory into `CLAUDE.md` or retrieve durable context from this adapter. Do not write memory without approval. Use `/m-init` behavior at session start when requested.
+Do not duplicate memory into `CLAUDE.md` or retrieve durable context from this adapter. Do not write memory without approval. Follow `AGENTS.md` for automatic first-interaction initialization; use `/m-init` only when the user asks to refresh or show initialization context.
 <!-- mindlayer:end -->'
 
   copilot_block='<!-- mindlayer:start -->
 Follow `AGENTS.md`.
 
 Use project `.mindlayer/` for project context. Use `~/.mindlayer/` for global user memory when available.
+
+At the first meaningful interaction in this project, initialize minimal useful MindLayer context automatically using indexes first and report a compact context receipt.
 
 Do not use `README.md` or `docs/` as memory input. Do not retrieve durable context from this adapter. Do not modify memory files unless explicitly requested. Keep generated changes minimal and safe.
 <!-- mindlayer:end -->'
@@ -703,9 +708,7 @@ Project memory:
 ./.mindlayer/
 
 Next step:
-Open your AI coding tool and run:
-
-/m-init
+Open your AI coding tool. MindLayer-aware adapters now initialize minimal context on the first meaningful interaction. Use /m-init later only to refresh or inspect the initialization context.
 EOF
 else
   echo "MindLayer installed."

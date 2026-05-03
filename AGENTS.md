@@ -38,7 +38,7 @@ Human documentation such as `README.md` and `docs/` explains the tool for people
 - Keep tool-specific files thin. Do not duplicate memory into adapters or retrieve durable context from adapters.
 - Go outside MindLayer memory only when necessary for the task.
 
-At session start, the user may run `/m-init`. When memory is needed, use `/m-retrieve`. When saving memory, use `/m-save`. For health checks, use `/m-status`.
+At the first meaningful interaction in a project, initialize minimal useful MindLayer context automatically. When memory is needed, use `/m-retrieve`. When saving memory, use `/m-save`. For health checks, use `/m-status`. Use `/m-init` when the user asks to refresh or show initialization context.
 
 
 <!-- mindlayer:start -->
@@ -47,7 +47,9 @@ MindLayer memory is stored outside this adapter.
 Global memory: `~/.mindlayer/`
 Project memory: `.mindlayer/`
 
-Use `/m-init` when the user asks to initialize memory context.
+At the first meaningful interaction in this project, initialize minimal useful MindLayer context automatically. Read command rules and indexes first, then load only essential global preferences, project identity, and current progress. Report a compact context receipt with loaded, skipped, missing, current understanding, current progress, and rough word or token cost.
+
+Use `/m-init` when the user asks to refresh or show initialization context.
 Use `/m-retrieve <query>` when specific memory is needed.
 Use `/m-save` only to propose memory writes; never write without approval.
 Use `/m-status` to check memory health.

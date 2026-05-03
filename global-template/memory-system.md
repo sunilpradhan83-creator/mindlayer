@@ -6,6 +6,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 
 - `/m-init` loads the minimum useful context for the current session.
 - `/m-init` reports a transparent context receipt describing what was loaded, skipped, missing, and the rough token or word cost when possible.
+- On the first meaningful interaction in a project, initialize minimal useful MindLayer context automatically and report a compact context receipt.
 - `/m-retrieve <query>` searches indexes first and loads only relevant sections.
 - `/m-save` proposes memory writes from durable learnings and waits for approval.
 - `/m-status` checks memory health and suggests fixes without writing.

@@ -271,13 +271,17 @@ lint_repo() {
   require_contains "$PROJECT_DIR/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.' "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Keep adapters thin; do not store or retrieve durable memory here." "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Go outside MindLayer memory only when necessary for the task." "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "first meaningful interaction" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "compact context receipt" "AGENTS.md"
 
   require_contains "$PROJECT_DIR/CLAUDE.md" '`README.md` and `docs/` are human documentation' "CLAUDE.md"
   require_contains "$PROJECT_DIR/CLAUDE.md" "Do not duplicate memory into" "CLAUDE.md"
   require_contains "$PROJECT_DIR/CLAUDE.md" "retrieve durable context from this adapter" "CLAUDE.md"
+  require_contains "$PROJECT_DIR/CLAUDE.md" "automatic first-interaction initialization" "CLAUDE.md"
 
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.' "Copilot adapter"
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter." "Copilot adapter"
+  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "first meaningful interaction" "Copilot adapter"
 
   require_contains "$PROJECT_DIR/prompts/m-init.md" 'Do not use `README.md` or `docs/` as memory input.' "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "blocked memory stores" "/m-init prompt"
@@ -290,9 +294,12 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "not durable memory stores or retrieval sources" "global memory-system template"
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "Go outside MindLayer memory only when necessary" "global memory-system template"
   require_contains "$PROJECT_DIR/global-template/memory-system.md" 'always check project `.mindlayer/project.md`' "global memory-system template"
+  require_contains "$PROJECT_DIR/global-template/memory-system.md" "first meaningful interaction" "global memory-system template"
 
   require_contains "$PROJECT_DIR/install.sh" 'Do not use `README.md` or `docs/` as memory input.' "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Keep adapters thin; do not store or retrieve durable memory here." "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "first meaningful interaction" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "compact context receipt" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer memory-system fallback"
   require_contains "$PROJECT_DIR/install.sh" "always check project .mindlayer/project.md" "installer memory-system fallback"
 }
