@@ -5,17 +5,19 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 ## Command Behavior
 
 - `/m-init` loads the minimum useful context for the current session.
+- `/m-init` reports a transparent context receipt describing what was loaded, skipped, missing, and the rough token or word cost when possible.
 - `/m-retrieve <query>` searches indexes first and loads only relevant sections.
 - `/m-save` proposes memory writes from durable learnings and waits for approval.
 - `/m-status` checks memory health and suggests fixes without writing.
 
 ## Write Rules
 
-- Never write memory without explicit approval.
+- Never write memory without literal explicit approval.
 - Prefer updating an existing entry over creating a duplicate.
 - Do not store raw chat logs.
 - Store durable information, not transient thoughts.
 - Keep entries compact, structured, and useful for retrieval.
+- If a memory write has been proposed but not approved, keep it visible as pending until the user clearly approves or rejects it.
 
 ## Read Rules
 
@@ -39,6 +41,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 - Project identity, progress, decisions, context, backlog, and risks belong in `project/.mindlayer/`.
 - Do not mirror global memory into `project/.mindlayer/`; read and write it directly from `~/.mindlayer/`.
 - Private, local, session, cache, and temporary material must stay out of committed project memory.
+- When developing MindLayer itself, treat repo `.mindlayer/` as the product-memory source of truth and treat live `~/.mindlayer/` as runtime, install, or test output rather than product memory.
 
 ## Token Rules
 
@@ -52,7 +55,9 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 
 ## Approval Rules
 
-Memory writes require approval even when the content seems obvious. Show the destination, action, duplicate check, and confidence before writing.
+Memory writes require clear approval even when the content seems obvious. Show the destination, action, duplicate check, and confidence before writing.
+
+Approval must be literal. `approve`, `approved`, `go ahead`, or an equally explicit instruction counts. Acknowledgments or vague statements such as `ok`, `got it`, `sounds good`, or `we should save this` do not count as approval.
 
 ## Lifecycle Statuses
 

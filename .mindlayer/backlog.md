@@ -51,3 +51,59 @@ Use when planning release validation, installer changes, or test coverage for ne
 
 ### Related
 ml-20260430-006
+
+## Session Continuity Tracking
+
+id: ml-20260503-004
+created: 2026-05-03
+updated: 2026-05-03
+scope: project
+type: backlog
+tags: [session-continuity, approval, prompts]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Add session continuity behavior so agents track pending approvals, unfinished tasks, blockers, and likely next actions.
+
+### Details
+MindLayer should help agents surface the next useful move when the user acknowledges, pauses, changes topic, or may have lost the thread, without becoming noisy after every message.
+
+When a memory write has been proposed but not approved, agents should keep it visible as pending and remind the user before moving on to unrelated next steps.
+
+This behavior likely belongs in prompts/adapters first, with optional future configuration for quiet, balanced, and proactive modes.
+
+### When to use
+Use when improving `/m-save`, command prompts, adapter instructions, or product behavior around unfinished work and pending approvals.
+
+### Related
+ml-20260503-002
+
+## Automatic Session Initialization
+
+id: ml-20260503-005
+created: 2026-05-03
+updated: 2026-05-03
+scope: project
+type: backlog
+tags: [init, onboarding, token-transparency]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Move MindLayer toward automatic session initialization with a transparent context receipt instead of requiring users to remember `/m-init`.
+
+### Details
+During install, MindLayer should make adapter and prompt instructions available so an AI companion can initialize minimal useful memory on the first interaction in a project.
+
+The first interaction should show a compact MindLayer welcome or context receipt: loaded memory roots, loaded files, skipped files, rough token or word cost, and percentage or share of context by source when available.
+
+`/m-init` may remain as a manual refresh or current initialization receipt command, but it should not be the required startup path once automatic initialization is reliable.
+
+### When to use
+Use when changing install behavior, adapters, `/m-init`, onboarding, or token-transparency reporting.
+
+### Related
+ml-20260503-004

@@ -38,3 +38,60 @@ Use when evaluating feature scope, installer behavior, documentation boundaries,
 
 ### Related
 ml-project-20260430-001
+
+## MindLayer Source-of-Truth Boundaries
+
+id: ml-20260503-001
+created: 2026-05-03
+updated: 2026-05-03
+scope: project
+type: decision
+tags: [source-of-truth, templates, memory-routing]
+confidence: high
+status: active
+source: manual
+
+### Summary
+While working inside the MindLayer repo, product memory should be saved to project `.mindlayer/`, shipped global behavior should be implemented through `global-template`, and live `~/.mindlayer/` should not be manually edited.
+
+### Details
+MindLayer separates source-of-truth memory from generated or installed memory output.
+
+During MindLayer repo development:
+- Do not write product learnings to the live `~/.mindlayer/` folder. It is runtime/install/test output and may be regenerated during installs, manual tests, or releases.
+- Do not write product learnings into `project-template` placeholders. Those files are starter memory for future MindLayer users.
+- Use repo `.mindlayer/` for MindLayer product improvement memory: context, decisions, risks, progress, and backlog.
+- Use `global-template` when intentionally changing default global memory behavior that should ship to MindLayer users.
+- Update prompts/adapters when a saved product rule must become operational command behavior.
+
+### When to use
+Use when routing memory writes, changing templates, testing installs, preparing releases, or deciding where durable MindLayer product behavior belongs.
+
+### Related
+ml-20260430-003
+
+## Literal Approval for Memory Writes
+
+id: ml-20260503-002
+created: 2026-05-03
+updated: 2026-05-03
+scope: project
+type: decision
+tags: [approval, memory-safety, commands]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Memory writes require literal explicit approval before editing durable memory.
+
+### Details
+Acknowledgments or vague instructions such as `ok`, `got it`, or `we need to save this` are not approval. The agent must propose the exact destination and content, then wait for clear approval such as `approve` or `go ahead` before writing memory.
+
+This rule applies to project `.mindlayer/`, global-template changes, prompt/adapters that encode memory behavior, and any other durable MindLayer memory source.
+
+### When to use
+Use during `/m-save`, memory routing, template updates, prompt changes, or any workflow that edits durable memory behavior.
+
+### Related
+ml-20260503-001

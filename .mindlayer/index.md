@@ -38,6 +38,30 @@
   status: active
   last_updated: 2026-05-02
 
+- id: ml-20260503-001
+  title: MindLayer Source-of-Truth Boundaries
+  file: decisions.md
+  section: MindLayer Source-of-Truth Boundaries
+  scope: project
+  type: decision
+  tags: [source-of-truth, templates, memory-routing]
+  summary: In the MindLayer repo, project `.mindlayer/` is product memory, `global-template` ships default global behavior, project templates stay generic, and live `~/.mindlayer/` is runtime/test output.
+  importance: high
+  status: active
+  last_updated: 2026-05-03
+
+- id: ml-20260503-002
+  title: Literal Approval for Memory Writes
+  file: decisions.md
+  section: Literal Approval for Memory Writes
+  scope: project
+  type: decision
+  tags: [approval, memory-safety, commands]
+  summary: Memory writes require exact destination/content proposal and clear approval such as `approve` or `go ahead`; acknowledgments like `ok` are not approval.
+  importance: high
+  status: active
+  last_updated: 2026-05-03
+
 - id: ml-20260430-004
   title: Memory as Intelligence Context
   file: context.md
@@ -49,6 +73,18 @@
   importance: high
   status: active
   last_updated: 2026-05-02
+
+- id: ml-20260503-003
+  title: AI-Efficient Memory Language
+  file: context.md
+  section: AI-Efficient Memory Language
+  scope: project
+  type: context
+  tags: [ai-context, tokens, writing]
+  summary: MindLayer memory should use clear, compact language AI companions can understand with minimal ambiguity and token waste.
+  importance: high
+  status: active
+  last_updated: 2026-05-03
 
 - id: ml-20260430-005
   title: Future Roadmap
@@ -73,6 +109,30 @@
   importance: high
   status: active
   last_updated: 2026-05-02
+
+- id: ml-20260503-004
+  title: Session Continuity Tracking
+  file: backlog.md
+  section: Session Continuity Tracking
+  scope: project
+  type: backlog
+  tags: [session-continuity, approval, prompts]
+  summary: Add prompt/adapter behavior for tracking pending approvals, unfinished tasks, blockers, and next actions without noisy over-prompting.
+  importance: high
+  status: active
+  last_updated: 2026-05-03
+
+- id: ml-20260503-005
+  title: Automatic Session Initialization
+  file: backlog.md
+  section: Automatic Session Initialization
+  scope: project
+  type: backlog
+  tags: [init, onboarding, token-transparency]
+  summary: Move toward first-interaction auto-init with a transparent context receipt for loaded/skipped files and rough token or word cost, keeping `/m-init` as manual refresh.
+  importance: high
+  status: active
+  last_updated: 2026-05-03
 
 - id: ml-20260502-001
   title: Deploy Readiness Test Harness

@@ -27,3 +27,27 @@ Use when deciding whether implementation details improve memory quality or merel
 
 ### Related
 ml-20260430-003
+
+## AI-Efficient Memory Language
+
+id: ml-20260503-003
+created: 2026-05-03
+updated: 2026-05-03
+scope: project
+type: context
+tags: [ai-context, tokens, writing]
+confidence: high
+status: active
+source: manual
+
+### Summary
+MindLayer memory should use clear, compact language that AI companions can understand with minimal ambiguity and token waste.
+
+### Details
+MindLayer memory files are durable context for AI companions. Entries should be short, explicit, and easy to retrieve. Jargon is acceptable when it is broadly understood and more efficient than a plain-language alternative, but clarity wins when wording could confuse agents or users.
+
+### When to use
+Use when writing or editing memory entries, templates, prompts, adapters, and command instructions.
+
+### Related
+ml-20260430-004
