@@ -8,7 +8,7 @@
 # English markdown. Reported as ~tokens; not a substitute for tiktoken.
 #
 # Strategies measured:
-#   L0           docs/token-strategy.md L0 bootstrap files only.
+#   L0           L0 bootstrap files only (memory-system.md + indexes).
 #   L0+identity  L0 plus project/.mindlayer/project.md and progress.md
 #                (what MindLayer boot typically loads in practice).
 #   FULL_MEM     Everything committed in project/.mindlayer/ except local.md,

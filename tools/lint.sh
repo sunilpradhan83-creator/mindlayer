@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # MindLayer linter
 #
-# Turns the conventions in docs/ and AGENTS.md into machine-checked invariants.
+# Turns the conventions in AGENTS.md into machine-checked invariants.
 # Runs against project .mindlayer/ (and optionally ~/.mindlayer/).
 #
 # Exit codes:

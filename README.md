@@ -152,12 +152,3 @@ tools/dogfood-codex-boot.sh
 
 This depends on local Codex auth, model availability, and network access.
 
-## Learn More
-
-- [Concepts](docs/concepts.md)
-- [Install](docs/install.md)
-- [File routing](docs/file-routing.md)
-- [Git strategy](docs/git-strategy.md)
-- [Lifecycle](docs/lifecycle.md)
-- [Token strategy](docs/token-strategy.md)
-- [Tool adapters](docs/tool-adapters.md)
