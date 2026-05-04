@@ -57,6 +57,13 @@ Return:
 - Healthy:
 - Warnings:
 - Conflicts:
+- Context:
+  - files loaded
+  - files skipped
+  - files changed
+  - MindLayer context used for the current task
+  - MindLayer context used in the current session
+  - model tokens, when the host exposes exact usage
 - Suggested fixes:
 - Approval needed:
 

@@ -14,6 +14,30 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 - `/m-save` proposes memory writes from durable learnings and waits for approval.
 - `/m-status` checks memory health and suggests fixes without writing.
 
+## Handoff Behavior
+
+MindLayer Handoff is a checkpoint/status artifact, not a running commentary format.
+
+Show a structured handoff only at task end, when the user explicitly asks for status or next steps, when work is paused, blocked, or handed off, and after crash or session recovery.
+
+Do not show it before every command, after every command, during routine progress updates, while exploring files, while tests are still running, or for every small subtask. During normal conversation or active execution, keep the user oriented with plain concise text and a proactive next-step cue when useful.
+
+Preferred compact handoff shape:
+
+```text
+Backlog item: <larger durable goal>
+Task: <current concrete work>
+  - Last result: <what just happened>
+  - Next step: <smallest useful action>
+  - Status: active | blocked | paused | completed
+
+Context:
+  - Task: ~<N> words, ~<N> est. tokens
+  - Session: ~<N> words, ~<N> est. tokens
+```
+
+Use estimated tokens when exact host usage is unavailable. Full context details such as files loaded, files skipped, files changed, health warnings, and context budgets belong in `/m-status`, not in routine handoff blocks.
+
 ## Write Rules
 
 - Never write memory without literal explicit approval.

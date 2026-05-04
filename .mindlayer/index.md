@@ -62,6 +62,18 @@
   status: active
   last_updated: 2026-05-03
 
+- id: ml-20260504-001
+  title: MindLayer Handoff Display Boundaries
+  file: decisions.md
+  section: MindLayer Handoff Display Boundaries
+  scope: project
+  type: decision
+  tags: [session-continuity, handoff, status, ux]
+  summary: MindLayer Handoff is a checkpoint/status artifact shown at task end, explicit status/next-step requests, pause/block/handoff, or recovery; routine progress updates stay plain and concise.
+  importance: high
+  status: active
+  last_updated: 2026-05-04
+
 - id: ml-20260430-004
   title: Memory as Intelligence Context
   file: context.md

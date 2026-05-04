@@ -95,3 +95,45 @@ Use during `/m-save`, memory routing, template updates, prompt changes, or any w
 
 ### Related
 ml-20260503-001
+
+## MindLayer Handoff Display Boundaries
+
+id: ml-20260504-001
+created: 2026-05-04
+updated: 2026-05-04
+scope: project
+type: decision
+tags: [session-continuity, handoff, status, ux]
+confidence: high
+status: active
+source: manual
+
+### Summary
+MindLayer Handoff is a checkpoint/status artifact, not a running commentary format.
+
+### Details
+Show the structured MindLayer Handoff only at task end, when the user explicitly asks for status or next steps, when work is paused, blocked, or handed off, and after crash or session recovery.
+
+Do not show it before every command, after every command, during routine progress updates, while exploring files, while tests are still running, or for every small subtask.
+
+During normal conversation or active execution, keep the user oriented with plain concise text and a proactive next-step cue when useful.
+
+Preferred compact handoff shape:
+
+```text
+Backlog item: <larger durable goal>
+Task: <current concrete work>
+  - Last result: <what just happened>
+  - Next step: <smallest useful action>
+  - Status: active | blocked | paused | completed
+
+Context:
+  - Task: ~<N> words, ~<N> est. tokens
+  - Session: ~<N> words, ~<N> est. tokens
+```
+
+### When to use
+Use when designing session continuity, status reporting, adapter guidance, `/m-status`, `/m-save`, and future handoff or recovery behavior.
+
+### Related
+ml-20260503-004
