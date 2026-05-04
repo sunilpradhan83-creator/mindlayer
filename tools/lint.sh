@@ -15,7 +15,7 @@
 #   E4  no duplicate ids across project (and global, if --include-global)
 #   E5  every index entry's `file` exists in .mindlayer/
 #   E6  every index entry's `section` appears as a heading in its `file`
-#   E7  source-boundary rules are present in adapters, /m-init, and templates
+#   E7  source-boundary rules are present in adapters, boot prompt, and templates
 #   W1  entries with last_updated older than --stale-days (default 180)
 #   W2  any committed memory file is nearing --max-lines (default 240 of 300)
 #   W3  any committed memory file exceeds --max-lines (default 300)
@@ -271,18 +271,21 @@ lint_repo() {
   require_contains "$PROJECT_DIR/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.' "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Keep adapters thin; do not store or retrieve durable memory here." "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Go outside MindLayer memory only when necessary for the task." "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "first meaningful interaction" "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Use this exact first-interaction receipt format" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" 'Read `~/.mindlayer/memory-system.md` first' "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "first project-relevant request" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "Use this exact boot receipt format" "AGENTS.md"
 
   require_contains "$PROJECT_DIR/CLAUDE.md" '`README.md` and `docs/` are human documentation' "CLAUDE.md"
   require_contains "$PROJECT_DIR/CLAUDE.md" "Do not duplicate memory into" "CLAUDE.md"
   require_contains "$PROJECT_DIR/CLAUDE.md" "retrieve durable context from this adapter" "CLAUDE.md"
-  require_contains "$PROJECT_DIR/CLAUDE.md" "automatic first-interaction initialization" "CLAUDE.md"
+  require_contains "$PROJECT_DIR/CLAUDE.md" "automatic MindLayer boot" "CLAUDE.md"
 
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.' "Copilot adapter"
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter." "Copilot adapter"
-  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "first meaningful interaction" "Copilot adapter"
+  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Read `~/.mindlayer/memory-system.md` first' "Copilot adapter"
+  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "first project-relevant request" "Copilot adapter"
 
+  require_contains "$PROJECT_DIR/prompts/m-init.md" 'Read `~/.mindlayer/memory-system.md` first' "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" 'Do not use `README.md` or `docs/` as memory input.' "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "blocked memory stores" "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "Go outside MindLayer memory only when necessary" "/m-init prompt"
@@ -294,14 +297,16 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "not durable memory stores or retrieval sources" "global memory-system template"
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "Go outside MindLayer memory only when necessary" "global memory-system template"
   require_contains "$PROJECT_DIR/global-template/memory-system.md" 'always check project `.mindlayer/project.md`' "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" "first meaningful interaction" "global memory-system template"
+  require_contains "$PROJECT_DIR/global-template/memory-system.md" "Read this file first when initializing MindLayer behavior" "global memory-system template"
+  require_contains "$PROJECT_DIR/global-template/memory-system.md" "first project-relevant request" "global memory-system template"
 
   require_contains "$PROJECT_DIR/install.sh" 'Do not use `README.md` or `docs/` as memory input.' "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Keep adapters thin; do not store or retrieve durable memory here." "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "first meaningful interaction" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "Use this exact first-interaction receipt format" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" 'Read `~/.mindlayer/memory-system.md` first' "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "first project-relevant request" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "Use this exact boot receipt format" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "always check project .mindlayer/project.md" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "During MindLayer boot, always check project .mindlayer/project.md" "installer memory-system fallback"
 }
 
 # ---------------------------------------------------------------------------

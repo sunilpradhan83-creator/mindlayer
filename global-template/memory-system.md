@@ -4,9 +4,12 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 
 ## Command Behavior
 
-- `/m-init` loads the minimum useful context for the current session.
-- `/m-init` reports a transparent context receipt describing what was loaded, skipped, missing, and the rough token or word cost when possible.
-- On the first meaningful interaction in a project, initialize minimal useful MindLayer context automatically and report a compact receipt with exact labels: Loaded, Skipped, Missing, Current understanding, Current progress, and Context cost.
+- MindLayer boot initializes the minimum useful context for the current session.
+- MindLayer boot must read this file first when available, then indexes, then essential preferences, project identity, and current progress.
+- Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run it before answering the first project-relevant request.
+- Do not treat a plain greeting as a project-relevant request. If boot has not already run, answer naturally and boot before the first substantive project task.
+- A transparent boot receipt should describe what was loaded, skipped, missing, and the rough token or word cost when visible to the user.
+- `/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt while hosts migrate to automatic boot.
 - `/m-retrieve <query>` searches indexes first and loads only relevant sections.
 - `/m-save` proposes memory writes from durable learnings and waits for approval.
 - `/m-status` checks memory health and suggests fixes without writing.
@@ -23,9 +26,9 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 ## Read Rules
 
 - Read this file first when initializing MindLayer behavior.
-- Read `preferences.md` during `/m-init` as always-on global preference context.
+- Read `preferences.md` during MindLayer boot as always-on global preference context.
 - Read indexes before full memory files.
-- During `/m-init`, always check project `.mindlayer/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.
+- During MindLayer boot, always check project `.mindlayer/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.
 - Load full sections only when relevant.
 - Do not use `README.md` or `docs/` as memory input; they are human-facing documentation.
 - Treat tool adapters such as `AGENTS.md`, `CLAUDE.md`, and Copilot instructions as thin instructions, not durable memory stores or retrieval sources.
@@ -71,4 +74,4 @@ V1 does not implement archive or cleanup automation, but it does require proacti
 
 ## Index-First Retrieval
 
-Indexes are compact maps for search. They are not full documentation. Search by title, tags, summary, type, status, importance, and last updated date before reading full sections, except for `preferences.md`, which is always loaded during `/m-init`.
+Indexes are compact maps for search. They are not full documentation. Search by title, tags, summary, type, status, importance, and last updated date before reading full sections, except for this file and `preferences.md`, which are always loaded during MindLayer boot.

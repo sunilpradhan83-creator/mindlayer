@@ -10,7 +10,7 @@
 # Strategies measured:
 #   L0           docs/token-strategy.md L0 bootstrap files only.
 #   L0+identity  L0 plus project/.mindlayer/project.md and progress.md
-#                (what /m-init typically loads in practice).
+#                (what MindLayer boot typically loads in practice).
 #   FULL_MEM     Everything committed in project/.mindlayer/ except local.md,
 #                private/, sessions/, cache/, tmp/. Worst case for memory.
 #   ADAPTERS     AGENTS.md + CLAUDE.md + .github/copilot-instructions.md.

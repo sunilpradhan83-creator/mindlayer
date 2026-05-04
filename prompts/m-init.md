@@ -1,13 +1,15 @@
-# /m-init
+# MindLayer Boot
 
-Initialize this AI session with minimal useful MindLayer memory context and report a transparent context receipt.
+Initialize this AI session with minimal useful MindLayer memory context and report a transparent context receipt when visible to the user.
+
+`/m-init` is a legacy/manual refresh alias for this boot procedure while hosts migrate to automatic session-start or preflight boot.
 
 ## Procedure
 
 1. Read `~/.mindlayer/memory-system.md` first if available. If missing, use project `.mindlayer/` files and note the missing global system file.
-2. Read `~/.mindlayer/preferences.md` if available as always-on global preference context.
-3. Read `~/.mindlayer/index.md` if available.
-4. Read project `.mindlayer/index.md` if available.
+2. Read `~/.mindlayer/index.md` if available and confirm it references `file: memory-system.md`. If the file exists but is unindexed, report the index issue.
+3. Read project `.mindlayer/index.md` if available.
+4. Read `~/.mindlayer/preferences.md` if available as always-on global preference context.
 5. Always check project `.mindlayer/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
 6. If `.mindlayer/project.md` contains only scaffold or placeholder content, do not treat it as substantive memory; report that project identity is missing or still starter-only.
 7. If `.mindlayer/project.md` contains substantive project identity, load the relevant identity section and summarize it.
@@ -31,9 +33,9 @@ When initializing inside the MindLayer repo:
 
 ## Token Discipline
 
-Keep token usage small. Always load `preferences.md`, then prefer index entries, section summaries, and targeted reads for everything else. Avoid loading full files, empty scaffolds, local notes, human docs, and adapter files by default.
+Keep token usage small. Always load `~/.mindlayer/memory-system.md` and `preferences.md`, then prefer index entries, section summaries, and targeted reads for everything else. Avoid loading full files, empty scaffolds, local notes, human docs, and adapter files by default.
 
-Project identity is a bootstrap exception: check `.mindlayer/project.md` during `/m-init`, but load only substantive identity content. A low-importance starter index entry is not enough reason to skip the check.
+Project identity is a bootstrap exception: check `.mindlayer/project.md` during MindLayer boot, but load only substantive identity content. A low-importance starter index entry is not enough reason to skip the check.
 
 ## Context Receipt
 
@@ -52,4 +54,4 @@ Clearly state what was loaded and skipped. Include rough word counts or token es
 
 ## Future Direction
 
-MindLayer should move toward automatic first-interaction initialization. Until that path is reliable, `/m-init` remains the manual way to refresh or show the current initialization receipt.
+MindLayer should move toward automatic session-start or tool-preflight boot. Until that path is reliable across hosts, `/m-init` remains a legacy/manual way to refresh or show the current boot receipt.

@@ -142,7 +142,8 @@ check assert_contains "$fresh_home/.mindlayer/memory-system.md" 'Do not use `REA
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "not durable memory stores or retrieval sources"
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "Go outside MindLayer memory only when necessary"
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" 'always check project `.mindlayer/project.md`'
-check assert_contains "$fresh_home/.mindlayer/memory-system.md" "first meaningful interaction"
+check assert_contains "$fresh_home/.mindlayer/memory-system.md" "Read this file first when initializing MindLayer behavior"
+check assert_contains "$fresh_home/.mindlayer/memory-system.md" "first project-relevant request"
 check assert_index_sections_exist "$fresh_home/.mindlayer"
 
 for file in project.md progress.md decisions.md context.md backlog.md risks.md index.md local.md; do
@@ -161,14 +162,16 @@ check assert_contains "$fresh_project/CLAUDE.md" "<!-- mindlayer:start -->"
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "<!-- mindlayer:start -->"
 check assert_contains "$fresh_project/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/AGENTS.md" "Keep adapters thin; do not store or retrieve durable memory here."
-check assert_contains "$fresh_project/AGENTS.md" "first meaningful interaction"
-check assert_contains "$fresh_project/AGENTS.md" "Use this exact first-interaction receipt format"
+check assert_contains "$fresh_project/AGENTS.md" 'Read `~/.mindlayer/memory-system.md` first'
+check assert_contains "$fresh_project/AGENTS.md" "first project-relevant request"
+check assert_contains "$fresh_project/AGENTS.md" "Use this exact boot receipt format"
 check assert_contains "$fresh_project/CLAUDE.md" '`README.md` and `docs/` are human documentation'
 check assert_contains "$fresh_project/CLAUDE.md" "Do not duplicate memory into"
-check assert_contains "$fresh_project/CLAUDE.md" "automatic first-interaction initialization"
+check assert_contains "$fresh_project/CLAUDE.md" "automatic MindLayer boot"
 check assert_contains "$fresh_project/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter."
-check assert_contains "$fresh_project/.github/copilot-instructions.md" "first meaningful interaction"
+check assert_contains "$fresh_project/.github/copilot-instructions.md" 'Read `~/.mindlayer/memory-system.md` first'
+check assert_contains "$fresh_project/.github/copilot-instructions.md" "first project-relevant request"
 check assert_contains "$fresh_project/.gitignore" ".mindlayer/local.md"
 check assert_contains "$fresh_project/.gitignore" ".mindlayer/private/"
 check assert_index_sections_exist "$fresh_project/.mindlayer"
@@ -266,20 +269,20 @@ check assert_file_exists "$existing_home/.mindlayer/index.md"
 check assert_contains "$existing_home/.mindlayer/index.md" "file: memory-system.md"
 check assert_file_exists "$existing_project/.mindlayer/index.md"
 
-scenario "m-init contract"
+scenario "boot contract"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" "preferences.md"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$ROOT_DIR/prompts/m-init.md" "blocked memory stores"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" 'Always check project `.mindlayer/project.md`'
 check assert_contains "$ROOT_DIR/prompts/m-init.md" "low importance or starter-like"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" "Project identity is a bootstrap exception"
-check assert_contains "$fresh_home/.mindlayer/memory-system.md" "initialize minimal useful MindLayer context automatically"
+check assert_contains "$fresh_home/.mindlayer/memory-system.md" "MindLayer boot initializes the minimum useful context"
 check assert_contains "$fresh_home/.mindlayer/index.md" "file: preferences.md"
 check assert_file_exists "$fresh_home/.mindlayer/preferences.md"
 check assert_not_exists "$fresh_home/.mindlayer/memory.md"
 check assert_contains "$fresh_project/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/AGENTS.md" "Use index files before full files."
-check assert_contains "$fresh_project/AGENTS.md" 'Use `/m-init` when the user asks to refresh or show initialization context.'
+check assert_contains "$fresh_project/AGENTS.md" '`/m-init` is a legacy/manual refresh alias'
 check assert_contains "$fresh_project/AGENTS.md" "Context cost:"
 
 printf "\nMindLayer Local Install Readiness Summary\n"

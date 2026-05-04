@@ -4,7 +4,7 @@
 
 id: ml-20260430-002
 created: 2026-04-30
-updated: 2026-04-30
+updated: 2026-05-04
 scope: project
 type: progress
 tags: [v1, installer]
@@ -13,7 +13,7 @@ status: active
 source: manual
 
 ### Summary
-Current phase: installer-first V1 seed published and ready for real project usage.
+Current phase: installer-first V1 seed published; boot-first memory initialization is implemented and validated.
 
 ### Details
 - Current phase: installer-first V1 seed project.
@@ -28,10 +28,15 @@ Current phase: installer-first V1 seed published and ready for real project usag
 - Completed: GitHub repo published at `https://github.com/sunilpradhan83-creator/mindlayer`.
 - Completed: manual `/m-init` dogfooding found that `~/.mindlayer/memory-system.md` could exist but remain unloaded/unreported when the global index lacked a `memory-system.md` entry.
 - Completed: installer fallback index content was updated, existing global indexes are repaired when missing `memory-system.md`, the local global index was repaired, and readiness tests now verify both fresh installs and old existing global indexes include `file: memory-system.md`.
-- Next step: review and push the deploy-readiness, source-boundary, and `/m-init` index repair changes.
+- Completed: boot-first initialization replaced `/m-init`-first workflow across adapters, installer output, templates, docs, prompts, and tests.
+- Completed: MindLayer boot now requires loading `~/.mindlayer/memory-system.md` first, treats `/m-init` as a legacy/manual refresh alias, and does not treat plain greetings as project-relevant boot triggers.
+- Completed: agent behavior tests now reject boot receipts that omit `~/.mindlayer/memory-system.md` from `Loaded:`.
+- Completed: full `tools/test.sh` suite passed with install readiness and boot contract validation.
+- Completed: manual command dogfooding confirmed `/m-init` works as a legacy/manual refresh alias and `/m-save` proposes memory writes without writing automatically.
+- Next step: test the same boot flow in a genuinely fresh agent session, starting with a plain greeting and then a project-relevant request.
 
 ### When to use
-Use during `/m-init` to understand the current project state.
+Use during MindLayer boot to understand the current project state.
 
 ### Related
 ml-project-20260430-001

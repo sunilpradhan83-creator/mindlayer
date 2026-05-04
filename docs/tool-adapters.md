@@ -4,7 +4,9 @@ Tool adapters tell AI coding tools how to use MindLayer. They are not memory sto
 
 ## AGENTS.md
 
-`AGENTS.md` is the universal adapter for agentic coding tools. It explains the memory layers, commands, and rules.
+`AGENTS.md` is the universal adapter for agentic coding tools. It explains the memory layers, commands, and automatic boot rules.
+
+MindLayer boot reads `~/.mindlayer/memory-system.md` first when available, then indexes and essential context. Hosts should run boot at session start or preflight when supported; otherwise agents run it before the first project-relevant request.
 
 ## CLAUDE.md
 
@@ -17,4 +19,3 @@ Tool adapters tell AI coding tools how to use MindLayer. They are not memory sto
 ## Drift Prevention
 
 Do not duplicate durable memory into adapters. If an adapter and memory file disagree, update the memory file after approval and keep the adapter generic.
-

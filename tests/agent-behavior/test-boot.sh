@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Deterministic contract tests for MindLayer first-interaction behavior.
+# Deterministic contract tests for MindLayer boot behavior.
 #
 # This does not call a live model. It validates the response shape that adapters
-# require agents to produce after automatic first-interaction initialization.
+# require agents to produce after automatic MindLayer boot.
 
 set -u
 
@@ -37,6 +37,13 @@ assert_valid_receipt() {
   grep -Fq "Current progress:" "$file" || return 1
   grep -Fq "Context cost:" "$file" || return 1
   grep -Fq "Ready." "$file" || return 1
+
+  awk '
+    /^Loaded:/ { in_loaded = 1; next }
+    /^[[:alpha:]][[:alpha:] ]*:/ { in_loaded = 0 }
+    in_loaded && /~\/\.mindlayer\/memory-system\.md/ { found = 1 }
+    END { exit found ? 0 : 1 }
+  ' "$file" || return 1
 
   grep -Fq 'README.md`, `docs/`, and tool adapters as memory sources' "$file" || return 1
   grep -Eq 'Approx\. [0-9][0-9,]*-[0-9][0-9,]* words loaded|Approx\. [0-9][0-9,]* words loaded' "$file" || return 1
@@ -124,7 +131,7 @@ cat > "$starter" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global command rules and preferences
+- Global: `~/.mindlayer/memory-system.md`, `~/.mindlayer/preferences.md`, `~/.mindlayer/index.md`
 - Project memory index
 
 Skipped:
@@ -150,12 +157,39 @@ EOF
 check_valid "$starter"
 
 scenario "receipt rejection cases"
+missing_memory_system="$SANDBOX/missing-memory-system.md"
+cat > "$missing_memory_system" <<'EOF'
+MindLayer context loaded.
+
+Loaded:
+- Global preferences and indexes
+- Project memory index
+
+Skipped:
+- `README.md`, `docs/`, and tool adapters as memory sources
+
+Missing:
+- None
+
+Current understanding:
+Project memory is available.
+
+Current progress:
+No progress loaded.
+
+Context cost:
+Approx. 400-500 words loaded.
+
+Ready.
+EOF
+check_invalid "$missing_memory_system" "missing memory-system boot file"
+
 missing_cost="$SANDBOX/missing-cost.md"
 cat > "$missing_cost" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global command rules and preferences
+- Global: `~/.mindlayer/memory-system.md`, command rules and preferences
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources
@@ -178,7 +212,7 @@ cat > "$loaded_docs" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global command rules and preferences
+- Global: `~/.mindlayer/memory-system.md`, command rules and preferences
 - README.md and docs/
 
 Skipped:
@@ -205,7 +239,7 @@ cat > "$missing_skip" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global command rules and preferences
+- Global: `~/.mindlayer/memory-system.md`, command rules and preferences
 
 Missing:
 - None
@@ -240,9 +274,9 @@ printf "Passed checks: %s\n" "$PASS_COUNT"
 printf "Failed checks: %s\n" "$FAIL_COUNT"
 
 if [ "$FAIL_COUNT" -eq 0 ]; then
-  printf "Verdict: FIRST-INTERACTION CONTRACT READY\n"
+  printf "Verdict: BOOT CONTRACT READY\n"
   exit 0
 fi
 
-printf "Verdict: FIRST-INTERACTION CONTRACT FAILED\n"
+printf "Verdict: BOOT CONTRACT FAILED\n"
 exit 1

@@ -21,10 +21,10 @@
   scope: project
   type: progress
   tags: [v1, installer]
-  summary: V1 seed is validated and dogfooding now covers deploy readiness, source boundaries, and memory-system index repair.
+  summary: V1 seed is validated; boot-first initialization now loads memory-system.md first, treats /m-init as legacy/manual refresh, and passes install plus boot contract tests.
   importance: high
   status: active
-  last_updated: 2026-05-02
+  last_updated: 2026-05-04
 
 - id: ml-20260430-003
   title: V1 Memory Architecture Decisions

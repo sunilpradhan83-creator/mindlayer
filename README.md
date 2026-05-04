@@ -35,11 +35,7 @@ Local install:
 bash install.sh --project .
 ```
 
-Then open your AI coding tool and run:
-
-```text
-/m-init
-```
+Then open your AI coding tool. MindLayer-aware adapters boot minimal context automatically when the host supports session preflight, or before the first project-relevant request as a fallback.
 
 ## How It Works
 
@@ -68,7 +64,7 @@ They tell tools how to use MindLayer, but they are not memory stores.
 
 MindLayer V1 uses prompt files, not a CLI runtime:
 
-- `/m-init`: initialize the session with minimal useful memory context.
+- MindLayer boot: initialize the session with minimal useful memory context.
 - `/m-retrieve <query>`: fetch specific memory using indexes first.
 - `/m-save`: propose durable memory writes and wait for approval.
 - `/m-status`: check memory health and suggest fixes.
@@ -77,7 +73,7 @@ Prompt sources live in [`prompts/`](prompts/).
 
 ## Effective Use
 
-Start a session with `/m-init` when project memory matters.
+MindLayer boot should load `~/.mindlayer/memory-system.md` first, then indexes, preferences, project identity, and current progress. `/m-init` remains a legacy/manual refresh alias while hosts migrate to automatic boot.
 
 Use `/m-retrieve <query>` instead of loading every memory file. Retrieval should start from indexes and load only relevant sections.
 

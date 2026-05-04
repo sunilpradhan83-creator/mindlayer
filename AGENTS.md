@@ -20,7 +20,7 @@ Human documentation such as `README.md` and `docs/` explains the tool for people
 
 ## Commands
 
-- `/m-init`: initialize the session with minimal useful memory context.
+- MindLayer boot: initialize the session with minimal useful memory context.
 - `/m-retrieve <query>`: fetch specific memory on demand using indexes first.
 - `/m-save`: analyze recent work and propose memory writes. Never write without approval.
 - `/m-status`: check memory health and suggest fixes.
@@ -38,9 +38,9 @@ Human documentation such as `README.md` and `docs/` explains the tool for people
 - Keep tool-specific files thin. Do not duplicate memory into adapters or retrieve durable context from adapters.
 - Go outside MindLayer memory only when necessary for the task.
 
-At the first meaningful interaction in a project, initialize minimal useful MindLayer context automatically. When memory is needed, use `/m-retrieve`. When saving memory, use `/m-save`. For health checks, use `/m-status`. Use `/m-init` when the user asks to refresh or show initialization context.
+Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run boot before answering the first project-relevant request. Do not treat a plain greeting as project-relevant. When memory is needed, use `/m-retrieve`. When saving memory, use `/m-save`. For health checks, use `/m-status`. `/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
 
-Use this exact first-interaction receipt format:
+Use this exact boot receipt format when the boot is visible to the user:
 
 ```text
 MindLayer context loaded.
@@ -74,9 +74,41 @@ MindLayer memory is stored outside this adapter.
 Global memory: `~/.mindlayer/`
 Project memory: `.mindlayer/`
 
-At the first meaningful interaction in this project, initialize minimal useful MindLayer context automatically. Read command rules and indexes first, then load only essential global preferences, project identity, and current progress. Report the exact first-interaction receipt format above with loaded, skipped, missing, current understanding, current progress, and rough word cost.
+MindLayer boot should run at session start or tool preflight when the host supports it. If no preflight hook exists, run boot before answering the first project-relevant request. Do not treat a plain greeting as project-relevant.
 
-Use `/m-init` when the user asks to refresh or show initialization context.
+Boot order:
+1. Read `~/.mindlayer/memory-system.md` first when available.
+2. Read `~/.mindlayer/index.md` and `.mindlayer/index.md`.
+3. Load only essential global preferences, project identity, and current progress.
+
+Use this exact boot receipt format when the boot is visible to the user:
+
+```text
+MindLayer context loaded.
+
+Loaded:
+- ...
+
+Skipped:
+- ...
+
+Missing:
+- ...
+
+Current understanding:
+...
+
+Current progress:
+...
+
+Context cost:
+Approx. N words loaded.
+
+Ready.
+What would you like to work on?
+```
+
+`/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
 Use `/m-retrieve <query>` when specific memory is needed.
 Use `/m-save` only to propose memory writes; never write without approval.
 Use `/m-status` to check memory health.

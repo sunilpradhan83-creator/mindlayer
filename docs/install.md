@@ -31,6 +31,12 @@ bash install.sh --project .
 
 The installer creates missing memory files and directories. It does not overwrite existing memory files. Existing adapter files are updated only inside MindLayer marker blocks.
 
+## Session Boot
+
+After install, MindLayer-aware adapters boot minimal context automatically when the host supports session preflight, or before the first project-relevant request as a fallback.
+
+Boot reads `~/.mindlayer/memory-system.md` first when available, then indexes, preferences, project identity, and current progress. `/m-init` remains a legacy/manual refresh alias while hosts migrate to automatic boot.
+
 ## Deploy Readiness
 
 Run the full local validation suite before release or deploy:

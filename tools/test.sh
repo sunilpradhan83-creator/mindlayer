@@ -17,5 +17,5 @@ bash "$ROOT_DIR/tests/lint/test-source-boundaries.sh"
 printf "\n3. Local install readiness\n"
 bash "$ROOT_DIR/tests/local-install/test-install.sh"
 
-printf "\n4. Agent first-interaction contract\n"
-bash "$ROOT_DIR/tests/agent-behavior/test-first-interaction.sh"
+printf "\n4. Agent boot contract\n"
+bash "$ROOT_DIR/tests/agent-behavior/test-boot.sh"

@@ -24,7 +24,6 @@ Current phase and immediate next step.
 - Next step:
 
 ### When to use
-Use during `/m-init` to understand current project state.
+Use during MindLayer boot to understand current project state.
 
 ### Related
-
