@@ -1,26 +1,30 @@
 # Global Preferences
 
-Always-loaded cross-project user preferences, habits, tool choices, and constraints.
+User-owned cross-project preferences for how AI coding agents should work with you.
 
-## Starter Preferences
+This file lives outside project Git at `~/.mindlayer/preferences.md`. Back up `~/.mindlayer/` with your normal dotfiles, encrypted backup, or private personal repository if you want these preferences preserved across machine loss.
+
+Do not store secrets, raw conversations, or project-specific facts here. Preferences must stay within the guardrails in `memory-system.md`.
+
+## User Preferences
 
 id: ml-global-YYYYMMDD-001
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: preference
-tags: [mindlayer, preferences, approval]
+tags: [preferences]
 confidence: medium
 status: active
-source: manual
+source: starter
 
 ### Summary
-Use MindLayer memory cautiously and require approval before writes.
+No user preferences saved yet.
 
 ### Details
-The user prefers transparent memory behavior, low token usage, and explicit approval before durable memory changes.
+Add durable cross-project preferences here only after explicit approval.
 
 ### When to use
-Use in every session as always-on global preference context.
+Skip this section during boot until real user preferences are saved.
 
 ### Related

@@ -17,13 +17,13 @@ Use this file as the compact search map for `~/.mindlayer/`.
   last_updated: YYYY-MM-DD
 
 - id: ml-global-YYYYMMDD-001
-  title: MindLayer global preferences starter
+  title: User global preferences
   file: preferences.md
-  section: Starter Preferences
+  section: User Preferences
   scope: global
   type: preference
   tags: [mindlayer, preferences]
-  summary: Starter always-loaded preferences for safe, approval-based memory use.
-  importance: high
+  summary: User-owned cross-project preferences; load only when the section contains substantive user-written preferences.
+  importance: medium
   status: active
   last_updated: YYYY-MM-DD

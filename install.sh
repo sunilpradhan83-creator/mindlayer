@@ -111,6 +111,34 @@ write_template_if_missing() {
   fi
 }
 
+write_managed_template() {
+  file="$1"
+  template_path="$2"
+  fallback_content="$3"
+  dir=$(dirname "$file")
+  mkdir_p "$dir"
+  tmp=$(mktemp "${TMPDIR:-/tmp}/mindlayer-managed.XXXXXX") || exit 1
+
+  if [ -f "$template_path" ]; then
+    render_template_file "$template_path" > "$tmp"
+  else
+    printf "%s\n" "$fallback_content" | awk -v date="$DATE" -v date_id="${DATE//-/}" '
+      {
+        gsub(/YYYYMMDD/, date_id)
+        gsub(/YYYY-MM-DD/, date)
+        print
+      }
+    ' > "$tmp"
+  fi
+
+  if [ -f "$file" ] && cmp -s "$tmp" "$file"; then
+    rm -f "$tmp"
+    return
+  fi
+
+  mv "$tmp" "$file"
+}
+
 append_gitignore_rule() {
   file="$1"
   rule="$2"
@@ -175,7 +203,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 ## Command Behavior
 
 - MindLayer boot initializes the minimum useful context for the current session.
-- MindLayer boot must read this file first when available, then indexes, then essential preferences, project identity, and current progress.
+- MindLayer boot must read this file first when available, then indexes, then substantive user preferences when present, project identity, and current progress.
 - Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run it before answering the first project-relevant request.
 - Do not treat a plain greeting as a project-relevant request. If boot has not already run, answer naturally and boot before the first substantive project task.
 - /m-init is a legacy/manual refresh alias for showing or rerunning the boot receipt while hosts migrate to automatic boot.
@@ -187,6 +215,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 
 - Never write memory without explicit approval.
 - Read this file first when initializing MindLayer behavior.
+- Read preferences.md during MindLayer boot only when it contains substantive user-written preferences. If it is missing or starter-only, report it as skipped or missing instead of loading it as useful context.
 - Read indexes before full memory files.
 - During MindLayer boot, always check project .mindlayer/project.md for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.
 - Do not use README.md or docs/ as memory input; they are human-facing documentation.
@@ -196,8 +225,10 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 - Go outside MindLayer memory only when necessary for the current task.
 - Prefer updating existing entries over creating duplicates.
 - Do not store raw chat logs.
-- Route global preferences to ~/.mindlayer/.
+- Route user-owned cross-project preferences to ~/.mindlayer/preferences.md. Preferences may customize collaboration style, workflow habits, and cross-project defaults, but they must not override MindLayer guardrails in this file.
 - Route project decisions, context, progress, backlog, and risks to project .mindlayer/.
+- ~/.mindlayer/ is outside project Git by design. Tell users to back it up with dotfiles, encrypted backup, or a private personal repository if they want global preferences preserved across machine loss.
+- Do not store secrets, tokens, raw conversations, or project-private facts in global preferences.
 - Use active, experimental, deprecated, and archived lifecycle statuses.
 - Warn when memory files are nearing their size budget, not only after they overflow.
 - Prompt for cleanup, merge, compression, or archive before adding more memory to near-limit files.
@@ -222,41 +253,45 @@ Use this file as the compact search map for ~/.mindlayer/.
   last_updated: YYYY-MM-DD
 
 - id: ml-global-YYYYMMDD-001
-  title: MindLayer global preferences starter
+  title: User global preferences
   file: preferences.md
-  section: Starter Preferences
+  section: User Preferences
   scope: global
   type: preference
   tags: [mindlayer, preferences]
-  summary: Starter always-loaded preferences for safe, approval-based memory use.
-  importance: high
+  summary: User-owned cross-project preferences; load only when the section contains substantive user-written preferences.
+  importance: medium
   status: active
   last_updated: YYYY-MM-DD"
 
 global_preferences="# Global Preferences
 
-Always-loaded cross-project user preferences, habits, tool choices, and constraints.
+User-owned cross-project preferences for how AI coding agents should work with you.
 
-## Starter Preferences
+This file lives outside project Git at ~/.mindlayer/preferences.md. Back up ~/.mindlayer/ with your normal dotfiles, encrypted backup, or private personal repository if you want these preferences preserved across machine loss.
+
+Do not store secrets, raw conversations, or project-specific facts here. Preferences must stay within the guardrails in memory-system.md.
+
+## User Preferences
 
 id: ml-global-YYYYMMDD-001
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: preference
-tags: [mindlayer, preferences, approval]
+tags: [preferences]
 confidence: medium
 status: active
-source: manual
+source: starter
 
 ### Summary
-Use MindLayer memory cautiously and require approval before writes.
+No user preferences saved yet.
 
 ### Details
-The user prefers transparent memory behavior, low token usage, and explicit approval before durable memory changes.
+Add durable cross-project preferences here only after explicit approval.
 
 ### When to use
-Use in every session as always-on global preference context.
+Skip this section during boot until real user preferences are saved.
 
 ### Related"
 
@@ -567,7 +602,7 @@ config_json='{
 
 install_global() {
   mkdir_p "$GLOBAL_DIR"
-  write_template_if_missing "$GLOBAL_DIR/memory-system.md" "$GLOBAL_TEMPLATE_DIR/memory-system.md" "$global_memory_system"
+  write_managed_template "$GLOBAL_DIR/memory-system.md" "$GLOBAL_TEMPLATE_DIR/memory-system.md" "$global_memory_system"
   write_template_if_missing "$GLOBAL_DIR/index.md" "$GLOBAL_TEMPLATE_DIR/index.md" "$global_index"
   ensure_global_memory_system_index
   write_template_if_missing "$GLOBAL_DIR/preferences.md" "$GLOBAL_TEMPLATE_DIR/preferences.md" "$global_preferences"
@@ -633,7 +668,7 @@ MindLayer boot should run at session start or tool preflight when the host suppo
 Boot order:
 1. Read `~/.mindlayer/memory-system.md` first when available.
 2. Read `~/.mindlayer/index.md` and `.mindlayer/index.md`.
-3. Load only essential global preferences, project identity, and current progress.
+3. Load substantive user preferences when present, project identity, and current progress.
 
 Use this exact boot receipt format when the boot is visible to the user:
 

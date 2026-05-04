@@ -9,7 +9,7 @@ Initialize this AI session with minimal useful MindLayer memory context and repo
 1. Read `~/.mindlayer/memory-system.md` first if available. If missing, use project `.mindlayer/` files and note the missing global system file.
 2. Read `~/.mindlayer/index.md` if available and confirm it references `file: memory-system.md`. If the file exists but is unindexed, report the index issue.
 3. Read project `.mindlayer/index.md` if available.
-4. Read `~/.mindlayer/preferences.md` if available as always-on global preference context.
+4. Check `~/.mindlayer/preferences.md` if available. Load it only when it contains substantive user-written preferences; if it is missing or starter-only, report it as missing or skipped.
 5. Always check project `.mindlayer/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
 6. If `.mindlayer/project.md` contains only scaffold or placeholder content, do not treat it as substantive memory; report that project identity is missing or still starter-only.
 7. If `.mindlayer/project.md` contains substantive project identity, load the relevant identity section and summarize it.
@@ -33,7 +33,7 @@ When initializing inside the MindLayer repo:
 
 ## Token Discipline
 
-Keep token usage small. Always load `~/.mindlayer/memory-system.md` and `preferences.md`, then prefer index entries, section summaries, and targeted reads for everything else. Avoid loading full files, empty scaffolds, local notes, human docs, and adapter files by default.
+Keep token usage small. Always load `~/.mindlayer/memory-system.md`, then prefer index entries, section summaries, substantive preferences, and targeted reads for everything else. Avoid loading full files, empty scaffolds, starter-only preferences, local notes, human docs, and adapter files by default.
 
 Project identity is a bootstrap exception: check `.mindlayer/project.md` during MindLayer boot, but load only substantive identity content. A low-importance starter index entry is not enough reason to skip the check.
 

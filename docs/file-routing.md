@@ -6,7 +6,7 @@ Use the narrowest durable destination.
 
 - `memory-system.md`: MindLayer operating rules.
 - `index.md`: compact search map for global memory.
-- `preferences.md`: always-loaded cross-project user preferences and constraints.
+- `preferences.md`: user-owned cross-project preferences and constraints; load only when substantive.
 - `playbook.md`: reusable workflows.
 - `principles.md`: stable engineering and product beliefs.
 - `anti-patterns.md`: mistakes and behaviors to avoid.
@@ -24,6 +24,8 @@ Use the narrowest durable destination.
 - `local.md`: personal local notes ignored by Git.
 
 Global memory does not need a mirrored project file. Read and write it directly from `~/.mindlayer/`.
+
+`~/.mindlayer/preferences.md` is personal global memory for the user. Preserve it on reinstall, keep it outside project Git, and back up `~/.mindlayer/` separately through dotfiles, encrypted backup, or a private personal repository when needed.
 
 ## Rule of Thumb
 

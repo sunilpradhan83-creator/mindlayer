@@ -33,7 +33,7 @@ Human documentation such as `README.md` and `docs/` explains the tool for people
 - Prefer updating existing memory over creating duplicates.
 - Keep token usage transparent: state what was loaded and skipped.
 - Do not dump raw conversations into memory.
-- Route global preferences to `~/.mindlayer/`.
+- Route user-owned cross-project preferences to `~/.mindlayer/preferences.md`.
 - Route project facts, decisions, progress, risks, and backlog to `project/.mindlayer/`.
 - Keep tool-specific files thin. Do not duplicate memory into adapters or retrieve durable context from adapters.
 - Go outside MindLayer memory only when necessary for the task.
@@ -79,7 +79,7 @@ MindLayer boot should run at session start or tool preflight when the host suppo
 Boot order:
 1. Read `~/.mindlayer/memory-system.md` first when available.
 2. Read `~/.mindlayer/index.md` and `.mindlayer/index.md`.
-3. Load only essential global preferences, project identity, and current progress.
+3. Load substantive user preferences when present, project identity, and current progress.
 
 Use this exact boot receipt format when the boot is visible to the user:
 

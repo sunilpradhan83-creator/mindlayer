@@ -29,13 +29,19 @@ bash install.sh --project .
 
 ## Safety
 
-The installer creates missing memory files and directories. It does not overwrite existing memory files. Existing adapter files are updated only inside MindLayer marker blocks.
+The installer creates missing memory files and directories. It may refresh managed MindLayer system instructions such as `~/.mindlayer/memory-system.md`, but it preserves user-owned memory such as `~/.mindlayer/preferences.md`. Existing adapter files are updated only inside MindLayer marker blocks.
 
 ## Session Boot
 
 After install, MindLayer-aware adapters boot minimal context automatically when the host supports session preflight, or before the first project-relevant request as a fallback.
 
-Boot reads `~/.mindlayer/memory-system.md` first when available, then indexes, preferences, project identity, and current progress. `/m-init` remains a legacy/manual refresh alias while hosts migrate to automatic boot.
+Boot reads `~/.mindlayer/memory-system.md` first when available, then indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `/m-init` remains a legacy/manual refresh alias while hosts migrate to automatic boot.
+
+## Global Backup
+
+Global memory lives outside project Git at `~/.mindlayer/`. This lets preferences work across projects and survive project deletion or recloning, but project commits do not back it up.
+
+Back up `~/.mindlayer/` with your normal dotfiles, encrypted backup, or private personal repository if you want cross-project preferences preserved across machine loss. Do not store secrets, tokens, raw conversations, or project-specific facts in global preferences.
 
 ## Deploy Readiness
 

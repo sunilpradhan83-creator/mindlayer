@@ -100,7 +100,7 @@ cat > "$substantive" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, `~/.mindlayer/preferences.md`, `~/.mindlayer/index.md`
+- Global: `~/.mindlayer/memory-system.md`, substantive `~/.mindlayer/preferences.md`, `~/.mindlayer/index.md`
 - Project: `.mindlayer/index.md`, `.mindlayer/project.md`, latest `.mindlayer/progress.md`
 
 Skipped:
@@ -118,7 +118,7 @@ Current progress:
 Installer-first V1 is published. Recent work clarified deploy readiness, source boundaries, literal approval for writes, and transparent initialization receipts.
 
 Context cost:
-Approx. 900-1,400 words loaded from memory. Kept to command rules, preferences, indexes, project identity, and latest progress.
+Approx. 900-1,400 words loaded from memory. Kept to command rules, substantive preferences, indexes, project identity, and latest progress.
 
 Ready.
 What would you like to work on?
@@ -131,10 +131,11 @@ cat > "$starter" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, `~/.mindlayer/preferences.md`, `~/.mindlayer/index.md`
+- Global: `~/.mindlayer/memory-system.md`, `~/.mindlayer/index.md`
 - Project memory index
 
 Skipped:
+- `~/.mindlayer/preferences.md` because it is starter-only
 - Starter-only project memory files
 - `.mindlayer/local.md`
 - `README.md`, `docs/`, and tool adapters as memory sources
@@ -189,7 +190,7 @@ cat > "$missing_cost" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, command rules and preferences
+- Global: `~/.mindlayer/memory-system.md`, command rules
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources
@@ -212,7 +213,7 @@ cat > "$loaded_docs" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, command rules and preferences
+- Global: `~/.mindlayer/memory-system.md`, command rules
 - README.md and docs/
 
 Skipped:
@@ -239,7 +240,7 @@ cat > "$missing_skip" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, command rules and preferences
+- Global: `~/.mindlayer/memory-system.md`, command rules
 
 Missing:
 - None
@@ -261,7 +262,7 @@ screenshot_regression="$SANDBOX/screenshot-regression.md"
 cat > "$screenshot_regression" <<'EOF'
 Hi! MindLayer context initialized.
 
-Loaded: global index, command rules, global preferences, project index, project identity, current progress.
+Loaded: global index, command rules, project index, project identity, current progress.
 Skipped: README/docs and other memory files not needed yet.
 Missing/starter-only: project identity and progress are placeholders, so I don't have a real project summary yet.
 Current understanding: use MindLayer cautiously, keep memory low-token, and never write memory without approval.

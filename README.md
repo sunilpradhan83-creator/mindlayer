@@ -13,7 +13,7 @@ AI coding agents are useful in the moment, but they often lose the durable conte
 MindLayer helps by:
 
 - separating memory from tool adapters
-- keeping global preferences separate from project facts
+- keeping user-owned global preferences separate from project facts
 - using indexes before loading full memory files
 - requiring explicit approval before memory writes
 - preserving existing files during install
@@ -46,7 +46,7 @@ MindLayer creates two memory layers:
 ./.mindlayer/      project memory for the current repo
 ```
 
-Global memory stores stable cross-project preferences, habits, principles, reusable workflows, anti-patterns, and prompt patterns.
+Global memory stores user-owned cross-project preferences, habits, principles, reusable workflows, anti-patterns, and prompt patterns.
 
 Project memory stores project identity, progress, decisions, context, backlog, risks, and an index.
 
@@ -73,7 +73,7 @@ Prompt sources live in [`prompts/`](prompts/).
 
 ## Effective Use
 
-MindLayer boot should load `~/.mindlayer/memory-system.md` first, then indexes, preferences, project identity, and current progress. `/m-init` remains a legacy/manual refresh alias while hosts migrate to automatic boot.
+MindLayer boot should load `~/.mindlayer/memory-system.md` first, then indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `/m-init` remains a legacy/manual refresh alias while hosts migrate to automatic boot.
 
 Use `/m-retrieve <query>` instead of loading every memory file. Retrieval should start from indexes and load only relevant sections.
 
@@ -86,7 +86,7 @@ Use `/m-status` when memory feels stale, duplicated, oversized, or inconsistent.
 - Do not use `README.md` as memory input.
 - Do not dump raw conversations into memory.
 - Prefer updating existing memory over creating duplicates.
-- Keep global preferences in `~/.mindlayer/`.
+- Keep user-owned global preferences in `~/.mindlayer/preferences.md`.
 - Keep project facts in `.mindlayer/`.
 - Keep tool-specific files thin.
 - Commit shared project memory.
@@ -116,9 +116,15 @@ Ignore:
 
 Do not ignore the entire `.mindlayer/` directory.
 
+## Global Backup
+
+`~/.mindlayer/` is outside project Git by design. It survives deleting or recloning a project, but project commits do not back it up.
+
+Back up `~/.mindlayer/` with your normal dotfiles, encrypted backup, or private personal repository if you want cross-project preferences and global memory preserved across machine loss. Do not store secrets, tokens, raw conversations, or project-specific facts in global preferences.
+
 ## Safety
 
-The installer creates missing files and preserves existing content. Adapter files are updated only inside the MindLayer marker block:
+The installer creates missing files and preserves existing content. It may refresh managed MindLayer system instructions such as `~/.mindlayer/memory-system.md`, while preserving user-owned global preferences. Adapter files are updated only inside the MindLayer marker block:
 
 ```text
 <!-- mindlayer:start -->
@@ -126,7 +132,7 @@ The installer creates missing files and preserves existing content. Adapter file
 <!-- mindlayer:end -->
 ```
 
-The installer does not overwrite memory files, delete files, move files, clean/archive memory, or duplicate global memory into project memory.
+The installer does not overwrite user-owned memory files, delete files, move files, clean/archive memory, or duplicate global memory into project memory.
 
 ## Validation
 

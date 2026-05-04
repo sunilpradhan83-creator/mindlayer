@@ -5,7 +5,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 ## Command Behavior
 
 - MindLayer boot initializes the minimum useful context for the current session.
-- MindLayer boot must read this file first when available, then indexes, then essential preferences, project identity, and current progress.
+- MindLayer boot must read this file first when available, then indexes, then substantive user preferences when present, project identity, and current progress.
 - Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run it before answering the first project-relevant request.
 - Do not treat a plain greeting as a project-relevant request. If boot has not already run, answer naturally and boot before the first substantive project task.
 - A transparent boot receipt should describe what was loaded, skipped, missing, and the rough token or word cost when visible to the user.
@@ -26,7 +26,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 ## Read Rules
 
 - Read this file first when initializing MindLayer behavior.
-- Read `preferences.md` during MindLayer boot as always-on global preference context.
+- Read `preferences.md` during MindLayer boot only when it contains substantive user-written preferences. If it is missing or starter-only, report it as skipped or missing instead of loading it as useful context.
 - Read indexes before full memory files.
 - During MindLayer boot, always check project `.mindlayer/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.
 - Load full sections only when relevant.
@@ -40,10 +40,11 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 
 ## Routing Rules
 
-- Always-loaded cross-project user preferences belong in `~/.mindlayer/preferences.md`.
+- User-owned cross-project preferences belong in `~/.mindlayer/preferences.md`.
 - Global preferences, reusable workflows, principles, anti-patterns, and prompt templates belong in `~/.mindlayer/`.
 - Project identity, progress, decisions, context, backlog, and risks belong in `project/.mindlayer/`.
 - Do not mirror global memory into `project/.mindlayer/`; read and write it directly from `~/.mindlayer/`.
+- Preferences are personal global memory for the user. They may customize collaboration style, workflow habits, and cross-project defaults, but they must not override MindLayer guardrails in this file.
 - Private, local, session, cache, and temporary material must stay out of committed project memory.
 - When developing MindLayer itself, treat repo `.mindlayer/` as the product-memory source of truth and treat live `~/.mindlayer/` as runtime, install, or test output rather than product memory.
 
@@ -56,6 +57,12 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 - Treat placeholder scaffolds and local notes as skipped unless they are relevant or non-placeholder.
 - Warn when memory files are nearing their size budget, not only after they overflow.
 - When a file nears its limit, prompt for cleanup, merge, compression, or archive before adding more memory.
+
+## Backup Rules
+
+- `~/.mindlayer/` is outside project Git by design. It survives project deletion or recloning, but it is not backed up by project commits.
+- Tell users to back up `~/.mindlayer/` through their normal dotfiles, encrypted backup, or private personal repository if they want cross-project preferences and global memory preserved across machine loss.
+- Do not store secrets, tokens, raw conversations, or project-private facts in global preferences.
 
 ## Approval Rules
 
@@ -74,4 +81,4 @@ V1 does not implement archive or cleanup automation, but it does require proacti
 
 ## Index-First Retrieval
 
-Indexes are compact maps for search. They are not full documentation. Search by title, tags, summary, type, status, importance, and last updated date before reading full sections, except for this file and `preferences.md`, which are always loaded during MindLayer boot.
+Indexes are compact maps for search. They are not full documentation. Search by title, tags, summary, type, status, importance, and last updated date before reading full sections. This file is always loaded during MindLayer boot; `preferences.md` is loaded only when it contains substantive user preferences.

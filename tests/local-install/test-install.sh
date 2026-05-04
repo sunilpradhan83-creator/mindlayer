@@ -138,6 +138,8 @@ check assert_file_exists "$fresh_home/.mindlayer/preferences.md"
 check assert_not_exists "$fresh_home/.mindlayer/memory.md"
 check assert_contains "$fresh_home/.mindlayer/index.md" "file: memory-system.md"
 check assert_contains "$fresh_home/.mindlayer/index.md" "file: preferences.md"
+check assert_contains "$fresh_home/.mindlayer/preferences.md" "No user preferences saved yet."
+check assert_contains "$fresh_home/.mindlayer/preferences.md" "Back up"
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" 'Do not use `README.md` or `docs/` as memory input'
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "not durable memory stores or retrieval sources"
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "Go outside MindLayer memory only when necessary"
@@ -191,14 +193,14 @@ Use this file as the compact search map for ~/.mindlayer/.
 ## Entries
 
 - id: ml-global-20260502-001
-  title: MindLayer global preferences starter
+  title: User global preferences
   file: preferences.md
-  section: Starter Preferences
+  section: User Preferences
   scope: global
   type: preference
   tags: [mindlayer, preferences]
-  summary: Starter always-loaded preferences for safe, approval-based memory use.
-  importance: high
+  summary: User-owned cross-project preferences; load only when the section contains substantive user-written preferences.
+  importance: medium
   status: active
   last_updated: 2026-05-02
 EOF
@@ -206,9 +208,15 @@ EOF
 cat > "$existing_home/.mindlayer/preferences.md" <<'EOF'
 # Global Preferences
 
-## Starter Preferences
+## User Preferences
 
 Custom global preference sentinel.
+EOF
+
+cat > "$existing_home/.mindlayer/memory-system.md" <<'EOF'
+# MindLayer Memory System
+
+Old global memory-system sentinel.
 EOF
 
 cat > "$existing_project/AGENTS.md" <<'EOF'
@@ -254,6 +262,8 @@ else
 fi
 
 check assert_contains "$existing_home/.mindlayer/preferences.md" "Custom global preference sentinel."
+check assert_contains "$existing_home/.mindlayer/memory-system.md" "MindLayer boot initializes the minimum useful context"
+check assert_contains "$existing_home/.mindlayer/memory-system.md" "first project-relevant request"
 check assert_contains "$existing_project/.mindlayer/project.md" "Custom project memory sentinel."
 check assert_contains "$existing_project/AGENTS.md" "Do not remove this project-specific instruction."
 check assert_contains "$existing_project/CLAUDE.md" "Keep this Claude sentinel."
@@ -271,6 +281,7 @@ check assert_file_exists "$existing_project/.mindlayer/index.md"
 
 scenario "boot contract"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" "preferences.md"
+check assert_contains "$ROOT_DIR/prompts/m-init.md" "starter-only"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$ROOT_DIR/prompts/m-init.md" "blocked memory stores"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" 'Always check project `.mindlayer/project.md`'
