@@ -4,15 +4,15 @@ Stable engineering and product beliefs.
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: template-global-principle
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: principle
 tags: []
 confidence: high
-status: active
-source: manual
+status: template
+source: template
 
 ### Summary
 Short summary.
@@ -24,4 +24,3 @@ Useful details.
 When this principle should influence decisions.
 
 ### Related
-

@@ -4,15 +4,15 @@ Reusable prompt templates.
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: template-global-prompt
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: playbook
 tags: [prompt]
 confidence: high
-status: active
-source: manual
+status: template
+source: template
 
 ### Summary
 Short summary.
@@ -24,4 +24,3 @@ Prompt template and usage notes.
 When this prompt pattern applies.
 
 ### Related
-

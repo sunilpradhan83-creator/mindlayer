@@ -36,7 +36,10 @@ Current phase: installer-first V1 seed published; boot-first memory initializati
 - Completed: commit `e4f4e6c` clarified global preferences as user-owned cross-project memory, made starter-only preferences skipped during boot, added backup guidance for `~/.mindlayer/`, preserved user preferences on reinstall, and refreshed managed `memory-system.md` on reinstall.
 - Completed: local reinstall ran successfully, live `~/.mindlayer/memory-system.md`, `~/.mindlayer/preferences.md`, and `~/.mindlayer/index.md` were inspected, and `tools/test.sh` passed with local install readiness reporting `READY TO DEPLOY` and agent boot contract reporting `BOOT CONTRACT READY`.
 - Completed: opt-in real Codex dogfood harness `tools/dogfood-codex-boot.sh` was added and passed against sandbox-installed MindLayer using fresh `codex exec` sessions; `hi` did not emit a boot receipt, while `what is this project?` did emit one listing `~/.mindlayer/memory-system.md` and starter-only preferences handling.
-- Next step: decide whether to commit and publish the Codex dogfood harness as part of the V1 validation toolkit.
+- Completed: commit `135f9bc` added and published the Codex boot dogfood harness.
+- Completed: commit `28fc9d1` released checkpoint-only MindLayer Handoff guidance, updated shipped global behavior, adapter guidance, `/m-status`, and install tests, then pushed to GitHub.
+- Completed: cleanup removed the broken local `.mindlayer/memory.md` legacy symlink, changed global scaffold entry templates from active duplicate-looking ids to `status: template`, updated installer fallback content, updated live `~/.mindlayer` starter scaffold files, and verified `tools/test.sh` passed.
+- Next step: commit and publish the scaffold cleanup changes.
 
 ### When to use
 Use during MindLayer boot to understand the current project state.

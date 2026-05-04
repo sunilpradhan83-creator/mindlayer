@@ -4,15 +4,15 @@ Mistakes and behaviors to avoid.
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: template-global-anti-pattern
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: anti-pattern
 tags: []
 confidence: high
-status: active
-source: manual
+status: template
+source: template
 
 ### Summary
 Short summary.
@@ -24,4 +24,3 @@ Useful details.
 When this mistake might recur.
 
 ### Related
-

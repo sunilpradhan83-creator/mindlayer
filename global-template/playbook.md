@@ -4,15 +4,15 @@ Reusable workflows and procedures.
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: template-global-playbook
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: playbook
 tags: []
 confidence: high
-status: active
-source: manual
+status: template
+source: template
 
 ### Summary
 Short summary.
@@ -24,4 +24,3 @@ Useful details.
 When this workflow applies.
 
 ### Related
-

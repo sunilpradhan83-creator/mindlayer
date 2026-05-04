@@ -323,15 +323,15 @@ Reusable workflows and procedures.
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: template-global-playbook
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: playbook
 tags: []
 confidence: high
-status: active
-source: manual
+status: template
+source: template
 
 ### Summary
 Short summary.
@@ -350,15 +350,15 @@ Stable engineering and product beliefs.
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: template-global-principle
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: principle
 tags: []
 confidence: high
-status: active
-source: manual
+status: template
+source: template
 
 ### Summary
 Short summary.
@@ -377,15 +377,15 @@ Mistakes and behaviors to avoid.
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: template-global-anti-pattern
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: anti-pattern
 tags: []
 confidence: high
-status: active
-source: manual
+status: template
+source: template
 
 ### Summary
 Short summary.
@@ -404,15 +404,15 @@ Reusable prompt templates.
 
 ## Entry Template
 
-id: ml-YYYYMMDD-001
+id: template-global-prompt
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
 type: playbook
 tags: [prompt]
 confidence: high
-status: active
-source: manual
+status: template
+source: template
 
 ### Summary
 Short summary.
