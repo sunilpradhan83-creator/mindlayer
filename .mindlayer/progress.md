@@ -44,7 +44,8 @@ Current phase: installer-first V1 seed published; automatic initialization and s
 - Completed: `bash tests/agent-behavior/test-boot.sh`, `bash tools/lint.sh`, and `bash tools/test.sh` passed with `READY TO DEPLOY` and `BOOT CONTRACT READY`.
 - Completed: Session Continuity Tracking now has adapter, global memory-system, `/m-save`, and `/m-status` guidance for pending memory-write approvals, blockers, unfinished work, and next useful actions without noisy routine handoffs.
 - Completed: `tests/agent-behavior/test-continuity.sh` was added and wired into `tools/test.sh`; the full suite passed with `READY TO DEPLOY`, `BOOT CONTRACT READY`, and `CONTINUITY CONTRACT READY`.
-- Next step: review remaining V1 deploy readiness or commit and publish the automatic initialization plus session continuity changes.
+- Completed: commit `c861c3f` published automatic initialization and session continuity contracts to `main` and `origin/main`.
+- Next step: run a final V1 deploy-readiness review or choose the next active backlog item.
 
 ### When to use
 Use during MindLayer boot to understand the current project state.
