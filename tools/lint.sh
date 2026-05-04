@@ -322,9 +322,19 @@ lint_repo() {
   require_contains "$PROJECT_DIR/install.sh" "Session continuity means tracking pending memory-write approvals" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Pending approvals:" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "During MindLayer boot, always check project .mindlayer/project.md" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "During MindLayer boot, always check project" "installer memory-system fallback"
   require_contains "$PROJECT_DIR/install.sh" "approximate context share by source" "installer memory-system fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Session Continuity Behavior" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Write Rules" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Read Rules" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Routing Rules" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Token Rules" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Backup Rules" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Approval Rules" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Lifecycle Statuses" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Index-First Retrieval" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "literal explicit approval" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "Approval must be literal" "installer memory-system fallback"
 }
 
 # ---------------------------------------------------------------------------

@@ -9,7 +9,7 @@ Initialize this AI session with minimal useful MindLayer memory context and repo
 1. Read `~/.mindlayer/memory-system.md` first if available. If missing, use project `.mindlayer/` files and note the missing global system file.
 2. Read `~/.mindlayer/index.md` if available and confirm it references `file: memory-system.md`. If the file exists but is unindexed, report the index issue.
 3. Read project `.mindlayer/index.md` if available.
-4. Check `~/.mindlayer/preferences.md` if available. Load it only when it contains substantive user-written preferences; if it is missing or starter-only, report it as missing or skipped.
+4. Check `~/.mindlayer/preferences.md` if available. Load it only when it contains substantive user-written preferences; if it is missing or starter-only (the file exists but contains only MindLayer scaffold content with no real user data), report it as missing or skipped.
 5. Always check project `.mindlayer/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
 6. If `.mindlayer/project.md` contains only scaffold or placeholder content, do not treat it as substantive memory; report that project identity is missing or still starter-only.
 7. If `.mindlayer/project.md` contains substantive project identity, load the relevant identity section and summarize it.
@@ -58,4 +58,4 @@ When exact host usage is unavailable, estimate tokens as words multiplied by rou
 
 MindLayer-aware adapters should trigger this procedure at session start or tool preflight when possible. If a host cannot run preflight hooks, the adapter should run it before the first project-relevant request. A plain greeting is not project-relevant; answer naturally and defer boot until the user asks about the project or asks the agent to work in it.
 
-`/m-init` remains available as a manual refresh or explicit receipt command, but users should not need it for ordinary project work.
+`/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt, but users should not need it for ordinary project work.

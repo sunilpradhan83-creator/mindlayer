@@ -33,9 +33,9 @@ The installer creates missing memory files and directories. It may refresh manag
 
 ## Session Boot
 
-After install, MindLayer-aware adapters boot minimal context automatically when the host supports session preflight, or before the first project-relevant request as a fallback.
+After install, MindLayer-aware adapters boot minimal context automatically when the host supports tool preflight, or before the first project-relevant request as a fallback.
 
-Boot reads `~/.mindlayer/memory-system.md` first when available, then indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `/m-init` remains a legacy/manual refresh alias while hosts migrate to automatic boot.
+Boot reads `~/.mindlayer/memory-system.md` first when available, then indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `/m-init` remains a legacy/manual refresh alias for showing or rerunning the boot receipt.
 
 ## Global Backup
 

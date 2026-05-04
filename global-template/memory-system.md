@@ -58,7 +58,7 @@ Use estimated tokens when exact host usage is unavailable. Full context details 
 ## Read Rules
 
 - Read this file first when initializing MindLayer behavior.
-- Read `preferences.md` during MindLayer boot only when it contains substantive user-written preferences. If it is missing or starter-only, report it as skipped or missing instead of loading it as useful context.
+- Read `preferences.md` during MindLayer boot only when it contains substantive user-written preferences. If it is missing or starter-only (the file exists but contains only MindLayer scaffold content with no real user data), report it as skipped or missing instead of loading it as useful context.
 - Read indexes before full memory files.
 - During MindLayer boot, always check project `.mindlayer/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.
 - Load full sections only when relevant.

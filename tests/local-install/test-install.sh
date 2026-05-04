@@ -300,6 +300,32 @@ check assert_file_exists "$existing_home/.mindlayer/index.md"
 check assert_contains "$existing_home/.mindlayer/index.md" "file: memory-system.md"
 check assert_file_exists "$existing_project/.mindlayer/index.md"
 
+scenario "adapter post-block content preserved"
+postblock_home="$SANDBOX/postblock-home"
+postblock_project="$SANDBOX/postblock-project"
+postblock_log="$SANDBOX/postblock-install.log"
+mkdir -p "$postblock_home" "$postblock_project/.github"
+
+cat > "$postblock_project/AGENTS.md" <<'EOF'
+# Agent Notes
+
+<!-- mindlayer:start -->
+Old MindLayer block content.
+<!-- mindlayer:end -->
+
+This content after the block must be preserved.
+EOF
+
+if run_install "$postblock_home" "$postblock_project" "$postblock_log"; then
+  pass "$CURRENT_SCENARIO: installer exits successfully"
+else
+  fail "$CURRENT_SCENARIO: installer exits successfully"
+fi
+
+check assert_contains "$postblock_project/AGENTS.md" "This content after the block must be preserved."
+check assert_count 1 "$postblock_project/AGENTS.md" "<!-- mindlayer:start -->"
+check assert_count 1 "$postblock_project/AGENTS.md" "<!-- mindlayer:end -->"
+
 scenario "boot contract"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" "preferences.md"
 check assert_contains "$ROOT_DIR/prompts/m-init.md" "starter-only"

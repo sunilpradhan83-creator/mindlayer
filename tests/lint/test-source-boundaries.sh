@@ -40,7 +40,7 @@ copy_path "install.sh"
 copy_path "AGENTS.md"
 copy_path "CLAUDE.md"
 
-perl -0pi -e 's/- Do not use `README\.md` or `docs\/` as memory input\.\n//g' "$SANDBOX/project/AGENTS.md"
+sed -i '/^- Do not use `README\.md` or `docs\/` as memory input\.$/d' "$SANDBOX/project/AGENTS.md"
 
 if bash "$SANDBOX/project/tools/lint.sh" --project "$SANDBOX/project" > "$SANDBOX/lint.log" 2>&1; then
   printf "FAIL  expected lint to fail when AGENTS.md source-boundary rule is removed\n"

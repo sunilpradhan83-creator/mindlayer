@@ -8,7 +8,7 @@ id: template-global-prompt
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 scope: global
-type: playbook
+type: prompt
 tags: [prompt]
 confidence: high
 status: template
