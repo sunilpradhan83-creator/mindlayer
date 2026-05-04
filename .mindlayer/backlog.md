@@ -56,26 +56,28 @@ ml-20260430-006
 
 id: ml-20260503-004
 created: 2026-05-03
-updated: 2026-05-03
+updated: 2026-05-04
 scope: project
 type: backlog
 tags: [session-continuity, approval, prompts]
 confidence: high
-status: active
+status: archived
 source: manual
 
 ### Summary
-Add session continuity behavior so agents track pending approvals, unfinished tasks, blockers, and likely next actions.
+Session continuity behavior is implemented so agents track pending approvals, unfinished tasks, blockers, and likely next actions.
 
 ### Details
-MindLayer should help agents surface the next useful move when the user acknowledges, pauses, changes topic, or may have lost the thread, without becoming noisy after every message.
+MindLayer helps agents surface the next useful move when the user acknowledges, pauses, changes topic, or may have lost the thread, without becoming noisy after every message.
 
-When a memory write has been proposed but not approved, agents should keep it visible as pending and remind the user before moving on to unrelated next steps.
+When a memory write has been proposed but not approved, agents keep it visible as pending and remind the user before moving on to unrelated memory work.
 
-This behavior likely belongs in prompts/adapters first, with optional future configuration for quiet, balanced, and proactive modes.
+This behavior is now operationalized in adapter guidance, shipped global memory-system behavior, `/m-save`, `/m-status`, install tests, lint, and the deterministic continuity contract test.
+
+Optional future configuration for quiet, balanced, and proactive continuity modes remains later product exploration rather than V1 scope.
 
 ### When to use
-Use when improving `/m-save`, command prompts, adapter instructions, or product behavior around unfinished work and pending approvals.
+Use for historical context when improving `/m-save`, command prompts, adapter instructions, or product behavior around unfinished work and pending approvals.
 
 ### Related
 ml-20260503-002
@@ -84,26 +86,28 @@ ml-20260503-002
 
 id: ml-20260503-005
 created: 2026-05-03
-updated: 2026-05-03
+updated: 2026-05-04
 scope: project
 type: backlog
 tags: [init, onboarding, token-transparency]
 confidence: high
-status: active
+status: archived
 source: manual
 
 ### Summary
-Move MindLayer toward automatic session initialization with a transparent context receipt instead of requiring users to remember `/m-init`.
+Automatic session initialization is implemented and validated with a transparent context receipt instead of requiring users to remember `/m-init`.
 
 ### Details
-During install, MindLayer should make adapter and prompt instructions available so an AI companion can initialize minimal useful memory on the first interaction in a project.
+MindLayer adapters and prompts now make boot-first behavior available so an AI companion initializes minimal useful memory at session start or tool preflight when supported, or before the first project-relevant request as a fallback.
 
-The first interaction should show a compact MindLayer welcome or context receipt: loaded memory roots, loaded files, skipped files, rough token or word cost, and percentage or share of context by source when available.
+The visible boot receipt contract includes loaded memory roots and files, skipped files, missing files, current understanding, current progress, rough word and estimated token cost, approximate context share by source, and token strategy.
 
-`/m-init` may remain as a manual refresh or current initialization receipt command, but it should not be the required startup path once automatic initialization is reliable.
+`/m-init` remains as a legacy/manual refresh alias, but ordinary project work should not require users to invoke it.
+
+Validated by `bash tests/agent-behavior/test-boot.sh`, `bash tools/lint.sh`, and `bash tools/test.sh` on 2026-05-04.
 
 ### When to use
-Use when changing install behavior, adapters, `/m-init`, onboarding, or token-transparency reporting.
+Use for historical context when changing install behavior, adapters, `/m-init`, onboarding, or token-transparency reporting.
 
 ### Related
 ml-20260503-004

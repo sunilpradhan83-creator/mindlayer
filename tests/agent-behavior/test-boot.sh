@@ -36,6 +36,8 @@ assert_valid_receipt() {
   grep -Fq "Current understanding:" "$file" || return 1
   grep -Fq "Current progress:" "$file" || return 1
   grep -Fq "Context cost:" "$file" || return 1
+  grep -Fq "Context share:" "$file" || return 1
+  grep -Fq "Token strategy:" "$file" || return 1
   grep -Fq "Ready." "$file" || return 1
 
   awk '
@@ -46,7 +48,9 @@ assert_valid_receipt() {
   ' "$file" || return 1
 
   grep -Fq 'README.md`, `docs/`, and tool adapters as memory sources' "$file" || return 1
-  grep -Eq 'Approx\. [0-9][0-9,]*-[0-9][0-9,]* words loaded|Approx\. [0-9][0-9,]* words loaded' "$file" || return 1
+  grep -Eq 'Approx\. [0-9][0-9,]*-[0-9][0-9,]* words loaded( \(~[0-9][0-9,]*-[0-9][0-9,]* est\. tokens\))?|Approx\. [0-9][0-9,]* words loaded( \(~[0-9][0-9,]* est\. tokens\))?' "$file" || return 1
+  grep -Eq 'Global memory: ~[0-9]+%|Global memory: approx\. [0-9]+%' "$file" || return 1
+  grep -Eq 'Project memory: ~[0-9]+%|Project memory: approx\. [0-9]+%' "$file" || return 1
 
   if awk '
     /^Loaded:/ { in_loaded = 1; next }
@@ -118,7 +122,15 @@ Current progress:
 Installer-first V1 is published. Recent work clarified deploy readiness, source boundaries, literal approval for writes, and transparent initialization receipts.
 
 Context cost:
-Approx. 900-1,400 words loaded from memory. Kept to command rules, substantive preferences, indexes, project identity, and latest progress.
+Approx. 900-1,400 words loaded (~1,200-1,900 est. tokens).
+
+Context share:
+- Global memory: ~45%
+- Project memory: ~55%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot only: command rules, substantive preferences, indexes, project identity, and latest progress.
 
 Ready.
 What would you like to work on?
@@ -150,7 +162,15 @@ Current progress:
 No substantive project progress has been saved yet.
 
 Context cost:
-Approx. 300-600 words loaded.
+Approx. 300-600 words loaded (~400-800 est. tokens).
+
+Context share:
+- Global memory: ~70%
+- Project memory: ~30%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot only: command rules, indexes, and starter/scaffold checks.
 
 Ready.
 What would you like to work on?
@@ -181,6 +201,14 @@ No progress loaded.
 Context cost:
 Approx. 400-500 words loaded.
 
+Context share:
+- Global memory: ~50%
+- Project memory: ~50%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot only.
+
 Ready.
 EOF
 check_invalid "$missing_memory_system" "missing memory-system boot file"
@@ -208,6 +236,35 @@ Ready.
 EOF
 check_invalid "$missing_cost" "missing context cost"
 
+missing_context_share="$SANDBOX/missing-context-share.md"
+cat > "$missing_context_share" <<'EOF'
+MindLayer context loaded.
+
+Loaded:
+- Global: `~/.mindlayer/memory-system.md`, command rules
+
+Skipped:
+- `README.md`, `docs/`, and tool adapters as memory sources
+
+Missing:
+- None
+
+Current understanding:
+Project memory is available.
+
+Current progress:
+No progress loaded.
+
+Context cost:
+Approx. 400-500 words loaded.
+
+Token strategy:
+L0 boot only.
+
+Ready.
+EOF
+check_invalid "$missing_context_share" "missing context share"
+
 loaded_docs="$SANDBOX/loaded-docs.md"
 cat > "$loaded_docs" <<'EOF'
 MindLayer context loaded.
@@ -231,6 +288,14 @@ No progress loaded.
 Context cost:
 Approx. 400-500 words loaded.
 
+Context share:
+- Global memory: ~50%
+- Project memory: ~50%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot only.
+
 Ready.
 EOF
 check_invalid "$loaded_docs" "human docs loaded"
@@ -253,6 +318,14 @@ No progress loaded.
 
 Context cost:
 Approx. 400-500 words loaded.
+
+Context share:
+- Global memory: ~50%
+- Project memory: ~50%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot only.
 
 Ready.
 EOF

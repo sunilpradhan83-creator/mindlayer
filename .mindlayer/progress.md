@@ -13,7 +13,7 @@ status: active
 source: manual
 
 ### Summary
-Current phase: installer-first V1 seed published; boot-first memory initialization is implemented and validated.
+Current phase: installer-first V1 seed published; automatic initialization and session continuity contracts are implemented and validated.
 
 ### Details
 - Current phase: installer-first V1 seed project.
@@ -39,7 +39,12 @@ Current phase: installer-first V1 seed published; boot-first memory initializati
 - Completed: commit `135f9bc` added and published the Codex boot dogfood harness.
 - Completed: commit `28fc9d1` released checkpoint-only MindLayer Handoff guidance, updated shipped global behavior, adapter guidance, `/m-status`, and install tests, then pushed to GitHub.
 - Completed: cleanup removed the broken local `.mindlayer/memory.md` legacy symlink, changed global scaffold entry templates from active duplicate-looking ids to `status: template`, updated installer fallback content, updated live `~/.mindlayer` starter scaffold files, and verified `tools/test.sh` passed.
-- Next step: commit and publish the scaffold cleanup changes.
+- Completed: commits `fb9f473` and `c1dc1fa` published scaffold metadata cleanup and docs/example polish.
+- Completed: automatic session initialization now has a stricter visible boot receipt contract with loaded/skipped/missing sources, current understanding/progress, approximate words and estimated tokens, context share by source, and token strategy.
+- Completed: `bash tests/agent-behavior/test-boot.sh`, `bash tools/lint.sh`, and `bash tools/test.sh` passed with `READY TO DEPLOY` and `BOOT CONTRACT READY`.
+- Completed: Session Continuity Tracking now has adapter, global memory-system, `/m-save`, and `/m-status` guidance for pending memory-write approvals, blockers, unfinished work, and next useful actions without noisy routine handoffs.
+- Completed: `tests/agent-behavior/test-continuity.sh` was added and wired into `tools/test.sh`; the full suite passed with `READY TO DEPLOY`, `BOOT CONTRACT READY`, and `CONTINUITY CONTRACT READY`.
+- Next step: review remaining V1 deploy readiness or commit and publish the automatic initialization plus session continuity changes.
 
 ### When to use
 Use during MindLayer boot to understand the current project state.

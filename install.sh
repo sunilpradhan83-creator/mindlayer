@@ -206,6 +206,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 - MindLayer boot must read this file first when available, then indexes, then substantive user preferences when present, project identity, and current progress.
 - Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run it before answering the first project-relevant request.
 - Do not treat a plain greeting as a project-relevant request. If boot has not already run, answer naturally and boot before the first substantive project task.
+- A transparent boot receipt should describe what was loaded, skipped, missing, the rough token or word cost, and approximate context share by source when visible to the user.
 - /m-init is a legacy/manual refresh alias for showing or rerunning the boot receipt while hosts migrate to automatic boot.
 - /m-retrieve <query> searches indexes first and loads only relevant sections.
 - /m-save proposes memory writes from durable learnings and waits for approval.
@@ -232,6 +233,14 @@ Context:
   - Session: ~<N> words, ~<N> est. tokens
 
 Use estimated tokens when exact host usage is unavailable. Full context details such as files loaded, files skipped, files changed, health warnings, and context budgets belong in /m-status, not in routine handoff blocks.
+
+## Session Continuity Behavior
+
+- Track pending memory-write approvals, unfinished tasks, blockers, and the smallest useful next action.
+- If a memory write has been proposed but not approved, keep it visible as pending until the user clearly approves or rejects it.
+- Remind the user about pending memory-write approvals before moving to unrelated memory work.
+- Show continuity state in handoff, status, pause, block, recovery, or explicit next-step responses; do not show it after every routine command.
+- If there are no pending approvals, blockers, or unfinished work, say None compactly.
 
 ## Rules
 
@@ -689,6 +698,8 @@ MindLayer boot should run at session start or tool preflight when the host suppo
 
 MindLayer Handoff is a checkpoint/status artifact, not running commentary. Show it only at task end, explicit status or next-step requests, pause, block, handoff, or recovery. Do not show it before/after every command or during routine progress updates; use plain concise updates with a proactive next-step cue when useful.
 
+Session continuity means tracking pending memory-write approvals, unfinished tasks, blockers, and the smallest useful next action. If a memory write was proposed but not approved, keep it visible as pending and remind the user before moving to unrelated memory work. If there are no pending approvals or blockers, say `None` rather than adding noise.
+
 Preferred handoff shape:
 
 ```text
@@ -701,6 +712,11 @@ Task: <current concrete work>
 Context:
   - Task: ~<N> words, ~<N> est. tokens
   - Session: ~<N> words, ~<N> est. tokens
+
+Continuity:
+  - Pending approvals: <none | memory write / destination / action>
+  - Blockers: <none | blocker>
+  - Unfinished work: <none | next unresolved task>
 ```
 
 Boot order:
@@ -729,7 +745,15 @@ Current progress:
 ...
 
 Context cost:
-Approx. N words loaded.
+Approx. N words loaded (~N est. tokens).
+
+Context share:
+- Global memory: ~N%
+- Project memory: ~N%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot: command rules, indexes, substantive preferences, project identity, and latest progress only.
 
 Ready.
 What would you like to work on?
@@ -748,6 +772,7 @@ Rules:
 - Do not dump raw conversations into memory.
 - Keep adapters thin; do not store or retrieve durable memory here.
 - Go outside MindLayer memory only when necessary for the task.
+- Track pending approvals, blockers, unfinished work, and next actions without showing handoff after every routine step.
 <!-- mindlayer:end -->'
 
   claude_block='<!-- mindlayer:start -->

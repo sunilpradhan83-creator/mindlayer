@@ -19,3 +19,6 @@ bash "$ROOT_DIR/tests/local-install/test-install.sh"
 
 printf "\n4. Agent boot contract\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-boot.sh"
+
+printf "\n5. Session continuity contract\n"
+bash "$ROOT_DIR/tests/agent-behavior/test-continuity.sh"

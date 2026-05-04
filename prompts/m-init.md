@@ -2,7 +2,7 @@
 
 Initialize this AI session with minimal useful MindLayer memory context and report a transparent context receipt when visible to the user.
 
-`/m-init` is a legacy/manual refresh alias for this boot procedure while hosts migrate to automatic session-start or preflight boot.
+`/m-init` is a legacy/manual refresh alias for this boot procedure. The primary path is automatic session-start or tool-preflight boot when the host supports it, with first project-relevant request boot as the fallback.
 
 ## Procedure
 
@@ -52,6 +52,10 @@ After loading, produce a concise context receipt:
 
 Clearly state what was loaded and skipped. Include rough word counts or token estimates when exact token counts are unavailable.
 
-## Future Direction
+When exact host usage is unavailable, estimate tokens as words multiplied by roughly 1.3 or characters divided by roughly 4. Approximate context share by source can be based on loaded word counts by category; mark it approximate rather than pretending it is model telemetry.
 
-MindLayer should move toward automatic session-start or tool-preflight boot. Until that path is reliable across hosts, `/m-init` remains a legacy/manual way to refresh or show the current boot receipt.
+## Automatic Boot Contract
+
+MindLayer-aware adapters should trigger this procedure at session start or tool preflight when possible. If a host cannot run preflight hooks, the adapter should run it before the first project-relevant request. A plain greeting is not project-relevant; answer naturally and defer boot until the user asks about the project or asks the agent to work in it.
+
+`/m-init` remains available as a manual refresh or explicit receipt command, but users should not need it for ordinary project work.

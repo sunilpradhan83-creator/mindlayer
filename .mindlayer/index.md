@@ -21,7 +21,7 @@
   scope: project
   type: progress
   tags: [v1, installer]
-  summary: V1 seed is validated; boot-first initialization now loads memory-system.md first, treats /m-init as legacy/manual refresh, and passes install plus boot contract tests.
+  summary: V1 seed is validated; automatic initialization and session continuity contracts now pass install, boot, and continuity tests.
   importance: high
   status: active
   last_updated: 2026-05-04
@@ -129,10 +129,10 @@
   scope: project
   type: backlog
   tags: [session-continuity, approval, prompts]
-  summary: Add prompt/adapter behavior for tracking pending approvals, unfinished tasks, blockers, and next actions without noisy over-prompting.
+  summary: Session continuity behavior is implemented for pending approvals, blockers, unfinished work, and next actions without noisy routine handoffs.
   importance: high
-  status: active
-  last_updated: 2026-05-03
+  status: archived
+  last_updated: 2026-05-04
 
 - id: ml-20260503-005
   title: Automatic Session Initialization
@@ -141,10 +141,10 @@
   scope: project
   type: backlog
   tags: [init, onboarding, token-transparency]
-  summary: Move toward first-interaction auto-init with a transparent context receipt for loaded/skipped files and rough token or word cost, keeping `/m-init` as manual refresh.
+  summary: Automatic session initialization is implemented and validated with loaded/skipped/missing sources, context cost/share, token strategy, and `/m-init` as manual refresh.
   importance: high
-  status: active
-  last_updated: 2026-05-03
+  status: archived
+  last_updated: 2026-05-04
 
 - id: ml-20260502-001
   title: Deploy Readiness Test Harness

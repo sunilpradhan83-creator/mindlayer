@@ -86,3 +86,4 @@ If a memory write has been proposed but not approved:
 - keep it visible as pending in the next `/m-save` or related response
 - remind the user before moving to unrelated memory work
 - do not treat later acknowledgments as retroactive approval
+- include the pending destination, action, duplicate check, and confidence in status or handoff output when relevant

@@ -51,6 +51,8 @@ MindLayer boot should run at session start or tool preflight when the host suppo
 
 MindLayer Handoff is a checkpoint/status artifact, not running commentary. Show it only at task end, explicit status or next-step requests, pause, block, handoff, or recovery. Do not show it before/after every command or during routine progress updates; use plain concise updates with a proactive next-step cue when useful.
 
+Session continuity means tracking pending memory-write approvals, unfinished tasks, blockers, and the smallest useful next action. If a memory write was proposed but not approved, keep it visible as pending and remind the user before moving to unrelated memory work. If there are no pending approvals or blockers, say `None` rather than adding noise.
+
 Preferred handoff shape:
 
 ```text
@@ -63,6 +65,11 @@ Task: <current concrete work>
 Context:
   - Task: ~<N> words, ~<N> est. tokens
   - Session: ~<N> words, ~<N> est. tokens
+
+Continuity:
+  - Pending approvals: <none | memory write / destination / action>
+  - Blockers: <none | blocker>
+  - Unfinished work: <none | next unresolved task>
 ```
 
 Boot order:
@@ -91,7 +98,15 @@ Current progress:
 ...
 
 Context cost:
-Approx. N words loaded.
+Approx. N words loaded (~N est. tokens).
+
+Context share:
+- Global memory: ~N%
+- Project memory: ~N%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot: command rules, indexes, substantive preferences, project identity, and latest progress only.
 
 Ready.
 What would you like to work on?
@@ -110,4 +125,5 @@ Rules:
 - Do not dump raw conversations into memory.
 - Keep adapters thin; do not store or retrieve durable memory here.
 - Go outside MindLayer memory only when necessary for the task.
+- Track pending approvals, blockers, unfinished work, and next actions without showing handoff after every routine step.
 <!-- mindlayer:end -->

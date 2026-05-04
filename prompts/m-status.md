@@ -57,6 +57,11 @@ Return:
 - Healthy:
 - Warnings:
 - Conflicts:
+- Continuity:
+  - pending approvals
+  - blockers
+  - unfinished work
+  - next useful action
 - Context:
   - files loaded
   - files skipped
@@ -66,6 +71,8 @@ Return:
   - model tokens, when the host exposes exact usage
 - Suggested fixes:
 - Approval needed:
+
+If there is a pending memory-write proposal, include its destination and action. Do not imply it is approved. If nothing is pending, say `None`.
 
 When a file is near or over its limit, suggested fixes should prefer:
 

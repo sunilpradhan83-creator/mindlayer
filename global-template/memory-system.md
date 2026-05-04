@@ -8,7 +8,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 - MindLayer boot must read this file first when available, then indexes, then substantive user preferences when present, project identity, and current progress.
 - Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run it before answering the first project-relevant request.
 - Do not treat a plain greeting as a project-relevant request. If boot has not already run, answer naturally and boot before the first substantive project task.
-- A transparent boot receipt should describe what was loaded, skipped, missing, and the rough token or word cost when visible to the user.
+- A transparent boot receipt should describe what was loaded, skipped, missing, the rough token or word cost, and approximate context share by source when visible to the user.
 - `/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt while hosts migrate to automatic boot.
 - `/m-retrieve <query>` searches indexes first and loads only relevant sections.
 - `/m-save` proposes memory writes from durable learnings and waits for approval.
@@ -37,6 +37,14 @@ Context:
 ```
 
 Use estimated tokens when exact host usage is unavailable. Full context details such as files loaded, files skipped, files changed, health warnings, and context budgets belong in `/m-status`, not in routine handoff blocks.
+
+## Session Continuity Behavior
+
+- Track pending memory-write approvals, unfinished tasks, blockers, and the smallest useful next action.
+- If a memory write has been proposed but not approved, keep it visible as pending until the user clearly approves or rejects it.
+- Remind the user about pending memory-write approvals before moving to unrelated memory work.
+- Show continuity state in handoff, status, pause, block, recovery, or explicit next-step responses; do not show it after every routine command.
+- If there are no pending approvals, blockers, or unfinished work, say `None` compactly.
 
 ## Write Rules
 

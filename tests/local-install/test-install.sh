@@ -155,9 +155,12 @@ check assert_contains "$fresh_home/.mindlayer/memory-system.md" "Go outside Mind
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" 'always check project `.mindlayer/project.md`'
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "Read this file first when initializing MindLayer behavior"
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "first project-relevant request"
+check assert_contains "$fresh_home/.mindlayer/memory-system.md" "approximate context share by source"
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "## Handoff Behavior"
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "checkpoint/status artifact"
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "not in routine handoff blocks"
+check assert_contains "$fresh_home/.mindlayer/memory-system.md" "## Session Continuity Behavior"
+check assert_contains "$fresh_home/.mindlayer/memory-system.md" "pending memory-write approvals"
 check assert_index_sections_exist "$fresh_home/.mindlayer"
 
 for file in project.md progress.md decisions.md context.md backlog.md risks.md index.md local.md; do
@@ -179,8 +182,12 @@ check assert_contains "$fresh_project/AGENTS.md" "Keep adapters thin; do not sto
 check assert_contains "$fresh_project/AGENTS.md" 'Read `~/.mindlayer/memory-system.md` first'
 check assert_contains "$fresh_project/AGENTS.md" "first project-relevant request"
 check assert_contains "$fresh_project/AGENTS.md" "MindLayer Handoff is a checkpoint/status artifact"
+check assert_contains "$fresh_project/AGENTS.md" "Session continuity means tracking pending memory-write approvals"
 check assert_contains "$fresh_project/AGENTS.md" "Preferred handoff shape"
+check assert_contains "$fresh_project/AGENTS.md" "Pending approvals:"
 check assert_contains "$fresh_project/AGENTS.md" "Use this exact boot receipt format"
+check assert_contains "$fresh_project/AGENTS.md" "Context share:"
+check assert_contains "$fresh_project/AGENTS.md" "Token strategy:"
 check assert_contains "$fresh_project/CLAUDE.md" '`README.md` and `docs/` are human documentation'
 check assert_contains "$fresh_project/CLAUDE.md" "Do not duplicate memory into"
 check assert_contains "$fresh_project/CLAUDE.md" "automatic MindLayer boot"

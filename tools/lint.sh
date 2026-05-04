@@ -274,6 +274,10 @@ lint_repo() {
   require_contains "$PROJECT_DIR/AGENTS.md" 'Read `~/.mindlayer/memory-system.md` first' "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "first project-relevant request" "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Use this exact boot receipt format" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "Context share:" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "Token strategy:" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "Session continuity means tracking pending memory-write approvals" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "Pending approvals:" "AGENTS.md"
 
   require_contains "$PROJECT_DIR/CLAUDE.md" '`README.md` and `docs/` are human documentation' "CLAUDE.md"
   require_contains "$PROJECT_DIR/CLAUDE.md" "Do not duplicate memory into" "CLAUDE.md"
@@ -292,6 +296,11 @@ lint_repo() {
   require_contains "$PROJECT_DIR/prompts/m-init.md" 'Always check project `.mindlayer/project.md`' "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "low importance or starter-like" "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "Project identity is a bootstrap exception" "/m-init prompt"
+  require_contains "$PROJECT_DIR/prompts/m-init.md" "Automatic Boot Contract" "/m-init prompt"
+  require_contains "$PROJECT_DIR/prompts/m-init.md" "Approximate context share by source" "/m-init prompt"
+  require_contains "$PROJECT_DIR/prompts/m-save.md" "pending destination, action, duplicate check, and confidence" "/m-save prompt"
+  require_contains "$PROJECT_DIR/prompts/m-status.md" "pending approvals" "/m-status prompt"
+  require_contains "$PROJECT_DIR/prompts/m-status.md" "next useful action" "/m-status prompt"
 
   require_contains "$PROJECT_DIR/global-template/memory-system.md" 'Do not use `README.md` or `docs/` as memory input' "global memory-system template"
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "not durable memory stores or retrieval sources" "global memory-system template"
@@ -299,14 +308,23 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/memory-system.md" 'always check project `.mindlayer/project.md`' "global memory-system template"
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "Read this file first when initializing MindLayer behavior" "global memory-system template"
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "first project-relevant request" "global memory-system template"
+  require_contains "$PROJECT_DIR/global-template/memory-system.md" "approximate context share by source" "global memory-system template"
+  require_contains "$PROJECT_DIR/global-template/memory-system.md" "## Session Continuity Behavior" "global memory-system template"
+  require_contains "$PROJECT_DIR/global-template/memory-system.md" "pending memory-write approvals" "global memory-system template"
 
   require_contains "$PROJECT_DIR/install.sh" 'Do not use `README.md` or `docs/` as memory input.' "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Keep adapters thin; do not store or retrieve durable memory here." "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" 'Read `~/.mindlayer/memory-system.md` first' "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "first project-relevant request" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Use this exact boot receipt format" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "Context share:" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "Token strategy:" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "Session continuity means tracking pending memory-write approvals" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "Pending approvals:" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer memory-system fallback"
   require_contains "$PROJECT_DIR/install.sh" "During MindLayer boot, always check project .mindlayer/project.md" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "approximate context share by source" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Session Continuity Behavior" "installer memory-system fallback"
 }
 
 # ---------------------------------------------------------------------------
