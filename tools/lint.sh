@@ -254,7 +254,7 @@ lint_repo() {
     for path in ".mindlayer/local.md" ".mindlayer/private/" ".mindlayer/sessions/" ".mindlayer/cache/" ".mindlayer/tmp/"; do
       hit=$(printf "%s\n" "$tracked" | grep -E "^${path}" || true)
       if [ -n "$hit" ]; then
-        warn "[W4] git is tracking '$path' — should be gitignored"
+        warn "[W5] git is tracking '$path' — should be gitignored"
       fi
     done
   fi

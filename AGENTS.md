@@ -38,50 +38,7 @@ Human documentation such as `README.md` and `docs/` explains the tool for people
 - Keep tool-specific files thin. Do not duplicate memory into adapters or retrieve durable context from adapters.
 - Go outside MindLayer memory only when necessary for the task.
 
-Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run boot before answering the first project-relevant request. Do not treat a plain greeting as project-relevant. When memory is needed, use `/m-retrieve`. When saving memory, use `/m-save`. For health checks, use `/m-status`. `/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-
-MindLayer Handoff is a checkpoint/status artifact, not running commentary. Show it only at task end, explicit status or next-step requests, pause, block, handoff, or recovery. Do not show it before/after every command or during routine progress updates; use plain concise updates with a proactive next-step cue when useful.
-
-Preferred handoff shape:
-
-```text
-Backlog item: <larger durable goal>
-Task: <current concrete work>
-  - Last result: <what just happened>
-  - Next step: <smallest useful action>
-  - Status: active | blocked | paused | completed
-
-Context:
-  - Task: ~<N> words, ~<N> est. tokens
-  - Session: ~<N> words, ~<N> est. tokens
-```
-
-Use this exact boot receipt format when the boot is visible to the user:
-
-```text
-MindLayer context loaded.
-
-Loaded:
-- ...
-
-Skipped:
-- ...
-
-Missing:
-- ...
-
-Current understanding:
-...
-
-Current progress:
-...
-
-Context cost:
-Approx. N words loaded.
-
-Ready.
-What would you like to work on?
-```
+Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run boot before answering the first project-relevant request. Do not treat a plain greeting as project-relevant. Use the managed MindLayer block below for boot order, handoff behavior, and command details.
 
 
 <!-- mindlayer:start -->

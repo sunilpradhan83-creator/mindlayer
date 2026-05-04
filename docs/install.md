@@ -5,7 +5,7 @@ MindLayer installs markdown memory files and thin tool adapters.
 Remote install:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/<USER>/mindlayer/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/sunilpradhan83-creator/mindlayer/main/install.sh | bash
 ```
 
 Local install:
@@ -55,6 +55,15 @@ This runs:
 
 - `tools/lint.sh` for project memory and adapter invariants.
 - `tests/local-install/test-install.sh` for sandboxed fresh-project and existing-project installer checks.
+- `tests/agent-behavior/test-boot.sh` for boot receipt contract checks.
+
+For an opt-in real Codex CLI dogfood check, run:
+
+```sh
+tools/dogfood-codex-boot.sh
+```
+
+This uses real `codex exec` sessions, so it depends on local Codex auth, model availability, and network access.
 
 The readiness test overrides `HOME` inside temporary directories, so it does not write to the user's real `~/.mindlayer/`.
 

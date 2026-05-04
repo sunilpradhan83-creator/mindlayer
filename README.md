@@ -142,7 +142,15 @@ Run the local validation suite before release or deploy:
 tools/test.sh
 ```
 
-It runs memory/adapters linting and a sandboxed install readiness test for fresh and existing projects.
+It runs memory/adapters linting, sandboxed install readiness tests for fresh and existing projects, and boot receipt contract tests.
+
+For an opt-in real Codex CLI dogfood check:
+
+```sh
+tools/dogfood-codex-boot.sh
+```
+
+This depends on local Codex auth, model availability, and network access.
 
 ## Learn More
 
