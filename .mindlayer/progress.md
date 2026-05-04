@@ -33,7 +33,8 @@ Current phase: installer-first V1 seed published; boot-first memory initializati
 - Completed: agent behavior tests now reject boot receipts that omit `~/.mindlayer/memory-system.md` from `Loaded:`.
 - Completed: full `tools/test.sh` suite passed with install readiness and boot contract validation.
 - Completed: manual command dogfooding confirmed `/m-init` works as a legacy/manual refresh alias and `/m-save` proposes memory writes without writing automatically.
-- Next step: test the same boot flow in a genuinely fresh agent session, starting with a plain greeting and then a project-relevant request.
+- Completed: commit `e4f4e6c` clarified global preferences as user-owned cross-project memory, made starter-only preferences skipped during boot, added backup guidance for `~/.mindlayer/`, preserved user preferences on reinstall, and refreshed managed `memory-system.md` on reinstall.
+- Next step: reinstall locally, inspect live `~/.mindlayer/memory-system.md` and `~/.mindlayer/preferences.md`, then start a fresh session to verify greeting/no-boot and project-question/boot behavior.
 
 ### When to use
 Use during MindLayer boot to understand the current project state.
