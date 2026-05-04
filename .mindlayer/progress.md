@@ -34,7 +34,9 @@ Current phase: installer-first V1 seed published; boot-first memory initializati
 - Completed: full `tools/test.sh` suite passed with install readiness and boot contract validation.
 - Completed: manual command dogfooding confirmed `/m-init` works as a legacy/manual refresh alias and `/m-save` proposes memory writes without writing automatically.
 - Completed: commit `e4f4e6c` clarified global preferences as user-owned cross-project memory, made starter-only preferences skipped during boot, added backup guidance for `~/.mindlayer/`, preserved user preferences on reinstall, and refreshed managed `memory-system.md` on reinstall.
-- Next step: reinstall locally, inspect live `~/.mindlayer/memory-system.md` and `~/.mindlayer/preferences.md`, then start a fresh session to verify greeting/no-boot and project-question/boot behavior.
+- Completed: local reinstall ran successfully, live `~/.mindlayer/memory-system.md`, `~/.mindlayer/preferences.md`, and `~/.mindlayer/index.md` were inspected, and `tools/test.sh` passed with local install readiness reporting `READY TO DEPLOY` and agent boot contract reporting `BOOT CONTRACT READY`.
+- Completed: opt-in real Codex dogfood harness `tools/dogfood-codex-boot.sh` was added and passed against sandbox-installed MindLayer using fresh `codex exec` sessions; `hi` did not emit a boot receipt, while `what is this project?` did emit one listing `~/.mindlayer/memory-system.md` and starter-only preferences handling.
+- Next step: decide whether to commit and publish the Codex dogfood harness as part of the V1 validation toolkit.
 
 ### When to use
 Use during MindLayer boot to understand the current project state.
