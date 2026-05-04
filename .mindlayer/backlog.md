@@ -32,22 +32,29 @@ ml-20260430-003
 
 id: ml-20260502-001
 created: 2026-05-02
-updated: 2026-05-02
+updated: 2026-05-04
 scope: project
 type: backlog
 tags: [testing, installer, deploy-readiness]
 confidence: high
-status: active
+status: archived
 source: manual
 
 ### Summary
-Add a sandboxed local readiness test suite that validates whether MindLayer is ready to deploy.
+Deploy readiness harness is implemented and passing as the maintained V1 deploy gate.
 
 ### Details
-The suite should install MindLayer into both fresh and existing projects, exercise important installer and memory-contract edge cases, and report a clear deploy verdict. It should evolve with future feature changes and commits so it becomes a maintained deploy gate rather than a one-off installer check.
+The suite installs MindLayer into fresh and existing projects, exercises installer and memory-contract edge cases, and reports clear deploy verdicts.
+
+Validated on 2026-05-04 by `bash tools/test.sh`:
+- Local install readiness: `READY TO DEPLOY`.
+- Agent boot contract: `BOOT CONTRACT READY`.
+- Session continuity contract: `CONTINUITY CONTRACT READY`.
+
+The harness should continue to evolve with future feature changes and commits as the maintained deploy gate.
 
 ### When to use
-Use when planning release validation, installer changes, or test coverage for new MindLayer features.
+Use for historical context when changing release validation, installer behavior, or test coverage for new MindLayer features.
 
 ### Related
 ml-20260430-006

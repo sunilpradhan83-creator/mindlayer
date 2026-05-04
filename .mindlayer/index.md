@@ -153,7 +153,7 @@
   scope: project
   type: backlog
   tags: [testing, installer, deploy-readiness]
-  summary: Add a sandboxed local readiness test suite that validates fresh and existing installs, edge cases, memory contracts, and deploy readiness.
+  summary: Deploy readiness harness is implemented and passing as the maintained V1 deploy gate for fresh/existing installs and memory contracts.
   importance: high
-  status: active
-  last_updated: 2026-05-02
+  status: archived
+  last_updated: 2026-05-04
