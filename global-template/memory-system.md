@@ -31,7 +31,7 @@ Token Burned:
   - Last turn: ~N words, ~N est. tokens
   - Session: ~N words, ~N est. tokens
 
-Next Step: <smallest useful action>
+<small>Next Step: <smallest useful action></small>
 --------------------------------------------------------------
 ```
 
