@@ -70,9 +70,21 @@
   type: decision
   tags: [session-continuity, handoff, status, ux]
   summary: MindLayer Handoff is a checkpoint/status artifact shown at task end, status requests, pause/block/handoff, or recovery — not after every command.
+  importance: low
+  status: deprecated
+  last_updated: 2026-05-05
+
+- id: ml-20260505-005
+  title: Token Burned Per-Turn Status Block
+  file: decisions.md
+  section: Token Burned Per-Turn Status Block
+  scope: project
+  type: decision
+  tags: [session-continuity, per-turn, next-step, token-tracking, handoff, goal-hierarchy]
+  summary: Handoff deprecated. Every agent turn ends with Token Burned block. Next Step navigates goal hierarchy (task → backlog → roadmap → brainstorm). Backlog-empty triggers proactive roadmap phase pull proposal.
   importance: high
   status: active
-  last_updated: 2026-05-04
+  last_updated: 2026-05-05
 
 - id: ml-20260430-004
   title: Product Design Philosophy
@@ -82,6 +94,18 @@
   type: context
   tags: [design, tokens, memory-quality, writing]
   summary: Token efficiency is the primary constraint; memory is curation not a chat dump; scaffold files must not be loaded as real memory.
+  importance: high
+  status: active
+  last_updated: 2026-05-05
+
+- id: ml-20260505-004
+  title: Goal Hierarchy and Flow
+  file: context.md
+  section: Goal Hierarchy and Flow
+  scope: project
+  type: context
+  tags: [goal-hierarchy, roadmap, backlog, next-step, flow, token-burned]
+  summary: Three-level goal hierarchy (roadmap → backlog → sessions) with Mermaid flow diagram and Next Step prediction rules. Defines backlog-empty and roadmap-complete behaviors.
   importance: high
   status: active
   last_updated: 2026-05-05

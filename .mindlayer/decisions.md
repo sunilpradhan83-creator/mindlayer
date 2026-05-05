@@ -137,3 +137,50 @@ Use when designing session continuity, status reporting, adapter guidance, `/m-s
 ### Related
 ml-20260503-004
 
+## Token Burned Per-Turn Status Block
+
+id: ml-20260505-005
+created: 2026-05-05
+updated: 2026-05-05
+scope: project
+type: decision
+tags: [session-continuity, per-turn, next-step, token-tracking, handoff, goal-hierarchy]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Handoff is deprecated. Every agent turn ends with a Token Burned block. Next Step prediction navigates a defined goal hierarchy to always surface a useful next action.
+
+### Details
+Every agent turn ends with:
+
+```text
+-------------------------------------------------------------
+Token Burned:
+  - Last turn: ~N words, ~N est. tokens
+  - Session: ~N words, ~N est. tokens
+
+Next Step: <smallest useful action>
+--------------------------------------------------------------
+```
+
+Next Step prediction hierarchy (never blank):
+1. Active task → next action within task
+2. Task complete → next backlog item
+3. Backlog empty → next roadmap phase (surface pull proposal)
+4. Roadmap complete → propose brainstorming next major version with user
+
+When backlog empties after task completion, the agent proactively surfaces a roadmap phase pull proposal. Human approves → agent decomposes phase into backlog items and proposes each for approval.
+
+When roadmap is complete, agent proposes a brainstorming session to plan the next major version.
+
+### When to use
+Use when implementing per-turn status behavior, Next Step prediction, backlog-to-roadmap navigation, and goal hierarchy.
+
+### Related
+ml-20260504-001
+ml-20260505-003
+ml-20260430-005
+ml-20260505-004
+

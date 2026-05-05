@@ -19,34 +19,44 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 
 ## Handoff Behavior
 
-MindLayer Handoff is a checkpoint/status artifact, not a running commentary format.
+Deprecated. The Per-Turn Status Block (Token Burned) replaces Handoff as the ongoing status surface. If Handoff is explicitly requested, Next Step prediction must still be included using the hierarchy defined in Per-Turn Status Block.
 
-Show a structured handoff only at task end, when the user explicitly asks for status or next steps, when work is paused, blocked, or handed off, and after crash or session recovery.
+## Per-Turn Status Block
 
-Do not show it before every command, after every command, during routine progress updates, while exploring files, while tests are still running, or for every small subtask. During normal conversation or active execution, keep the user oriented with plain concise text and a proactive next-step cue when useful.
-
-Preferred compact handoff shape:
+Append a status block at the end of every agent turn as the last output.
 
 ```text
-Backlog item: <larger durable goal>
-Task: <current concrete work>
-  - Last result: <what just happened>
-  - Next step: <smallest useful action>
-  - Status: active | blocked | paused | completed
+-------------------------------------------------------------
+Token Burned:
+  - Last turn: ~N words, ~N est. tokens
+  - Session: ~N words, ~N est. tokens
 
-Context:
-  - Task: ~<N> words, ~<N> est. tokens
-  - Session: ~<N> words, ~<N> est. tokens
+Next Step: <smallest useful action>
+--------------------------------------------------------------
 ```
 
-Use estimated tokens when exact host usage is unavailable. Full context details such as files loaded, files skipped, files changed, health warnings, and context budgets belong in `/m-status`, not in routine handoff blocks.
+Use words × 1.3 or characters ÷ 4 to estimate tokens when exact counts are unavailable. Mark as approximate.
+
+**Next Step prediction hierarchy** — always predict something, never leave blank:
+1. Active task in progress → next action within the current task
+2. Task just completed → next item in backlog
+3. Backlog empty → next roadmap phase (surface pull proposal)
+4. Roadmap complete → propose brainstorming next major version with the user
+
+**Backlog-empty detection** — when a task completes and the backlog is empty, append before the Token Burned block:
+
+```text
+Backlog complete — next phase: <roadmap phase name and summary>. Say 'pull next phase' to populate backlog.
+```
+
+When the user says 'pull next phase', decompose the roadmap phase into backlog items and propose each for approval before writing.
 
 ## Session Continuity Behavior
 
 - Track pending memory-write approvals, unfinished tasks, blockers, and the smallest useful next action.
 - If a memory write has been proposed but not approved, keep it visible as pending until the user clearly approves or rejects it.
 - Remind the user about pending memory-write approvals before moving to unrelated memory work.
-- Show continuity state in handoff, status, pause, block, recovery, or explicit next-step responses; do not show it after every routine command.
+- Continuity state (pending approvals, blockers, unfinished tasks) is surfaced in the per-turn Token Burned block via Next Step prediction. Show explicit continuation context in status, pause, block, and recovery responses.
 - If there are no pending approvals, blockers, or unfinished work, say `None` compactly.
 - MindLayer boot is intentionally cheap. When the user asks about session or token management, recommend starting a new session at each task boundary rather than compacting mid-session. Compacting carries forward session history at a token cost on every subsequent message; a new session boots from durable memory with zero history overhead.
 - When a user installs MindLayer on an existing project with rich context in README, docs, or other files, offer to help populate `.mindlayer/` files using `/m-save`. Propose entries for approval — do not auto-populate without explicit approval.
@@ -114,6 +124,7 @@ At the end of every turn, before completing the response:
 - Check whether the turn produced anything durable worth saving. If yes, surface a memory candidate immediately — do not wait for the next turn or session end.
 - Check whether the current task context suggests relevant memory that has not yet been loaded. If yes, suggest a retrieval query.
 - Estimate session context weight. If heavy or critical, surface a compact session warning.
+- Check whether the current task just completed and the backlog is now empty. If yes, surface a roadmap phase pull proposal (see Per-Turn Status Block).
 
 Surface at most one of each per turn. Do not interrupt the main response — append after the primary answer.
 
