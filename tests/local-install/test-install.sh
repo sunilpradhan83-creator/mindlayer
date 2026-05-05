@@ -155,10 +155,6 @@ for file in project.md progress.md decisions.md context.md backlog.md risks.md i
   check assert_file_exists "$fresh_project/.mindlayer/$file"
 done
 
-check assert_dir_exists "$fresh_project/.mindlayer/private"
-check assert_dir_exists "$fresh_project/.mindlayer/sessions"
-check assert_dir_exists "$fresh_project/.mindlayer/cache"
-check assert_dir_exists "$fresh_project/.mindlayer/tmp"
 check assert_file_exists "$fresh_project/AGENTS.md"
 check assert_file_exists "$fresh_project/CLAUDE.md"
 check assert_file_exists "$fresh_project/.github/copilot-instructions.md"

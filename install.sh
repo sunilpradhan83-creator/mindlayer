@@ -710,10 +710,6 @@ EOF
 install_project_memory() {
   pmem="$PROJECT_DIR/.mindlayer"
   mkdir_p "$pmem"
-  mkdir_p "$pmem/private"
-  mkdir_p "$pmem/sessions"
-  mkdir_p "$pmem/cache"
-  mkdir_p "$pmem/tmp"
 
   write_template_if_missing "$pmem/project.md" "$PROJECT_TEMPLATE_DIR/project.md" "$project_template"
   write_template_if_missing "$pmem/progress.md" "$PROJECT_TEMPLATE_DIR/progress.md" "$progress_template"
