@@ -39,9 +39,10 @@ Use words × 1.3 or characters ÷ 4 to estimate tokens when exact counts are una
 
 **Next Step prediction hierarchy** — always predict something, never leave blank:
 1. Active task in progress → next action within the current task
-2. Task just completed → next item in backlog
-3. Backlog empty → next roadmap phase (surface pull proposal)
-4. Roadmap complete → propose brainstorming next major version with the user
+2. Task complete + uncommitted changes exist → commit
+3. Task complete + clean working tree → next item in backlog
+4. Backlog empty → next roadmap phase (surface pull proposal)
+5. Roadmap complete → propose brainstorming next major version with the user
 
 **Backlog-empty detection** — when a task completes and the backlog is empty, append before the Token Burned block:
 

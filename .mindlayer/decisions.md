@@ -154,9 +154,10 @@ Next Step: <smallest useful action>
 
 Next Step prediction hierarchy (never blank):
 1. Active task → next action within task
-2. Task complete → next backlog item
-3. Backlog empty → next roadmap phase (surface pull proposal)
-4. Roadmap complete → propose brainstorming next major version with user
+2. Task complete + uncommitted changes → commit
+3. Task complete + clean tree → next backlog item
+4. Backlog empty → next roadmap phase (surface pull proposal)
+5. Roadmap complete → propose brainstorming next major version with user
 
 When backlog empties after task completion, the agent proactively surfaces a roadmap phase pull proposal. Human approves → agent decomposes phase into backlog items and proposes each for approval.
 
