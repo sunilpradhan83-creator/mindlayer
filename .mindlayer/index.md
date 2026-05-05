@@ -129,7 +129,7 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: V2 phase 1 and 2 shipped (proactive behavior, m-session, archive mode). Up next: .mindlayer/ subdirectories. See ROADMAP.md for full vision.
+  summary: V2 complete (phases 1–4). Up next: V3 Memory Quality + Smarter Retrieval (health scoring, memory diff, auto-summarization, ranked retrieval). See ROADMAP.md for full vision.
   importance: medium
   status: active
   last_updated: 2026-05-05
