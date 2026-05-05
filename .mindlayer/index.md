@@ -74,6 +74,18 @@
   status: archived
   last_updated: 2026-05-05
 
+- id: ml-20260505-008
+  title: Pre-Push Gate
+  file: decisions.md
+  section: Pre-Push Gate
+  scope: project
+  type: decision
+  tags: [pre-push, testing, quality-gate, proactive]
+  summary: Before every push, agent appends a one-line test confirmation — 'yes' or 'skip' both proceed immediately.
+  importance: high
+  status: active
+  last_updated: 2026-05-05
+
 - id: ml-20260505-007
   title: Lateral Intent Routing
   file: decisions.md

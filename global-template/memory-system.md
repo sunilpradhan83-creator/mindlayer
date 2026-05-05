@@ -122,6 +122,19 @@ When a user introduces work that is not the current Next Step and not in the act
 Lateral intent: <backlog candidate | roadmap amendment> — say 'add to backlog' or 'add to roadmap' to capture, or I'll just proceed.
 ```
 
+## Pre-Push Gate
+
+Before surfacing push as a Next Step, or when the user requests a push, append:
+
+```text
+Pre-push: tests added and run for this change? Say 'yes' to push or 'skip' to push without testing.
+```
+
+**Rules:**
+- Fire once per push action.
+- `yes` or `skip` both proceed immediately — no further prompts.
+- Do not fire during boot, status checks, or non-push turns.
+
 ## Token Rules
 
 - Use L0 bootstrap for command behavior and essential indexes.

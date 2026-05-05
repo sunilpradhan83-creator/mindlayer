@@ -95,6 +95,33 @@ Use during `/m-save`, memory routing, template updates, prompt changes, or any w
 ### Related
 ml-20260503-001
 
+## Pre-Push Gate
+
+id: ml-20260505-008
+created: 2026-05-05
+updated: 2026-05-05
+scope: project
+type: decision
+tags: [pre-push, testing, quality-gate, proactive]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Before every push, the agent appends a one-line test confirmation. `yes` or `skip` both proceed immediately.
+
+### Details
+- Fires once per push action — before suggesting push as Next Step or when user requests push.
+- Format: `Pre-push: tests added and run for this change? Say 'yes' to push or 'skip' to push without testing.`
+- `yes` = tested and ready. `skip` = escape hatch, no further prompts.
+- Does not fire during boot, status checks, or non-push turns.
+
+### When to use
+Use when implementing or evaluating pre-push quality gate behavior.
+
+### Related
+ml-20260505-005
+
 ## Lateral Intent Routing
 
 id: ml-20260505-007
