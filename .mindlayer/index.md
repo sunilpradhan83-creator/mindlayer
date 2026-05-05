@@ -74,30 +74,6 @@
   status: active
   last_updated: 2026-05-04
 
-- id: ml-20260430-004
-  title: Memory as Intelligence Context
-  file: context.md
-  section: Memory as Intelligence Context
-  scope: project
-  type: context
-  tags: [memory, retrieval, lifecycle]
-  summary: Memory is curation, routing, retrieval, and lifecycle; initialization separates structural presence from semantic value and keeps AI context token-efficient inside MindLayer boundaries.
-  importance: high
-  status: active
-  last_updated: 2026-05-02
-
-- id: ml-20260503-003
-  title: AI-Efficient Memory Language
-  file: context.md
-  section: AI-Efficient Memory Language
-  scope: project
-  type: context
-  tags: [ai-context, tokens, writing]
-  summary: MindLayer memory should use clear, compact language AI companions can understand with minimal ambiguity and token waste.
-  importance: high
-  status: active
-  last_updated: 2026-05-03
-
 - id: ml-20260430-005
   title: Future Roadmap
   file: backlog.md
@@ -105,20 +81,20 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: CLI, VS Code extension, archive mode, optional vector search, and product exploration are later.
+  summary: CLI, archive mode, and /m-session command are concrete V2 items.
   importance: medium
   status: active
-  last_updated: 2026-04-30
+  last_updated: 2026-05-05
 
-- id: ml-20260430-006
-  title: V1 Trust Risks
-  file: risks.md
-  section: V1 Trust Risks
+- id: ml-20260505-002
+  title: Product Design Principles
+  file: decisions.md
+  section: Product Design Principles
   scope: project
-  type: risk
-  tags: [trust, tokens, installer]
-  summary: Token bloat, scaffold false confidence, wrong routing, installer safety regressions, adapter drift, and undiscoverable memory are key risks.
+  type: decision
+  tags: [design, tokens, memory-quality]
+  summary: Token efficiency is the primary constraint; memory must be curated, indexed, and written for AI retrieval — not a chat dump.
   importance: high
   status: active
-  last_updated: 2026-05-02
+  last_updated: 2026-05-05
 

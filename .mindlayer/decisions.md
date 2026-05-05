@@ -136,3 +136,30 @@ Use when designing session continuity, status reporting, adapter guidance, `/m-s
 
 ### Related
 ml-20260503-004
+
+## Product Design Principles
+
+id: ml-20260505-002
+created: 2026-05-05
+updated: 2026-05-05
+scope: project
+type: decision
+tags: [design, tokens, memory-quality]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Memory is curation, routing, retrieval, and lifecycle — not a chat dump.
+
+### Details
+- Token efficiency is the primary design constraint. Everything an agent needs for durable context lives in MindLayer markdowns.
+- Initialization must distinguish structural presence from semantic value. Scaffold files with no real content must not be loaded as useful context.
+- Memory entries should be short, explicit, and written for AI retrieval with minimal ambiguity and token waste.
+- Do not load scaffold files as real memory; treat them as skipped unless they contain non-placeholder content.
+- Do not duplicate memory across tool-specific adapter files; they drift.
+- A memory file that exists but is not indexed is effectively unavailable. Index entries are the discoverability contract.
+- Installer changes require sandbox test coverage: fresh install, idempotent rerun, file preservation, and adapter block integrity.
+
+### When to use
+Use when evaluating memory quality, writing entries, designing prompts, or deciding whether an implementation detail improves memory or adds noise.
