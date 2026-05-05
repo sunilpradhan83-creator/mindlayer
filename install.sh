@@ -671,13 +671,6 @@ Personal local notes for this project. This file should be ignored by Git.
 
 Do not store shared project decisions here. Use committed project memory files for shared project intelligence."
 
-config_json='{
-  "version": 1,
-  "memory_system": "mindlayer",
-  "global_memory": "~/.mindlayer",
-  "write_requires_approval": true,
-  "index_first_retrieval": true
-}'
 
 install_global() {
   mkdir_p "$GLOBAL_DIR"
@@ -689,7 +682,6 @@ install_global() {
   write_template_if_missing "$GLOBAL_DIR/principles.md" "$GLOBAL_TEMPLATE_DIR/principles.md" "$global_principles"
   write_template_if_missing "$GLOBAL_DIR/anti-patterns.md" "$GLOBAL_TEMPLATE_DIR/anti-patterns.md" "$global_anti_patterns"
   write_template_if_missing "$GLOBAL_DIR/prompts.md" "$GLOBAL_TEMPLATE_DIR/prompts.md" "$global_prompts"
-  write_template_if_missing "$GLOBAL_DIR/config.json" "$GLOBAL_TEMPLATE_DIR/config.json" "$config_json"
 }
 
 ensure_global_memory_system_index() {

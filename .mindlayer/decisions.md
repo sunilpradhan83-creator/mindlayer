@@ -21,7 +21,6 @@ MindLayer V1 uses markdown files, global and project memory layers, thin tool ad
 - Use `AGENTS.md` as the universal adapter.
 - Use `CLAUDE.md` and Copilot instructions as thin adapters.
 - Treat `README.md` as human-facing product documentation only, not AI memory input.
-- Treat `docs/` as human-facing deep-dive documentation only, not default AI memory input.
 - Treat tool adapters such as `AGENTS.md`, `CLAUDE.md`, and Copilot instructions as blocked memory stores: agents should not add durable memory there or use them as retrieval sources beyond the thin MindLayer instructions.
 - AI agents should rely on global `~/.mindlayer/` and project `.mindlayer/` markdown files for initialization, on-demand retrieval, and memory writes.
 - Agents may go outside MindLayer memory only when necessary for the task, and should remain cautious about token usage.

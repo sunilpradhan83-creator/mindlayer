@@ -1,7 +1,0 @@
-{
-  "version": 1,
-  "memory_system": "mindlayer",
-  "global_memory": "~/.mindlayer",
-  "write_requires_approval": true,
-  "index_first_retrieval": true
-}
