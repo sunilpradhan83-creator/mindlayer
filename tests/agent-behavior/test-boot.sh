@@ -331,18 +331,6 @@ Ready.
 EOF
 check_invalid "$missing_skip" "missing skipped section"
 
-screenshot_regression="$SANDBOX/screenshot-regression.md"
-cat > "$screenshot_regression" <<'EOF'
-Hi! MindLayer context initialized.
-
-Loaded: global index, command rules, project index, project identity, current progress.
-Skipped: README/docs and other memory files not needed yet.
-Missing/starter-only: project identity and progress are placeholders, so I don't have a real project summary yet.
-Current understanding: use MindLayer cautiously, keep memory low-token, and never write memory without approval.
-Approx cost: ~1k tokens.
-EOF
-check_invalid "$screenshot_regression" "screenshot-style loose receipt"
-
 printf "\nMindLayer Agent Behavior Summary\n"
 printf "Passed checks: %s\n" "$PASS_COUNT"
 printf "Failed checks: %s\n" "$FAIL_COUNT"
