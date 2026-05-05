@@ -761,29 +761,6 @@ Project memory: `.mindlayer/`
 
 MindLayer boot should run at session start or tool preflight when the host supports it. If no preflight hook exists, run boot before answering the first project-relevant request. Do not treat a plain greeting as project-relevant.
 
-MindLayer Handoff is a checkpoint/status artifact, not running commentary. Show it only at task end, explicit status or next-step requests, pause, block, handoff, or recovery. Do not show it before/after every command or during routine progress updates; use plain concise updates with a proactive next-step cue when useful.
-
-Session continuity means tracking pending memory-write approvals, unfinished tasks, blockers, and the smallest useful next action. If a memory write was proposed but not approved, keep it visible as pending and remind the user before moving to unrelated memory work. If there are no pending approvals or blockers, say `None` rather than adding noise.
-
-Preferred handoff shape:
-
-```text
-Backlog item: <larger durable goal>
-Task: <current concrete work>
-  - Last result: <what just happened>
-  - Next step: <smallest useful action>
-  - Status: active | blocked | paused | completed
-
-Context:
-  - Task: ~<N> words, ~<N> est. tokens
-  - Session: ~<N> words, ~<N> est. tokens
-
-Continuity:
-  - Pending approvals: <none | memory write / destination / action>
-  - Blockers: <none | blocker>
-  - Unfinished work: <none | next unresolved task>
-```
-
 Boot order:
 1. Read `~/.mindlayer/memory-system.md` first when available.
 2. Read `~/.mindlayer/index.md` and `.mindlayer/index.md`.
@@ -828,17 +805,11 @@ What would you like to work on?
 Use `/m-retrieve <query>` when specific memory is needed.
 Use `/m-save` only to propose memory writes; never write without approval.
 Use `/m-status` to check memory health.
+Use `/m-session` to report session context cost and recommend compact or new session.
 
-Rules:
-- Do not use `README.md` or `docs/` as memory input.
-- Use index files before full files.
-- Prefer update over duplicate.
-- Keep token usage transparent.
-- Do not dump raw conversations into memory.
-- Keep adapters thin; do not store or retrieve durable memory here.
-- Go outside MindLayer memory only when necessary for the task.
-- Track pending approvals, blockers, unfinished work, and next actions without showing handoff after every routine step.
-- Prefer starting a new session at each task boundary over compacting mid-session. MindLayer boot is cheap and restores project context from durable memory with zero history overhead. Use `/compact` only when mid-task at the context limit.
+Commands are also triggered proactively. See the Proactive Behavior section in `~/.mindlayer/memory-system.md` for end-of-turn detection rules, trigger phrases, and surface formats.
+
+Commands are also triggered proactively. See the Proactive Behavior section in `~/.mindlayer/memory-system.md` for end-of-turn detection rules, trigger phrases, and surface formats.
 <!-- mindlayer:end -->'
 
   claude_block='<!-- mindlayer:start -->

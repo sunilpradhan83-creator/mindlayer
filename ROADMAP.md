@@ -16,16 +16,15 @@ A minimal, installable markdown-first memory system.
 
 ---
 
-## V2 — CLI + Core Commands
+## V2 — AI-Driven Prompt Automation
 
-Replace prompt files with a real CLI so commands are reliable, scriptable, and host-agnostic.
+Make MindLayer commands proactive and automatic without replacing the prompt-driven model. The AI becomes the driver — detecting, proposing, and executing commands at the right moments, not just when explicitly asked.
 
-- `m install` — install or update MindLayer in a project
-- `m save` — propose and write durable memory with approval flow
-- `m retrieve <query>` — index-first retrieval from the command line
-- `m status` — memory health check with actionable output
-- `m session` — show session context cost, recommend new session vs compact
-- Archive mode — archive old memory entries without deleting them
+- `/m-session` — new command: session context cost and new-session vs compact recommendation (shipped)
+- End-of-turn detection — AI checks every turn for memory candidates and retrieval needs, surfaces proposals immediately
+- Trigger phrases — natural language invocation of all commands without typing slash commands
+- Proactive session warnings — AI surfaces compact warning when context is heavy or critical
+- `m-clean` — archive and forget: archive old entries or remove stale memory (m-archive + m-forget)
 - `.mindlayer/` subdirectories — `private/`, `sessions/`, `cache/`, `tmp/` with real V2 behavior behind each
 
 ---

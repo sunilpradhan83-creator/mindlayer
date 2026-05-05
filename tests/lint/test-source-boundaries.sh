@@ -40,10 +40,10 @@ copy_path "install.sh"
 copy_path "AGENTS.md"
 copy_path "CLAUDE.md"
 
-sed -i '/^- Do not use `README\.md` or `docs\/` as memory input\.$/d' "$SANDBOX/project/AGENTS.md"
+sed -i '/Proactive Behavior/d' "$SANDBOX/project/AGENTS.md"
 
 if bash "$SANDBOX/project/tools/lint.sh" --project "$SANDBOX/project" > "$SANDBOX/lint.log" 2>&1; then
-  printf "FAIL  expected lint to fail when AGENTS.md source-boundary rule is removed\n"
+  printf "FAIL  expected lint to fail when AGENTS.md proactive behavior reference is removed\n"
   cat "$SANDBOX/lint.log"
   exit 1
 fi
@@ -54,4 +54,4 @@ if ! grep -Fq "[E7] AGENTS.md missing source-boundary rule" "$SANDBOX/lint.log";
   exit 1
 fi
 
-printf "PASS  source-boundary lint fails when AGENTS.md loses README/docs rule\n"
+printf "PASS  source-boundary lint fails when AGENTS.md loses proactive behavior reference\n"

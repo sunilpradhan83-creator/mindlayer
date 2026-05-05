@@ -268,16 +268,14 @@ lint_repo() {
   done
 
   # E7 source-boundary rules
-  require_contains "$PROJECT_DIR/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.' "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Keep adapters thin; do not store or retrieve durable memory here." "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Go outside MindLayer memory only when necessary for the task." "AGENTS.md"
+  # Behavior rules live in memory-system.md; adapters are thin pointers.
+  # AGENTS.md only needs to reference memory-system.md and the boot trigger.
   require_contains "$PROJECT_DIR/AGENTS.md" 'Read `~/.mindlayer/memory-system.md` first' "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "first project-relevant request" "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Use this exact boot receipt format" "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Context share:" "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Token strategy:" "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Session continuity means tracking pending memory-write approvals" "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Pending approvals:" "AGENTS.md"
+  require_contains "$PROJECT_DIR/AGENTS.md" "Proactive Behavior" "AGENTS.md"
 
   require_contains "$PROJECT_DIR/CLAUDE.md" '`README.md` and `docs/` are human documentation' "CLAUDE.md"
   require_contains "$PROJECT_DIR/CLAUDE.md" "Do not duplicate memory into" "CLAUDE.md"
@@ -312,15 +310,13 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "## Session Continuity Behavior" "global memory-system template"
   require_contains "$PROJECT_DIR/global-template/memory-system.md" "pending memory-write approvals" "global memory-system template"
 
-  require_contains "$PROJECT_DIR/install.sh" 'Do not use `README.md` or `docs/` as memory input.' "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "Keep adapters thin; do not store or retrieve durable memory here." "installer adapter block"
+  # Behavior rules live in memory-system.md; codex_block is a thin pointer.
   require_contains "$PROJECT_DIR/install.sh" 'Read `~/.mindlayer/memory-system.md` first' "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "first project-relevant request" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Use this exact boot receipt format" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Context share:" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Token strategy:" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "Session continuity means tracking pending memory-write approvals" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "Pending approvals:" "installer adapter block"
+  require_contains "$PROJECT_DIR/install.sh" "Proactive Behavior" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer memory-system fallback"
   require_contains "$PROJECT_DIR/install.sh" "During MindLayer boot, always check project" "installer memory-system fallback"
   require_contains "$PROJECT_DIR/install.sh" "approximate context share by source" "installer memory-system fallback"

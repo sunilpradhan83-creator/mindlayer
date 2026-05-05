@@ -101,6 +101,63 @@ Use estimated tokens when exact host usage is unavailable. Full context details 
 - Tell users to back up `~/.mindlayer/` through their normal dotfiles, encrypted backup, or private personal repository if they want cross-project preferences and global memory preserved across machine loss.
 - Do not store secrets, tokens, raw conversations, or project-private facts in global preferences.
 
+## Proactive Behavior
+
+MindLayer commands are triggered two ways: by the AI detecting a need at the end of a turn, or by the user invoking them explicitly via a recognized phrase. Approval rules apply regardless of how a command is triggered.
+
+### End-of-Turn Detection
+
+At the end of every turn, before completing the response:
+
+- Check whether the turn produced anything durable worth saving. If yes, surface a memory candidate immediately — do not wait for the next turn or session end.
+- Check whether the current task context suggests relevant memory that has not yet been loaded. If yes, suggest a retrieval query.
+- Estimate session context weight. If heavy or critical, surface a compact session warning.
+
+Surface at most one of each per turn. Do not interrupt the main response — append after the primary answer.
+
+### Memory Candidate Format
+
+When a memory candidate is detected, append at the end of the response:
+
+```text
+Memory candidate: <description> → <target.md> — say 'go' to save
+```
+
+If the user says `go`, execute `/m-save` for that candidate. Approval rules still apply — `go` counts as explicit approval for the specific proposed candidate only.
+
+### Retrieval Suggestion Format
+
+When a retrieval need is detected, append at the end of the response:
+
+```text
+Relevant context may be available — try: /m-retrieve <predicted-query>
+```
+
+### Session Warning Format
+
+When session context is heavy (60–80%) or critical (>80%), append at the end of the response:
+
+```text
+Session context: <heavy | critical> (~N% used). Recommend: <compact | new session> — say 'msession' for full report.
+```
+
+Do not surface this when status is light or moderate.
+
+### Trigger Phrases
+
+Recognized phrases that invoke commands immediately, without waiting for end-of-turn detection:
+
+| Phrase | Command |
+|--------|---------|
+| "remember this", "save this", "add to memory" | `/m-save` |
+| "retrieve X", "load X", "what do we know about X" | `/m-retrieve <X>` |
+| "where were we", "memory status", "mstatus", "what's loaded" | `/m-status` |
+| "should I compact", "how much context", "start fresh", "msession" | `/m-session` |
+
+Interpret intent loosely — treat natural language variations as equivalent to the listed phrases.
+
+`/m-status` and `/m-session` are never AI-initiated. Only the user triggers them.
+
 ## Approval Rules
 
 Memory writes require clear approval even when the content seems obvious. Show the destination, action, duplicate check, and confidence before writing.

@@ -161,17 +161,12 @@ check assert_file_exists "$fresh_project/.github/copilot-instructions.md"
 check assert_contains "$fresh_project/AGENTS.md" "<!-- mindlayer:start -->"
 check assert_contains "$fresh_project/CLAUDE.md" "<!-- mindlayer:start -->"
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "<!-- mindlayer:start -->"
-check assert_contains "$fresh_project/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.'
-check assert_contains "$fresh_project/AGENTS.md" "Keep adapters thin; do not store or retrieve durable memory here."
 check assert_contains "$fresh_project/AGENTS.md" 'Read `~/.mindlayer/memory-system.md` first'
 check assert_contains "$fresh_project/AGENTS.md" "first project-relevant request"
-check assert_contains "$fresh_project/AGENTS.md" "MindLayer Handoff is a checkpoint/status artifact"
-check assert_contains "$fresh_project/AGENTS.md" "Session continuity means tracking pending memory-write approvals"
-check assert_contains "$fresh_project/AGENTS.md" "Preferred handoff shape"
-check assert_contains "$fresh_project/AGENTS.md" "Pending approvals:"
 check assert_contains "$fresh_project/AGENTS.md" "Use this exact boot receipt format"
 check assert_contains "$fresh_project/AGENTS.md" "Context share:"
 check assert_contains "$fresh_project/AGENTS.md" "Token strategy:"
+check assert_contains "$fresh_project/AGENTS.md" "Proactive Behavior"
 check assert_contains "$fresh_project/CLAUDE.md" '`README.md` and `docs/` are human documentation'
 check assert_contains "$fresh_project/CLAUDE.md" "Do not duplicate memory into"
 check assert_contains "$fresh_project/CLAUDE.md" "automatic MindLayer boot"
@@ -315,11 +310,8 @@ check assert_contains "$fresh_home/.mindlayer/memory-system.md" "MindLayer boot 
 check assert_contains "$fresh_home/.mindlayer/index.md" "file: preferences.md"
 check assert_file_exists "$fresh_home/.mindlayer/preferences.md"
 check assert_not_exists "$fresh_home/.mindlayer/memory.md"
-check assert_contains "$fresh_project/AGENTS.md" 'Do not use `README.md` or `docs/` as memory input.'
-check assert_contains "$fresh_project/AGENTS.md" "Use index files before full files."
 check assert_contains "$fresh_project/AGENTS.md" '`/m-init` is a legacy/manual refresh alias'
 check assert_contains "$fresh_project/AGENTS.md" "Context cost:"
-check assert_contains "$fresh_project/AGENTS.md" "Context:"
 
 printf "\nMindLayer Local Install Readiness Summary\n"
 printf "Passed checks: %s\n" "$PASS_COUNT"
