@@ -21,6 +21,10 @@ Full vision lives in `ROADMAP.md`. This entry tracks the immediate V2 priorities
 - `/m-session` command: session context cost and new-session vs compact recommendation
 - `.mindlayer/` subdirectories: `private/`, `sessions/`, `cache/`, `tmp/` — deferred from V1, add back in V2 with real behavior behind each
 
+- Existing project onboarding flow: automated way to populate `.mindlayer/` from existing README, docs, or context when installing into a mature project. V2 CLI feature.
+- Memory-system.md changelog: surface what changed when memory-system.md is refreshed on reinstall so users know their agent behavior updated.
+- Migration guide: document how to adopt new template files (e.g. roadmap.md) in existing installs.
+
 ### When to use
 Use when planning V2 work. See `ROADMAP.md` for the full multi-version vision.
 

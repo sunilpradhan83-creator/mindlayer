@@ -910,8 +910,13 @@ Project memory:
 Next step:
 Open your AI coding tool. MindLayer-aware adapters now boot minimal context automatically when the host supports tool preflight, or before the first project-relevant request as a fallback. /m-init is a legacy/manual refresh alias for showing or rerunning the boot receipt.
 
+Existing project tip:
+If this project already has context in README or docs, ask your AI tool to help populate .mindlayer/ files. Use /m-save to propose and approve memory entries one at a time.
+
 Session tip:
 MindLayer boot is cheap. Start a new session at each task boundary instead of compacting — boot restores project context from durable memory with zero history overhead.
+
+Note: ~/.mindlayer/memory-system.md was refreshed with the latest MindLayer behavior rules.
 EOF
 else
   echo "MindLayer installed."

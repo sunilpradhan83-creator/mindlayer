@@ -33,7 +33,7 @@
   scope: project
   type: decision
   tags: [architecture, installer, adapters]
-  summary: Markdown memory, global/project layers, strict source boundaries, thin adapters, non-destructive install, fail-fast errors, and scaffold-skipping /m-init behavior.
+  summary: Markdown memory, global/project layers, strict source boundaries, thin adapters, non-destructive install, fail-fast errors, and scaffold-skipping boot behavior.
   importance: high
   status: active
   last_updated: 2026-05-02
@@ -57,7 +57,7 @@
   scope: project
   type: decision
   tags: [approval, memory-safety, commands]
-  summary: Memory writes require exact destination/content proposal and clear approval such as `approve` or `go ahead`; acknowledgments like `ok` are not approval.
+  summary: Memory writes require exact destination/content proposal and clear approval; acknowledgments like `ok` are not approval.
   importance: high
   status: active
   last_updated: 2026-05-03
@@ -69,10 +69,34 @@
   scope: project
   type: decision
   tags: [session-continuity, handoff, status, ux]
-  summary: MindLayer Handoff is a checkpoint/status artifact shown at task end, explicit status/next-step requests, pause/block/handoff, or recovery; routine progress updates stay plain and concise.
+  summary: MindLayer Handoff is a checkpoint/status artifact shown at task end, status requests, pause/block/handoff, or recovery — not after every command.
   importance: high
   status: active
   last_updated: 2026-05-04
+
+- id: ml-20260430-004
+  title: Product Design Philosophy
+  file: context.md
+  section: Product Design Philosophy
+  scope: project
+  type: context
+  tags: [design, tokens, memory-quality, writing]
+  summary: Token efficiency is the primary constraint; memory is curation not a chat dump; scaffold files must not be loaded as real memory.
+  importance: high
+  status: active
+  last_updated: 2026-05-05
+
+- id: ml-20260430-006
+  title: V1 Trust and Quality Risks
+  file: risks.md
+  section: V1 Trust and Quality Risks
+  scope: project
+  type: risk
+  tags: [trust, tokens, installer, onboarding]
+  summary: Token bloat, wrong routing, installer safety, scaffold false confidence, adapter drift, undiscoverable memory, onboarding gap, and silent behavior change on reinstall.
+  importance: high
+  status: active
+  last_updated: 2026-05-05
 
 - id: ml-20260430-005
   title: Future Roadmap
@@ -81,20 +105,19 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: CLI, archive mode, and /m-session command are concrete V2 items.
+  summary: CLI, archive mode, and /m-session command are concrete V2 items. See ROADMAP.md for full vision.
   importance: medium
   status: active
   last_updated: 2026-05-05
 
-- id: ml-20260505-002
-  title: Product Design Principles
-  file: decisions.md
-  section: Product Design Principles
+- id: ml-20260505-003
+  title: MindLayer Product Roadmap
+  file: roadmap.md
+  section: MindLayer Product Roadmap
   scope: project
-  type: decision
-  tags: [design, tokens, memory-quality]
-  summary: Token efficiency is the primary constraint; memory must be curated, indexed, and written for AI retrieval — not a chat dump.
-  importance: high
+  type: roadmap
+  tags: [roadmap, v2, cli]
+  summary: V1 shipped. V2 targets CLI, archive mode, /m-session. Full vision in ROADMAP.md.
+  importance: medium
   status: active
   last_updated: 2026-05-05
-

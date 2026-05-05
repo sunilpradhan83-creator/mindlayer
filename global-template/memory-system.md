@@ -1,5 +1,7 @@
 # MindLayer Memory System
 
+<!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
+
 MindLayer is a markdown-first memory system for AI-native software development. Its job is to help agents remember durable knowledge, retrieve it cheaply, and avoid unsafe or noisy memory behavior.
 
 ## Command Behavior
@@ -46,6 +48,7 @@ Use estimated tokens when exact host usage is unavailable. Full context details 
 - Show continuity state in handoff, status, pause, block, recovery, or explicit next-step responses; do not show it after every routine command.
 - If there are no pending approvals, blockers, or unfinished work, say `None` compactly.
 - MindLayer boot is intentionally cheap. When the user asks about session or token management, recommend starting a new session at each task boundary rather than compacting mid-session. Compacting carries forward session history at a token cost on every subsequent message; a new session boots from durable memory with zero history overhead.
+- When a user installs MindLayer on an existing project with rich context in README, docs, or other files, offer to help populate `.mindlayer/` files using `/m-save`. Propose entries for approval — do not auto-populate without explicit approval.
 
 ## Write Rules
 
