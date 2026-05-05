@@ -81,6 +81,16 @@ Use `/m-save` after durable learning happens: new decisions, stable preferences,
 
 Use `/m-status` when memory feels stale, duplicated, oversized, or inconsistent.
 
+## Session Strategy
+
+MindLayer makes new sessions cheap. Boot loads the minimum useful context — command rules, indexes, substantive preferences, project identity, and current progress — regardless of how long the previous session was.
+
+Prefer starting a new session at each task boundary over compacting mid-session. Save progress with `/m-save`, finish the task, and start fresh. The next session boots from durable memory, not from chat history.
+
+Use `/compact` only when mid-task and hitting the context limit with active work still in progress. Compacting preserves history at a cost: every subsequent message in that session pays for the summary. A new session has zero history overhead.
+
+This pattern works across all agents — Claude, ChatGPT, Cursor, Copilot, and any LLM-backed tool. Durable memory is what makes new sessions viable; without it, every session restart means re-explaining everything.
+
 ## Best Practices
 
 - Do not use `README.md` as memory input.

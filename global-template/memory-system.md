@@ -45,6 +45,7 @@ Use estimated tokens when exact host usage is unavailable. Full context details 
 - Remind the user about pending memory-write approvals before moving to unrelated memory work.
 - Show continuity state in handoff, status, pause, block, recovery, or explicit next-step responses; do not show it after every routine command.
 - If there are no pending approvals, blockers, or unfinished work, say `None` compactly.
+- MindLayer boot is intentionally cheap. When the user asks about session or token management, recommend starting a new session at each task boundary rather than compacting mid-session. Compacting carries forward session history at a token cost on every subsequent message; a new session boots from durable memory with zero history overhead.
 
 ## Write Rules
 
