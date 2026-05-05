@@ -97,6 +97,30 @@ When the user says 'pull next phase', decompose the roadmap phase into backlog i
 - Private, local, session, cache, and temporary material must stay out of committed project memory.
 - When developing MindLayer itself, treat repo `.mindlayer/` as the product-memory source of truth and treat live `~/.mindlayer/` as runtime, install, or test output rather than product memory.
 
+## Lateral Intent Routing
+
+When a user introduces work that is not the current Next Step and not in the active backlog, classify the intent before proceeding.
+
+**Classification:**
+
+| Signal | Classification | Agent action |
+|---|---|---|
+| Fits project scope, likely recurring | Backlog candidate | Append capture offer, then proceed |
+| New direction or scope change | Roadmap amendment | Append flag, then proceed |
+| Clearly one-off, no durable value | Ad-hoc | Proceed without comment |
+
+**Rules:**
+- Classify silently. Do not narrate the classification.
+- Never block the user's request. The nudge is informational.
+- Append at most one nudge per turn, after the main response and before the Token Burned block.
+- Do not fire during boot, status checks, or when the user is explicitly responding to a Next Step or backlog pull.
+
+**Nudge format:**
+
+```text
+Lateral intent: <backlog candidate | roadmap amendment> — say 'add to backlog' or 'add to roadmap' to capture, or I'll just proceed.
+```
+
 ## Token Rules
 
 - Use L0 bootstrap for command behavior and essential indexes.

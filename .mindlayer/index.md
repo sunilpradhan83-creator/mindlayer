@@ -64,14 +64,26 @@
 
 - id: ml-20260504-001
   title: MindLayer Handoff Display Boundaries
-  file: decisions.md
+  file: archive.md
   section: MindLayer Handoff Display Boundaries
   scope: project
   type: decision
   tags: [session-continuity, handoff, status, ux]
   summary: MindLayer Handoff is a checkpoint/status artifact shown at task end, status requests, pause/block/handoff, or recovery — not after every command.
   importance: low
-  status: deprecated
+  status: archived
+  last_updated: 2026-05-05
+
+- id: ml-20260505-007
+  title: Lateral Intent Routing
+  file: decisions.md
+  section: Lateral Intent Routing
+  scope: project
+  type: decision
+  tags: [lateral-intent, routing, backlog, roadmap, proactive]
+  summary: When user introduces out-of-plan work, agent silently classifies it and appends a one-line non-blocking nudge (backlog candidate / roadmap amendment / ad-hoc) before proceeding.
+  importance: high
+  status: active
   last_updated: 2026-05-05
 
 - id: ml-20260505-005
@@ -134,14 +146,26 @@
   status: active
   last_updated: 2026-05-05
 
+- id: ml-20260505-006
+  title: Current Phase — V3 Memory Quality + Smarter Retrieval
+  file: progress.md
+  section: Current Phase
+  scope: project
+  type: progress
+  tags: [v3, memory-quality, retrieval]
+  summary: V2 complete. V3 phase 1 in progress — extend /m-status with per-file memory health scoring.
+  importance: high
+  status: active
+  last_updated: 2026-05-05
+
 - id: ml-20260505-003
   title: MindLayer Product Roadmap
   file: roadmap.md
   section: MindLayer Product Roadmap
   scope: project
   type: roadmap
-  tags: [roadmap, v2, cli]
-  summary: V1 shipped. V2 targets CLI, archive mode, /m-session. Full vision in ROADMAP.md.
+  tags: [roadmap, v2, v3, cli]
+  summary: V1 and V2 shipped. V3 targets memory health scoring and smarter retrieval. Full vision in ROADMAP.md.
   importance: medium
   status: active
   last_updated: 2026-05-05

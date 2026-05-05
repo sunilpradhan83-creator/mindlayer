@@ -95,47 +95,34 @@ Use during `/m-save`, memory routing, template updates, prompt changes, or any w
 ### Related
 ml-20260503-001
 
-## MindLayer Handoff Display Boundaries
+## Lateral Intent Routing
 
-id: ml-20260504-001
-created: 2026-05-04
-updated: 2026-05-04
+id: ml-20260505-007
+created: 2026-05-05
+updated: 2026-05-05
 scope: project
 type: decision
-tags: [session-continuity, handoff, status, ux]
+tags: [lateral-intent, routing, backlog, roadmap, proactive]
 confidence: high
 status: active
 source: manual
 
 ### Summary
-MindLayer Handoff is a checkpoint/status artifact, not a running commentary format.
+When a user introduces work outside the current Next Step or backlog, the agent classifies it silently and appends a one-line non-blocking nudge before proceeding.
 
 ### Details
-Show the structured MindLayer Handoff only at task end, when the user explicitly asks for status or next steps, when work is paused, blocked, or handed off, and after crash or session recovery.
-
-Do not show it before every command, after every command, during routine progress updates, while exploring files, while tests are still running, or for every small subtask.
-
-During normal conversation or active execution, keep the user oriented with plain concise text and a proactive next-step cue when useful.
-
-Preferred compact handoff shape:
-
-```text
-Backlog item: <larger durable goal>
-Task: <current concrete work>
-  - Last result: <what just happened>
-  - Next step: <smallest useful action>
-  - Status: active | blocked | paused | completed
-
-Context:
-  - Task: ~<N> words, ~<N> est. tokens
-  - Session: ~<N> words, ~<N> est. tokens
-```
+- Three classifications: backlog candidate (fits scope, recurring), roadmap amendment (scope change), ad-hoc (one-off, no capture needed).
+- Agent never blocks the user. Nudge is append-only, one per turn, placed after main response and before Token Burned block.
+- Does not fire during boot, status checks, or when user is responding to a Next Step or backlog pull.
+- Nudge format: `Lateral intent: <type> — say 'add to backlog' or 'add to roadmap' to capture, or I'll just proceed.`
+- Capture only happens if user explicitly responds — approval rules still apply.
 
 ### When to use
-Use when designing session continuity, status reporting, adapter guidance, `/m-status`, `/m-save`, and future handoff or recovery behavior.
+Use when implementing or evaluating proactive intent detection, backlog hygiene, and mid-session routing behavior.
 
 ### Related
-ml-20260503-004
+ml-20260505-005
+ml-20260430-005
 
 ## Token Burned Per-Turn Status Block
 

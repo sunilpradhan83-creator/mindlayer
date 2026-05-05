@@ -26,3 +26,45 @@ Historical reference for V1 completion state.
 
 ### Related
 ml-project-20260430-001
+
+## MindLayer Handoff Display Boundaries
+
+id: ml-20260504-001
+created: 2026-05-04
+updated: 2026-05-05
+scope: project
+type: decision
+tags: [session-continuity, handoff, status, ux]
+confidence: high
+status: archived
+source: manual
+
+### Summary
+MindLayer Handoff is a checkpoint/status artifact, not a running commentary format. Deprecated; superseded by Token Burned Per-Turn Status Block (ml-20260505-005).
+
+### Details
+Show the structured MindLayer Handoff only at task end, when the user explicitly asks for status or next steps, when work is paused, blocked, or handed off, and after crash or session recovery.
+
+Do not show it before every command, after every command, during routine progress updates, while exploring files, while tests are still running, or for every small subtask.
+
+During normal conversation or active execution, keep the user oriented with plain concise text and a proactive next-step cue when useful.
+
+Preferred compact handoff shape:
+
+```text
+Backlog item: <larger durable goal>
+Task: <current concrete work>
+  - Last result: <what just happened>
+  - Next step: <smallest useful action>
+  - Status: active | blocked | paused | completed
+
+Context:
+  - Task: ~<N> words, ~<N> est. tokens
+  - Session: ~<N> words, ~<N> est. tokens
+```
+
+### When to use
+Historical reference only. Superseded by Token Burned Per-Turn Status Block.
+
+### Related
+ml-20260505-005
