@@ -746,6 +746,8 @@ install_project_memory() {
   write_template_if_missing "$pmem/risks.md" "$PROJECT_TEMPLATE_DIR/risks.md" "$risk_template"
   write_template_if_missing "$pmem/index.md" "$PROJECT_TEMPLATE_DIR/index.md" "$project_index"
   write_template_if_missing "$pmem/local.md" "$PROJECT_TEMPLATE_DIR/local.md" "$local_template"
+
+  rmdir "$pmem/private" "$pmem/sessions" "$pmem/cache" "$pmem/tmp" 2>/dev/null || true
 }
 
 install_adapters() {
