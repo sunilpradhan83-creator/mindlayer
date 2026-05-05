@@ -122,38 +122,3 @@
   status: active
   last_updated: 2026-05-02
 
-- id: ml-20260503-004
-  title: Session Continuity Tracking
-  file: backlog.md
-  section: Session Continuity Tracking
-  scope: project
-  type: backlog
-  tags: [session-continuity, approval, prompts]
-  summary: Session continuity behavior is implemented for pending approvals, blockers, unfinished work, and next actions without noisy routine handoffs.
-  importance: high
-  status: archived
-  last_updated: 2026-05-04
-
-- id: ml-20260503-005
-  title: Automatic Session Initialization
-  file: backlog.md
-  section: Automatic Session Initialization
-  scope: project
-  type: backlog
-  tags: [init, onboarding, token-transparency]
-  summary: Automatic session initialization is implemented and validated with loaded/skipped/missing sources, context cost/share, token strategy, and `/m-init` as manual refresh.
-  importance: high
-  status: archived
-  last_updated: 2026-05-04
-
-- id: ml-20260502-001
-  title: Deploy Readiness Test Harness
-  file: backlog.md
-  section: Deploy Readiness Test Harness
-  scope: project
-  type: backlog
-  tags: [testing, installer, deploy-readiness]
-  summary: Deploy readiness harness is implemented and passing as the maintained V1 deploy gate for fresh/existing installs and memory contracts.
-  importance: high
-  status: archived
-  last_updated: 2026-05-04
