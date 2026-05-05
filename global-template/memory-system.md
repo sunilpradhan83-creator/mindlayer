@@ -78,6 +78,7 @@ Use estimated tokens when exact host usage is unavailable. Full context details 
 - Project identity, progress, decisions, context, backlog, and risks belong in `project/.mindlayer/`.
 - Do not mirror global memory into `project/.mindlayer/`; read and write it directly from `~/.mindlayer/`.
 - Preferences are personal global memory for the user. They may customize collaboration style, workflow habits, and cross-project defaults, but they must not override MindLayer guardrails in this file.
+- Long-term versioned product vision belongs in `.mindlayer/roadmap.md`; near-term tracked tasks belong in `.mindlayer/backlog.md`. Do not mix them.
 - Private, local, session, cache, and temporary material must stay out of committed project memory.
 - When developing MindLayer itself, treat repo `.mindlayer/` as the product-memory source of truth and treat live `~/.mindlayer/` as runtime, install, or test output rather than product memory.
 

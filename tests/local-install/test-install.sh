@@ -151,7 +151,7 @@ check assert_contains "$fresh_home/.mindlayer/memory-system.md" "first project-r
 check assert_contains "$fresh_home/.mindlayer/memory-system.md" "pending memory-write approvals"
 check assert_index_sections_exist "$fresh_home/.mindlayer"
 
-for file in project.md progress.md decisions.md context.md backlog.md risks.md index.md local.md; do
+for file in project.md progress.md decisions.md context.md backlog.md roadmap.md risks.md index.md local.md; do
   check assert_file_exists "$fresh_project/.mindlayer/$file"
 done
 

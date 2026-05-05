@@ -13,16 +13,16 @@ status: active
 source: manual
 
 ### Summary
-Concrete V2 items after V1 is stable.
+Full vision lives in `ROADMAP.md`. This entry tracks the immediate V2 priorities.
 
 ### Details
-- CLI in V2: makes commands reliable and host-agnostic instead of relying on prompt files.
-- Archive mode: when memory files grow, users need a way to archive old entries without deleting them.
-- `/m-session` command: shows current session context cost and recommends new session vs compact based on thresholds.
-- `.mindlayer/` subdirectories: `private/` for sensitive notes, `sessions/` for session handoff snapshots, `cache/` for generated output, `tmp/` for throwaway scratch. Removed from V1 installer because no V1 behavior writes to them. Add back in V2 when real purpose exists behind each one.
+- CLI: `m install`, `m save`, `m retrieve`, `m status`, `m session`
+- Archive mode: archive old entries without deleting them
+- `/m-session` command: session context cost and new-session vs compact recommendation
+- `.mindlayer/` subdirectories: `private/`, `sessions/`, `cache/`, `tmp/` — deferred from V1, add back in V2 with real behavior behind each
 
 ### When to use
-Use when planning post-V1 work.
+Use when planning V2 work. See `ROADMAP.md` for the full multi-version vision.
 
 ### Related
 ml-20260430-003

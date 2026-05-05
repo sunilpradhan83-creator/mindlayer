@@ -144,6 +144,10 @@ The installer creates missing files and preserves existing content. It may refre
 
 The installer does not overwrite user-owned memory files, delete files, move files, clean/archive memory, or duplicate global memory into project memory.
 
+## Roadmap
+
+See [`ROADMAP.md`](ROADMAP.md) for the full product vision across versions.
+
 ## Validation
 
 Run the local validation suite before release or deploy:

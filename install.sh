@@ -638,6 +638,32 @@ When planning future work.
 
 ### Related"
 
+roadmap_template="# Roadmap
+
+Long-term versioned vision for this project. Review and update as priorities shift, new trends emerge, or versions ship.
+
+## Entry Template
+
+id: ml-roadmap-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+scope: project
+type: roadmap
+tags: []
+confidence: medium
+status: planned
+source: manual
+
+### Summary
+Short summary of this version or phase.
+
+### Details
+- Goal or feature one.
+- Goal or feature two.
+
+### Status
+planned | in-progress | shipped"
+
 risk_template="# Risks
 
 Known risks, blockers, fragile areas, and trust concerns.
@@ -716,6 +742,7 @@ install_project_memory() {
   write_template_if_missing "$pmem/decisions.md" "$PROJECT_TEMPLATE_DIR/decisions.md" "$decision_template"
   write_template_if_missing "$pmem/context.md" "$PROJECT_TEMPLATE_DIR/context.md" "$context_template"
   write_template_if_missing "$pmem/backlog.md" "$PROJECT_TEMPLATE_DIR/backlog.md" "$backlog_template"
+  write_template_if_missing "$pmem/roadmap.md" "$PROJECT_TEMPLATE_DIR/roadmap.md" "$roadmap_template"
   write_template_if_missing "$pmem/risks.md" "$PROJECT_TEMPLATE_DIR/risks.md" "$risk_template"
   write_template_if_missing "$pmem/index.md" "$PROJECT_TEMPLATE_DIR/index.md" "$project_index"
   write_template_if_missing "$pmem/local.md" "$PROJECT_TEMPLATE_DIR/local.md" "$local_template"
