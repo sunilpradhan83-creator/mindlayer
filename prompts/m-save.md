@@ -39,6 +39,8 @@ Classify each candidate by:
 
 Use global memory for cross-project preferences and reusable workflows. Use project memory for project identity, progress, decisions, context, backlog, and risks.
 
+When content is marked sensitive or private by the user, route to `.mindlayer/private/` instead of main committed files. Private entries are gitignored and never loaded at boot.
+
 When working inside the MindLayer repo, follow the repo source-of-truth boundaries:
 
 - Do not write product learnings to the live `~/.mindlayer/` folder.

@@ -10,7 +10,8 @@ Inspect:
 - missing project memory files
 - missing indexes
 - duplicate entries
-- stale entries
+- stale entries (flag count by type)
+- archived entries (count in `archive.md` if it exists)
 - oversized files
 - unclear routing
 - conflicting memory
@@ -50,12 +51,23 @@ Include the file name, current size, risk, and 2-4 concrete cleanup options.
 .mindlayer/tmp/
 ```
 
+## Subdirectory Checks
+
+When subdirectories exist, inspect:
+
+- `tmp/`: warn if files exist with a modification date older than the current session — stale scratch from a prior session. Suggest clearing with `/m-clean`.
+- `sessions/`: report count of session files and most recent date. No action needed.
+- `cache/`: report count and most recent file. Flag entries older than 7 days as potentially stale.
+- `private/`: acknowledge existence only. Do not read or surface content.
+
 ## Output
 
 Return:
 
 - Healthy:
 - Warnings:
+- Stale entries: N flagged (list titles and types) — say '/m-archive' to review
+- Archived entries: N in archive.md (global: N, project: N)
 - Conflicts:
 - Continuity:
   - pending approvals

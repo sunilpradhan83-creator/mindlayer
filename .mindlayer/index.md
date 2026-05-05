@@ -16,15 +16,15 @@
 
 - id: ml-20260430-002
   title: Installer-First V1 Seed
-  file: progress.md
+  file: archive.md
   section: Installer-First V1 Seed
   scope: project
   type: progress
   tags: [v1, installer]
   summary: V1 seed is validated; automatic initialization and session continuity contracts now pass install, boot, and continuity tests.
   importance: high
-  status: active
-  last_updated: 2026-05-04
+  status: archived
+  last_updated: 2026-05-05
 
 - id: ml-20260430-003
   title: V1 Memory Architecture Decisions
@@ -105,7 +105,7 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: CLI, archive mode, and /m-session command are concrete V2 items. See ROADMAP.md for full vision.
+  summary: V2 phase 1 and 2 shipped (proactive behavior, m-session, archive mode). Up next: .mindlayer/ subdirectories. See ROADMAP.md for full vision.
   importance: medium
   status: active
   last_updated: 2026-05-05

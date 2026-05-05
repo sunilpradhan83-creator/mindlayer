@@ -74,6 +74,7 @@ Use `/m-retrieve <query>` when specific memory is needed.
 Use `/m-save` only to propose memory writes; never write without approval.
 Use `/m-status` to check memory health.
 Use `/m-session` to report session context cost and recommend compact or new session.
+Use `/m-archive` (alias: `/m-clean`) to scan for stale entries and propose archive or delete actions.
 
 Commands are also triggered proactively. See the Proactive Behavior section in `~/.mindlayer/memory-system.md` for end-of-turn detection rules, trigger phrases, and surface formats.
 <!-- mindlayer:end -->

@@ -15,6 +15,7 @@ MindLayer is a markdown-first memory system for AI-native software development. 
 - `/m-retrieve <query>` searches indexes first and loads only relevant sections.
 - `/m-save` proposes memory writes from durable learnings and waits for approval.
 - `/m-status` checks memory health and suggests fixes without writing.
+- `/m-archive` scans for stale entries and proposes archive or delete actions with approval.
 
 ## Handoff Behavior
 
@@ -70,6 +71,7 @@ Use estimated tokens when exact host usage is unavailable. Full context details 
 - Treat tool adapters such as `AGENTS.md`, `CLAUDE.md`, and Copilot instructions as thin instructions, not durable memory stores or retrieval sources.
 - Do not load empty scaffold files or `local.md` by default.
 - Load scaffold files or `local.md` only when an index marks them as relevant, the user task needs them, or they contain non-placeholder content.
+- Do not load `archive.md` during boot. Load it only when `/m-retrieve` explicitly targets archived content.
 - Go outside MindLayer memory only when necessary for the current task.
 - Cite file and section when using memory.
 - State what was loaded and skipped.
@@ -153,10 +155,22 @@ Recognized phrases that invoke commands immediately, without waiting for end-of-
 | "retrieve X", "load X", "what do we know about X" | `/m-retrieve <X>` |
 | "where were we", "memory status", "mstatus", "what's loaded" | `/m-status` |
 | "should I compact", "how much context", "start fresh", "msession" | `/m-session` |
+| "clean memory", "clean up memory", "archive memory", "archive it", "delete memory", "forget X", "remove X from memory", "memory is getting bloated", "tidy memory" | `/m-archive` |
+| "done for today", "wrapping up", "I'm done", "that's all", "bye", "done for now", "end session", "save session" | session write offer |
 
 Interpret intent loosely — treat natural language variations as equivalent to the listed phrases.
 
 `/m-status` and `/m-session` are never AI-initiated. Only the user triggers them.
+
+### Session Write Format
+
+When a session write trigger fires, append after the main response:
+
+```text
+Session summary ready — say 'save session' to write sessions/YYYY-MM-DD.md.
+```
+
+Also fires automatically (with approval) at: pre-`/compact`, post-significant-completion, and when session context exceeds 80%.
 
 ## Approval Rules
 
@@ -169,9 +183,61 @@ Approval must be literal. `approve`, `approved`, `go ahead`, or an equally expli
 - `active`: current and trusted.
 - `experimental`: useful but not fully proven.
 - `deprecated`: superseded but retained for reference.
-- `archived`: inactive history.
+- `archived`: inactive history. Content lives in `archive.md` (global or project scope). Index entry remains with `status: archived` and `file: archive.md` so `/m-retrieve` can still find it. Boot skips `archive.md`.
 
-V1 does not implement archive or cleanup automation, but it does require proactive warning when files become stale, oversized, or close to their budget.
+## Subdirectory Rules
+
+Subdirectories under `.mindlayer/` are created on first use. Never create empty placeholder directories.
+
+### private/
+- Purpose: sensitive notes that must not be committed to git (API key references, personal context, sensitive project notes).
+- Write: via `/m-save` when the user marks content as sensitive or private.
+- Read: only when the user explicitly asks for private context.
+- Boot: always skip.
+- Git: gitignored.
+- Lifecycle: never auto-cleared. User deletes manually.
+
+### sessions/
+- Purpose: dated session journals. One file per session (`YYYY-MM-DD.md`). Captures what was worked on, decided, completed, and what's next.
+- Write: AI-initiated with approval. Triggers: session-end phrases ("done for today", "wrapping up", "I'm done", "that's all", "bye", "done for now", "end session"), pre-`/compact`, post-significant-completion, context critical (>80%).
+- Format:
+  ```
+  # Session: YYYY-MM-DD
+  ## Worked on
+  ## Decisions
+  ## Completed
+  ## Next
+  ```
+- Read: via `/m-retrieve sessions` or a date query. On boot, if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
+- Boot: skip full load. Surface `## Next` from the most recent session file only.
+- Git: gitignored.
+- Lifecycle: dated snapshots — no archive or cleanup needed.
+
+### cache/
+- Purpose: derived or computed context that can be regenerated (codebase scans, analysis results, summaries of large files).
+- Write: AI writes when deriving expensive context for a task.
+- Read: when the same derived context is needed again for the current task.
+- Boot: always skip.
+- Git: gitignored.
+- Lifecycle: `/m-clean` can clear stale cache entries. Safe to delete and regenerate without data loss.
+
+### tmp/
+- Purpose: ephemeral scratch notes during active multi-step work within a single session.
+- Write: AI writes scratch notes mid-task.
+- Read: only within the same session.
+- Boot: skip. Warn if `tmp/` contains content from a prior session (stale scratch — offer to clear).
+- Git: gitignored.
+- Lifecycle: cleared at session start when stale, or on `/m-clean`.
+
+## Archive Rules
+
+- `archive.md` exists at `~/.mindlayer/archive.md` (global) and `.mindlayer/archive.md` (project).
+- Boot always skips `archive.md`. Load it only when `/m-retrieve` explicitly targets archived content.
+- Archived entries keep their full markdown section in `archive.md` for future reference.
+- Deleted entries are removed from both the source file and the index.
+- Never archive `index.md`, `memory-system.md`, `prompts.md`, or `archive.md` itself.
+- `/m-archive` is the command that executes archive and delete actions. See `prompts/m-archive.md`.
+- `/m-clean` is an alias for `/m-archive`.
 
 ## Index-First Retrieval
 
