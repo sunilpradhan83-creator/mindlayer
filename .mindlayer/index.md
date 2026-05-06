@@ -129,7 +129,7 @@
   scope: project
   type: context
   tags: [goal-hierarchy, roadmap, backlog, next-step, flow, token-burned]
-  summary: Three-level goal hierarchy (roadmap → backlog → sessions) with Mermaid flow diagram and Next Step prediction rules. Defines backlog-empty and roadmap-complete behaviors.
+  summary: Product goal flow from project identity → roadmap → backlog → progress → sessions → per-turn Next Step, with Mermaid flow diagram and backlog-empty/roadmap-complete rules.
   importance: high
   status: active
   last_updated: 2026-05-05

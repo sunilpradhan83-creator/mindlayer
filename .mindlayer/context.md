@@ -45,19 +45,36 @@ status: active
 source: manual
 
 ### Summary
-MindLayer uses a three-level goal hierarchy: roadmap (versioned vision) → backlog (near-term tasks) → sessions (daily work). The per-turn Token Burned block surfaces Next Step by walking this hierarchy bottom-up.
+MindLayer uses a product goal flow: project identity (north star) → roadmap (versioned vision) → backlog (near-term tasks) → progress (current execution state) → sessions (daily work) → per-turn Next Step. The per-turn Token Burned block surfaces Next Step by walking this hierarchy bottom-up.
+
+### Product Goal Flow
+
+```text
+project.md -> roadmap.md -> backlog.md -> progress.md -> sessions/YYYY-MM-DD.md -> Token Burned / Next Step
+```
+
+- `project.md`: stable product identity and north star.
+- `roadmap.md`: long-term versioned product direction.
+- `backlog.md`: near-term work pulled from the active roadmap phase.
+- `progress.md`: current shipped state, active phase, and immediate execution target.
+- `sessions/YYYY-MM-DD.md`: daily continuity and handoff notes.
+- Token Burned / Next Step: smallest useful next action surfaced every turn.
 
 ### Flow Diagram
 
 ```mermaid
 flowchart TD
+    P["project.md\nProduct identity / north star"]
     R["ROADMAP.md\nVersioned vision (V1 → V5+)"]
     B["backlog.md\nNear-term phase items"]
+    P2["progress.md\nCurrent execution state"]
     S["sessions/YYYY-MM-DD.md\nDaily work log"]
     T["Per-turn Token Burned block\nNext Step prediction"]
 
+    P -->|"Shapes versioned direction"| R
     R -->|"Phase kickoff\n(human approves)"| B
-    B -->|"Task execution"| S
+    B -->|"Task execution"| P2
+    P2 -->|"Session continuity"| S
     S -->|"Every agent turn"| T
 
     B -->|"Backlog empty →\nagent proposes next roadmap phase"| R
