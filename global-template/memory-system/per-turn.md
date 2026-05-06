@@ -136,11 +136,12 @@ Do not surface this when status is light or moderate.
 
 ### Trigger Phrases
 
-Recognized phrases that invoke commands immediately, without waiting for end-of-turn detection:
+Load and save triggers are defined in `~/.mindlayer/router.md` (global) and `.mindlayer/router.md` (project). Routers are the single source of truth for all trigger signals.
+
+The following commands are still user-invocable directly:
 
 | Phrase | Command |
 |--------|---------|
-| "remember this", "save this", "add to memory" | `/m-save` |
 | "retrieve X", "load X", "what do we know about X" | `/m-retrieve <X>` |
 | "where were we", "memory status", "mstatus", "what's loaded" | `/m-status` |
 | "should I compact", "how much context", "start fresh", "msession" | `/m-session` |
@@ -150,6 +151,8 @@ Recognized phrases that invoke commands immediately, without waiting for end-of-
 Interpret intent loosely — treat natural language variations as equivalent to the listed phrases.
 
 `/m-status` and `/m-session` are never AI-initiated. Only the user triggers them.
+
+Save triggers ("ml save", "remember this", "save this", etc.) are handled by the router. See `~/.mindlayer/router.md` Save Triggers section.
 
 ### Session Write Format
 

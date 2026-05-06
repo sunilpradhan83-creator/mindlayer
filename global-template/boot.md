@@ -9,8 +9,9 @@ Read this file first at every session start. Then read router.md. Then follow th
 Run once per session, in order, before answering any request:
 
 1. Read `~/.mindlayer/boot.md` — you are here.
-2. Read `~/.mindlayer/router.md` — load triggers for all subfiles.
-3. Read `~/.mindlayer/memory-system/per-turn.md` — always. Controls every response you generate.
+2. Read `~/.mindlayer/router.md` — global load and save triggers.
+3. Read `.mindlayer/router.md` — project load triggers. Skip if file does not exist.
+4. Read `~/.mindlayer/memory-system/per-turn.md` — always. Controls every response you generate.
 4. Read `~/.mindlayer/preferences/personal.md` — only if it contains non-scaffold content (file has real user preferences, not just the starter template).
 5. Read project `.mindlayer/index.md` — catalog of project memory.
 6. Always check project `.mindlayer/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only identity as missing. Load even if index marks it low importance; report as missing if placeholder-only.

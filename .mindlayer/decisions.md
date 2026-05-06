@@ -155,16 +155,16 @@ ml-20260430-005
 
 id: ml-20260505-005
 created: 2026-05-05
-updated: 2026-05-05
+updated: 2026-05-06
 scope: project
 type: decision
-tags: [session-continuity, per-turn, next-step, token-tracking, handoff, goal-hierarchy]
+tags: [session-continuity, per-turn, next-step, token-tracking, handoff, goal-hierarchy, coming-up, priority]
 confidence: high
 status: active
 source: manual
 
 ### Summary
-Handoff is deprecated. Every agent turn ends with a Token Burned block. Next Step prediction navigates a defined goal hierarchy to always surface a useful next action.
+Handoff is deprecated. Every agent turn ends with a Token Burned block. Next Step is always a single plain-text action. Optional Coming Up: surfaces for ambiguity or long queues. Priority hierarchy is strictly enforced.
 
 ### Details
 Every agent turn ends with:
@@ -176,6 +176,10 @@ Token Burned:
   - Session: ~N words, ~N est. tokens
 
 Next Step: <smallest useful action>
+
+Coming Up:            ← omit when not needed
+  - <action>
+  - <action>
 --------------------------------------------------------------
 ```
 
@@ -186,12 +190,19 @@ Next Step prediction hierarchy (never blank):
 4. Backlog empty → next roadmap phase (surface pull proposal)
 5. Roadmap complete → propose brainstorming next major version with user
 
-When backlog empties after task completion, the agent proactively surfaces a roadmap phase pull proposal. Human approves → agent decomposes phase into backlog items and proposes each for approval.
+Coming Up rules:
+- Show only when meaningful ambiguity exists between two equally valid next actions, OR more than 2 pending actions exist.
+- For ambiguity: list recommended action first, marked `(recommended)`. Do not mark others.
+- For long queues (>2 pending): list in selection-priority order. No `(recommended)` markers.
+- Omit entirely when Next Step is clear and queue has ≤ 2 items.
 
-When roadmap is complete, agent proposes a brainstorming session to plan the next major version.
+Priority enforcement:
+- Next Step is always the highest-priority action from the hierarchy. Apply the lowest-numbered rule that applies — never skip to a more interesting rule.
+- Coming Up may only list actions lower in priority than Next Step. Never list an action in Coming Up that should have been Next Step.
+- Uncommitted changes (rule 2) always outrank next backlog item (rule 3).
 
 ### When to use
-Use when implementing per-turn status behavior, Next Step prediction, backlog-to-roadmap navigation, and goal hierarchy.
+Use when implementing per-turn status behavior, Next Step prediction, Coming Up: queue, backlog-to-roadmap navigation, and goal hierarchy.
 
 ### Related
 ml-20260504-001
