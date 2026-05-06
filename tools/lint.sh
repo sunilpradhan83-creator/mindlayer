@@ -297,6 +297,8 @@ lint_repo() {
   require_contains "$PROJECT_DIR/prompts/m-save.md" "pending destination, action, duplicate check, and confidence" "/m-save prompt"
   require_contains "$PROJECT_DIR/prompts/m-status.md" "pending approvals" "/m-status prompt"
   require_contains "$PROJECT_DIR/prompts/m-status.md" "next useful action" "/m-status prompt"
+  require_contains "$PROJECT_DIR/prompts/m-status.md" "Per-File Health" "/m-status prompt"
+  require_contains "$PROJECT_DIR/prompts/m-status.md" "OK | WARN | CRITICAL" "/m-status prompt"
 
   # Global template — rules split across memory-system/ subfiles
   require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input' "global read-write template"

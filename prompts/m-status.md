@@ -60,10 +60,30 @@ When subdirectories exist, inspect:
 - `cache/`: report count and most recent file. Flag entries older than 7 days as potentially stale.
 - `private/`: acknowledge existence only. Do not read or surface content.
 
+## Per-File Health Score
+
+For each committed `.mindlayer/` file, compute a health score: **OK | WARN | CRITICAL**.
+
+Score across three dimensions — overall score equals the worst:
+
+| Dimension | WARN | CRITICAL |
+|-----------|------|----------|
+| Staleness | Any entry with `last_updated` > 90 days | Majority of entries > 180 days |
+| Size | ≥ 80% of line budget (240+ lines) | ≥ 100% of line budget (300+ lines) |
+| Duplicates | Two entries with overlapping titles, tags, or summary | Near-identical entries |
+
+Skip `archive.md` and `local.md`. Mark `index.md` as navigation-only (no score).
+
+Show in Output as a compact table. When any file scores WARN or CRITICAL, append a one-line fix suggestion beneath the table.
+
 ## Output
 
 Return:
 
+- Per-File Health:
+  ```
+  <file>    <OK|WARN|CRITICAL>    (<issue summary or "clean">)
+  ```
 - Healthy:
 - Warnings:
 - Stale entries: N flagged (list titles and types) — say '/m-archive' to review
