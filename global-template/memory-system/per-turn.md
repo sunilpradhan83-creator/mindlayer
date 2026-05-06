@@ -41,6 +41,11 @@ Omit entirely when Next Step is clear and the queue has ≤ 2 items.
 4. Backlog empty → next roadmap phase (surface pull proposal)
 5. Roadmap complete → propose brainstorming next major version with the user
 
+**Priority enforcement rules:**
+- Next Step is always the highest-priority action from the hierarchy. Apply the lowest-numbered rule that currently applies — never skip a rule to reach a more interesting one.
+- Coming Up lists only actions that follow Next Step in the same or lower priority tier. Never list an action in Coming Up that ranks higher than Next Step in the hierarchy.
+- Uncommitted changes (rule 2) always outrank next backlog item (rule 3). Do not surface a new backlog item as Next Step while uncommitted changes exist.
+
 **Backlog-empty detection** — when a task completes and the backlog is empty, append before the Token Burned block:
 
 ```text
