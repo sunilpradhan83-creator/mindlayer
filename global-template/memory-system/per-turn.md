@@ -14,13 +14,27 @@ Token Burned:
   - Last turn: ~N words, ~N est. tokens
   - Session: ~N words, ~N est. tokens
 
-*Next Step: <smallest useful action>*
+Next Step: <smallest useful action>
+
+Coming Up:            ← omit this section when not needed
+  - <action>
+  - <action>
 --------------------------------------------------------------
 ```
 
 Use words × 1.3 or characters ÷ 4 to estimate tokens when exact counts are unavailable. Mark as approximate.
 
-**Next Step prediction hierarchy** — always predict something, never leave blank:
+**Next Step** — always a single action, never a list. Always predict something, never leave blank.
+
+**Coming Up** — optional. Show only when:
+- Meaningful ambiguity exists between two equally valid next actions, OR
+- More than 2 pending actions exist in the queue
+
+For **ambiguity**: list the recommended action first, marked `(recommended)`. Do not mark others.
+For **long queues** (>2 pending): list in selection-priority order. No `(recommended)` markers.
+Omit entirely when Next Step is clear and the queue has ≤ 2 items.
+
+**Next Step prediction hierarchy** — use to populate both Next Step and Coming Up:
 1. Active task in progress → next action within the current task
 2. Task complete + uncommitted changes exist → commit
 3. Task complete + clean working tree → next item in backlog
