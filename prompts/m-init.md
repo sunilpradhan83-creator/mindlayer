@@ -7,19 +7,20 @@ Initialize this AI session with minimal useful MindLayer memory context and repo
 ## Procedure
 
 1. Read `~/.mindlayer/boot.md` first if available. If missing, fall back to project `.mindlayer/` files and note the missing global boot file.
-2. Read `~/.mindlayer/router.md` and follow its load triggers for the current session.
-3. Read `~/.mindlayer/memory-system/per-turn.md` — always load, controls every response.
-4. Read `~/.mindlayer/index.md` if available.
-5. Read project `.mindlayer/index.md` if available.
-6. Check `~/.mindlayer/preferences/personal.md` if available. Load it only when it contains substantive user-written preferences; if it is missing or starter-only, report it as skipped.
-7. Always check project `.mindlayer/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
-8. If `.mindlayer/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
-9. Read only the latest useful progress summary from project `.mindlayer/progress.md`.
-10. Do not load empty scaffold files by default.
-11. Do not load `.mindlayer/local.md` by default.
-12. Do not use `README.md` or `docs/` as memory input.
-13. Treat tool adapters as thin instructions only — not memory stores.
-14. Go outside MindLayer memory only when necessary for the current task.
+2. Read `~/.mindlayer/router.md` — global load and save triggers.
+3. Read `.mindlayer/router.md` — project load triggers. Skip if file does not exist.
+4. Read `~/.mindlayer/memory-system/per-turn.md` — always load, controls every response.
+5. Read `~/.mindlayer/index.md` if available.
+6. Read project `.mindlayer/index.md` if available.
+7. Check `~/.mindlayer/preferences/personal.md` if available. Load it only when it contains substantive user-written preferences; if it is missing or starter-only, report it as skipped.
+8. Always check project `.mindlayer/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
+9. If `.mindlayer/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
+10. Read only the latest useful progress summary from project `.mindlayer/progress.md`.
+11. Do not load empty scaffold files by default.
+12. Do not load `.mindlayer/local.md` by default.
+13. Do not use `README.md` or `docs/` as memory input.
+14. Treat tool adapters as thin instructions only — not memory stores.
+15. Go outside MindLayer memory only when necessary for the current task.
 
 ## Source Boundaries
 

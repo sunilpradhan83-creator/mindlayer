@@ -23,7 +23,8 @@ Excluded from archive actions:
 |------|--------|
 | `index.md` (global and project) | Navigation map — entries are updated, not archived |
 | `boot.md` | Operational rules — system managed |
-| `router.md` | Operational rules — system managed |
+| `~/.mindlayer/router.md` | Operational rules — system managed |
+| `.mindlayer/router.md` | Operational rules — system managed |
 | `memory-system/` (all subfiles) | Operational rules — system managed |
 | `archive.md` | The destination itself |
 
