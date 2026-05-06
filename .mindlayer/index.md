@@ -177,10 +177,10 @@
   scope: project
   type: progress
   tags: [v3, memory-quality, retrieval]
-  summary: V2 complete. V3 phase 1 in progress — extend /m-status with per-file memory health scoring.
+  summary: V3 phase 1 complete. V3 phase 2 (memory diff) is next.
   importance: high
   status: active
-  last_updated: 2026-05-05
+  last_updated: 2026-05-06
 
 - id: ml-20260505-003
   title: MindLayer Product Roadmap

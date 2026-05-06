@@ -35,12 +35,12 @@ Full vision lives in `ROADMAP.md`. This entry tracks the immediate V2 priorities
 
 **Up next (V3 — Memory Quality + Smarter Retrieval):**
 
-V3 phase 1:
-- Memory health scoring: extend `/m-status` to auto-warn when files are stale, oversized, or contain duplicate entries. Surface a health score per file.
+V3 phase 1: ✅ complete
+- ✅ Memory health scoring: /m-status now scores each file OK|WARN|CRITICAL across staleness, size, and duplicates. Lint checks added.
 - ✅ Dynamic Next Step queue: `Next Step:` single-action plain text; optional `Coming Up:` for ambiguity or >2 pending. Ambiguity: recommended first, marked `(recommended)`. Long queue: priority order, no markers.
 - ✅ memory-system/ folder split: replace monolithic memory-system.md with indexed folder. Boot loads index + per-turn.md only (~750 tokens). Other sections load conditionally by trigger. Target: ~66% boot cost reduction for memory-system.
 
-V3 phase 2:
+**Up next (V3 phase 2):**
 - Memory diff: on boot or `/m-status`, surface what changed in memory since the last session (new entries, updated entries, archived entries).
 
 V3 phase 3:
