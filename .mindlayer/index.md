@@ -122,6 +122,18 @@
   status: active
   last_updated: 2026-05-05
 
+- id: ml-20260506-001
+  title: Memory System Self-Reference Problem
+  file: context.md
+  section: Memory System Self-Reference Problem
+  scope: project
+  type: context
+  tags: [memory-system, token-efficiency, architecture, v3]
+  summary: memory-system.md loads ~3,500 tokens just to learn what not to load. Proposed fix — memory-system/ folder with index-driven conditional loading (~1,200 tokens typical).
+  importance: high
+  status: active
+  last_updated: 2026-05-06
+
 - id: ml-20260505-004
   title: Goal Hierarchy and Flow
   file: context.md

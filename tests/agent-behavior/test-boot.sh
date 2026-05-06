@@ -43,7 +43,7 @@ assert_valid_receipt() {
   awk '
     /^Loaded:/ { in_loaded = 1; next }
     /^[[:alpha:]][[:alpha:] ]*:/ { in_loaded = 0 }
-    in_loaded && /~\/\.mindlayer\/memory-system\.md/ { found = 1 }
+    in_loaded && /~\/\.mindlayer\/(boot\.md|router\.md|memory-system\/)/ { found = 1 }
     END { exit found ? 0 : 1 }
   ' "$file" || return 1
 
@@ -104,13 +104,13 @@ cat > "$substantive" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, substantive `~/.mindlayer/preferences.md`, `~/.mindlayer/index.md`
+- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, `~/.mindlayer/preferences/personal.md`, `~/.mindlayer/index.md`
 - Project: `.mindlayer/index.md`, `.mindlayer/project.md`, latest `.mindlayer/progress.md`
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources
 - Empty scaffold files and `.mindlayer/local.md`
-- Full memory files not needed for startup
+- Conditional memory-system/ subfiles not needed for startup
 
 Missing:
 - None
@@ -130,7 +130,7 @@ Context share:
 - Other sources: 0% (README.md, docs/, and adapters skipped)
 
 Token strategy:
-L0 boot only: command rules, substantive preferences, indexes, project identity, and latest progress.
+L0 boot only: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress.
 
 Ready.
 What would you like to work on?
@@ -143,11 +143,11 @@ cat > "$starter" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, `~/.mindlayer/index.md`
+- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, `~/.mindlayer/index.md`
 - Project memory index
 
 Skipped:
-- `~/.mindlayer/preferences.md` because it is starter-only
+- `~/.mindlayer/preferences/personal.md` because it is starter-only
 - Starter-only project memory files
 - `.mindlayer/local.md`
 - `README.md`, `docs/`, and tool adapters as memory sources
@@ -178,8 +178,8 @@ EOF
 check_valid "$starter"
 
 scenario "receipt rejection cases"
-missing_memory_system="$SANDBOX/missing-memory-system.md"
-cat > "$missing_memory_system" <<'EOF'
+missing_boot_files="$SANDBOX/missing-boot-files.md"
+cat > "$missing_boot_files" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
@@ -211,14 +211,14 @@ L0 boot only.
 
 Ready.
 EOF
-check_invalid "$missing_memory_system" "missing memory-system boot file"
+check_invalid "$missing_boot_files" "missing boot/router/per-turn from loaded list"
 
 missing_cost="$SANDBOX/missing-cost.md"
 cat > "$missing_cost" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, command rules
+- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, command rules
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources
@@ -241,7 +241,7 @@ cat > "$missing_context_share" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, command rules
+- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, command rules
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources
@@ -270,7 +270,7 @@ cat > "$loaded_docs" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, command rules
+- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, command rules
 - README.md and docs/
 
 Skipped:
@@ -305,7 +305,7 @@ cat > "$missing_skip" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/memory-system.md`, command rules
+- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, command rules
 
 Missing:
 - None

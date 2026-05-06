@@ -268,9 +268,8 @@ lint_repo() {
   done
 
   # E7 source-boundary rules
-  # Behavior rules live in memory-system.md; adapters are thin pointers.
-  # AGENTS.md only needs to reference memory-system.md and the boot trigger.
-  require_contains "$PROJECT_DIR/AGENTS.md" 'Read `~/.mindlayer/memory-system.md` first' "AGENTS.md"
+  # Behavior rules live in memory-system/ subfiles; adapters are thin pointers.
+  require_contains "$PROJECT_DIR/AGENTS.md" 'Read `~/.mindlayer/boot.md` first' "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "first project-relevant request" "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Use this exact boot receipt format" "AGENTS.md"
   require_contains "$PROJECT_DIR/AGENTS.md" "Context share:" "AGENTS.md"
@@ -284,53 +283,52 @@ lint_repo() {
 
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.' "Copilot adapter"
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter." "Copilot adapter"
-  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Read `~/.mindlayer/memory-system.md` first' "Copilot adapter"
+  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Read `~/.mindlayer/boot.md` first' "Copilot adapter"
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "first project-relevant request" "Copilot adapter"
 
-  require_contains "$PROJECT_DIR/prompts/m-init.md" 'Read `~/.mindlayer/memory-system.md` first' "/m-init prompt"
+  require_contains "$PROJECT_DIR/prompts/m-init.md" 'Read `~/.mindlayer/boot.md` first' "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" 'Do not use `README.md` or `docs/` as memory input.' "/m-init prompt"
-  require_contains "$PROJECT_DIR/prompts/m-init.md" "blocked memory stores" "/m-init prompt"
+  require_contains "$PROJECT_DIR/prompts/m-init.md" "not memory stores" "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "Go outside MindLayer memory only when necessary" "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" 'Always check project `.mindlayer/project.md`' "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "low importance or starter-like" "/m-init prompt"
-  require_contains "$PROJECT_DIR/prompts/m-init.md" "Project identity is a bootstrap exception" "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "Automatic Boot Contract" "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-init.md" "Approximate context share by source" "/m-init prompt"
   require_contains "$PROJECT_DIR/prompts/m-save.md" "pending destination, action, duplicate check, and confidence" "/m-save prompt"
   require_contains "$PROJECT_DIR/prompts/m-status.md" "pending approvals" "/m-status prompt"
   require_contains "$PROJECT_DIR/prompts/m-status.md" "next useful action" "/m-status prompt"
 
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" 'Do not use `README.md` or `docs/` as memory input' "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" "not durable memory stores or retrieval sources" "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" "Go outside MindLayer memory only when necessary" "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" 'always check project `.mindlayer/project.md`' "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" "Read this file first when initializing MindLayer behavior" "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" "first project-relevant request" "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" "approximate context share by source" "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" "## Session Continuity Behavior" "global memory-system template"
-  require_contains "$PROJECT_DIR/global-template/memory-system.md" "pending memory-write approvals" "global memory-system template"
+  # Global template — rules split across memory-system/ subfiles
+  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input' "global read-write template"
+  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "not durable memory stores or retrieval sources" "global read-write template"
+  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "Go outside MindLayer memory only when necessary" "global read-write template"
+  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "Approval must be literal" "global read-write template"
+  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "literal explicit approval" "global read-write template"
+  require_contains "$PROJECT_DIR/global-template/memory-system/session.md" "## Session Continuity Behavior" "global session template"
+  require_contains "$PROJECT_DIR/global-template/memory-system/session.md" "pending memory-write approvals" "global session template"
+  require_contains "$PROJECT_DIR/global-template/boot.md" "first project-relevant request" "global boot template"
+  require_contains "$PROJECT_DIR/global-template/boot.md" "approximate context share by source" "global boot template"
+  require_contains "$PROJECT_DIR/global-template/boot.md" 'check project `.mindlayer/project.md`' "global boot template"
 
-  # Behavior rules live in memory-system.md; codex_block is a thin pointer.
-  require_contains "$PROJECT_DIR/install.sh" 'Read `~/.mindlayer/memory-system.md` first' "installer adapter block"
+  # Installer — check adapter block and embedded fallback vars
+  require_contains "$PROJECT_DIR/install.sh" 'Read `~/.mindlayer/boot.md` first' "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "first project-relevant request" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Use this exact boot receipt format" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Context share:" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Token strategy:" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Proactive Behavior" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "During MindLayer boot, always check project" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "approximate context share by source" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Session Continuity Behavior" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Write Rules" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Read Rules" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Routing Rules" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Token Rules" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Backup Rules" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Approval Rules" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Lifecycle Statuses" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Index-First Retrieval" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "literal explicit approval" "installer memory-system fallback"
-  require_contains "$PROJECT_DIR/install.sh" "Approval must be literal" "installer memory-system fallback"
+  require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer read-write fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Session Continuity Behavior" "installer session fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Write Rules" "installer read-write fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Read Rules" "installer read-write fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Routing Rules" "installer read-write fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Token Rules" "installer schema fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Backup Rules" "installer session fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Approval Rules" "installer read-write fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Lifecycle Statuses" "installer schema fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Index-First Retrieval" "installer commands fallback"
+  require_contains "$PROJECT_DIR/install.sh" "literal explicit approval" "installer read-write fallback"
+  require_contains "$PROJECT_DIR/install.sh" "Approval must be literal" "installer read-write fallback"
 }
 
 # ---------------------------------------------------------------------------

@@ -9,7 +9,7 @@ Follow `AGENTS.md`.
 
 Use project `.mindlayer/` for project context. Use `~/.mindlayer/` for global user memory when available.
 
-Run MindLayer boot at session start or before the first project-relevant request. Read `~/.mindlayer/memory-system.md` first when available, then indexes, and report a compact context receipt when visible to the user.
+Run MindLayer boot at session start or before the first project-relevant request. Read `~/.mindlayer/boot.md` first when available, then `router.md`, then follow load triggers. Report a compact context receipt when visible to the user.
 
 Do not use `README.md` or `docs/` as memory input. Do not retrieve durable context from this adapter. Do not modify memory files unless explicitly requested. Keep generated changes minimal and safe.
 

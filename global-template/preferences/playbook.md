@@ -1,6 +1,6 @@
 # Global Playbook
 
-Reusable workflows and procedures.
+Reusable cross-project workflows and procedures. Agent writes entries here via /m-save when recurring workflows emerge across projects.
 
 ## Entry Template
 

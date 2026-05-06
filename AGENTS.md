@@ -30,9 +30,10 @@ Project memory: `.mindlayer/`
 MindLayer boot should run at session start or tool preflight when the host supports it. If no preflight hook exists, run boot before answering the first project-relevant request. Do not treat a plain greeting as project-relevant.
 
 Boot order:
-1. Read `~/.mindlayer/memory-system.md` first when available.
-2. Read `~/.mindlayer/index.md` and `.mindlayer/index.md`.
-3. Load substantive user preferences when present, project identity, and current progress.
+1. Read `~/.mindlayer/boot.md` first when available.
+2. Read `~/.mindlayer/router.md` and follow its load triggers.
+3. Read `~/.mindlayer/index.md` and `.mindlayer/index.md`.
+4. Load project identity and current progress.
 
 Use this exact boot receipt format when the boot is visible to the user:
 
@@ -63,7 +64,7 @@ Context share:
 - Other sources: 0% (README.md, docs/, and adapters skipped)
 
 Token strategy:
-L0 boot: command rules, indexes, substantive preferences, project identity, and latest progress only.
+L0 boot: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress only.
 
 Ready.
 What would you like to work on?
@@ -76,5 +77,5 @@ Use `/m-status` to check memory health.
 Use `/m-session` to report session context cost and recommend compact or new session.
 Use `/m-archive` (alias: `/m-clean`) to scan for stale entries and propose archive or delete actions.
 
-Commands are also triggered proactively. See the Proactive Behavior section in `~/.mindlayer/memory-system.md` for end-of-turn detection rules, trigger phrases, and surface formats.
+Commands are also triggered proactively. See the Proactive Behavior section in `~/.mindlayer/memory-system/per-turn.md` for end-of-turn detection rules, trigger phrases, and surface formats.
 <!-- mindlayer:end -->

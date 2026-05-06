@@ -22,8 +22,9 @@ Excluded from archive actions:
 | File | Reason |
 |------|--------|
 | `index.md` (global and project) | Navigation map — entries are updated, not archived |
-| `memory-system.md` | Operational rules |
-| `prompts.md` | Command reference |
+| `boot.md` | Operational rules — system managed |
+| `router.md` | Operational rules — system managed |
+| `memory-system/` (all subfiles) | Operational rules — system managed |
 | `archive.md` | The destination itself |
 
 ### Staleness Criteria by Type

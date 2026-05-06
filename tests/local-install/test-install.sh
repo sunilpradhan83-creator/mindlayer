@@ -64,6 +64,19 @@ assert_count() {
   [ "$actual" = "$expected" ]
 }
 
+assert_git_has_commit() {
+  dir="$1"
+  [ -d "$dir/.git" ] || return 1
+  git -C "$dir" log --oneline 2>/dev/null | grep -q .
+}
+
+assert_not_contains() {
+  file="$1"
+  pattern="$2"
+  [ -f "$file" ] || return 0
+  ! grep -Fq "$pattern" "$file"
+}
+
 assert_index_sections_exist() {
   base="$1"
   index="$base/index.md"
@@ -132,23 +145,31 @@ else
   fail "$CURRENT_SCENARIO: installer exits successfully"
 fi
 
-check assert_file_exists "$fresh_home/.mindlayer/memory-system.md"
+check assert_file_exists "$fresh_home/.mindlayer/boot.md"
+check assert_file_exists "$fresh_home/.mindlayer/router.md"
+check assert_dir_exists "$fresh_home/.mindlayer/memory-system"
+check assert_file_exists "$fresh_home/.mindlayer/memory-system/per-turn.md"
+check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands.md"
+check assert_file_exists "$fresh_home/.mindlayer/memory-system/read-write.md"
+check assert_file_exists "$fresh_home/.mindlayer/memory-system/session.md"
+check assert_file_exists "$fresh_home/.mindlayer/memory-system/schema.md"
 check assert_file_exists "$fresh_home/.mindlayer/index.md"
-check assert_file_exists "$fresh_home/.mindlayer/preferences.md"
-check assert_file_exists "$fresh_home/.mindlayer/principles.md"
-check assert_file_exists "$fresh_home/.mindlayer/anti-patterns.md"
-check assert_file_exists "$fresh_home/.mindlayer/prompts.md"
-check assert_file_exists "$fresh_home/.mindlayer/playbook.md"
+check assert_dir_exists "$fresh_home/.mindlayer/preferences"
+check assert_file_exists "$fresh_home/.mindlayer/preferences/index.md"
+check assert_file_exists "$fresh_home/.mindlayer/preferences/personal.md"
+check assert_dir_exists "$fresh_home/.mindlayer/preferences/.git"
 check assert_not_exists "$fresh_home/.mindlayer/memory.md"
-check assert_contains "$fresh_home/.mindlayer/index.md" "file: memory-system.md"
-check assert_contains "$fresh_home/.mindlayer/index.md" "file: preferences.md"
-check assert_contains "$fresh_home/.mindlayer/preferences.md" "No user preferences saved yet."
-check assert_contains "$fresh_home/.mindlayer/preferences.md" "Back up"
-check assert_contains "$fresh_home/.mindlayer/memory-system.md" 'Do not use `README.md` or `docs/` as memory input'
-check assert_contains "$fresh_home/.mindlayer/memory-system.md" 'always check project `.mindlayer/project.md`'
-check assert_contains "$fresh_home/.mindlayer/memory-system.md" "Read this file first when initializing MindLayer behavior"
-check assert_contains "$fresh_home/.mindlayer/memory-system.md" "first project-relevant request"
-check assert_contains "$fresh_home/.mindlayer/memory-system.md" "pending memory-write approvals"
+check assert_not_exists "$fresh_home/.mindlayer/memory-system.md"
+check assert_not_exists "$fresh_home/.mindlayer/preferences.md"
+check assert_not_exists "$fresh_home/.mindlayer/principles.md"
+check assert_not_exists "$fresh_home/.mindlayer/anti-patterns.md"
+check assert_not_exists "$fresh_home/.mindlayer/prompts.md"
+check assert_not_exists "$fresh_home/.mindlayer/playbook.md"
+check assert_git_has_commit "$fresh_home/.mindlayer/preferences"
+check assert_contains "$fresh_home/.mindlayer/boot.md" "first project-relevant request"
+check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input'
+check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'always check project `.mindlayer/project.md`'
+check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" "explicit approval"
 check assert_index_sections_exist "$fresh_home/.mindlayer"
 
 for file in project.md progress.md decisions.md context.md backlog.md roadmap.md risks.md index.md local.md; do
@@ -161,7 +182,7 @@ check assert_file_exists "$fresh_project/.github/copilot-instructions.md"
 check assert_contains "$fresh_project/AGENTS.md" "<!-- mindlayer:start -->"
 check assert_contains "$fresh_project/CLAUDE.md" "<!-- mindlayer:start -->"
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "<!-- mindlayer:start -->"
-check assert_contains "$fresh_project/AGENTS.md" 'Read `~/.mindlayer/memory-system.md` first'
+check assert_contains "$fresh_project/AGENTS.md" 'Read `~/.mindlayer/boot.md` first'
 check assert_contains "$fresh_project/AGENTS.md" "first project-relevant request"
 check assert_contains "$fresh_project/AGENTS.md" "Use this exact boot receipt format"
 check assert_contains "$fresh_project/AGENTS.md" "Context share:"
@@ -172,7 +193,7 @@ check assert_contains "$fresh_project/CLAUDE.md" "Do not duplicate memory into"
 check assert_contains "$fresh_project/CLAUDE.md" "automatic MindLayer boot"
 check assert_contains "$fresh_project/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter."
-check assert_contains "$fresh_project/.github/copilot-instructions.md" 'Read `~/.mindlayer/memory-system.md` first'
+check assert_contains "$fresh_project/.github/copilot-instructions.md" 'Read `~/.mindlayer/boot.md` first'
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "first project-relevant request"
 check assert_contains "$fresh_project/.gitignore" ".mindlayer/local.md"
 check assert_contains "$fresh_project/.gitignore" ".mindlayer/private/"
@@ -211,12 +232,6 @@ cat > "$existing_home/.mindlayer/preferences.md" <<'EOF'
 ## User Preferences
 
 Custom global preference sentinel.
-EOF
-
-cat > "$existing_home/.mindlayer/memory-system.md" <<'EOF'
-# MindLayer Memory System
-
-Old global memory-system sentinel.
 EOF
 
 cat > "$existing_project/AGENTS.md" <<'EOF'
@@ -262,8 +277,8 @@ else
 fi
 
 check assert_contains "$existing_home/.mindlayer/preferences.md" "Custom global preference sentinel."
-check assert_contains "$existing_home/.mindlayer/memory-system.md" "MindLayer boot initializes the minimum useful context"
-check assert_contains "$existing_home/.mindlayer/memory-system.md" "first project-relevant request"
+check assert_file_exists "$existing_home/.mindlayer/boot.md"
+check assert_contains "$existing_home/.mindlayer/boot.md" "first project-relevant request"
 check assert_contains "$existing_project/.mindlayer/project.md" "Custom project memory sentinel."
 check assert_contains "$existing_project/AGENTS.md" "Do not remove this project-specific instruction."
 check assert_contains "$existing_project/CLAUDE.md" "Keep this Claude sentinel."
@@ -276,7 +291,6 @@ check assert_count 1 "$existing_project/.github/copilot-instructions.md" "<!-- m
 check assert_count 1 "$existing_project/.gitignore" ".mindlayer/local.md"
 check assert_count 1 "$existing_project/.gitignore" ".mindlayer/private/"
 check assert_file_exists "$existing_home/.mindlayer/index.md"
-check assert_contains "$existing_home/.mindlayer/index.md" "file: memory-system.md"
 check assert_file_exists "$existing_project/.mindlayer/index.md"
 
 scenario "adapter post-block content preserved"
@@ -305,10 +319,35 @@ check assert_contains "$postblock_project/AGENTS.md" "This content after the blo
 check assert_count 1 "$postblock_project/AGENTS.md" "<!-- mindlayer:start -->"
 check assert_count 1 "$postblock_project/AGENTS.md" "<!-- mindlayer:end -->"
 
+scenario "managed template overwrite on reinstall"
+managed_home="$SANDBOX/managed-home"
+managed_project="$SANDBOX/managed-project"
+managed_log_1="$SANDBOX/managed-install-1.log"
+managed_log_2="$SANDBOX/managed-install-2.log"
+mkdir -p "$managed_home/.mindlayer/memory-system" "$managed_home/.mindlayer/preferences" "$managed_project"
+
+cat > "$managed_home/.mindlayer/boot.md" <<'EOF'
+# Old Boot
+
+old boot sentinel content
+EOF
+
+cat > "$managed_home/.mindlayer/preferences/personal.md" <<'EOF'
+# Preferences
+
+User custom preferences sentinel.
+EOF
+
+run_install "$managed_home" "$managed_project" "$managed_log_1" || true
+run_install "$managed_home" "$managed_project" "$managed_log_2" || true
+
+check assert_not_contains "$managed_home/.mindlayer/boot.md" "old boot sentinel content"
+check assert_contains "$managed_home/.mindlayer/boot.md" "first project-relevant request"
+check assert_contains "$managed_home/.mindlayer/preferences/personal.md" "User custom preferences sentinel."
+
 scenario "boot contract"
-check assert_contains "$fresh_home/.mindlayer/memory-system.md" "MindLayer boot initializes the minimum useful context"
-check assert_contains "$fresh_home/.mindlayer/index.md" "file: preferences.md"
-check assert_file_exists "$fresh_home/.mindlayer/preferences.md"
+check assert_contains "$fresh_home/.mindlayer/boot.md" "first project-relevant request"
+check assert_file_exists "$fresh_home/.mindlayer/preferences/personal.md"
 check assert_not_exists "$fresh_home/.mindlayer/memory.md"
 check assert_contains "$fresh_project/AGENTS.md" '`/m-init` is a legacy/manual refresh alias'
 check assert_contains "$fresh_project/AGENTS.md" "Context cost:"

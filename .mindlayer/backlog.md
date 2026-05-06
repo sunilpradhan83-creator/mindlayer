@@ -38,6 +38,7 @@ Full vision lives in `ROADMAP.md`. This entry tracks the immediate V2 priorities
 V3 phase 1:
 - Memory health scoring: extend `/m-status` to auto-warn when files are stale, oversized, or contain duplicate entries. Surface a health score per file.
 - Dynamic Next Step queue: refine the Token Burned block so `Next Step:` stays single-action, with an optional `Coming Up:` section shown only for meaningful ambiguity or when more than 2 pending actions exist. For ambiguity, list the recommended action first and mark it `(recommended)`; for long queues only, list actions in selection-priority order without recommendation markers.
+- memory-system/ folder split: replace monolithic memory-system.md with indexed folder. Boot loads index + per-turn.md only (~750 tokens). Other sections load conditionally by trigger. Target: ~66% boot cost reduction for memory-system.
 
 V3 phase 2:
 - Memory diff: on boot or `/m-status`, surface what changed in memory since the last session (new entries, updated entries, archived entries).

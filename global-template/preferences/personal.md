@@ -1,10 +1,11 @@
-# Global Preferences
+# Personal Preferences
 
 User-owned cross-project preferences for how AI coding agents should work with you.
 
-This file lives outside project Git at `~/.mindlayer/preferences.md`. Back up `~/.mindlayer/` with your normal dotfiles, encrypted backup, or private personal repository if you want these preferences preserved across machine loss.
+This file is git-backed at `~/.mindlayer/preferences/`. Add a remote to back it up:
+`git -C ~/.mindlayer/preferences remote add origin <your-private-repo>`
 
-Do not store secrets, raw conversations, or project-specific facts here. Preferences must stay within the guardrails in `memory-system.md`.
+Do not store secrets, raw conversations, or project-specific facts here.
 
 ## User Preferences
 

@@ -67,9 +67,11 @@ print_row() {
 
 # ---- L0 bootstrap ---------------------------------------------------------
 L0_FILES=""
-[ "$INCLUDE_GLOBAL" -eq 1 ] && [ -f "$GMEM/memory-system.md" ] && L0_FILES="$L0_FILES $GMEM/memory-system.md"
-[ "$INCLUDE_GLOBAL" -eq 1 ] && [ -f "$GMEM/index.md" ]         && L0_FILES="$L0_FILES $GMEM/index.md"
-[ -f "$PMEM/index.md" ]                                        && L0_FILES="$L0_FILES $PMEM/index.md"
+[ "$INCLUDE_GLOBAL" -eq 1 ] && [ -f "$GMEM/boot.md" ]                        && L0_FILES="$L0_FILES $GMEM/boot.md"
+[ "$INCLUDE_GLOBAL" -eq 1 ] && [ -f "$GMEM/router.md" ]                      && L0_FILES="$L0_FILES $GMEM/router.md"
+[ "$INCLUDE_GLOBAL" -eq 1 ] && [ -f "$GMEM/memory-system/per-turn.md" ]      && L0_FILES="$L0_FILES $GMEM/memory-system/per-turn.md"
+[ "$INCLUDE_GLOBAL" -eq 1 ] && [ -f "$GMEM/index.md" ]                       && L0_FILES="$L0_FILES $GMEM/index.md"
+[ -f "$PMEM/index.md" ]                                                       && L0_FILES="$L0_FILES $PMEM/index.md"
 L0_CHARS=$(count_chars $L0_FILES)
 L0_NAMES=$(echo "$L0_FILES" | sed "s|$HOME|~|g; s|$PROJECT_DIR/||g" | xargs -n1 echo 2>/dev/null | tr '\n' ' ')
 

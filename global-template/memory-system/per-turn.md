@@ -1,0 +1,143 @@
+# Per-Turn Rules
+
+<!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
+
+Load this file at the start of every session, immediately after router.md. Rules here fire on every agent turn.
+
+## Per-Turn Status Block
+
+Append a status block at the end of every agent turn as the last output.
+
+```text
+-------------------------------------------------------------
+Token Burned:
+  - Last turn: ~N words, ~N est. tokens
+  - Session: ~N words, ~N est. tokens
+
+*Next Step: <smallest useful action>*
+--------------------------------------------------------------
+```
+
+Use words × 1.3 or characters ÷ 4 to estimate tokens when exact counts are unavailable. Mark as approximate.
+
+**Next Step prediction hierarchy** — always predict something, never leave blank:
+1. Active task in progress → next action within the current task
+2. Task complete + uncommitted changes exist → commit
+3. Task complete + clean working tree → next item in backlog
+4. Backlog empty → next roadmap phase (surface pull proposal)
+5. Roadmap complete → propose brainstorming next major version with the user
+
+**Backlog-empty detection** — when a task completes and the backlog is empty, append before the Token Burned block:
+
+```text
+Backlog complete — next phase: <roadmap phase name and summary>. Say 'pull next phase' to populate backlog.
+```
+
+When the user says 'pull next phase', decompose the roadmap phase into backlog items and propose each for approval before writing.
+
+## Lateral Intent Routing
+
+When a user introduces work that is not the current Next Step and not in the active backlog, classify the intent before proceeding.
+
+**Classification:**
+
+| Signal | Classification | Agent action |
+|---|---|---|
+| Fits project scope, likely recurring | Backlog candidate | Append capture offer, then proceed |
+| New direction or scope change | Roadmap amendment | Append flag, then proceed |
+| Clearly one-off, no durable value | Ad-hoc | Proceed without comment |
+
+**Rules:**
+- Classify silently. Do not narrate the classification.
+- Never block the user's request. The nudge is informational.
+- Append at most one nudge per turn, after the main response and before the Token Burned block.
+- Do not fire during boot, status checks, or when the user is explicitly responding to a Next Step or backlog pull.
+
+**Nudge format:**
+
+```text
+Lateral intent: <backlog candidate | roadmap amendment> — say 'add to backlog' or 'add to roadmap' to capture, or I'll just proceed.
+```
+
+## Pre-Push Gate
+
+Before surfacing push as a Next Step, or when the user requests a push, append:
+
+```text
+Pre-push: tests added and run for this change? Say 'yes' to push or 'skip' to push without testing.
+```
+
+**Rules:**
+- Fire once per push action.
+- `yes` or `skip` both proceed immediately — no further prompts.
+- Do not fire during boot, status checks, or non-push turns.
+
+## Proactive Behavior
+
+MindLayer commands are triggered two ways: by the AI detecting a need at the end of a turn, or by the user invoking them explicitly via a recognized phrase. Approval rules apply regardless of how a command is triggered.
+
+### End-of-Turn Detection
+
+At the end of every turn, before completing the response:
+
+- Check whether the turn produced anything durable worth saving. If yes, surface a memory candidate immediately — do not wait for the next turn or session end.
+- Check whether the current task context suggests relevant memory that has not yet been loaded. If yes, suggest a retrieval query.
+- Estimate session context weight. If heavy or critical, surface a compact session warning.
+- Check whether the current task just completed and the backlog is now empty. If yes, surface a roadmap phase pull proposal (see Per-Turn Status Block).
+
+Surface at most one of each per turn. Do not interrupt the main response — append after the primary answer.
+
+### Memory Candidate Format
+
+When a memory candidate is detected, append at the end of the response:
+
+```text
+Memory candidate: <description> → <target.md> — say 'go' to save
+```
+
+If the user says `go`, execute `/m-save` for that candidate. Approval rules still apply — `go` counts as explicit approval for the specific proposed candidate only.
+
+### Retrieval Suggestion Format
+
+When a retrieval need is detected, append at the end of the response:
+
+```text
+Relevant context may be available — try: /m-retrieve <predicted-query>
+```
+
+### Session Warning Format
+
+When session context is heavy (60–80%) or critical (>80%), append at the end of the response:
+
+```text
+Session context: <heavy | critical> (~N% used). Recommend: <compact | new session> — say 'msession' for full report.
+```
+
+Do not surface this when status is light or moderate.
+
+### Trigger Phrases
+
+Recognized phrases that invoke commands immediately, without waiting for end-of-turn detection:
+
+| Phrase | Command |
+|--------|---------|
+| "remember this", "save this", "add to memory" | `/m-save` |
+| "retrieve X", "load X", "what do we know about X" | `/m-retrieve <X>` |
+| "where were we", "memory status", "mstatus", "what's loaded" | `/m-status` |
+| "should I compact", "how much context", "start fresh", "msession" | `/m-session` |
+| "clean memory", "clean up memory", "archive memory", "archive it", "delete memory", "forget X", "remove X from memory", "memory is getting bloated", "tidy memory" | `/m-archive` |
+| "done for today", "wrapping up", "I'm done", "that's all", "bye", "done for now", "end session", "save session" | session write offer |
+
+Interpret intent loosely — treat natural language variations as equivalent to the listed phrases.
+
+`/m-status` and `/m-session` are never AI-initiated. Only the user triggers them.
+
+### Session Write Format
+
+When a session write trigger fires, append after the main response:
+
+```text
+Session summary ready — say 'save session' to write sessions/YYYY-MM-DD.md.
+```
+
+Also fires automatically (with approval) at: pre-`/compact`, post-significant-completion, and when session context exceeds 80%.

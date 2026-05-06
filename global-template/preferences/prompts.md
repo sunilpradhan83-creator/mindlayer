@@ -1,6 +1,6 @@
 # Global Prompts
 
-Reusable prompt templates.
+Reusable cross-project prompt templates. Agent writes entries here via /m-save when effective prompt patterns emerge.
 
 ## Entry Template
 
