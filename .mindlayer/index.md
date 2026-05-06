@@ -193,3 +193,15 @@
   importance: medium
   status: active
   last_updated: 2026-05-05
+
+- id: ml-20260506-002
+  title: Project Router
+  file: router.md
+  section: Project Router
+  scope: project
+  type: decision
+  tags: [router, auto-load, triggers, memory-routing, v3]
+  summary: Project-level router defining conditional load triggers for decisions, context, risks, roadmap, and sessions. Loads automatically at boot after global router.
+  importance: high
+  status: active
+  last_updated: 2026-05-06
