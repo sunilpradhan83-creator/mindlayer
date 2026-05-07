@@ -165,7 +165,7 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: V2 complete. V3 phases 1–4 complete. Backlog is empty; V4 SCRIPT and IDE extensions are next. See ROADMAP.md for full vision.
+  summary: V2 complete. V3 phases 1–3 complete. V3 phase 4 has ml load rename/contract shipped; programmatic ranked loader remains. See ROADMAP.md for full vision.
   importance: medium
   status: active
   last_updated: 2026-05-07
@@ -177,7 +177,7 @@
   scope: project
   type: progress
   tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
-  summary: Ranked loading shipped (session 13) — ml load primary, ml retrieve alias, deterministic index scoring, archive handling. V3 phase 4 complete. 10 test suites, 243 checks passing.
+  summary: V3 phase 4 in progress. ml load rename and ranked-load contract shipped; programmatic index scorer/loader remains pending. 10 test suites, 243 checks passing.
   importance: high
   status: active
   last_updated: 2026-05-07
