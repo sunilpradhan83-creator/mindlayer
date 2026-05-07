@@ -1,5 +1,108 @@
 # Decisions
 
+## Global-Template Sync Rule
+
+id: ml-20260507-007
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [global-template, sync, installer, per-turn, memory-system]
+confidence: high
+status: active
+source: manual
+
+### Summary
+When any file in `~/.mindlayer/memory-system/` is updated, `global-template/memory-system/` must be synced in the same session. New users only receive what ships in global-template.
+
+### Details
+- Live `~/.mindlayer/memory-system/` is the runtime install for the current developer. Changes there do not automatically propagate to new installs.
+- `global-template/memory-system/` is the source that the installer copies to new users on `install.sh` runs.
+- If they diverge, existing users have newer behavior but new users install an older version — silent regression.
+- Discovered this session: per-turn.md was updated live but global-template was not synced until explicitly caught at session close.
+
+### Sync checklist (any memory-system/ change):
+1. Edit live `~/.mindlayer/memory-system/<file>`
+2. Apply identical change to `global-template/memory-system/<file>`
+3. Run `tools/test.sh` to confirm both pass
+4. Commit both together
+
+### When to use
+Use whenever editing any file inside `~/.mindlayer/memory-system/` or `global-template/memory-system/`.
+
+### Related
+ml-20260430-003
+ml-20260507-006
+
+## Agent-Agnostic Design Principle
+
+id: ml-20260507-004
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [architecture, agent-agnostic, adapters, design]
+confidence: high
+status: active
+source: manual
+
+### Summary
+MindLayer is designed to work across any LLM tool — Claude, Codex, Cursor, Copilot, and any future agent. No feature, rule, or mitigation should be written as tool-specific unless it is explicitly a thin adapter for that tool.
+
+### Details
+- MindLayer is a control plane over agents, not a feature of any one agent.
+- Rules, mitigations, and future plans must be framed agent-agnostically. Example: "Claude Code hooks" is wrong; "/m-script command runner" is right.
+- Tool-specific content belongs only inside the relevant adapter file (AGENTS.md, CLAUDE.md, .github/copilot-instructions.md) and nowhere else.
+- If a tool-specific assumption is found in memory, decisions, risks, or roadmap — correct it immediately.
+
+### When to use
+Use when writing any rule, mitigation, or future plan that references a specific agent or tool. Use when reviewing decisions or risks for accidental tool lock-in.
+
+### Related
+ml-20260430-003
+ml-20260507-003
+
+## ML-999 Backlog Evaluation Decisions
+
+id: ml-20260507-005
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [backlog, roadmap, ml-999, prioritization, v3, v4]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Backlog evaluation (ML-999, 2026-05-07) produced activation, defer, and reject decisions for ML-101 through ML-110. These decisions should not be re-litigated without new evidence.
+
+### Details
+**Rejected permanently** (overlap with existing tools or violates core principles):
+- ML-104 Event-Based Memory System — overlaps with V2 proactive detection, adds infrastructure with no marginal gain
+- ML-105 Evidence-Based Routing — already implemented as the unified router (V3 phase 1)
+- ML-106 Indexed Memory Layer — already the core architecture, solved by memory-system/ folder split
+- ML-107 Team Mode & Governance — premature; single-user retrieval not yet reliable
+- ML-109 Auto-Learning Context Engine — violates deterministic-first principle; overlaps with LLM capabilities
+- ML-110 Agent Skills Layer — MindLayer is not a coding agent and must not become one
+
+**Deferred** (not needed now, revisit with evidence):
+- ML-103 Multi-Agent Adapter Layer — no evidence of adapter gaps causing real failures
+- ML-108 Memory Graph System — `Related:` field is sufficient; graph adds complexity LLMs can handle natively
+
+**Activated (partial)**:
+- ML-101 Context Intelligence Upgrade — scoped to ranked retrieval (V3 phase 4) on top of existing index; no ML, no new storage. Depends on memory diff (V3 phase 2) being stable first.
+
+**Pulled from deferred into V3 active**:
+- `/m-onboard` — existing project onboarding command; unblocked by V3 phase 1 infrastructure. Biggest adoption barrier for non-greenfield projects.
+
+### When to use
+Use when evaluating new backlog proposals that overlap with any ML-101 through ML-110 item, or when planning V3/V4 scope.
+
+### Related
+ml-20260430-005
+ml-20260505-003
+
 ## V1 Memory Architecture Decisions
 
 id: ml-20260430-003
@@ -94,6 +197,33 @@ Use during `/m-save`, memory routing, template updates, prompt changes, or any w
 
 ### Related
 ml-20260503-001
+
+## Skill Approval Gate
+
+id: ml-20260507-002
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [approval, skills, m-init, adapter-safety, memory-safety]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Skills that write files (such as the `init` skill triggered by `/m-init`) must not execute autonomously in the MindLayer repo. The agent must read the target file, explain what the skill would do, and wait for explicit approval before any write.
+
+### Details
+- `/m-init` in this repo triggers the `init` skill, which is designed to write or rewrite `CLAUDE.md`. In MindLayer, `CLAUDE.md` is a managed adapter file with a deliberate thin design — it must not be overwritten without approval.
+- If a skill writes without approval, revert immediately and explain what happened.
+- The literal approval rule (ml-20260503-002) applies to all file writes, including those initiated by skills and slash commands — not just `/m-save`.
+- MindLayer product learnings must be saved to `~/.mindlayer/` (global) or `.mindlayer/` (project), never to Claude's own memory system.
+
+### When to use
+Use when any skill, slash command, or automated tool attempts to write to files in the MindLayer repo.
+
+### Related
+ml-20260503-002
 
 ## Pre-Push Gate
 

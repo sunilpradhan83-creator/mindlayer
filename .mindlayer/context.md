@@ -133,3 +133,37 @@ Use when evaluating V3 token-efficiency work or designing changes to how
 
 ### Related
 ml-20260505-006
+
+## SCRIPT Development Philosophy
+
+id: ml-20260507-001
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: context
+tags: [script, philosophy, development-cycle, agile, v4, users]
+confidence: high
+status: active
+source: manual
+
+### Summary
+SCRIPT is MindLayer's six-step development philosophy for human + AI pairs on any project type. Signal → Cut → Refine → Implement → Prove → Transfer. Wraps Agile, adds the two steps Agile never had. Full definition in `ROADMAP.md`.
+
+### Details
+- **S Signal:** surface the real problem raw and unfiltered, pre-backlog
+- **C Cut:** roadmap gate (right version?) then backlog gate (right moment?) — most signals die here, correctly
+- **R Refine:** smallest version that answers the key question + 2–3 acceptance criteria before build
+- **I Implement:** build + unit tests together, AI leads execution, human steers
+- **P Prove:** broader tests, dogfood against real workflow, guard rails and regression
+- **T Transfer:** save the lesson (not the summary) to memory — feeds the next Signal
+
+Agile fits inside SCRIPT: Cut+Refine = sprint planning, Implement = execution, Prove = QA/review, Transfer = retro. Signal and Transfer are new-age extensions Agile never had because it predates AI companions.
+
+Planned: `/m-script` command in V4 ships this as a first-class user feature in global-template.
+
+### When to use
+Use when evaluating new feature ideas, planning development cycles, deciding whether a proposed process change fits MindLayer's philosophy, or explaining MindLayer's development approach to new users.
+
+### Related
+ml-20260430-004
+ml-20260505-003

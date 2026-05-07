@@ -42,6 +42,7 @@ V3 phase 1: ✅ complete
 
 **Up next (V3 phase 2):**
 - Memory diff: on boot or `/m-status`, surface what changed in memory since the last session (new entries, updated entries, archived entries).
+- Per-turn behavioral contracts: load announcement, memory candidate scan checklist, index-driven retrieval check — defined in `per-turn.md`. Verified by `tests/agent-behavior/test-per-turn.sh` (61 contract tests, all passing). Global `~/.mindlayer/memory-system/per-turn.md` updated. Router.md simplified — announcement format now owned by per-turn.md.
 
 V3 phase 3:
 - Auto-summarization suggestions: when an entry or file exceeds a size threshold, propose compression, splitting, or archiving before the file overflows.
@@ -53,6 +54,7 @@ V3 phase 4:
 - Existing project onboarding flow: automated way to populate `.mindlayer/` from existing README, docs, or context when installing into a mature project.
 - Memory-system.md changelog: surface what changed when memory-system.md is refreshed on reinstall.
 - Migration guide: document how to adopt new template files (e.g. roadmap.md) in existing installs.
+- `/m-script` command (V4): walks any user through S→C→R→I→P→T for their project. Ships in global-template as a first-class user feature. Depends on solid Transfer (V3 /m-save + memory health) being in place first.
 
 ### When to use
 Use when planning V2 work. See `ROADMAP.md` for the full multi-version vision.

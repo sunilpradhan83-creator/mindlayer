@@ -91,6 +91,62 @@ Pre-push: tests added and run for this change? Say 'yes' to push or 'skip' to pu
 - `yes` or `skip` both proceed immediately — no further prompts.
 - Do not fire during boot, status checks, or non-push turns.
 
+## Load Announcement Contract
+
+Every file load — at boot OR mid-session — must be announced before the response. Silence on a load is a contract violation.
+
+```text
+Loaded: <file-path> — <reason>
+```
+
+Rules:
+- Announce every file that loads this turn, one line per file, before the main response.
+- Reason must be non-empty and specific: what triggered the load.
+- Do not re-announce files already loaded earlier in the same session.
+- Do not announce `boot.md`, `router.md`, or `per-turn.md` after the initial boot receipt — they are boot-only.
+- If multiple files load in one turn, announce each on its own line.
+
+## Memory Candidate Scan
+
+At the end of every turn, before completing the response, run this checklist:
+
+| Check | If yes → candidate for |
+|---|---|
+| Was a decision made or rationale given? | `decisions.md` |
+| Was a risk or concern identified? | `risks.md` |
+| Was meaningful progress made or completed? | `progress.md` |
+| Was new project context or constraint learned? | `context.md` |
+| Was a backlog item added, resolved, or changed? | `backlog.md` |
+| Was a user preference or working style observed? | `preferences/` |
+| Was a prior candidate surfaced but not saved or skipped? | Re-surface it |
+
+If any match, surface immediately — do not wait for `/m-save` or session end:
+
+```text
+Memory candidate: <description> → <target.md> — say 'save' or 'skip'
+```
+
+Rules:
+- Surface at most one candidate per turn.
+- If multiple candidates exist, surface the highest-priority one (decisions > risks > progress > context > backlog > preferences).
+- Re-surface a pending candidate before surfacing a new one.
+- Never target adapter files (AGENTS.md, CLAUDE.md, copilot-instructions.md).
+- `go`, `save`, or `approved` counts as approval for the specific proposed candidate only.
+
+## Index-Driven Retrieval Check
+
+At the end of every turn, scan loaded index summaries against the current task topic. If any indexed entry is relevant to the current task but not yet loaded this session, flag it:
+
+```text
+Relevant memory not loaded: <entry title> (<id>) — say '/m-retrieve <query>' to load
+```
+
+Rules:
+- Surface at most one retrieval suggestion per turn.
+- Do not suggest files already loaded this session.
+- Do not suggest if the current task has no clear match in the index.
+- Query must be specific enough to retrieve the correct entry.
+
 ## Proactive Behavior
 
 MindLayer commands are triggered two ways: by the AI detecting a need at the end of a turn, or by the user invoking them explicitly via a recognized phrase. Approval rules apply regardless of how a command is triggered.
@@ -108,20 +164,20 @@ Surface at most one of each per turn. Do not interrupt the main response — app
 
 ### Memory Candidate Format
 
-When a memory candidate is detected, append at the end of the response:
+When a memory candidate is detected via the Memory Candidate Scan checklist, append at the end of the response:
 
 ```text
-Memory candidate: <description> → <target.md> — say 'go' to save
+Memory candidate: <description> → <target.md> — say 'save' or 'skip'
 ```
 
-If the user says `go`, execute `/m-save` for that candidate. Approval rules still apply — `go` counts as explicit approval for the specific proposed candidate only.
+`go`, `save`, or `approved` counts as explicit approval for the specific proposed candidate only. Full rules in Memory Candidate Scan section above.
 
 ### Retrieval Suggestion Format
 
-When a retrieval need is detected, append at the end of the response:
+When a retrieval need is detected via the Index-Driven Retrieval Check, append at the end of the response:
 
 ```text
-Relevant context may be available — try: /m-retrieve <predicted-query>
+Relevant memory not loaded: <entry title> (<id>) — say '/m-retrieve <query>' to load
 ```
 
 ### Session Warning Format

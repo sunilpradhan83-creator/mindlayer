@@ -188,11 +188,11 @@
   section: MindLayer Product Roadmap
   scope: project
   type: roadmap
-  tags: [roadmap, v2, v3, cli]
-  summary: V1 and V2 shipped. V3 targets memory health scoring and smarter retrieval. Full vision in ROADMAP.md.
+  tags: [roadmap, v2, v3, v4, script, cli]
+  summary: V1 and V2 shipped. V3 in progress (phase 1 complete). V4 targets /m-script and IDE extensions. SCRIPT philosophy defined in ROADMAP.md and context.md (ml-20260507-001). Full vision in ROADMAP.md.
   importance: medium
   status: active
-  last_updated: 2026-05-05
+  last_updated: 2026-05-07
 
 - id: ml-20260506-002
   title: Project Router
@@ -205,3 +205,87 @@
   importance: high
   status: active
   last_updated: 2026-05-06
+
+- id: ml-20260507-007
+  title: Global-Template Sync Rule
+  file: decisions.md
+  section: Global-Template Sync Rule
+  scope: project
+  type: decision
+  tags: [global-template, sync, installer, per-turn, memory-system]
+  summary: When ~/.mindlayer/memory-system/ is updated, global-template/memory-system/ must be synced in the same session. Divergence means new users install older behavior silently. Sync checklist defined.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-006
+  title: Per-Turn Behavioral Contract Compliance Risk
+  file: risks.md
+  section: Per-Turn Behavioral Contract Compliance
+  scope: project
+  type: risk
+  tags: [per-turn, enforcement, agent-behavior, load-announcement, memory-candidate, retrieval, trust]
+  summary: Load announcement, memory candidate surfacing, and retrieval suggestions are instruction-based not runtime-enforced. Silent failures possible. Mitigated by per-turn.md contract rules and 61-test test-per-turn.sh suite. Future fix via /m-script (V4).
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-003
+  title: Router Enforcement Gap
+  file: risks.md
+  section: Router Enforcement Gap
+  scope: project
+  type: risk
+  tags: [router, enforcement, agent-behavior, trust, skills]
+  summary: The MindLayer router is a memory document, not an execution engine. All trigger rules are soft contracts — the agent decides whether to fire them. No runtime process enforces them. Current mitigations are best-effort. Hard enforcement planned via /m-script command runner in V4.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-005
+  title: ML-999 Backlog Evaluation Decisions
+  file: decisions.md
+  section: ML-999 Backlog Evaluation Decisions
+  scope: project
+  type: decision
+  tags: [backlog, roadmap, ml-999, prioritization, v3, v4]
+  summary: ML-101–110 evaluation (2026-05-07). Rejected ML-104/105/106/107/109/110. Deferred ML-103/108. Activated ML-101 partial (ranked retrieval, after V3 diff). Pulled /m-onboard into V3 active. Do not re-litigate without new evidence.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-004
+  title: Agent-Agnostic Design Principle
+  file: decisions.md
+  section: Agent-Agnostic Design Principle
+  scope: project
+  type: decision
+  tags: [architecture, agent-agnostic, adapters, design]
+  summary: MindLayer works across any LLM tool. No rule, feature, or mitigation should be tool-specific unless it is explicitly a thin adapter. Correct violations immediately.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-002
+  title: Skill Approval Gate
+  file: decisions.md
+  section: Skill Approval Gate
+  scope: project
+  type: decision
+  tags: [approval, skills, m-init, adapter-safety, memory-safety]
+  summary: Skills and slash commands that write files must not execute autonomously in MindLayer. Agent must explain and wait for approval. MindLayer product memory belongs in ~/.mindlayer/ or .mindlayer/, never in Claude's own memory system.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-001
+  title: SCRIPT Development Philosophy
+  file: context.md
+  section: SCRIPT Development Philosophy
+  scope: project
+  type: context
+  tags: [script, philosophy, development-cycle, agile, v4, users]
+  summary: Six-step human+AI development cycle — Signal, Cut, Refine, Implement, Prove, Transfer. Wraps Agile, adds pre-backlog validation and persistent memory transfer. Full definition in ROADMAP.md. Planned /m-script command in V4.
+  importance: high
+  status: active
+  last_updated: 2026-05-07

@@ -42,8 +42,9 @@ Make stored memory more useful over time and easier to find.
 
 ## V4 — IDE Extensions + Intelligence Layer
 
-Bring MindLayer into the editor and make retrieval smarter.
+Bring MindLayer into the editor, ship SCRIPT as a user-facing feature, and make retrieval smarter.
 
+- `/m-script` command — walks any user through S→C→R→I→P→T for their project; ships in global-template
 - VS Code extension: memory sidebar, quick-save from selection
 - JetBrains and Cursor support
 - Optional semantic search layer for large memory stores
@@ -64,6 +65,59 @@ Shared memory for collaborating developers on the same project.
 ## V5+ — Hosted / SaaS
 
 A fundamentally different deployment model. Cross-device sync, web dashboard, team collaboration with a backend. This is a separate product decision, not just a feature addition.
+
+---
+
+## Development Philosophy — SCRIPT
+
+How MindLayer is built, and how every user should build with an AI companion.
+
+SCRIPT is a six-step development cycle for human + AI pairs working on any kind of project. It wraps Agile — backlog grooming and sprint planning live in Cut and Refine, execution in Implement, QA and review in Prove, retrospective in Transfer — while adding the two steps Agile never had: **Signal** (validate the real problem before it enters the backlog) and **Transfer** (save lessons to persistent memory so every cycle is smarter than the last).
+
+**S — Signal**
+Surface the real problem. Raw input: user complaint, metric drop, founder instinct, market gap. This is pre-backlog — no filtering yet, just honest capture.
+
+**C — Cut**
+Decide what is worth doing now. Two gates in sequence:
+- Roadmap gate: does this advance the current version goal? If not, defer to a future version or drop.
+- Backlog gate: is this the right moment to execute? If not, park and revisit next cycle.
+Most signals die here. That is correct.
+
+**R — Refine**
+Shape the smallest version that answers the key question. Write 2–3 acceptance criteria before any build starts. This is where user stories live. "Smallest" means smallest enough to learn from fast — not smallest imaginable.
+
+**I — Implement**
+Build it. Unit tests are part of Implement, not after it. AI companion leads execution; human steers direction and scope.
+
+**P — Prove**
+Broader tests, real scenario validation, dogfooding. Run it against your own workflow before calling it done. Guard rails: does it break anything upstream? AI companion can run regression checks automatically.
+
+**T — Transfer**
+Save what changed your understanding to persistent memory. Not what you built — what you learned. This feeds the next Signal and makes every cycle smarter than the last.
+
+```
+S → C → R → I → P → T → (back to S)
+```
+
+### SCRIPT and Agile
+
+| Agile concept | SCRIPT step |
+|---|---|
+| Backlog grooming | Cut |
+| Sprint planning | Cut + Refine |
+| User stories + acceptance criteria | Refine |
+| Sprint execution | Implement |
+| QA / sprint review | Prove |
+| Retrospective | Transfer |
+| Continuous delivery | Prove → Signal loop |
+
+SCRIPT does not replace Agile. Agile fits inside it. Signal and Transfer are the extensions Agile never had because it was designed before AI companions existed.
+
+### SCRIPT across MindLayer versions
+
+- **Now (V3):** Philosophy documented. Lateral intent routing handles Signal. `/m-save` handles Transfer.
+- **V4:** `/m-script` command — walks any user through S→C→R→I→P→T for their project. Ships in global-template as a first-class user feature.
+- **V5:** SCRIPT as shared team language. Retros feed Transfer across team members. Signal becomes crowd-sourced across the team.
 
 ---
 
