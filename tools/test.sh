@@ -25,3 +25,6 @@ bash "$ROOT_DIR/tests/agent-behavior/test-continuity.sh"
 
 printf "\n6. Per-turn behavioral contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-per-turn.sh"
+
+printf "\n7. Onboard behavioral contracts\n"
+bash "$ROOT_DIR/tests/agent-behavior/test-onboard.sh"
