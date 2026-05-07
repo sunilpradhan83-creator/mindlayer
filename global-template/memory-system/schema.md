@@ -19,7 +19,7 @@ Load this file when the user asks about lifecycle statuses, subdirectory rules, 
 - `active`: current and trusted.
 - `experimental`: useful but not fully proven.
 - `deprecated`: superseded but retained for reference.
-- `archived`: inactive history. Content lives in `archive.md` (global or project scope). Index entry remains with `status: archived` and `file: archive.md` so `/m-retrieve` can still find it. Boot skips `archive.md`.
+- `archived`: inactive history. Content lives in `archive.md` (global or project scope). Index entry remains with `status: archived` and `file: archive.md` so `ml retrieve` can still find it. Boot skips `archive.md`.
 
 ## Subdirectory Rules
 
@@ -27,7 +27,7 @@ Subdirectories under `.mindlayer/` are created on first use. Never create empty 
 
 ### private/
 - Purpose: sensitive notes that must not be committed to git (API key references, personal context, sensitive project notes).
-- Write: via `/m-save` when the user marks content as sensitive or private.
+- Write: via `ml save` when the user marks content as sensitive or private.
 - Read: only when the user explicitly asks for private context.
 - Boot: always skip.
 - Git: gitignored.
@@ -44,7 +44,7 @@ Subdirectories under `.mindlayer/` are created on first use. Never create empty 
   ## Completed
   ## Next
   ```
-- Read: via `/m-retrieve sessions` or a date query. On boot, if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
+- Read: via `ml retrieve sessions` or a date query. On boot, if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
 - Boot: skip full load. Surface `## Next` from the most recent session file only.
 - Git: gitignored.
 - Lifecycle: dated snapshots — no archive or cleanup needed.
@@ -55,7 +55,7 @@ Subdirectories under `.mindlayer/` are created on first use. Never create empty 
 - Read: when the same derived context is needed again for the current task.
 - Boot: always skip.
 - Git: gitignored.
-- Lifecycle: `/m-clean` can clear stale cache entries. Safe to delete and regenerate without data loss.
+- Lifecycle: `ml clean` can clear stale cache entries. Safe to delete and regenerate without data loss.
 
 ### tmp/
 - Purpose: ephemeral scratch notes during active multi-step work within a single session.
@@ -63,4 +63,4 @@ Subdirectories under `.mindlayer/` are created on first use. Never create empty 
 - Read: only within the same session.
 - Boot: skip. Warn if `tmp/` contains content from a prior session (stale scratch — offer to clear).
 - Git: gitignored.
-- Lifecycle: cleared at session start when stale, or on `/m-clean`.
+- Lifecycle: cleared at session start when stale, or on `ml clean`.

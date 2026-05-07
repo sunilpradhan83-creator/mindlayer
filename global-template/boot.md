@@ -57,4 +57,4 @@ Ready.
 What would you like to work on?
 ```
 
-`/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.

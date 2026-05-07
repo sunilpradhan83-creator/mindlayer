@@ -1,6 +1,6 @@
 # Global Anti-Patterns
 
-Cross-project mistakes and behaviors to avoid. Agent writes entries here via /m-save when recurring anti-patterns are identified.
+Cross-project mistakes and behaviors to avoid. Agent writes entries here via ml save when recurring anti-patterns are identified.
 
 ## Entry Template
 

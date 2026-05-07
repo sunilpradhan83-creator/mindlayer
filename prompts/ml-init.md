@@ -2,7 +2,7 @@
 
 Initialize this AI session with minimal useful MindLayer memory context and report a transparent context receipt when visible to the user.
 
-`/m-init` is a legacy/manual refresh alias for this boot procedure. The primary path is automatic session-start or tool-preflight boot when the host supports it, with first project-relevant request boot as the fallback.
+`ml init` is a legacy/manual refresh alias for this boot procedure. The primary path is automatic session-start or tool-preflight boot when the host supports it, with first project-relevant request boot as the fallback.
 
 ## Procedure
 
@@ -56,4 +56,4 @@ When exact host usage is unavailable, estimate tokens as words multiplied by rou
 
 MindLayer-aware adapters should trigger this procedure at session start or tool preflight when possible. If a host cannot run preflight hooks, run it before the first project-relevant request. A plain greeting is not project-relevant.
 
-`/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.

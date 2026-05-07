@@ -1,16 +1,16 @@
-# /m-retrieve
+# ml retrieve
 
 Fetch specific MindLayer memory for the query provided by the user.
 
 Usage:
 
 ```text
-/m-retrieve <query>
+ml retrieve <query>
 ```
 
 ## Procedure
 
-1. Treat the text after `/m-retrieve` as the query.
+1. Treat the text after `ml retrieve` as the query.
 2. Search indexes first:
    - `~/.mindlayer/index.md`
    - project `.mindlayer/index.md`

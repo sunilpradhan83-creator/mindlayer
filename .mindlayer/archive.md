@@ -17,7 +17,7 @@ Current phase: V1 polish complete. Installer, boot, continuity, and deploy-readi
 
 ### Details
 - Completed: automatic session initialization and session continuity contracts implemented and validated across adapters, prompts, templates, and tests.
-- Completed: V1 polish — fixed embedded memory-system fallback drift, aligned /m-init phrasing, fixed Copilot adapter terminology, defined "starter-only" inline, removed perl dependency from tests, removed docs/ folder.
+- Completed: V1 polish — fixed embedded memory-system fallback drift, aligned ml init phrasing, fixed Copilot adapter terminology, defined "starter-only" inline, removed perl dependency from tests, removed docs/ folder.
 - Completed: `bash tools/test.sh` passes with `READY TO DEPLOY`, `BOOT CONTRACT READY`, and `CONTINUITY CONTRACT READY`.
 - Next step: choose next track — simplify memory model for humans, start CLI planning, start VS Code extension planning, or explore product/SaaS direction.
 

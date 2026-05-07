@@ -1,4 +1,4 @@
-# /m-archive
+# ml archive
 
 Scan for stale memory entries and propose archive or delete actions. Do not write without explicit approval.
 
@@ -106,7 +106,7 @@ Done.
 
 ## Subdirectory Cleanup
 
-`/m-clean` also handles ephemeral subdirectory content — not just index entries:
+`ml clean` also handles ephemeral subdirectory content — not just index entries:
 
 - **`tmp/`**: clear all files when stale (modification date from a prior session). Always propose before deleting.
 - **`cache/`**: flag files older than 7 days as potentially stale. Propose deletion per file — cache is always regenerable.
@@ -117,10 +117,10 @@ Propose subdirectory cleanup alongside index entry proposals when both are prese
 
 ## Checkpoints
 
-`/m-archive` scans and prompts automatically (approval still required) at these moments:
+`ml archive` scans and prompts automatically (approval still required) at these moments:
 
 1. **Post-backlog completion** — when a backlog item is marked completed, scan for entries made stale by that completion.
-2. **Session heavy/critical** — when `/m-session` reports ≥ 60% context usage, suggest an archive pass before compact or new session.
+2. **Session heavy/critical** — when `ml session` reports ≥ 60% context usage, suggest an archive pass before compact or new session.
 3. **Index size threshold** — when active entry count in either index exceeds 20 entries, nudge with a clean-pass suggestion.
 4. **Phase transition** — when `progress.md` records a version or phase transition (e.g., V1 → V2), flag all entries from the completed phase for review.
 5. **Risk resolved** — when a risk entry is updated to resolved or mitigated, prompt to archive it immediately.
@@ -128,5 +128,5 @@ Propose subdirectory cleanup alongside index entry proposals when both are prese
 At checkpoints, do not interrupt the main response. Append after the primary answer:
 
 ```text
-Memory check: <N> stale entries found — say 'clean' or '/m-archive' to review.
+Memory check: <N> stale entries found — say 'clean' or 'ml archive' to review.
 ```

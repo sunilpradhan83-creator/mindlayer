@@ -1,6 +1,6 @@
 # Global Principles
 
-Stable cross-project engineering and product beliefs. Agent writes entries here via /m-save when durable principles emerge.
+Stable cross-project engineering and product beliefs. Agent writes entries here via ml save when durable principles emerge.
 
 ## Entry Template
 

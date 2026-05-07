@@ -10,7 +10,7 @@ A minimal, installable markdown-first memory system.
 
 - Global (`~/.mindlayer/`) and project (`.mindlayer/`) memory layers
 - Thin tool adapters: `AGENTS.md`, `CLAUDE.md`, Copilot instructions
-- Prompt-driven commands: boot, `/m-retrieve`, `/m-save`, `/m-status`
+- Prompt-driven commands: boot, `ml retrieve`, `ml save`, `ml status`
 - Safe installer: non-destructive, idempotent, marker-block updates
 - Validated by install, boot, and session continuity contract tests
 
@@ -20,11 +20,11 @@ A minimal, installable markdown-first memory system.
 
 Make MindLayer commands proactive and automatic without replacing the prompt-driven model. The AI becomes the driver — detecting, proposing, and executing commands at the right moments, not just when explicitly asked.
 
-- `/m-session` — new command: session context cost and new-session vs compact recommendation (shipped)
+- `ml session` — new command: session context cost and new-session vs compact recommendation (shipped)
 - End-of-turn detection — AI checks every turn for memory candidates and retrieval needs, surfaces proposals immediately
 - Trigger phrases — natural language invocation of all commands without typing slash commands
 - Proactive session warnings — AI surfaces compact warning when context is heavy or critical
-- `m-clean` — archive and forget: archive old entries or remove stale memory (m-archive + m-forget)
+- `ml clean` — archive and forget: archive old entries or remove stale memory (ml archive + ml forget)
 - `.mindlayer/` subdirectories — `private/`, `sessions/`, `cache/`, `tmp/` with real V2 behavior behind each
 
 ---
@@ -115,8 +115,8 @@ SCRIPT does not replace Agile. Agile fits inside it. Signal and Transfer are the
 
 ### SCRIPT across MindLayer versions
 
-- **Now (V3):** Philosophy documented. Lateral intent routing handles Signal. `/m-save` handles Transfer.
-- **V4:** `/m-script` command — walks any user through S→C→R→I→P→T for their project. Ships in global-template as a first-class user feature.
+- **Now (V3):** Philosophy documented. Lateral intent routing handles Signal. `ml save` handles Transfer.
+- **V4:** `ml script` command — walks any user through S→C→R→I→P→T for their project. Ships in global-template as a first-class user feature.
 - **V5:** SCRIPT as shared team language. Retros feed Transfer across team members. Signal becomes crowd-sourced across the team.
 
 ---

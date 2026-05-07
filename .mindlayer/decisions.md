@@ -94,7 +94,7 @@ Backlog evaluation (ML-999, 2026-05-07) produced activation, defer, and reject d
 - ML-101 Context Intelligence Upgrade — scoped to ranked retrieval (V3 phase 4) on top of existing index; no ML, no new storage. Depends on memory diff (V3 phase 2) being stable first.
 
 **Pulled from deferred into V3 active**:
-- `/m-onboard` — existing project onboarding command; unblocked by V3 phase 1 infrastructure. Biggest adoption barrier for non-greenfield projects.
+- `ml onboard` — existing project onboarding command; unblocked by V3 phase 1 infrastructure. Biggest adoption barrier for non-greenfield projects.
 
 ### When to use
 Use when evaluating new backlog proposals that overlap with any ML-101 through ML-110 item, or when planning V3/V4 scope.
@@ -131,7 +131,7 @@ MindLayer V1 uses markdown files, global and project memory layers, thin tool ad
 - Use a pointer fallback when symlink creation fails.
 - Never overwrite existing user files.
 - Fail fast on required installer write errors instead of printing success after partial failure.
-- `/m-init` must skip scaffold-only files and `local.md` by default unless relevant or non-placeholder.
+- `ml init` must skip scaffold-only files and `local.md` by default unless relevant or non-placeholder.
 - Do not ignore the entire `.mindlayer` directory.
 - Do not implement archive or cleanup in V1.
 
@@ -193,7 +193,7 @@ Acknowledgments or vague instructions such as `ok`, `got it`, or `we need to sav
 This rule applies to project `.mindlayer/`, global-template changes, prompt/adapters that encode memory behavior, and any other durable MindLayer memory source.
 
 ### When to use
-Use during `/m-save`, memory routing, template updates, prompt changes, or any workflow that edits durable memory behavior.
+Use during `ml save`, memory routing, template updates, prompt changes, or any workflow that edits durable memory behavior.
 
 ### Related
 ml-20260503-001
@@ -205,18 +205,18 @@ created: 2026-05-07
 updated: 2026-05-07
 scope: project
 type: decision
-tags: [approval, skills, m-init, adapter-safety, memory-safety]
+tags: [approval, skills, ml-init, adapter-safety, memory-safety]
 confidence: high
 status: active
 source: manual
 
 ### Summary
-Skills that write files (such as the `init` skill triggered by `/m-init`) must not execute autonomously in the MindLayer repo. The agent must read the target file, explain what the skill would do, and wait for explicit approval before any write.
+Skills that write files (such as the `init` skill triggered by `ml init`) must not execute autonomously in the MindLayer repo. The agent must read the target file, explain what the skill would do, and wait for explicit approval before any write.
 
 ### Details
-- `/m-init` in this repo triggers the `init` skill, which is designed to write or rewrite `CLAUDE.md`. In MindLayer, `CLAUDE.md` is a managed adapter file with a deliberate thin design — it must not be overwritten without approval.
+- `ml init` in this repo triggers the `init` skill, which is designed to write or rewrite `CLAUDE.md`. In MindLayer, `CLAUDE.md` is a managed adapter file with a deliberate thin design — it must not be overwritten without approval.
 - If a skill writes without approval, revert immediately and explain what happened.
-- The literal approval rule (ml-20260503-002) applies to all file writes, including those initiated by skills and slash commands — not just `/m-save`.
+- The literal approval rule (ml-20260503-002) applies to all file writes, including those initiated by skills and slash commands — not just `ml save`.
 - MindLayer product learnings must be saved to `~/.mindlayer/` (global) or `.mindlayer/` (project), never to Claude's own memory system.
 
 ### When to use

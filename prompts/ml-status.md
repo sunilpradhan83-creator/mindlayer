@@ -1,4 +1,4 @@
-# /m-status
+# ml status
 
 Check MindLayer memory health and suggest fixes. Do not write without explicit approval.
 
@@ -55,7 +55,7 @@ Include the file name, current size, risk, and 2-4 concrete cleanup options.
 
 When subdirectories exist, inspect:
 
-- `tmp/`: warn if files exist with a modification date older than the current session — stale scratch from a prior session. Suggest clearing with `/m-clean`.
+- `tmp/`: warn if files exist with a modification date older than the current session — stale scratch from a prior session. Suggest clearing with `ml clean`.
 - `sessions/`: report count of session files and most recent date. No action needed.
 - `cache/`: report count and most recent file. Flag entries older than 7 days as potentially stale.
 - `private/`: acknowledge existence only. Do not read or surface content.
@@ -86,7 +86,7 @@ Return:
   ```
 - Healthy:
 - Warnings:
-- Stale entries: N flagged (list titles and types) — say '/m-archive' to review
+- Stale entries: N flagged (list titles and types) — say 'ml archive' to review
 - Archived entries: N in archive.md (global: N, project: N)
 - Conflicts:
 - Continuity:

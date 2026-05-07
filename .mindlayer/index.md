@@ -165,7 +165,7 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: V2 complete. V3 phase 1 complete. V3 phase 2 partial (per-turn contracts shipped; memory diff remaining). V3 phase 3–4 and /m-onboard pending. See ROADMAP.md for full vision.
+  summary: V2 complete. V3 phase 1 complete. V3 phase 2 partial (per-turn contracts shipped; memory diff remaining). V3 phase 3–4 and ml onboard pending. See ROADMAP.md for full vision.
   importance: medium
   status: active
   last_updated: 2026-05-07
@@ -249,7 +249,7 @@
   scope: project
   type: decision
   tags: [backlog, roadmap, ml-999, prioritization, v3, v4]
-  summary: ML-101–110 evaluation (2026-05-07). Rejected ML-104/105/106/107/109/110. Deferred ML-103/108. Activated ML-101 partial (ranked retrieval, after V3 diff). Pulled /m-onboard into V3 active. Do not re-litigate without new evidence.
+  summary: ML-101–110 evaluation (2026-05-07). Rejected ML-104/105/106/107/109/110. Deferred ML-103/108. Activated ML-101 partial (ranked retrieval, after V3 diff). Pulled ml onboard into V3 active. Do not re-litigate without new evidence.
   importance: high
   status: active
   last_updated: 2026-05-07
@@ -272,7 +272,7 @@
   section: Skill Approval Gate
   scope: project
   type: decision
-  tags: [approval, skills, m-init, adapter-safety, memory-safety]
+  tags: [approval, skills, ml-init, adapter-safety, memory-safety]
   summary: Skills and slash commands that write files must not execute autonomously in MindLayer. Agent must explain and wait for approval. MindLayer product memory belongs in ~/.mindlayer/ or .mindlayer/, never in Claude's own memory system.
   importance: high
   status: active

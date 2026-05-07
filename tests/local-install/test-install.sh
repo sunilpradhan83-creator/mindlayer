@@ -349,7 +349,7 @@ scenario "boot contract"
 check assert_contains "$fresh_home/.mindlayer/boot.md" "first project-relevant request"
 check assert_file_exists "$fresh_home/.mindlayer/preferences/personal.md"
 check assert_not_exists "$fresh_home/.mindlayer/memory.md"
-check assert_contains "$fresh_project/AGENTS.md" '`/m-init` is a legacy/manual refresh alias'
+check assert_contains "$fresh_project/AGENTS.md" '`ml init` is a legacy/manual refresh alias'
 check assert_contains "$fresh_project/AGENTS.md" "Context cost:"
 
 printf "\nMindLayer Local Install Readiness Summary\n"

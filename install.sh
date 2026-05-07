@@ -250,7 +250,7 @@ Ready.
 What would you like to work on?
 ```
 
-`/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.'
+`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.'
 
 global_router='# MindLayer Router
 
@@ -266,12 +266,12 @@ Load each file at most once per session. Load before acting on the trigger — n
 
 | File | Load before | Exact signal |
 |---|---|---|
-| memory-system/commands.md | Executing any command | Message contains: /m-init /m-save /m-retrieve /m-status /m-archive /m-session /m-clean |
-| memory-system/read-write.md | Any memory operation | About to write to .mindlayer/, proposing /m-save, or reading memory for a task |
+| memory-system/commands.md | Executing any command | Message contains: ml init ml save ml retrieve ml status ml archive ml session ml clean |
+| memory-system/read-write.md | Any memory operation | About to write to .mindlayer/, proposing ml save, or reading memory for a task |
 | memory-system/session.md | Session boundary action | User says: done / bye / wrapping up / end session / save session — or /compact invoked |
 | memory-system/schema.md | Structural question | User asks about: lifecycle statuses, private/ sessions/ cache/ tmp/, or token strategy |
 | preferences/personal.md | Every session | Non-scaffold content present (file contains real user preferences) |
-| preferences/*.md | On-demand retrieval | /m-retrieve targets cross-project knowledge, or current task clearly needs it |
+| preferences/*.md | On-demand retrieval | ml retrieve targets cross-project knowledge, or current task clearly needs it |
 
 ## Failsafe Rules
 
@@ -365,7 +365,7 @@ Memory candidate: <description> -> <target.md> — say '"'"'go'"'"' to save
 
 Retrieval suggestion format:
 ```text
-Relevant context may be available — try: /m-retrieve <predicted-query>
+Relevant context may be available — try: ml retrieve <predicted-query>
 ```
 
 Session warning format (heavy 60-80%, critical >80%):
@@ -374,11 +374,11 @@ Session context: <heavy | critical> (~N% used). Recommend: <compact | new sessio
 ```
 
 Trigger phrases (invoke immediately):
-- "remember this", "save this", "add to memory" -> /m-save
-- "retrieve X", "load X", "what do we know about X" -> /m-retrieve <X>
-- "where were we", "memory status", "mstatus", "what'"'"'s loaded" -> /m-status
-- "should I compact", "how much context", "start fresh", "msession" -> /m-session
-- "clean memory", "archive memory", "forget X", "tidy memory" -> /m-archive
+- "remember this", "save this", "add to memory" -> ml save
+- "retrieve X", "load X", "what do we know about X" -> ml retrieve <X>
+- "where were we", "memory status", "mstatus", "what'"'"'s loaded" -> ml status
+- "should I compact", "how much context", "start fresh", "msession" -> ml session
+- "clean memory", "archive memory", "forget X", "tidy memory" -> ml archive
 - "done for today", "wrapping up", "bye", "end session", "save session" -> session write offer
 
 Session write format:
@@ -388,7 +388,7 @@ Session summary ready — say '"'"'save session'"'"' to write sessions/YYYY-MM-D
 
 global_memory_system_commands='# Commands
 
-Load this file when the user invokes any /m-* command.
+Load this file when the user invokes any ml * command.
 
 ## Command Behavior
 
@@ -396,21 +396,21 @@ Load this file when the user invokes any /m-* command.
 - Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run it before answering the first project-relevant request.
 - Do not treat a plain greeting as a project-relevant request.
 - A transparent boot receipt should describe what was loaded, skipped, missing, the rough token or word cost, and approximate context share.
-- /m-init is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-- /m-retrieve <query> searches indexes first and loads only relevant sections.
-- /m-save proposes memory writes from durable learnings and waits for approval.
-- /m-status checks memory health and suggests fixes without writing.
-- /m-archive scans for stale entries and proposes archive or delete actions with approval.
+- ml init is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+- ml retrieve <query> searches indexes first and loads only relevant sections.
+- ml save proposes memory writes from durable learnings and waits for approval.
+- ml status checks memory health and suggests fixes without writing.
+- ml archive scans for stale entries and proposes archive or delete actions with approval.
 
 ## Archive Rules
 
 - archive.md exists at ~/.mindlayer/archive.md (global) and .mindlayer/archive.md (project).
-- Boot always skips archive.md. Load it only when /m-retrieve explicitly targets archived content.
+- Boot always skips archive.md. Load it only when ml retrieve explicitly targets archived content.
 - Archived entries keep their full markdown section in archive.md for future reference.
 - Deleted entries are removed from both the source file and the index.
 - Never archive index.md, boot.md, router.md, or archive.md itself.
-- /m-archive is the command that executes archive and delete actions. See prompts/m-archive.md.
-- /m-clean is an alias for /m-archive.
+- ml archive is the command that executes archive and delete actions. See prompts/ml-archive.md.
+- ml clean is an alias for ml archive.
 
 ## Index-First Retrieval
 
@@ -461,7 +461,7 @@ Approval must be literal. approve, approved, go ahead, or an equally explicit in
 
 global_memory_system_session='# Session Rules
 
-Load this file at session boundaries: boot, /m-session, and when session-end phrases fire.
+Load this file at session boundaries: boot, ml session, and when session-end phrases fire.
 
 ## Session Continuity Behavior
 
@@ -507,7 +507,7 @@ Load this file when the user asks about lifecycle statuses, subdirectory rules, 
 Subdirectories under .mindlayer/ are created on first use. Never create empty placeholder directories.
 
 ### private/
-Purpose: sensitive notes not committed to git. Write via /m-save when user marks content sensitive. Boot: always skip. Git: gitignored.
+Purpose: sensitive notes not committed to git. Write via ml save when user marks content sensitive. Boot: always skip. Git: gitignored.
 
 ### sessions/
 Purpose: dated session journals (YYYY-MM-DD.md). Boot: skip full load, surface ## Next from most recent file only. Git: gitignored.
@@ -520,7 +520,7 @@ Purpose: ephemeral scratch notes within a single session. Boot: skip, warn if st
 
 global_index='# Global Memory Index
 
-Agent-written catalog for ~/.mindlayer/. Starts empty — agent adds entries via /m-save over time.
+Agent-written catalog for ~/.mindlayer/. Starts empty — agent adds entries via ml save over time.
 
 For behavioral rules and load triggers, see boot.md and router.md.
 For cross-project knowledge catalog, see preferences/index.md.
@@ -629,7 +629,7 @@ Skip this section during boot until real user preferences are saved.
 
 global_preferences_playbook="# Global Playbook
 
-Reusable cross-project workflows and procedures. Agent writes entries here via /m-save when recurring workflows emerge across projects.
+Reusable cross-project workflows and procedures. Agent writes entries here via ml save when recurring workflows emerge across projects.
 
 ## Entry Template
 
@@ -656,7 +656,7 @@ When this workflow applies.
 
 global_preferences_principles="# Global Principles
 
-Stable cross-project engineering and product beliefs. Agent writes entries here via /m-save when durable principles emerge.
+Stable cross-project engineering and product beliefs. Agent writes entries here via ml save when durable principles emerge.
 
 ## Entry Template
 
@@ -683,7 +683,7 @@ When this principle should influence decisions.
 
 global_preferences_anti_patterns="# Global Anti-Patterns
 
-Cross-project mistakes and behaviors to avoid. Agent writes entries here via /m-save when recurring anti-patterns are identified.
+Cross-project mistakes and behaviors to avoid. Agent writes entries here via ml save when recurring anti-patterns are identified.
 
 ## Entry Template
 
@@ -710,7 +710,7 @@ When this mistake might recur.
 
 global_preferences_prompts="# Global Prompts
 
-Reusable cross-project prompt templates. Agent writes entries here via /m-save when effective prompt patterns emerge.
+Reusable cross-project prompt templates. Agent writes entries here via ml save when effective prompt patterns emerge.
 
 ## Entry Template
 
@@ -1055,11 +1055,11 @@ Ready.
 What would you like to work on?
 ```
 
-`/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-Use `/m-retrieve <query>` when specific memory is needed.
-Use `/m-save` only to propose memory writes; never write without approval.
-Use `/m-status` to check memory health.
-Use `/m-session` to report session context cost and recommend compact or new session.
+`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+Use `ml retrieve <query>` when specific memory is needed.
+Use `ml save` only to propose memory writes; never write without approval.
+Use `ml status` to check memory health.
+Use `ml session` to report session context cost and recommend compact or new session.
 
 Commands are also triggered proactively. See the Proactive Behavior section in `~/.mindlayer/memory-system/per-turn.md` for end-of-turn detection rules, trigger phrases, and surface formats.
 <!-- mindlayer:end -->'
@@ -1069,7 +1069,7 @@ Follow `AGENTS.md`.
 
 MindLayer memory sources of truth are `~/.mindlayer/` and project `.mindlayer/`. `README.md` and `docs/` are human documentation, not default AI memory input.
 
-Do not duplicate memory into `CLAUDE.md` or retrieve durable context from this adapter. Do not write memory without approval. Follow `AGENTS.md` for automatic MindLayer boot; `/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+Do not duplicate memory into `CLAUDE.md` or retrieve durable context from this adapter. Do not write memory without approval. Follow `AGENTS.md` for automatic MindLayer boot; `ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
 <!-- mindlayer:end -->'
 
   copilot_block='<!-- mindlayer:start -->
@@ -1133,10 +1133,10 @@ Project memory:
 ./.mindlayer/
 
 Next step:
-Open your AI coding tool. MindLayer-aware adapters now boot minimal context automatically when the host supports tool preflight, or before the first project-relevant request as a fallback. /m-init is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+Open your AI coding tool. MindLayer-aware adapters now boot minimal context automatically when the host supports tool preflight, or before the first project-relevant request as a fallback. ml init is a legacy/manual refresh alias for showing or rerunning the boot receipt.
 
 Existing project tip:
-If this project already has context in README or docs, ask your AI tool to help populate .mindlayer/ files. Use /m-save to propose and approve memory entries one at a time.
+If this project already has context in README or docs, ask your AI tool to help populate .mindlayer/ files. Use ml save to propose and approve memory entries one at a time.
 
 Session tip:
 MindLayer boot is cheap. Start a new session at each task boundary instead of compacting — boot restores project context from durable memory with zero history overhead.

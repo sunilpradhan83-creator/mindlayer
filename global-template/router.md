@@ -22,12 +22,12 @@ Load each file at most once per session. Load before acting on the trigger, not 
 
 | File | Load when | Signal variants |
 |---|---|---|
-| `memory-system/commands.md` | Any /m-* command | /m-init, /m-retrieve, /m-status, /m-archive, /m-session, /m-clean |
+| `memory-system/commands.md` | Any ml * command | ml init, ml retrieve, ml status, ml archive, ml session, ml clean |
 | `memory-system/read-write.md` | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
 | `memory-system/session.md` | Session boundary | done, bye, wrapping up, end session, save session, /compact invoked |
 | `memory-system/schema.md` | Structural question | lifecycle statuses, private/, sessions/, cache/, tmp/, token strategy, folder structure |
 | `preferences/personal.md` | Every session | Non-scaffold content present |
-| `preferences/*.md` | On-demand retrieval | /m-retrieve targets cross-project knowledge, or current task needs it |
+| `preferences/*.md` | On-demand retrieval | ml retrieve targets cross-project knowledge, or current task needs it |
 
 ## Save Triggers
 
@@ -45,7 +45,7 @@ When any signal below is detected, load `memory-system/read-write.md`, then scan
 
 | Signal |
 |---|
-| "ml save", "m-save", "/m-save" |
+| "ml save" |
 | "anything pending to save?", "worth saving?", "should we save anything?", "what should we save?" |
 | "remember this", "save this", "add to memory", "capture this", "save that", "log this" |
 | "don't want to lose this", "keep this", "preserve this" |

@@ -1,4 +1,4 @@
-# /m-session
+# ml session
 
 Report current session context cost and recommend whether to continue, compact, or start a new session.
 
@@ -24,7 +24,7 @@ When exact token counts are unavailable, estimate as words × 1.3 or characters 
 
 - Mid-task and heavy or critical → recommend `/compact`
 - At task boundary and heavy or critical → recommend new session (MindLayer boot is cheap, restores context with zero history overhead)
-- Heavy or critical → also suggest `/m-archive` to trim stale memory before next session
+- Heavy or critical → also suggest `ml archive` to trim stale memory before next session
 - Light or moderate → continue
 
 ## Output
@@ -38,4 +38,4 @@ Return:
 - Status: light | moderate | heavy | critical
 - Recommendation: continue | compact | new session
 - Reason:
-- Memory: (only when heavy or critical) suggest `/m-archive` to trim stale entries before next session
+- Memory: (only when heavy or critical) suggest `ml archive` to trim stale entries before next session

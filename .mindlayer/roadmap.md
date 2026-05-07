@@ -19,9 +19,9 @@ V1 and V2 shipped. V3 in progress (phase 1 complete). V4 targets SCRIPT as user-
 
 ### Details
 - V1 (shipped): installer, prompt commands, thin adapters, boot/continuity/install contracts.
-- V2 (shipped): proactive behavior, archive mode, `/m-session`, `private/` `sessions/` `cache/` `tmp/` subdirectories, Token Burned per-turn block.
+- V2 (shipped): proactive behavior, archive mode, `ml session`, `private/` `sessions/` `cache/` `tmp/` subdirectories, Token Burned per-turn block.
 - V3 (in progress): memory health scoring, memory diff, auto-summarization, ranked retrieval. Phase 1 complete.
-- V4: `/m-script` command (SCRIPT philosophy as user-facing feature), IDE extensions, smarter retrieval.
+- V4: `ml script` command (SCRIPT philosophy as user-facing feature), IDE extensions, smarter retrieval.
 - V5+: teams, SaaS. Full vision in `ROADMAP.md`.
 - SCRIPT development philosophy defined in `ROADMAP.md` and `context.md` (ml-20260507-001).
 

@@ -120,7 +120,7 @@ At the end of every turn, before completing the response, run this checklist:
 | Was a user preference or working style observed? | `preferences/` |
 | Was a prior candidate surfaced but not saved or skipped? | Re-surface it |
 
-If any match, surface immediately — do not wait for `/m-save` or session end:
+If any match, surface immediately — do not wait for `ml save` or session end:
 
 ```text
 Memory candidate: <description> → <target.md> — say 'save' or 'skip'
@@ -138,7 +138,7 @@ Rules:
 At the end of every turn, scan loaded index summaries against the current task topic. If any indexed entry is relevant to the current task but not yet loaded this session, flag it:
 
 ```text
-Relevant memory not loaded: <entry title> (<id>) — say '/m-retrieve <query>' to load
+Relevant memory not loaded: <entry title> (<id>) — say 'ml retrieve <query>' to load
 ```
 
 Rules:
@@ -177,7 +177,7 @@ Memory candidate: <description> → <target.md> — say 'save' or 'skip'
 When a retrieval need is detected via the Index-Driven Retrieval Check, append at the end of the response:
 
 ```text
-Relevant memory not loaded: <entry title> (<id>) — say '/m-retrieve <query>' to load
+Relevant memory not loaded: <entry title> (<id>) — say 'ml retrieve <query>' to load
 ```
 
 ### Session Warning Format
@@ -198,15 +198,15 @@ The following commands are still user-invocable directly:
 
 | Phrase | Command |
 |--------|---------|
-| "retrieve X", "load X", "what do we know about X" | `/m-retrieve <X>` |
-| "where were we", "memory status", "mstatus", "what's loaded" | `/m-status` |
-| "should I compact", "how much context", "start fresh", "msession" | `/m-session` |
-| "clean memory", "clean up memory", "archive memory", "archive it", "delete memory", "forget X", "remove X from memory", "memory is getting bloated", "tidy memory" | `/m-archive` |
+| "retrieve X", "load X", "what do we know about X" | `ml retrieve <X>` |
+| "where were we", "memory status", "mstatus", "what's loaded" | `ml status` |
+| "should I compact", "how much context", "start fresh", "msession" | `ml session` |
+| "clean memory", "clean up memory", "archive memory", "archive it", "delete memory", "forget X", "remove X from memory", "memory is getting bloated", "tidy memory" | `ml archive` |
 | "done for today", "wrapping up", "I'm done", "that's all", "bye", "done for now", "end session", "save session" | session write offer |
 
 Interpret intent loosely — treat natural language variations as equivalent to the listed phrases.
 
-`/m-status` and `/m-session` are never AI-initiated. Only the user triggers them.
+`ml status` and `ml session` are never AI-initiated. Only the user triggers them.
 
 Save triggers ("ml save", "remember this", "save this", etc.) are handled by the router. See `~/.mindlayer/router.md` Save Triggers section.
 

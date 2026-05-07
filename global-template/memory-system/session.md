@@ -2,7 +2,7 @@
 
 <!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
 
-Load this file at session boundaries: boot, /m-session, and when session-end phrases fire.
+Load this file at session boundaries: boot, ml session, and when session-end phrases fire.
 
 ## Session Continuity Behavior
 

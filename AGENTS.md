@@ -70,11 +70,11 @@ Ready.
 What would you like to work on?
 ```
 
-`/m-init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-Use `/m-retrieve <query>` when specific memory is needed.
-Use `/m-save` only to propose memory writes; never write without approval.
-Use `/m-status` to check memory health.
-Use `/m-session` to report session context cost and recommend compact or new session.
+`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+Use `ml retrieve <query>` when specific memory is needed.
+Use `ml save` only to propose memory writes; never write without approval.
+Use `ml status` to check memory health.
+Use `ml session` to report session context cost and recommend compact or new session.
 
 Commands are also triggered proactively. See the Proactive Behavior section in `~/.mindlayer/memory-system/per-turn.md` for end-of-turn detection rules, trigger phrases, and surface formats.
 <!-- mindlayer:end -->

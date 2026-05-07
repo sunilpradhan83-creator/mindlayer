@@ -2,7 +2,7 @@
 
 <!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
 
-Load this file before any memory read or write operation — before proposing /m-save, writing to .mindlayer/, or reading memory for a task.
+Load this file before any memory read or write operation — before proposing ml save, writing to .mindlayer/, or reading memory for a task.
 
 ## Write Rules
 
@@ -24,7 +24,7 @@ Load this file before any memory read or write operation — before proposing /m
 - Treat tool adapters such as `AGENTS.md`, `CLAUDE.md`, and Copilot instructions as thin instructions, not durable memory stores or retrieval sources.
 - Do not load empty scaffold files or `local.md` by default.
 - Load scaffold files or `local.md` only when an index marks them as relevant, the user task needs them, or they contain non-placeholder content.
-- Do not load `archive.md` during boot. Load it only when `/m-retrieve` explicitly targets archived content.
+- Do not load `archive.md` during boot. Load it only when `ml retrieve` explicitly targets archived content.
 - Go outside MindLayer memory only when necessary for the current task.
 - Cite file and section when using memory.
 - State what was loaded and skipped.
@@ -45,4 +45,4 @@ Approval must be literal. `approve`, `approved`, `go ahead`, or an equally expli
 - Long-term versioned product vision belongs in `.mindlayer/roadmap.md`; near-term tracked tasks belong in `.mindlayer/backlog.md`. Do not mix them.
 - Private, local, session, cache, and temporary material must stay out of committed project memory.
 - When developing MindLayer itself, treat repo `.mindlayer/` as the product-memory source of truth and treat live `~/.mindlayer/` as runtime, install, or test output rather than product memory.
-- When a user installs MindLayer on an existing project with rich context in README, docs, or other files, offer to help populate `.mindlayer/` files using `/m-save`. Propose entries for approval — do not auto-populate without explicit approval.
+- When a user installs MindLayer on an existing project with rich context in README, docs, or other files, offer to help populate `.mindlayer/` files using `ml save`. Propose entries for approval — do not auto-populate without explicit approval.

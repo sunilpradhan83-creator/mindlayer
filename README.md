@@ -65,27 +65,27 @@ They tell tools how to use MindLayer, but they are not memory stores.
 MindLayer V1 uses prompt files, not a CLI runtime:
 
 - MindLayer boot: initialize the session with minimal useful memory context.
-- `/m-retrieve <query>`: fetch specific memory using indexes first.
-- `/m-save`: propose durable memory writes and wait for approval.
-- `/m-status`: check memory health and suggest fixes.
+- `ml retrieve <query>`: fetch specific memory using indexes first.
+- `ml save`: propose durable memory writes and wait for approval.
+- `ml status`: check memory health and suggest fixes.
 
 Prompt sources live in [`prompts/`](prompts/).
 
 ## Effective Use
 
-MindLayer boot should load `~/.mindlayer/memory-system.md` first, then indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `/m-init` remains a legacy/manual refresh alias for showing or rerunning the boot receipt.
+MindLayer boot should load `~/.mindlayer/memory-system.md` first, then indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `ml init` remains a legacy/manual refresh alias for showing or rerunning the boot receipt.
 
-Use `/m-retrieve <query>` instead of loading every memory file. Retrieval should start from indexes and load only relevant sections.
+Use `ml retrieve <query>` instead of loading every memory file. Retrieval should start from indexes and load only relevant sections.
 
-Use `/m-save` after durable learning happens: new decisions, stable preferences, meaningful progress, risks, reusable workflows, or backlog items. MindLayer should propose writes first and only save after approval.
+Use `ml save` after durable learning happens: new decisions, stable preferences, meaningful progress, risks, reusable workflows, or backlog items. MindLayer should propose writes first and only save after approval.
 
-Use `/m-status` when memory feels stale, duplicated, oversized, or inconsistent.
+Use `ml status` when memory feels stale, duplicated, oversized, or inconsistent.
 
 ## Session Strategy
 
 MindLayer makes new sessions cheap. Boot loads the minimum useful context — command rules, indexes, substantive preferences, project identity, and current progress — regardless of how long the previous session was.
 
-Prefer starting a new session at each task boundary over compacting mid-session. Save progress with `/m-save`, finish the task, and start fresh. The next session boots from durable memory, not from chat history.
+Prefer starting a new session at each task boundary over compacting mid-session. Save progress with `ml save`, finish the task, and start fresh. The next session boots from durable memory, not from chat history.
 
 Use `/compact` only when mid-task and hitting the context limit with active work still in progress. Compacting preserves history at a cost: every subsequent message in that session pays for the summary. A new session has zero history overhead.
 

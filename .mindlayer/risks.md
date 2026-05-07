@@ -49,18 +49,18 @@ source: manual
 The MindLayer router is a memory document, not an execution engine. All trigger-based rules depend on the agent recognizing a signal and choosing to act — there is no runtime process enforcing them.
 
 ### Details
-- When a `/m-*` command or skill fires, no external process loads `decisions.md` or any other file. The agent decides, based on what it remembers from boot.
+- When an `ml *` command or skill fires, no external process loads `decisions.md` or any other file. The agent decides, based on what it remembers from boot.
 - If boot context has drifted, the session is long, or a new session did not boot correctly, router rules may silently fail to fire.
-- The Skill Approval Gate (ml-20260507-002) is particularly vulnerable: by the time the agent recognizes `/m-init` as a trigger, the skill may already be executing.
+- The Skill Approval Gate (ml-20260507-002) is particularly vulnerable: by the time the agent recognizes `ml init` as a trigger, the skill may already be executing.
 - The `commands.md` pointer and project router trigger are soft contracts — instructions to the agent, not hard guards.
 
 ### Mitigation (current)
-- `memory-system/commands.md` carries a one-line pointer to the Skill Approval Gate at the exact moment `/m-*` commands are recognized.
-- Project router now lists all `/m-*` commands as triggers for `decisions.md`.
+- `memory-system/commands.md` carries a one-line pointer to the Skill Approval Gate at the exact moment `ml *` commands are recognized.
+- Project router now lists all `ml *` commands as triggers for `decisions.md`.
 - Both are best-effort — they improve reliability but do not guarantee enforcement.
 
 ### Mitigation (future)
-- `/m-script` command (V4): structured command runner with approval gates built into the execution flow, agent-agnostic. Works across Claude, Codex, Cursor, Copilot, and any LLM tool.
+- `ml script` command (V4): structured command runner with approval gates built into the execution flow, agent-agnostic. Works across Claude, Codex, Cursor, Copilot, and any LLM tool.
 
 ### When to use
 Use when evaluating trust guarantees of router-based rules, planning hook-based enforcement, or assessing whether a new rule needs hard enforcement vs soft instruction.
@@ -86,7 +86,7 @@ The three core per-turn contracts — load announcement, memory candidate surfac
 
 ### Details
 - **Load announcement failure**: agent loads a file mid-session without announcing it. User cannot tell what context is active. Memory decisions are made on invisible context.
-- **Memory candidate miss**: durable content produced during a turn is not surfaced. User must explicitly invoke `/m-save` at session end, by which point earlier candidates may be forgotten or imprecise.
+- **Memory candidate miss**: durable content produced during a turn is not surfaced. User must explicitly invoke `ml save` at session end, by which point earlier candidates may be forgotten or imprecise.
 - **Retrieval miss**: relevant indexed memory exists but is never suggested. Agent operates on incomplete context without the user knowing.
 - All three failures are silent — no error, no warning. The user simply doesn't know they happened.
 - Root cause: per-turn rules are behavioral instructions, not executable contracts. Agent attention drift, long sessions, and noisy context all increase failure probability.
@@ -98,7 +98,7 @@ The three core per-turn contracts — load announcement, memory candidate surfac
 
 ### Mitigation (future)
 - Live dogfood runs: periodically run a real agent session against the test scenarios and verify output manually.
-- `/m-script` (V4): structured command runner with gates that enforce per-turn contracts as execution steps, not just instructions.
+- `ml script` (V4): structured command runner with gates that enforce per-turn contracts as execution steps, not just instructions.
 
 ### When to use
 Use when evaluating whether a per-turn behavioral change is actually working, planning dogfood sessions, or deciding whether a new rule needs stronger enforcement than per-turn.md can provide.

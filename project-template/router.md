@@ -26,11 +26,11 @@ Load each file at most once per session. Load before acting on the trigger, not 
 | `context.md` | Product or philosophy question | "what is this project", "product goals", "philosophy", "purpose", "principles", "constraints", "how does it work", "design goals", "vision", "what are we building" |
 | `risks.md` | Risk or safety question | "risk", "failure", "trust", "safety", "crash", "edge case", "what could go wrong", "concern", "downside", "problem with", "danger", "careful" |
 | `roadmap.md` | Planning or vision question | "roadmap", "future", "what's next", "version", "phase", "long term", "plan", "next major", "coming up", "vision", "after this", "what comes after" |
-| `sessions/YYYY-MM-DD.md` | Session recovery | "where were we", "last session", "what did we work on", "catch me up", "remind me", "what was left", /m-status invoked |
+| `sessions/YYYY-MM-DD.md` | Session recovery | "where were we", "last session", "what did we work on", "catch me up", "remind me", "what was left", ml status invoked |
 
 ## Failsafe Rules
 
 - Load each file at most once per session.
 - When in doubt, load.
-- Never load `archive.md` unless /m-retrieve explicitly targets archived content.
+- Never load `archive.md` unless ml retrieve explicitly targets archived content.
 - Never load `local.md` unless index marks it relevant or user explicitly references it.

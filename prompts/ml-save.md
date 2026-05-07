@@ -1,4 +1,4 @@
-# /m-save
+# ml save
 
 Analyze recent work and propose MindLayer memory writes. Do not write without literal explicit approval.
 
@@ -85,7 +85,7 @@ If approved, make only the approved changes and update the appropriate index com
 
 If a memory write has been proposed but not approved:
 
-- keep it visible as pending in the next `/m-save` or related response
+- keep it visible as pending in the next `ml save` or related response
 - remind the user before moving to unrelated memory work
 - do not treat later acknowledgments as retroactive approval
 - include the pending destination, action, duplicate check, and confidence in status or handoff output when relevant
