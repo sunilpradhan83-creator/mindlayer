@@ -52,8 +52,14 @@ V3 phase 3: ✅ complete
 - ✅ Contract tests — test-autosummarize.sh verifies thresholds, output format, duplicate-warning avoidance, and live/template sync.
 - ✅ Global-template sync — live ~/.mindlayer and global-template per-turn/status specs synced in the same session.
 
-**Up next (V3 phase 4):**
-- [ ] Programmatic index-first retrieval: strengthen `ml retrieve` with scored ranking by tag match, recency, and importance rather than keyword-only search.
+V3 phase 4: ✅ complete
+- ✅ Programmatic index-first loading: `ml load` is now primary, `ml retrieve` is an alias, and ranked matching scores title, tags, summary, type/status, importance, and recency.
+- ✅ Archive handling: archived entries are skipped unless explicitly requested, then included with a penalty.
+- ✅ Contract tests: test-load.sh verifies command naming, ranked output, title/tag/importance/recency behavior, archive behavior, and live/template sync.
+
+**Backlog empty — next roadmap phase: V4**
+- `ml script` command: walk users through Signal → Cut → Refine → Implement → Prove → Transfer.
+- IDE extensions: bring MindLayer workflows into editor surfaces.
 
 **Deferred:**
 - Memory-system.md changelog: surface what changed when memory-system.md is refreshed on reinstall.

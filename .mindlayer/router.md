@@ -18,7 +18,7 @@ Announcement format and rules are defined in `~/.mindlayer/memory-system/per-tur
 
 | File | Load when | Signal variants |
 |---|---|---|
-| `decisions.md` | Design or architecture question, or any slash command or skill invocation | "why", "how did we decide", "rationale", "design", "architecture", "reasoning", "tradeoff", "alternative", "why does X work", "why did we choose", "what was the decision on", "behavior", "rule change", "how is X implemented", "ml init", "ml retrieve", "ml save", "ml status", "ml archive", "ml session", "ml clean", "skill", "slash command", "init" |
+| `decisions.md` | Design or architecture question, or any slash command or skill invocation | "why", "how did we decide", "rationale", "design", "architecture", "reasoning", "tradeoff", "alternative", "why does X work", "why did we choose", "what was the decision on", "behavior", "rule change", "how is X implemented", "ml init", "ml load", "ml retrieve", "ml save", "ml status", "ml archive", "ml session", "ml clean", "skill", "slash command", "init" |
 | `context.md` | MindLayer philosophy or product question | "what is MindLayer", "product goals", "design philosophy", "token strategy", "how does it work", "purpose", "principles", "constraints", "memory quality", "why markdown", "what are we building" |
 | `risks.md` | Risk, installer, or trust question | "risk", "failure", "installer", "trust", "safety", "crash", "onboarding", "edge case", "what could go wrong", "concern", "scaffold false confidence", "silent behavior", "adapter drift" |
 | `roadmap.md` | Planning or versioning question | "roadmap", "future", "what's next", "V3", "V4", "phase", "long term", "plan", "next major", "coming up", "vision", "after this", "what comes after V3" |
@@ -28,5 +28,5 @@ Announcement format and rules are defined in `~/.mindlayer/memory-system/per-tur
 
 - Load each file at most once per session.
 - When in doubt, load.
-- Never load `archive.md` unless ml retrieve explicitly targets archived content.
+- Never load `archive.md` unless ml load explicitly targets archived content.
 - Never load `local.md` unless index marks it relevant or user explicitly references it.

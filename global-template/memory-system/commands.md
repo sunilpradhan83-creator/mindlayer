@@ -11,7 +11,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 - Do not treat a plain greeting as a project-relevant request. If boot has not already run, answer naturally and boot before the first substantive project task.
 - A transparent boot receipt should describe what was loaded, skipped, missing, the rough token or word cost, and approximate context share by source when visible to the user.
 - `ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-- `ml retrieve <query>` searches indexes first and loads only relevant sections.
+- `ml load <query>` searches indexes first and loads only relevant sections. `ml retrieve <query>` is a backward-compatible alias.
 - `ml save` proposes memory writes from durable learnings and waits for approval.
 - `ml status` checks memory health and suggests fixes without writing.
 - `ml archive` scans for stale entries and proposes archive or delete actions with approval.
@@ -21,7 +21,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 ## Archive Rules
 
 - `archive.md` exists at `~/.mindlayer/archive.md` (global) and `.mindlayer/archive.md` (project).
-- Boot always skips `archive.md`. Load it only when `ml retrieve` explicitly targets archived content.
+- Boot always skips `archive.md`. Load it only when `ml load` explicitly targets archived content.
 - Archived entries keep their full markdown section in `archive.md` for future reference.
 - Deleted entries are removed from both the source file and the index.
 - Never archive `index.md`, `boot.md`, `router.md`, or `archive.md` itself.

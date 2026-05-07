@@ -32,5 +32,5 @@ Load each file at most once per session. Load before acting on the trigger, not 
 
 - Load each file at most once per session.
 - When in doubt, load.
-- Never load `archive.md` unless ml retrieve explicitly targets archived content.
+- Never load `archive.md` unless ml load explicitly targets archived content.
 - Never load `local.md` unless index marks it relevant or user explicitly references it.

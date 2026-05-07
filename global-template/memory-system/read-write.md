@@ -24,7 +24,7 @@ Load this file before any memory read or write operation — before proposing ml
 - Treat tool adapters such as `AGENTS.md`, `CLAUDE.md`, and Copilot instructions as thin instructions, not durable memory stores or retrieval sources.
 - Do not load empty scaffold files or `local.md` by default.
 - Load scaffold files or `local.md` only when an index marks them as relevant, the user task needs them, or they contain non-placeholder content.
-- Do not load `archive.md` during boot. Load it only when `ml retrieve` explicitly targets archived content.
+- Do not load `archive.md` during boot. Load it only when `ml load` explicitly targets archived content.
 - Go outside MindLayer memory only when necessary for the current task.
 - Cite file and section when using memory.
 - State what was loaded and skipped.
@@ -34,4 +34,3 @@ Load this file before any memory read or write operation — before proposing ml
 Memory writes require clear approval even when the content seems obvious. Show the destination, action, duplicate check, and confidence before writing.
 
 Approval must be literal. `approve`, `approved`, `go ahead`, or an equally explicit instruction counts. Acknowledgments or vague statements such as `ok`, `got it`, `sounds good`, or `we should save this` do not count as approval.
-

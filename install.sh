@@ -272,9 +272,9 @@ Load each file at most once per session. Load before acting on the trigger — n
 
 | File | Load when | Signal variants |
 |---|---|---|
-| memory-system/commands/index.md | Any ml * command fires | ml init, ml retrieve, ml save, ml status, ml archive, ml session, ml clean, ml onboard |
+| memory-system/commands/index.md | Any ml * command fires | ml init, ml load, ml retrieve, ml save, ml status, ml archive, ml session, ml clean, ml onboard |
 | memory-system/commands/init.md | ml init invoked | ml init |
-| memory-system/commands/retrieve.md | ml retrieve invoked | ml retrieve, "retrieve X", "load X", "what do we know about X" |
+| memory-system/commands/load.md | ml load invoked | ml load, ml retrieve, "load X", "retrieve X", "what do we know about X" |
 | memory-system/commands/save.md | ml save invoked or save trigger fires | ml save, "remember this", "save this", "add to memory" |
 | memory-system/commands/status.md | ml status invoked | ml status, "mstatus", "memory status" |
 | memory-system/commands/archive.md | ml archive invoked | ml archive, ml clean, "clean memory", "forget X", "tidy memory" |
@@ -283,7 +283,7 @@ Load each file at most once per session. Load before acting on the trigger — n
 | memory-system/read-write.md | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
 | memory-system/schema.md | Structural question | lifecycle statuses, private/, sessions/, cache/, tmp/, token strategy, folder structure |
 | preferences/personal.md | Every session | Non-scaffold content present |
-| preferences/*.md | On-demand retrieval | ml retrieve targets cross-project knowledge, or current task needs it |
+| preferences/*.md | On-demand memory loading | ml load targets cross-project knowledge, or current task needs it |
 
 ## Save Triggers
 
@@ -395,7 +395,7 @@ Memory candidate: <description> -> <target.md> — say '"'"'go'"'"' to save
 
 Retrieval suggestion format:
 ```text
-Relevant context may be available — try: ml retrieve <predicted-query>
+Relevant context may be available — try: ml load <predicted-query>
 ```
 
 Session warning format (heavy 60-80%, critical >80%):
@@ -405,7 +405,7 @@ Session context: <heavy | critical> (~N% used). Recommend: <compact | new sessio
 
 Trigger phrases (invoke immediately):
 - "remember this", "save this", "add to memory" -> ml save
-- "retrieve X", "load X", "what do we know about X" -> ml retrieve <X>
+- "load X", "retrieve X", "what do we know about X" -> ml load <X>
 - "where were we", "memory status", "mstatus", "what'"'"'s loaded" -> ml status
 - "should I compact", "how much context", "start fresh", "msession" -> ml session
 - "clean memory", "archive memory", "forget X", "tidy memory" -> ml archive
@@ -427,7 +427,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 - Do not treat a plain greeting as a project-relevant request.
 - A transparent boot receipt should describe what was loaded, skipped, missing, the rough token or word cost, and approximate context share.
 - ml init is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-- ml retrieve <query> searches indexes first and loads only relevant sections.
+- ml load <query> searches indexes first and loads only relevant sections. ml retrieve <query> is a backward-compatible alias.
 - ml save proposes memory writes from durable learnings and waits for approval.
 - ml status checks memory health and suggests fixes without writing.
 - ml archive scans for stale entries and proposes archive or delete actions with approval.
@@ -437,7 +437,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 ## Archive Rules
 
 - archive.md exists at ~/.mindlayer/archive.md (global) and .mindlayer/archive.md (project).
-- Boot always skips archive.md. Load it only when ml retrieve explicitly targets archived content.
+- Boot always skips archive.md. Load it only when ml load explicitly targets archived content.
 - Archived entries keep their full markdown section in archive.md for future reference.
 - Deleted entries are removed from both the source file and the index.
 - Never archive index.md, boot.md, router.md, or archive.md itself.
@@ -490,7 +490,7 @@ Load this file when any ml * command fires. Then load the spec file for the spec
 | Command | Spec file | When to load |
 |---|---|---|
 | ml init | commands/init.md | ml init invoked, or boot receipt requested |
-| ml retrieve <query> | commands/retrieve.md | ml retrieve, "retrieve X", "load X", "what do we know about X" |
+| ml load <query> | commands/load.md | ml load, ml retrieve, "load X", "retrieve X", "what do we know about X" |
 | ml save | commands/save.md | ml save, "remember this", "save this", "add to memory", "capture this" |
 | ml status | commands/status.md | ml status, "mstatus", "memory status", "what'"'"'s loaded" |
 | ml archive | commands/archive.md | ml archive, ml clean, "clean memory", "forget X", "tidy memory", "archive memory" |
@@ -991,7 +991,7 @@ install_global() {
   mkdir_p "$GLOBAL_DIR/memory-system/commands"
   write_managed_template "$GLOBAL_DIR/memory-system/commands/index.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/index.md" "$global_memory_system_commands_index"
   write_managed_template "$GLOBAL_DIR/memory-system/commands/init.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/init.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/retrieve.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/retrieve.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/load.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/load.md" ""
   write_managed_template "$GLOBAL_DIR/memory-system/commands/save.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/save.md" ""
   write_managed_template "$GLOBAL_DIR/memory-system/commands/status.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/status.md" ""
   write_managed_template "$GLOBAL_DIR/memory-system/commands/archive.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/archive.md" ""
@@ -1085,7 +1085,7 @@ What would you like to work on?
 ```
 
 `ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-Use `ml retrieve <query>` when specific memory is needed.
+Use `ml load <query>` when specific memory is needed. `ml retrieve <query>` remains an alias.
 Use `ml save` only to propose memory writes; never write without approval.
 Use `ml status` to check memory health.
 Use `ml session` to report session context cost and recommend compact or new session.

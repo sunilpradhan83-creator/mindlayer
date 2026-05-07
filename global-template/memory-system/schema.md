@@ -19,7 +19,7 @@ Load this file when the user asks about lifecycle statuses, subdirectory rules, 
 - `active`: current and trusted.
 - `experimental`: useful but not fully proven.
 - `deprecated`: superseded but retained for reference.
-- `archived`: inactive history. Content lives in `archive.md` (global or project scope). Index entry remains with `status: archived` and `file: archive.md` so `ml retrieve` can still find it. Boot skips `archive.md`.
+- `archived`: inactive history. Content lives in `archive.md` (global or project scope). Index entry remains with `status: archived` and `file: archive.md` so `ml load` can still find it. Boot skips `archive.md`.
 
 ## Subdirectory Rules
 
@@ -44,7 +44,7 @@ Subdirectories under `.mindlayer/` are created on first use. Never create empty 
   ## Completed
   ## Next
   ```
-- Read: via `ml retrieve sessions` or a date query. On boot, if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
+- Read: via `ml load sessions` or a date query. On boot, if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
 - Boot: skip full load. Surface `## Next` from the most recent session file only.
 - Git: gitignored.
 - Lifecycle: dated snapshots — no archive or cleanup needed.
