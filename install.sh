@@ -213,6 +213,7 @@ Run once per session, in order, before answering any request:
 7. Read project .mindlayer/project.md — stable project identity.
 8. Load project progress and backlog — check progress.md and backlog.md.
 9. Check sessions/ — if a recent session file exists, read only the ## Next section.
+10. Check onboard status — scan .mindlayer/index.md for id: ml-onboard-complete. If absent AND .mindlayer/project.md contains only placeholder/scaffold content, load memory-system/commands/onboard.md and fire the onboard flow on the first project-relevant turn.
 
 Do not treat a plain greeting as a project-relevant request.
 
@@ -235,6 +236,10 @@ Current understanding:
 
 Current progress:
 ...
+
+Onboarding:
+pending — ml onboard will run on first project-relevant request.
+(omit this line entirely when ml-onboard-complete is present in the index)
 
 Context cost:
 Approx. N words loaded (~N est. tokens).
@@ -274,7 +279,7 @@ Load each file at most once per session. Load before acting on the trigger — n
 | memory-system/commands/status.md | ml status invoked | ml status, "mstatus", "memory status" |
 | memory-system/commands/archive.md | ml archive invoked | ml archive, ml clean, "clean memory", "forget X", "tidy memory" |
 | memory-system/commands/session.md | ml session invoked or session boundary | ml session, "msession", "how much context", "done", "bye", "end session", /compact invoked |
-| memory-system/commands/onboard.md | First project-relevant turn post-install | .mindlayer/ files are all starter-only and ml-onboard-complete flag absent |
+| memory-system/commands/onboard.md | First project-relevant turn when onboard not yet complete | .mindlayer/index.md does NOT contain id: ml-onboard-complete AND .mindlayer/project.md is placeholder-only |
 | memory-system/read-write.md | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
 | memory-system/schema.md | Structural question | lifecycle statuses, private/, sessions/, cache/, tmp/, token strategy, folder structure |
 | preferences/personal.md | Every session | Non-scaffold content present |

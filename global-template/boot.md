@@ -17,6 +17,7 @@ Run once per session, in order, before answering any request:
 7. Always check project `.mindlayer/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only identity as missing. Load even if index marks it low importance; report as missing if placeholder-only.
 8. Load project progress and backlog — check `progress.md` and `backlog.md` for current phase and next action.
 9. Check `sessions/` — if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
+10. Check onboard status — scan `.mindlayer/index.md` for `id: ml-onboard-complete`. If absent AND `.mindlayer/project.md` contains only placeholder/scaffold content, load `memory-system/commands/onboard.md` and fire the onboard flow on the first project-relevant turn. Surface in boot receipt as: `Onboarding: pending — ml onboard will run on first project-relevant request.`
 
 Do not treat a plain greeting as a project-relevant request. If boot has not run, answer naturally and boot before the first project-relevant request.
 
@@ -41,6 +42,10 @@ Current understanding:
 
 Current progress:
 ...
+
+Onboarding:
+pending — ml onboard will run on first project-relevant request.
+(omit this line entirely when ml-onboard-complete is present in the index)
 
 Context cost:
 Approx. N words loaded (~N est. tokens).
