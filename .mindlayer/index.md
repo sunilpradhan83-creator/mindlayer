@@ -176,8 +176,8 @@
   section: Current Phase
   scope: project
   type: progress
-  tags: [v3, memory-quality, retrieval, per-turn, contracts]
-  summary: V3 phase 1 complete. V3 phase 2 partial — per-turn contracts shipped (load announcement, candidate scan, retrieval check), 61 tests passing. Memory diff still remaining.
+  tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
+  summary: V3 phase 2 further advanced. Commands restructured into memory-system/commands/ subfolder, prompts/ deleted, ml onboard added, routing rules consolidated. 94 tests passing. Memory diff remaining.
   importance: high
   status: active
   last_updated: 2026-05-07
@@ -250,6 +250,30 @@
   type: decision
   tags: [backlog, roadmap, ml-999, prioritization, v3, v4]
   summary: ML-101–110 evaluation (2026-05-07). Rejected ML-104/105/106/107/109/110. Deferred ML-103/108. Activated ML-101 partial (ranked retrieval, after V3 diff). Pulled ml onboard into V3 active. Do not re-litigate without new evidence.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-009
+  title: ml onboard One-Time Flag via Index Entry
+  file: decisions.md
+  section: ml onboard One-Time Flag via Index Entry
+  scope: project
+  type: decision
+  tags: [onboard, ml-onboard, flag, index, architecture]
+  summary: ml onboard completion flagged by index entry id:ml-onboard-complete. Boot checks for this entry and skips onboard if present. Chosen over a separate flag file — reuses existing infrastructure, no new file needed.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-008
+  title: Commands Subfolder Architecture
+  file: decisions.md
+  section: Commands Subfolder Architecture
+  scope: project
+  type: decision
+  tags: [commands, architecture, token-efficiency, prompts, memory-system]
+  summary: All ml command specs live in memory-system/commands/ as per-command files loaded conditionally by router. prompts/ deleted. Each spec loads only when its command fires (~90 tokens vs ~1,200). Router is the index for memory-system files.
   importance: high
   status: active
   last_updated: 2026-05-07

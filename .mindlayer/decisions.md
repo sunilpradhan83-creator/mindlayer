@@ -1,5 +1,63 @@
 # Decisions
 
+## ml onboard One-Time Flag via Index Entry
+
+id: ml-20260507-009
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [onboard, ml-onboard, flag, index, architecture]
+confidence: high
+status: active
+source: manual
+
+### Summary
+`ml onboard` completion is flagged by writing a single entry to `.mindlayer/index.md` with `id: ml-onboard-complete, type: onboarding, status: complete`. On every subsequent boot, if this entry exists, skip `ml onboard` entirely.
+
+### Details
+- Alternative considered: a separate flag file (e.g. `.mindlayer/.onboarded`). Rejected — adds a new file with no other purpose, increases install surface.
+- Index entry reuses existing infrastructure — no new file, no new install step, discoverable via standard index scan at boot.
+- The index entry also serves as a record of when onboarding ran.
+- Boot check: scan `.mindlayer/index.md` for `id: ml-onboard-complete` before deciding whether to fire `ml onboard`.
+
+### When to use
+When implementing or modifying the `ml onboard` flow — the index entry is the single source of truth for completion state.
+
+### Related
+ml-20260507-008
+
+## Commands Subfolder Architecture
+
+id: ml-20260507-008
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [commands, architecture, token-efficiency, prompts, memory-system]
+confidence: high
+status: active
+source: manual
+
+### Summary
+All ml command specs live in `memory-system/commands/` as per-command files loaded conditionally by the router. The `prompts/` folder is deleted. Each spec loads only when its command fires (~90 tokens vs ~1,200 for all specs at once).
+
+### Details
+- `prompts/` was never loaded by the router or boot — it provided false safety (specs existed but were never guaranteed to be in context).
+- Specs moved into `memory-system/commands/`: index.md (dispatch map), init.md, retrieve.md, save.md, status.md, archive.md, session.md, onboard.md.
+- Router is the index for memory-system files — no separate index.md needed inside memory-system/.
+- `commands/index.md` is the entry point: loaded first when any `ml *` fires, then the agent loads the specific spec file.
+- `session.md` content merged into `commands/session.md`. `memory-system/session.md` deleted.
+- Routing rules moved from `read-write.md` into `router.md` — they belong at trigger-time, not write-time.
+- `global-template/index.md` and `~/.mindlayer/index.md` deleted — `preferences/index.md` is the global catalog.
+
+### When to use
+When adding or modifying any ml command — always add to `memory-system/commands/` with a router trigger. Never create a standalone prompts/ file.
+
+### Related
+ml-20260507-007
+ml-20260506-001
+
 ## Global-Template Sync Rule
 
 id: ml-20260507-007
