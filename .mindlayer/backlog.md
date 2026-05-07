@@ -52,13 +52,14 @@ V3 phase 3: ✅ complete
 - ✅ Contract tests — test-autosummarize.sh verifies thresholds, output format, duplicate-warning avoidance, and live/template sync.
 - ✅ Global-template sync — live ~/.mindlayer and global-template per-turn/status specs synced in the same session.
 
-**Up next (V3 phase 4):**
+V3 phase 4: ✅ complete
 - ✅ Command rename: `ml load` is now primary and `ml retrieve` remains an alias.
 - ✅ Ranked-load contract: load.md specifies deterministic scoring by title, tags, summary, type/status, importance, recency, and archive intent.
 - ✅ Contract tests: test-load.sh verifies command naming, ranked output shape, scoring precedence examples, archive behavior, and live/template sync.
-- [ ] Programmatic ranked loader: parse global/project indexes, compute deterministic scores, sort matches, skip/down-rank archived entries appropriately, and load only the relevant sections.
 
-**After V3 phase 4 completes — next roadmap phase: V4**
+**Backlog empty — next roadmap phase: V4**
+- Standardized `ml` command runner foundation: start with read-only deterministic commands (`ml load`, `ml status`, `ml diff`, `ml session`) to reduce agent drift and support future IDE integrations.
+- Programmatic ranked loader: parse global/project indexes, compute deterministic scores, sort matches, skip/down-rank archived entries appropriately, and load only relevant sections.
 - `ml script` command: walk users through Signal → Cut → Refine → Implement → Prove → Transfer.
 - IDE extensions: bring MindLayer workflows into editor surfaces.
 

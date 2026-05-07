@@ -15,18 +15,18 @@ status: active
 source: manual
 
 ### Summary
-V1 and V2 shipped. V3 is in progress with phase 4 remaining: programmatic ranked loading. V4 targets SCRIPT as user-facing feature and IDE extensions. Full vision in `ROADMAP.md`.
+V1, V2, and V3 shipped. V4 targets a standardized `ml` command runner foundation, SCRIPT as a user-facing feature, and IDE extensions. Full vision in `ROADMAP.md`.
 
 ### Details
 - V1 (shipped): installer, prompt commands, thin adapters, boot/continuity/install contracts.
 - V2 (shipped): proactive behavior, archive mode, `ml session`, `private/` `sessions/` `cache/` `tmp/` subdirectories, Token Burned per-turn block.
-- V3 (in progress): memory health scoring, memory diff, auto-summarization shipped; `ml load` rename/contract shipped; programmatic ranked loading remains.
-- V4: `ml script` command (SCRIPT philosophy as user-facing feature), IDE extensions, smarter retrieval.
+- V3 (shipped): memory health scoring, memory diff, auto-summarization, `ml load` primary command, and ranked-load contract for agent-executed retrieval.
+- V4: standardized `ml` command runner foundation, programmatic ranked loader, `ml script` command (SCRIPT philosophy as user-facing feature), IDE extensions.
 - V5+: teams, SaaS. Full vision in `ROADMAP.md`.
 - SCRIPT development philosophy defined in `ROADMAP.md` and `context.md` (ml-20260507-001).
 
 ### Status
-V1 shipped. V2 shipped. V3 phase 4 remains active.
+V1 shipped. V2 shipped. V3 shipped. V4 is next.
 
 ### Related
 ml-20260430-005

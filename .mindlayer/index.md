@@ -165,7 +165,7 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: V2 complete. V3 phases 1–3 complete. V3 phase 4 has ml load rename/contract shipped; programmatic ranked loader remains. See ROADMAP.md for full vision.
+  summary: V2 complete. V3 phases 1–4 complete as markdown-first, agent-executed behavior. V4 command runner foundation is next. See ROADMAP.md for full vision.
   importance: medium
   status: active
   last_updated: 2026-05-07
@@ -177,7 +177,7 @@
   scope: project
   type: progress
   tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
-  summary: V3 phase 4 in progress. ml load rename and ranked-load contract shipped; programmatic index scorer/loader remains pending. 10 test suites, 243 checks passing.
+  summary: V3 phase 4 complete as agent-executed ranked-load contract. Programmatic command runner/ranked loader moved to V4 foundation. 10 test suites, 243 checks passing.
   importance: high
   status: active
   last_updated: 2026-05-07
@@ -189,7 +189,7 @@
   scope: project
   type: roadmap
   tags: [roadmap, v2, v3, v4, script, cli]
-  summary: V1 and V2 shipped. V3 in progress (phase 1 complete). V4 targets /m-script and IDE extensions. SCRIPT philosophy defined in ROADMAP.md and context.md (ml-20260507-001). Full vision in ROADMAP.md.
+  summary: V1, V2, and V3 shipped. V4 targets standardized ml command runner foundation, ml script, and IDE extensions. SCRIPT philosophy defined in ROADMAP.md and context.md (ml-20260507-001).
   importance: medium
   status: active
   last_updated: 2026-05-07
