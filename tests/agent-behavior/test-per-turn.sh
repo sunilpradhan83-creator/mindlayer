@@ -100,7 +100,7 @@ assert_has_retrieval_suggestion() {
 assert_retrieval_suggestion_has_query() {
   file="$1"
   if grep -Eq "^Relevant memory not loaded:" "$file"; then
-    grep -Eq "^Relevant memory not loaded: .+ — say 'ml retrieve .+' to load" "$file"
+    grep -Eq "^Relevant memory not loaded: .+ — say 'ml load .+' to load" "$file"
   else
     return 0
   fi
@@ -463,7 +463,7 @@ f="$SANDBOX/retrieval-flagged.md"
 cat > "$f" <<'EOF'
 Here is the answer about the routing question.
 
-Relevant memory not loaded: Router Enforcement Gap (ml-20260507-003) — say 'ml retrieve router enforcement' to load
+Relevant memory not loaded: Router Enforcement Gap (ml-20260507-003) — say 'ml load router enforcement' to load
 
 -------------------------------------------------------------
 Token Burned:
@@ -533,8 +533,8 @@ f="$SANDBOX/retrieval-two.md"
 cat > "$f" <<'EOF'
 Answer here.
 
-Relevant memory not loaded: Router Enforcement Gap (ml-20260507-003) — say 'ml retrieve router enforcement' to load
-Relevant memory not loaded: SCRIPT Philosophy (ml-20260507-001) — say 'ml retrieve SCRIPT' to load
+Relevant memory not loaded: Router Enforcement Gap (ml-20260507-003) — say 'ml load router enforcement' to load
+Relevant memory not loaded: SCRIPT Philosophy (ml-20260507-001) — say 'ml load SCRIPT' to load
 
 -------------------------------------------------------------
 Token Burned:
@@ -658,7 +658,7 @@ The router enforcement gap is a known risk. The mitigation is the /m-script comm
 
 Memory candidate: /m-script as enforcement mitigation for router gap → risks.md — say 'save' or 'skip'
 
-Relevant memory not loaded: SCRIPT Development Philosophy (ml-20260507-001) — say 'ml retrieve SCRIPT' to load
+Relevant memory not loaded: SCRIPT Development Philosophy (ml-20260507-001) — say 'ml load SCRIPT' to load
 
 -------------------------------------------------------------
 Token Burned:

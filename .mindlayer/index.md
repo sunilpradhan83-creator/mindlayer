@@ -165,7 +165,7 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: V2 complete. V3 phases 1–3 complete. V3 phase 4 ranked retrieval is next. See ROADMAP.md for full vision.
+  summary: V2 complete. V3 phases 1–4 complete. Backlog is empty; V4 SCRIPT and IDE extensions are next. See ROADMAP.md for full vision.
   importance: medium
   status: active
   last_updated: 2026-05-07
@@ -177,7 +177,7 @@
   scope: project
   type: progress
   tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
-  summary: Auto-summarization suggestions shipped (session 12) — post-write size checks and ml status cleanup suggestions. V3 phase 3 complete. 9 test suites, 229 checks passing.
+  summary: Ranked loading shipped (session 13) — ml load primary, ml retrieve alias, deterministic index scoring, archive handling. V3 phase 4 complete. 10 test suites, 243 checks passing.
   importance: high
   status: active
   last_updated: 2026-05-07
@@ -322,6 +322,18 @@
   type: decision
   tags: [memory-diff, boot, status, git, session-continuity, v3]
   summary: Memory diff uses git SHA from latest session file as baseline, parses entry-level changes (new/updated/archived), outputs counts + file names grouped by category, fires at boot (step 11) and ml status, skips silently on fallback.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-012
+  title: ml load Primary Command and Ranked Loading
+  file: decisions.md
+  section: ml load Primary Command and Ranked Loading
+  scope: project
+  type: decision
+  tags: [ml-load, retrieval, commands, ranking, v3]
+  summary: ml load is the primary memory-loading command; ml retrieve remains an alias. Ranked loading uses deterministic index scoring by title, tags, summary, type/status, importance, recency, and archive intent. No ML or new storage.
   importance: high
   status: active
   last_updated: 2026-05-07

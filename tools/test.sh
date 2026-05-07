@@ -34,3 +34,6 @@ bash "$ROOT_DIR/tests/agent-behavior/test-diff.sh"
 
 printf "\n9. Auto-summarization suggestion contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-autosummarize.sh"
+
+printf "\n10. Ranked load behavioral contracts\n"
+bash "$ROOT_DIR/tests/agent-behavior/test-load.sh"

@@ -4,7 +4,7 @@
 
 id: ml-20260505-006
 created: 2026-05-05
-updated: 2026-05-07 (session 12)
+updated: 2026-05-07 (session 13)
 scope: project
 type: progress
 tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
@@ -13,7 +13,7 @@ status: active
 source: manual
 
 ### Summary
-V3 phase 3 shipped — auto-summarization suggestions now fire after oversized memory writes and in ml status. 9 test suites, 229 checks passing.
+V3 phase 4 shipped — `ml load` is primary, `ml retrieve` is an alias, and ranked index-first loading is specified/tested. 10 test suites, 243 checks passing.
 
 ### Details
 - V1 complete: installer, prompt commands, thin adapters, boot/continuity contracts.
@@ -24,7 +24,8 @@ V3 phase 3 shipped — auto-summarization suggestions now fire after oversized m
 - V3 phase 2 (session 10): ml onboard three-phase flow shipped — adapter conflict migration, inline memory extraction, project context population. Boot/router integration complete (step 10, precise trigger condition). test-onboard.sh shipped (25 tests, all passing). tools/test.sh now runs 7 suites.
 - V3 phase 2 (session 11): memory diff shipped — surfaces new/updated/archived entries since last session at boot and ml status. diff.md spec in memory-system/commands/ (live + global-template). Boot step 11 added. Router, status.md, commands/index.md updated. test-diff.sh shipped (22 tests, all passing). tools/test.sh now runs 8 suites, 213 checks.
 - V3 phase 3 (session 12): auto-summarization suggestions shipped — post-write size checks in per-turn.md, detailed cleanup suggestions in status.md, live/global-template sync, test-autosummarize.sh added (16 checks). tools/test.sh now runs 9 suites, 229 checks.
-- V3 phase 4: programmatic index-first retrieval with scored ranking.
+- V3 phase 4 (session 13): ranked loading shipped — `ml load` primary command, `ml retrieve` alias, command spec renamed to load.md, deterministic scoring by title/tags/summary/type/status/importance/recency, archive handling, test-load.sh added (14 checks). tools/test.sh now runs 10 suites, 243 checks.
+- V4 next: `ml script` command and IDE extensions.
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.

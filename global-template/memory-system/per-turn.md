@@ -159,7 +159,7 @@ Rules:
 At the end of every turn, scan loaded index summaries against the current task topic. If any indexed entry is relevant to the current task but not yet loaded this session, flag it:
 
 ```text
-Relevant memory not loaded: <entry title> (<id>) — say 'ml retrieve <query>' to load
+Relevant memory not loaded: <entry title> (<id>) — say 'ml load <query>' to load
 ```
 
 Rules:
@@ -198,7 +198,7 @@ Memory candidate: <description> → <target.md> — say 'save' or 'skip'
 When a retrieval need is detected via the Index-Driven Retrieval Check, append at the end of the response:
 
 ```text
-Relevant memory not loaded: <entry title> (<id>) — say 'ml retrieve <query>' to load
+Relevant memory not loaded: <entry title> (<id>) — say 'ml load <query>' to load
 ```
 
 ### Session Warning Format
@@ -219,7 +219,7 @@ The following commands are still user-invocable directly:
 
 | Phrase | Command |
 |--------|---------|
-| "retrieve X", "load X", "what do we know about X" | `ml retrieve <X>` |
+| "load X", "retrieve X", "what do we know about X" | `ml load <X>` |
 | "where were we", "memory status", "mstatus", "what's loaded" | `ml status` |
 | "should I compact", "how much context", "start fresh", "msession" | `ml session` |
 | "clean memory", "clean up memory", "archive memory", "archive it", "delete memory", "forget X", "remove X from memory", "memory is getting bloated", "tidy memory" | `ml archive` |

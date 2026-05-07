@@ -10,7 +10,7 @@ A minimal, installable markdown-first memory system.
 
 - Global (`~/.mindlayer/`) and project (`.mindlayer/`) memory layers
 - Thin tool adapters: `AGENTS.md`, `CLAUDE.md`, Copilot instructions
-- Prompt-driven commands: boot, `ml retrieve`, `ml save`, `ml status`
+- Prompt-driven commands: boot, `ml load`, `ml save`, `ml status`
 - Safe installer: non-destructive, idempotent, marker-block updates
 - Validated by install, boot, and session continuity contract tests
 

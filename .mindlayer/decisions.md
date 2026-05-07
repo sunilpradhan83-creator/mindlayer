@@ -1,5 +1,36 @@
 # Decisions
 
+## ml load Primary Command and Ranked Loading
+
+id: ml-20260507-012
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [ml-load, retrieval, commands, ranking, v3]
+confidence: high
+status: active
+source: manual
+
+### Summary
+`ml load <query>` is the primary memory-loading command. `ml retrieve <query>` remains a backward-compatible alias. V3 phase 4 ranked loading uses deterministic index scoring, not ML or new storage.
+
+### Details
+- Primary command: `ml load <query>`.
+- Alias: `ml retrieve <query>` remains supported for compatibility with prior adapters, docs, and user habit.
+- Command spec renamed from `commands/retrieve.md` to `commands/load.md`.
+- Ranked loading scores index entries by title, tags, summary keywords, type/status, importance, and recency.
+- Archived entries are skipped by default unless the query explicitly asks for archived/history/old/completed content; when included, they receive an archived penalty.
+- Output includes score and match reason for each ranked match before loading relevant sections.
+- No ML, embeddings, background indexer, or new storage layer in V3 phase 4.
+
+### When to use
+When modifying load/retrieve command behavior, routing, output format, or ranked memory matching.
+
+### Related
+ml-20260505-006
+ml-20260507-005
+
 ## Memory Diff Design Decisions
 
 id: ml-20260507-011
@@ -113,7 +144,7 @@ All ml command specs live in `memory-system/commands/` as per-command files load
 
 ### Details
 - `prompts/` was never loaded by the router or boot — it provided false safety (specs existed but were never guaranteed to be in context).
-- Specs moved into `memory-system/commands/`: index.md (dispatch map), init.md, retrieve.md, save.md, status.md, archive.md, session.md, onboard.md.
+- Specs moved into `memory-system/commands/`: index.md (dispatch map), init.md, load.md, save.md, status.md, archive.md, session.md, onboard.md.
 - Router is the index for memory-system files — no separate index.md needed inside memory-system/.
 - `commands/index.md` is the entry point: loaded first when any `ml *` fires, then the agent loads the specific spec file.
 - `session.md` content merged into `commands/session.md`. `memory-system/session.md` deleted.
@@ -466,4 +497,3 @@ ml-20260504-001
 ml-20260505-003
 ml-20260430-005
 ml-20260505-004
-

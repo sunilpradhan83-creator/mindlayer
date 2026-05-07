@@ -71,7 +71,7 @@ What would you like to work on?
 ```
 
 `ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-Use `ml retrieve <query>` when specific memory is needed.
+Use `ml load <query>` when specific memory is needed. `ml retrieve <query>` remains an alias.
 Use `ml save` only to propose memory writes; never write without approval.
 Use `ml status` to check memory health.
 Use `ml session` to report session context cost and recommend compact or new session.

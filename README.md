@@ -65,7 +65,7 @@ They tell tools how to use MindLayer, but they are not memory stores.
 MindLayer V1 uses prompt files, not a CLI runtime:
 
 - MindLayer boot: initialize the session with minimal useful memory context.
-- `ml retrieve <query>`: fetch specific memory using indexes first.
+- `ml load <query>`: fetch specific memory using ranked index matches first. `ml retrieve <query>` remains an alias.
 - `ml save`: propose durable memory writes and wait for approval.
 - `ml status`: check memory health and suggest fixes.
 
@@ -75,7 +75,7 @@ Prompt sources live in [`prompts/`](prompts/).
 
 MindLayer boot should load `~/.mindlayer/memory-system.md` first, then indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `ml init` remains a legacy/manual refresh alias for showing or rerunning the boot receipt.
 
-Use `ml retrieve <query>` instead of loading every memory file. Retrieval should start from indexes and load only relevant sections.
+Use `ml load <query>` instead of loading every memory file. Loading should start from indexes and load only relevant sections.
 
 Use `ml save` after durable learning happens: new decisions, stable preferences, meaningful progress, risks, reusable workflows, or backlog items. MindLayer should propose writes first and only save after approval.
 
@@ -165,4 +165,3 @@ tools/dogfood-codex-boot.sh
 ```
 
 This depends on local Codex auth, model availability, and network access.
-

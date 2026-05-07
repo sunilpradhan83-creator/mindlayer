@@ -9,7 +9,7 @@ Load this file when any `ml *` command fires. Read it first, then load the spec 
 | Command | Spec file | When to load |
 |---|---|---|
 | `ml init` | `commands/init.md` | `ml init` invoked, or boot receipt requested |
-| `ml retrieve <query>` | `commands/retrieve.md` | `ml retrieve`, "load X", "what do we know about X" |
+| `ml load <query>` | `commands/load.md` | `ml load`, `ml retrieve`, "load X", "retrieve X", "what do we know about X" |
 | `ml save` | `commands/save.md` | `ml save`, "remember this", "save this", "add to memory" |
 | `ml status` | `commands/status.md` | `ml status`, "mstatus", "memory status", "what's loaded" |
 | `ml archive` | `commands/archive.md` | `ml archive`, `ml clean`, "clean memory", "forget X", "tidy memory" |
