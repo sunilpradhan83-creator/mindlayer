@@ -50,6 +50,9 @@ V3 phase 3:
 V3 phase 4:
 - Programmatic index-first retrieval: strengthen `/m-retrieve` with scored ranking by tag match, recency, and importance rather than keyword-only search.
 
+**Follow-up (next session start):**
+- Verify `global-template/router.md` is in sync with `.mindlayer/router.md` — router was simplified this session (announcement format moved to per-turn.md) but global-template/router.md was not checked.
+
 **Deferred:**
 - Existing project onboarding flow: automated way to populate `.mindlayer/` from existing README, docs, or context when installing into a mature project.
 - Memory-system.md changelog: surface what changed when memory-system.md is refreshed on reinstall.
