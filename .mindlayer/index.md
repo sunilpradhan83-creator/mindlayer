@@ -124,15 +124,15 @@
 
 - id: ml-20260506-001
   title: Memory System Self-Reference Problem
-  file: context.md
+  file: archive.md
   section: Memory System Self-Reference Problem
   scope: project
   type: context
   tags: [memory-system, token-efficiency, architecture, v3]
-  summary: memory-system.md loads ~3,500 tokens just to learn what not to load. Proposed fix — memory-system/ folder with index-driven conditional loading (~1,200 tokens typical).
-  importance: high
-  status: active
-  last_updated: 2026-05-06
+  summary: Resolved. memory-system/ folder split shipped in V3 phase 1 — boot cost reduced from ~3,500 to ~1,200 tokens typical.
+  importance: low
+  status: archived
+  last_updated: 2026-05-07
 
 - id: ml-20260505-004
   title: Goal Hierarchy and Flow
@@ -165,10 +165,10 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: V2 complete (phases 1–4). Up next: V3 Memory Quality + Smarter Retrieval (health scoring, memory diff, auto-summarization, ranked retrieval). See ROADMAP.md for full vision.
+  summary: V2 complete. V3 phase 1 complete. V3 phase 2 partial (per-turn contracts shipped; memory diff remaining). V3 phase 3–4 and /m-onboard pending. See ROADMAP.md for full vision.
   importance: medium
   status: active
-  last_updated: 2026-05-05
+  last_updated: 2026-05-07
 
 - id: ml-20260505-006
   title: Current Phase — V3 Memory Quality + Smarter Retrieval
@@ -176,11 +176,11 @@
   section: Current Phase
   scope: project
   type: progress
-  tags: [v3, memory-quality, retrieval]
-  summary: V3 phase 1 complete. V3 phase 2 (memory diff) is next.
+  tags: [v3, memory-quality, retrieval, per-turn, contracts]
+  summary: V3 phase 1 complete. V3 phase 2 partial — per-turn contracts shipped (load announcement, candidate scan, retrieval check), 61 tests passing. Memory diff still remaining.
   importance: high
   status: active
-  last_updated: 2026-05-06
+  last_updated: 2026-05-07
 
 - id: ml-20260505-003
   title: MindLayer Product Roadmap

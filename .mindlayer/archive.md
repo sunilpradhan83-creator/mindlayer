@@ -27,6 +27,27 @@ Historical reference for V1 completion state.
 ### Related
 ml-project-20260430-001
 
+## Memory System Self-Reference Problem
+
+id: ml-20260506-001
+created: 2026-05-06
+updated: 2026-05-07
+scope: project
+type: context
+tags: [memory-system, token-efficiency, architecture, v3]
+confidence: high
+status: archived
+source: manual
+
+### Summary
+`memory-system.md` had a chicken-and-egg problem: rules for what to load were embedded inside the file that had to be fully loaded first (~3,500 tokens) just to learn what not to load. Fixed in V3 phase 1 by splitting into `memory-system/` folder with index-driven conditional loading (~1,200 tokens typical boot cost).
+
+### When to use
+Historical reference. Problem resolved — memory-system/ folder split shipped in V3 phase 1.
+
+### Related
+ml-20260505-006
+
 ## MindLayer Handoff Display Boundaries
 
 id: ml-20260504-001

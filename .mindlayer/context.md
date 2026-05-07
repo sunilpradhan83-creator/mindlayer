@@ -101,39 +101,6 @@ Use when implementing or evaluating Next Step prediction, backlog pull behavior,
 ml-20260430-005
 ml-20260505-003
 
-## Memory System Self-Reference Problem
-
-id: ml-20260506-001
-created: 2026-05-06
-scope: project
-type: context
-tags: [memory-system, token-efficiency, architecture, v3]
-confidence: high
-status: active
-source: manual
-
-### Summary
-`memory-system.md` has a chicken-and-egg problem: the rules for what to load
-and when are embedded inside the file that must be fully loaded first (~3,500
-tokens) just to learn what not to load.
-
-### Proposed Solution
-Split into `memory-system/` folder with a lightweight index (~150 tokens)
-that carries load triggers. Boot loads only `index.md` + `per-turn.md`.
-Everything else is pulled conditionally within a turn.
-
-### Savings Estimate
-- Current boot cost: ~3,500 tokens
-- Proposed typical session cost: ~1,200 tokens
-- Worst case unchanged: ~3,500 tokens
-
-### When to use
-Use when evaluating V3 token-efficiency work or designing changes to how
-`memory-system.md` is structured and loaded.
-
-### Related
-ml-20260505-006
-
 ## SCRIPT Development Philosophy
 
 id: ml-20260507-001
