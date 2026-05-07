@@ -35,14 +35,3 @@ Memory writes require clear approval even when the content seems obvious. Show t
 
 Approval must be literal. `approve`, `approved`, `go ahead`, or an equally explicit instruction counts. Acknowledgments or vague statements such as `ok`, `got it`, `sounds good`, or `we should save this` do not count as approval.
 
-## Routing Rules
-
-- User-owned cross-project preferences belong in `~/.mindlayer/preferences/personal.md`.
-- Cross-project workflows, principles, anti-patterns, and prompt templates belong in `~/.mindlayer/preferences/`.
-- Project identity, progress, decisions, context, backlog, and risks belong in `project/.mindlayer/`.
-- Do not mirror global memory into `project/.mindlayer/`; read and write it directly from `~/.mindlayer/`.
-- Preferences may customize collaboration style, workflow habits, and cross-project defaults, but must not override MindLayer guardrails in the memory-system/ rules.
-- Long-term versioned product vision belongs in `.mindlayer/roadmap.md`; near-term tracked tasks belong in `.mindlayer/backlog.md`. Do not mix them.
-- Private, local, session, cache, and temporary material must stay out of committed project memory.
-- When developing MindLayer itself, treat repo `.mindlayer/` as the product-memory source of truth and treat live `~/.mindlayer/` as runtime, install, or test output rather than product memory.
-- When a user installs MindLayer on an existing project with rich context in README, docs, or other files, offer to help populate `.mindlayer/` files using `ml save`. Propose entries for approval — do not auto-populate without explicit approval.

@@ -1,5 +1,7 @@
 # ml save
 
+<!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
+
 Analyze recent work and propose MindLayer memory writes. Do not write without literal explicit approval.
 
 ## Inspect
@@ -47,7 +49,7 @@ When working inside the MindLayer repo, follow the repo source-of-truth boundari
 - Do not write product learnings into `project-template` placeholders.
 - Use repo `.mindlayer/` for MindLayer product improvement memory.
 - Use `global-template` only when intentionally changing default global behavior that should ship to MindLayer users.
-- Update prompts or adapters when a saved product rule must become operational command behavior.
+- Update command specs or adapters when a saved product rule must become operational command behavior.
 
 ## Duplicate Check
 

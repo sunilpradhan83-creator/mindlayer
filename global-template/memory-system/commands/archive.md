@@ -1,5 +1,7 @@
 # ml archive
 
+<!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
+
 Scan for stale memory entries and propose archive or delete actions. Do not write without explicit approval.
 
 ## Triggers
@@ -13,7 +15,7 @@ Also invoked at proactive checkpoints — see Checkpoints below.
 
 ## Scan Strategy
 
-Scan the **index first** — read `~/.mindlayer/index.md` and `.mindlayer/index.md`. Use index metadata (`status`, `last_updated`, `type`, `tags`, `summary`) to flag candidates before reading full file sections. Only load a section when proposing an action on that specific entry.
+Scan the **index first** — read `.mindlayer/index.md` and `~/.mindlayer/preferences/index.md`. Use index metadata (`status`, `last_updated`, `type`, `tags`, `summary`) to flag candidates before reading full file sections. Only load a section when proposing an action on that specific entry.
 
 ### Never Scan
 
@@ -106,7 +108,7 @@ Done.
 
 ## Subdirectory Cleanup
 
-`ml clean` also handles ephemeral subdirectory content — not just index entries:
+`ml archive` also handles ephemeral subdirectory content — not just index entries:
 
 - **`tmp/`**: clear all files when stale (modification date from a prior session). Always propose before deleting.
 - **`cache/`**: flag files older than 7 days as potentially stale. Propose deletion per file — cache is always regenerable.

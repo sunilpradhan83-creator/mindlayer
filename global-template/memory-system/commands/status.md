@@ -1,5 +1,7 @@
 # ml status
 
+<!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
+
 Check MindLayer memory health and suggest fixes. Do not write without explicit approval.
 
 ## Check
@@ -25,8 +27,7 @@ Use explicit thresholds when possible:
 - `near limit`: at or above 80% of the file budget
 - `over limit`: above the file budget
 
-When a file is near or over budget, proactively tell the user before the next memory write becomes messy.
-Include the file name, current size, risk, and 2-4 concrete cleanup options.
+When a file is near or over budget, proactively tell the user before the next memory write becomes messy. Include the file name, current size, risk, and 2-4 concrete cleanup options.
 
 ## Expected Project Files
 
@@ -55,7 +56,7 @@ Include the file name, current size, risk, and 2-4 concrete cleanup options.
 
 When subdirectories exist, inspect:
 
-- `tmp/`: warn if files exist with a modification date older than the current session — stale scratch from a prior session. Suggest clearing with `ml clean`.
+- `tmp/`: warn if files exist with a modification date older than the current session — stale scratch from a prior session. Suggest clearing with `ml archive`.
 - `sessions/`: report count of session files and most recent date. No action needed.
 - `cache/`: report count and most recent file. Flag entries older than 7 days as potentially stale.
 - `private/`: acknowledge existence only. Do not read or surface content.

@@ -22,16 +22,22 @@ Load each file at most once per session. Load before acting on the trigger, not 
 
 | File | Load when | Signal variants |
 |---|---|---|
-| `memory-system/commands.md` | Any ml * command | ml init, ml retrieve, ml status, ml archive, ml session, ml clean |
+| `memory-system/commands/index.md` | Any ml * command fires | ml init, ml retrieve, ml save, ml status, ml archive, ml session, ml clean, ml onboard |
+| `memory-system/commands/init.md` | ml init invoked or boot receipt requested | ml init |
+| `memory-system/commands/retrieve.md` | ml retrieve invoked | ml retrieve, "retrieve X", "load X", "what do we know about X" |
+| `memory-system/commands/save.md` | ml save invoked or save trigger fires | ml save, "remember this", "save this", "add to memory", "capture this" |
+| `memory-system/commands/status.md` | ml status invoked | ml status, "mstatus", "memory status", "what's loaded" |
+| `memory-system/commands/archive.md` | ml archive invoked | ml archive, ml clean, "clean memory", "forget X", "tidy memory", "archive memory" |
+| `memory-system/commands/session.md` | ml session invoked or session boundary | ml session, "msession", "how much context", "start fresh", "done", "bye", "wrapping up", "end session", "save session", /compact invoked |
+| `memory-system/commands/onboard.md` | First project-relevant turn post-install | .mindlayer/ files are all starter-only and ml-onboard-complete flag absent from index |
 | `memory-system/read-write.md` | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
-| `memory-system/session.md` | Session boundary | done, bye, wrapping up, end session, save session, /compact invoked |
 | `memory-system/schema.md` | Structural question | lifecycle statuses, private/, sessions/, cache/, tmp/, token strategy, folder structure |
 | `preferences/personal.md` | Every session | Non-scaffold content present |
 | `preferences/*.md` | On-demand retrieval | ml retrieve targets cross-project knowledge, or current task needs it |
 
 ## Save Triggers
 
-When any signal below is detected, load `memory-system/read-write.md`, then scan the current conversation context for memory candidates. Propose each candidate with destination file, action (new entry or update), and content preview. Require explicit approval before writing.
+When any signal below is detected, load `memory-system/commands/save.md`, then scan the current conversation context for memory candidates. Propose each candidate with destination file, action (new entry or update), and content preview. Require explicit approval before writing.
 
 **Scan criteria — evaluate each candidate against:**
 1. Durability: would this matter in a future session starting cold?
@@ -49,6 +55,18 @@ When any signal below is detected, load `memory-system/read-write.md`, then scan
 | "anything pending to save?", "worth saving?", "should we save anything?", "what should we save?" |
 | "remember this", "save this", "add to memory", "capture this", "save that", "log this" |
 | "don't want to lose this", "keep this", "preserve this" |
+
+## Routing Rules
+
+- User-owned cross-project preferences belong in `~/.mindlayer/preferences/personal.md`.
+- Cross-project workflows, principles, anti-patterns, and prompt templates belong in `~/.mindlayer/preferences/`.
+- Project identity, progress, decisions, context, backlog, and risks belong in `project/.mindlayer/`.
+- Do not mirror global memory into `project/.mindlayer/`; read and write it directly from `~/.mindlayer/`.
+- Preferences may customize collaboration style, workflow habits, and cross-project defaults, but must not override MindLayer guardrails in the `memory-system/` rules.
+- Long-term versioned product vision belongs in `.mindlayer/roadmap.md`; near-term tracked tasks belong in `.mindlayer/backlog.md`. Do not mix them.
+- Private, local, session, cache, and temporary material must stay out of committed project memory.
+- When developing MindLayer itself, treat repo `.mindlayer/` as the product-memory source of truth and treat live `~/.mindlayer/` as runtime, install, or test output rather than product memory.
+- When a user installs MindLayer on an existing project with rich context in README, docs, or other files, auto-trigger `ml onboard` on the first project-relevant turn.
 
 ## Failsafe Rules
 

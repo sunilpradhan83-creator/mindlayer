@@ -32,7 +32,7 @@ MindLayer boot should run at session start or tool preflight when the host suppo
 Boot order:
 1. Read `~/.mindlayer/boot.md` first when available.
 2. Read `~/.mindlayer/router.md` and follow its load triggers.
-3. Read `~/.mindlayer/index.md` and `.mindlayer/index.md`.
+3. Read `.mindlayer/index.md` — project memory catalog.
 4. Load project identity and current progress.
 
 Use this exact boot receipt format when the boot is visible to the user:

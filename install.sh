@@ -205,13 +205,14 @@ Read this file first at every session start. Then read router.md. Then follow th
 Run once per session, in order, before answering any request:
 
 1. Read ~/.mindlayer/boot.md — you are here.
-2. Read ~/.mindlayer/router.md — load triggers for all subfiles.
-3. Read ~/.mindlayer/memory-system/per-turn.md — always. Controls every response you generate.
-4. Read ~/.mindlayer/preferences/personal.md — only if it contains non-scaffold content.
-5. Read project .mindlayer/index.md — catalog of project memory.
-6. Read project .mindlayer/project.md — stable project identity.
-7. Load project progress and backlog — check progress.md and backlog.md.
-8. Check sessions/ — if a recent session file exists, read only the ## Next section.
+2. Read ~/.mindlayer/router.md — global load and save triggers.
+3. Read .mindlayer/router.md — project load triggers. Skip if file does not exist.
+4. Read ~/.mindlayer/memory-system/per-turn.md — always. Controls every response you generate.
+5. Read ~/.mindlayer/preferences/personal.md — only if it contains non-scaffold content.
+6. Read project .mindlayer/index.md — catalog of project memory.
+7. Read project .mindlayer/project.md — stable project identity.
+8. Load project progress and backlog — check progress.md and backlog.md.
+9. Check sessions/ — if a recent session file exists, read only the ## Next section.
 
 Do not treat a plain greeting as a project-relevant request.
 
@@ -254,7 +255,7 @@ What would you like to work on?
 
 global_router='# MindLayer Router
 
-Read this file immediately after boot.md. Then follow the load table below.
+Read this file immediately after boot.md. Then read the project router at .mindlayer/router.md. Then follow the load and save triggers below.
 
 ## Always Load (every session, before first response)
 
@@ -264,21 +265,45 @@ Read this file immediately after boot.md. Then follow the load table below.
 
 Load each file at most once per session. Load before acting on the trigger — not after.
 
-| File | Load before | Exact signal |
+| File | Load when | Signal variants |
 |---|---|---|
-| memory-system/commands.md | Executing any command | Message contains: ml init ml save ml retrieve ml status ml archive ml session ml clean |
-| memory-system/read-write.md | Any memory operation | About to write to .mindlayer/, proposing ml save, or reading memory for a task |
-| memory-system/session.md | Session boundary action | User says: done / bye / wrapping up / end session / save session — or /compact invoked |
-| memory-system/schema.md | Structural question | User asks about: lifecycle statuses, private/ sessions/ cache/ tmp/, or token strategy |
-| preferences/personal.md | Every session | Non-scaffold content present (file contains real user preferences) |
-| preferences/*.md | On-demand retrieval | ml retrieve targets cross-project knowledge, or current task clearly needs it |
+| memory-system/commands/index.md | Any ml * command fires | ml init, ml retrieve, ml save, ml status, ml archive, ml session, ml clean, ml onboard |
+| memory-system/commands/init.md | ml init invoked | ml init |
+| memory-system/commands/retrieve.md | ml retrieve invoked | ml retrieve, "retrieve X", "load X", "what do we know about X" |
+| memory-system/commands/save.md | ml save invoked or save trigger fires | ml save, "remember this", "save this", "add to memory" |
+| memory-system/commands/status.md | ml status invoked | ml status, "mstatus", "memory status" |
+| memory-system/commands/archive.md | ml archive invoked | ml archive, ml clean, "clean memory", "forget X", "tidy memory" |
+| memory-system/commands/session.md | ml session invoked or session boundary | ml session, "msession", "how much context", "done", "bye", "end session", /compact invoked |
+| memory-system/commands/onboard.md | First project-relevant turn post-install | .mindlayer/ files are all starter-only and ml-onboard-complete flag absent |
+| memory-system/read-write.md | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
+| memory-system/schema.md | Structural question | lifecycle statuses, private/, sessions/, cache/, tmp/, token strategy, folder structure |
+| preferences/personal.md | Every session | Non-scaffold content present |
+| preferences/*.md | On-demand retrieval | ml retrieve targets cross-project knowledge, or current task needs it |
+
+## Save Triggers
+
+When any signal below is detected, load memory-system/commands/save.md, then scan the current conversation context for memory candidates. Propose each candidate with destination file, action, and content preview. Require explicit approval before writing.
+
+Signal variants: "ml save", "remember this", "save this", "add to memory", "capture this", "save that", "log this", "don'"'"'t want to lose this", "keep this", "preserve this"
+
+## Routing Rules
+
+- User-owned cross-project preferences belong in ~/.mindlayer/preferences/personal.md.
+- Cross-project workflows, principles, anti-patterns, and prompt templates belong in ~/.mindlayer/preferences/.
+- Project identity, progress, decisions, context, backlog, and risks belong in project/.mindlayer/.
+- Do not mirror global memory into project/.mindlayer/; read and write it directly from ~/.mindlayer/.
+- Long-term versioned product vision belongs in .mindlayer/roadmap.md; near-term tracked tasks belong in .mindlayer/backlog.md.
+- Private, local, session, cache, and temporary material must stay out of committed project memory.
+- When developing MindLayer itself, treat repo .mindlayer/ as the product-memory source of truth and treat live ~/.mindlayer/ as runtime output.
+- When a user installs MindLayer on an existing project, auto-trigger ml onboard on the first project-relevant turn.
 
 ## Failsafe Rules
 
 - Load each file at most once per session.
 - When in doubt, load. A missed rule costs more than 400 tokens.
 - Never skip memory-system/per-turn.md. It controls the Token Burned block on every response.
-- Always load memory-system/read-write.md BEFORE writing, not after recognizing the need.'
+- Always load memory-system/read-write.md BEFORE writing, not after recognizing the need.
+- Read the project router (.mindlayer/router.md) immediately after this file.'
 
 global_memory_system_per_turn='# Per-Turn Rules
 
@@ -388,7 +413,7 @@ Session summary ready — say '"'"'save session'"'"' to write sessions/YYYY-MM-D
 
 global_memory_system_commands='# Commands
 
-Load this file when the user invokes any ml * command.
+Load this file when the user invokes any ml * command. Then load the spec file for the specific command from memory-system/commands/. See memory-system/commands/index.md for the full command map.
 
 ## Command Behavior
 
@@ -401,6 +426,8 @@ Load this file when the user invokes any ml * command.
 - ml save proposes memory writes from durable learnings and waits for approval.
 - ml status checks memory health and suggests fixes without writing.
 - ml archive scans for stale entries and proposes archive or delete actions with approval.
+- ml session reports session context cost and recommends compact or new session.
+- ml onboard runs once post-install on existing projects to populate .mindlayer/ from existing context.
 
 ## Archive Rules
 
@@ -409,12 +436,12 @@ Load this file when the user invokes any ml * command.
 - Archived entries keep their full markdown section in archive.md for future reference.
 - Deleted entries are removed from both the source file and the index.
 - Never archive index.md, boot.md, router.md, or archive.md itself.
-- ml archive is the command that executes archive and delete actions. See prompts/ml-archive.md.
+- ml archive is the command that executes archive and delete actions. Full spec in memory-system/commands/archive.md.
 - ml clean is an alias for ml archive.
 
 ## Index-First Retrieval
 
-Indexes are compact maps for search. They are not full documentation. Search by title, tags, summary, type, status, importance, and last updated date before reading full sections. On boot, read index.md and preferences/index.md as catalogs.'
+Indexes are compact maps for search. They are not full documentation. Search by title, tags, summary, type, status, importance, and last updated date before reading full sections. On boot, read project .mindlayer/index.md and preferences/index.md as catalogs.'
 
 global_memory_system_read_write='# Read and Write Rules
 
@@ -447,40 +474,30 @@ Load this file before any memory read or write operation.
 
 Memory writes require clear approval even when the content seems obvious. Show the destination, action, duplicate check, and confidence before writing.
 
-Approval must be literal. approve, approved, go ahead, or an equally explicit instruction counts. Acknowledgments or vague statements such as ok, got it, sounds good, or we should save this do not count as approval.
+Approval must be literal. approve, approved, go ahead, or an equally explicit instruction counts. Acknowledgments or vague statements such as ok, got it, sounds good, or we should save this do not count as approval.'
 
-## Routing Rules
+global_memory_system_commands_index='# Commands Index
 
-- User-owned cross-project preferences belong in ~/.mindlayer/preferences/personal.md.
-- Cross-project workflows, principles, anti-patterns, and prompt templates belong in ~/.mindlayer/preferences/.
-- Project identity, progress, decisions, context, backlog, and risks belong in project/.mindlayer/.
-- Do not mirror global memory into project/.mindlayer/; read and write it directly from ~/.mindlayer/.
-- Long-term versioned product vision belongs in .mindlayer/roadmap.md; near-term tracked tasks belong in .mindlayer/backlog.md.
-- Private, local, session, cache, and temporary material must stay out of committed project memory.
-- When developing MindLayer itself, treat repo .mindlayer/ as the product-memory source of truth and treat live ~/.mindlayer/ as runtime output.'
+Load this file when any ml * command fires. Then load the spec file for the specific command invoked.
 
-global_memory_system_session='# Session Rules
+## Command Map
 
-Load this file at session boundaries: boot, ml session, and when session-end phrases fire.
+| Command | Spec file | When to load |
+|---|---|---|
+| ml init | commands/init.md | ml init invoked, or boot receipt requested |
+| ml retrieve <query> | commands/retrieve.md | ml retrieve, "retrieve X", "load X", "what do we know about X" |
+| ml save | commands/save.md | ml save, "remember this", "save this", "add to memory", "capture this" |
+| ml status | commands/status.md | ml status, "mstatus", "memory status", "what'"'"'s loaded" |
+| ml archive | commands/archive.md | ml archive, ml clean, "clean memory", "forget X", "tidy memory", "archive memory" |
+| ml session | commands/session.md | ml session, "msession", "how much context", "start fresh", "done", "bye", "end session" |
+| ml onboard | commands/onboard.md | First project-relevant turn post-install when .mindlayer/ is starter-only |
 
-## Session Continuity Behavior
+## Rules
 
-- Track pending memory-write approvals, unfinished tasks, blockers, and the smallest useful next action.
-- If a memory write has been proposed but not approved, keep it visible as pending until the user clearly approves or rejects it.
-- Remind the user about pending memory-write approvals before moving to unrelated memory work.
-- Continuity state is surfaced in the per-turn Token Burned block via Next Step prediction.
-- If there are no pending approvals, blockers, or unfinished work, say None compactly.
-- MindLayer boot is intentionally cheap. Recommend starting a new session at each task boundary rather than compacting mid-session.
-
-## Handoff Behavior
-
-Deprecated. The Per-Turn Status Block (Token Burned) replaces Handoff as the ongoing status surface.
-
-## Backup Rules
-
-- ~/.mindlayer/preferences/ is a git repo. Back it up by adding a remote: git -C ~/.mindlayer/preferences remote add origin <your-private-repo>.
-- All other ~/.mindlayer/ files are outside project Git and not automatically backed up.
-- Do not store secrets, tokens, raw conversations, or project-private facts in global preferences.'
+- Load the spec file for the invoked command immediately after this file.
+- Never load all spec files at once — load only the one needed.
+- ml clean is an alias for ml archive.
+- ml init is a legacy/manual refresh alias for running the boot receipt.'
 
 global_memory_system_schema='# Schema Reference
 
@@ -963,11 +980,18 @@ install_global() {
   write_managed_template "$GLOBAL_DIR/memory-system/per-turn.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn.md" "$global_memory_system_per_turn"
   write_managed_template "$GLOBAL_DIR/memory-system/commands.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands.md" "$global_memory_system_commands"
   write_managed_template "$GLOBAL_DIR/memory-system/read-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/read-write.md" "$global_memory_system_read_write"
-  write_managed_template "$GLOBAL_DIR/memory-system/session.md" "$GLOBAL_TEMPLATE_DIR/memory-system/session.md" "$global_memory_system_session"
   write_managed_template "$GLOBAL_DIR/memory-system/schema.md" "$GLOBAL_TEMPLATE_DIR/memory-system/schema.md" "$global_memory_system_schema"
 
-  # Agent-written global catalog — create once, never overwrite
-  write_template_if_missing "$GLOBAL_DIR/index.md" "$GLOBAL_TEMPLATE_DIR/index.md" "$global_index"
+  # memory-system/commands/ — per-command spec files
+  mkdir_p "$GLOBAL_DIR/memory-system/commands"
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/index.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/index.md" "$global_memory_system_commands_index"
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/init.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/init.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/retrieve.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/retrieve.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/save.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/save.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/status.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/status.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/archive.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/archive.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/session.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/session.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/onboard.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/onboard.md" ""
 
   # preferences/ — agent-written cross-project knowledge, git-backed
   mkdir_p "$GLOBAL_DIR/preferences"
@@ -1017,7 +1041,7 @@ MindLayer boot should run at session start or tool preflight when the host suppo
 Boot order:
 1. Read `~/.mindlayer/boot.md` first when available.
 2. Read `~/.mindlayer/router.md` and follow its load triggers.
-3. Read `~/.mindlayer/index.md` and `.mindlayer/index.md`.
+3. Read `.mindlayer/index.md` — project memory catalog.
 4. Load project identity and current progress.
 
 Use this exact boot receipt format when the boot is visible to the user:

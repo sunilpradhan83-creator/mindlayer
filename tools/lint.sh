@@ -158,6 +158,7 @@ lint_dir() {
 
   index="$base/index.md"
   if [ ! -f "$index" ]; then
+    [ "$label" = "global" ] && { ok "$label index.md not present (global index removed — preferences/index.md is the catalog)"; return; }
     err "[E2] missing $index"
     return
   fi
@@ -286,19 +287,19 @@ lint_repo() {
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Read `~/.mindlayer/boot.md` first' "Copilot adapter"
   require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "first project-relevant request" "Copilot adapter"
 
-  require_contains "$PROJECT_DIR/prompts/ml-init.md" 'Read `~/.mindlayer/boot.md` first' "ml init prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-init.md" 'Do not use `README.md` or `docs/` as memory input.' "ml init prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-init.md" "not memory stores" "ml init prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-init.md" "Go outside MindLayer memory only when necessary" "ml init prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-init.md" 'Always check project `.mindlayer/project.md`' "ml init prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-init.md" "low importance or starter-like" "ml init prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-init.md" "Automatic Boot Contract" "ml init prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-init.md" "Approximate context share by source" "ml init prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-save.md" "pending destination, action, duplicate check, and confidence" "ml save prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-status.md" "pending approvals" "ml status prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-status.md" "next useful action" "ml status prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-status.md" "Per-File Health" "ml status prompt"
-  require_contains "$PROJECT_DIR/prompts/ml-status.md" "OK | WARN | CRITICAL" "ml status prompt"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Read `~/.mindlayer/boot.md` first' "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Do not use `README.md` or `docs/` as memory input.' "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "not memory stores" "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Go outside MindLayer memory only when necessary" "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Always check project `.mindlayer/project.md`' "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "low importance or starter-like" "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Automatic Boot Contract" "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Approximate context share by source" "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/save.md" "pending destination, action, duplicate check, and confidence" "ml save command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/status.md" "pending approvals" "ml status command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/status.md" "next useful action" "ml status command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/status.md" "Per-File Health" "ml status command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/status.md" "OK | WARN | CRITICAL" "ml status command"
 
   # Global template — rules split across memory-system/ subfiles
   require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input' "global read-write template"
@@ -306,8 +307,8 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "Go outside MindLayer memory only when necessary" "global read-write template"
   require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "Approval must be literal" "global read-write template"
   require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "literal explicit approval" "global read-write template"
-  require_contains "$PROJECT_DIR/global-template/memory-system/session.md" "## Session Continuity Behavior" "global session template"
-  require_contains "$PROJECT_DIR/global-template/memory-system/session.md" "pending memory-write approvals" "global session template"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/session.md" "## Session Continuity Behavior" "global session command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/session.md" "pending memory-write approvals" "global session command"
   require_contains "$PROJECT_DIR/global-template/boot.md" "first project-relevant request" "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" "approximate context share by source" "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" 'check project `.mindlayer/project.md`' "global boot template"
@@ -320,17 +321,16 @@ lint_repo() {
   require_contains "$PROJECT_DIR/install.sh" "Token strategy:" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "Proactive Behavior" "installer adapter block"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer read-write fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Session Continuity Behavior" "installer session fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Write Rules" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Read Rules" "installer read-write fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Routing Rules" "installer read-write fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Routing Rules" "installer router fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Token Rules" "installer schema fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Backup Rules" "installer session fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Approval Rules" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Lifecycle Statuses" "installer schema fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Index-First Retrieval" "installer commands fallback"
   require_contains "$PROJECT_DIR/install.sh" "literal explicit approval" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "Approval must be literal" "installer read-write fallback"
+  require_contains "$PROJECT_DIR/install.sh" "memory-system/commands/index.md" "installer commands index fallback"
 }
 
 # ---------------------------------------------------------------------------
