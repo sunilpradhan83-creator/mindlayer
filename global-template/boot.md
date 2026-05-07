@@ -18,6 +18,7 @@ Run once per session, in order, before answering any request:
 8. Load project progress and backlog — check `progress.md` and `backlog.md` for current phase and next action.
 9. Check `sessions/` — if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
 10. Check onboard status — scan `.mindlayer/index.md` for `id: ml-onboard-complete`. If absent AND `.mindlayer/project.md` contains only placeholder/scaffold content, load `memory-system/commands/onboard.md` and fire the onboard flow on the first project-relevant turn. Surface in boot receipt as: `Onboarding: pending — ml onboard will run on first project-relevant request.`
+11. Run memory diff — load `memory-system/commands/diff.md` and compute what changed in `.mindlayer/` since the last session. Surface in boot receipt between `Current progress:` and `Context cost:`. Skip silently if no session file or git unavailable.
 
 Do not treat a plain greeting as a project-relevant request. If boot has not run, answer naturally and boot before the first project-relevant request.
 
@@ -42,6 +43,12 @@ Current understanding:
 
 Current progress:
 ...
+
+Memory changes since last session:
+  New:      N entries (<file>)
+  Updated:  N entries (<file>)
+  Archived: N entries
+(omit this block entirely when no changes detected)
 
 Onboarding:
 pending — ml onboard will run on first project-relevant request.

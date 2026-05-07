@@ -15,6 +15,7 @@ Load this file when any `ml *` command fires. Read it first, then load the spec 
 | `ml archive` | `commands/archive.md` | `ml archive`, `ml clean`, "clean memory", "forget X", "tidy memory" |
 | `ml session` | `commands/session.md` | `ml session`, "msession", "how much context", "start fresh" |
 | `ml onboard` | `commands/onboard.md` | First project-relevant turn post-install when `.mindlayer/` is empty or starter-only |
+| *(internal)* | `commands/diff.md` | Boot step 11 and `ml status` — not user-invocable directly |
 
 ## Rules
 

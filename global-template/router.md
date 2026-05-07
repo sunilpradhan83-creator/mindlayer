@@ -30,6 +30,7 @@ Load each file at most once per session. Load before acting on the trigger, not 
 | `memory-system/commands/archive.md` | ml archive invoked | ml archive, ml clean, "clean memory", "forget X", "tidy memory", "archive memory" |
 | `memory-system/commands/session.md` | ml session invoked or session boundary | ml session, "msession", "how much context", "start fresh", "done", "bye", "wrapping up", "end session", "save session", /compact invoked |
 | `memory-system/commands/onboard.md` | First project-relevant turn when onboard not yet complete | `.mindlayer/index.md` does NOT contain `id: ml-onboard-complete` AND `.mindlayer/project.md` contains only placeholder/scaffold content (no real user-written entries) |
+| `memory-system/commands/diff.md` | Boot step 11, or ml status invoked | Always at boot after sessions/ check; also when `ml status` fires |
 | `memory-system/read-write.md` | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
 | `memory-system/schema.md` | Structural question | lifecycle statuses, private/, sessions/, cache/, tmp/, token strategy, folder structure |
 | `preferences/personal.md` | Every session | Non-scaffold content present |

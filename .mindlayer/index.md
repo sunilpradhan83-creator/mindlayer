@@ -177,7 +177,7 @@
   scope: project
   type: progress
   tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
-  summary: ml onboard three-phase flow shipped (spec, boot/router wiring, 25 tests). Commands in memory-system/commands/. 7 test suites, 185 checks passing. V3 phase 2 remaining: memory diff only.
+  summary: Memory diff shipped (session 11) — surfaces entry-level changes since last session at boot and ml status. V3 phase 2 complete. 8 test suites, 213 checks passing.
   importance: high
   status: active
   last_updated: 2026-05-07
@@ -310,6 +310,18 @@
   type: decision
   tags: [approval, skills, ml-init, adapter-safety, memory-safety]
   summary: Skills and slash commands that write files must not execute autonomously in MindLayer. Agent must explain and wait for approval. MindLayer product memory belongs in ~/.mindlayer/ or .mindlayer/, never in Claude's own memory system.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
+- id: ml-20260507-011
+  title: Memory Diff Design Decisions
+  file: decisions.md
+  section: Memory Diff Design Decisions
+  scope: project
+  type: decision
+  tags: [memory-diff, boot, status, git, session-continuity, v3]
+  summary: Memory diff uses git SHA from latest session file as baseline, parses entry-level changes (new/updated/archived), outputs counts + file names grouped by category, fires at boot (step 11) and ml status, skips silently on fallback.
   importance: high
   status: active
   last_updated: 2026-05-07

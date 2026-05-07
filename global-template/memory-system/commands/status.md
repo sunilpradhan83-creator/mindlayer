@@ -102,6 +102,7 @@ Return:
   - MindLayer context used for the current task
   - MindLayer context used in the current session
   - model tokens, when the host exposes exact usage
+  - Memory diff: load `memory-system/commands/diff.md` and surface changes since last session (same format as boot receipt). Skip silently if no session file or git unavailable.
 - Suggested fixes:
 - Approval needed:
 

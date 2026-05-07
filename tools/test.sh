@@ -28,3 +28,6 @@ bash "$ROOT_DIR/tests/agent-behavior/test-per-turn.sh"
 
 printf "\n7. Onboard behavioral contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-onboard.sh"
+
+printf "\n8. Memory diff behavioral contracts\n"
+bash "$ROOT_DIR/tests/agent-behavior/test-diff.sh"

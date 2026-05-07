@@ -1,5 +1,45 @@
 # Decisions
 
+## Memory Diff Design Decisions
+
+id: ml-20260507-011
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [memory-diff, boot, status, git, session-continuity, v3]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Memory diff surfaces what changed in `.mindlayer/` since the last session — new entries, updated entries, archived entries — at boot and during `ml status`.
+
+### Details
+- **Baseline**: git SHA from the `## Commit` section of the most recent session file in `.mindlayer/sessions/`. Latest by filename (YYYY-MM-DD.md).
+- **Mechanism**: `git diff <sha>..HEAD -- .mindlayer/` parsed for `id:` line additions, modifications, and removals.
+- **Output detail**: counts + file names grouped by category (New / Updated / Archived). Entry titles are not listed — counts only.
+- **Output format**:
+  ```
+  Memory changes since last session:
+    New:      N entries (<file>, <file>)
+    Updated:  N entries (<file>)
+    Archived: N entries
+  ```
+  Omit lines where count is 0. Omit block entirely when no changes.
+- **Placement**: boot receipt between `Current progress:` and `Context cost:`; `ml status` in the Context section.
+- **Scope**: project `.mindlayer/` only. Excludes `sessions/`, `cache/`, `tmp/`, `private/`, `local.md`, `archive.md`.
+- **Fallback**: skip silently if no session file, no `## Commit` SHA, or git unavailable. Never surface an error.
+- **Fires**: once per surface per session (once at boot, once per `ml status` call).
+- **Spec**: `memory-system/commands/diff.md`. Not user-invocable.
+
+### When to use
+When implementing or modifying memory diff behavior. All design decisions above are settled — do not re-litigate without new evidence.
+
+### Related
+ml-20260505-006
+ml-20260507-007
+
 ## ml onboard Three-Phase Migration Flow
 
 id: ml-20260507-010
