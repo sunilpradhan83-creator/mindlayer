@@ -89,3 +89,111 @@ Historical reference only. Superseded by Token Burned Per-Turn Status Block.
 
 ### Related
 ml-20260505-005
+
+## ml load Primary Command and Ranked Loading
+id: ml-20260507-012
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [ml-load, retrieval, commands, ranking, v3]
+confidence: high
+status: archived
+source: manual
+### Summary
+`ml load <query>` is the primary memory-loading command. `ml retrieve <query>` remains a backward-compatible alias. V3 phase 4 ranked loading uses deterministic index scoring, not ML or new storage.
+### Details
+- Primary command is `ml load <query>`; `ml retrieve <query>` remains an alias.
+- Spec moved to `commands/load.md`; ranked loading is deterministic over title/tags/summary/type/status/importance/recency/archive intent.
+- No ML, embeddings, background indexer, or new storage layer in V3 phase 4.
+
+## Memory Diff Design Decisions
+id: ml-20260507-011
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [memory-diff, boot, status, git, session-continuity, v3]
+confidence: high
+status: archived
+source: manual
+### Summary
+Memory diff surfaces what changed in `.mindlayer/` since the last session — new entries, updated entries, archived entries — at boot and during `ml status`.
+### Details
+- Baseline is the git SHA from the latest dated session file's `## Commit` section.
+- Diff project `.mindlayer/` only; exclude sessions/cache/tmp/private/local/archive.
+- Output counts + file names for New / Updated / Archived entries; omit zero-count lines and omit the whole block when empty.
+- Place in boot receipt after `Current progress:` and in `ml status` Context.
+- Skip silently on missing session/SHA/git errors. Spec lives in `memory-system/commands/diff.md`.
+
+## ml onboard Three-Phase Migration Flow
+id: ml-20260507-010
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [onboard, migration, adapters, ml-save, conflict-detection]
+confidence: high
+status: archived
+source: manual
+### Summary
+`ml onboard` runs a three-phase migration flow: (1) adapter conflict detection and migration, (2) inline memory extraction, (3) project context population. Agent reads and reasons about each file — same as `ml save`. One proposal per turn, explicit approval required.
+### Details
+- Phase 1 scans project/global adapters for conflicts and proposes adapter edit + optional MindLayer write together.
+- Phase 2 extracts durable non-conflict adapter content using `ml save` proposal rules; extraction does not remove adapter text.
+- Phase 3 scans README/docs/source only for onboarding context and proposes one `.mindlayer/` entry at a time.
+- Conflicts include contradictory boot instructions, inline memory stores, duplicate boot sequences, or adapter-as-memory instructions. Coding standards are not conflicts.
+- Completion is recorded by index entry `ml-onboard-complete`, even on early stop.
+
+## ml onboard One-Time Flag via Index Entry
+id: ml-20260507-009
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [onboard, ml-onboard, flag, index, architecture]
+confidence: high
+status: archived
+source: manual
+### Summary
+`ml onboard` completion is flagged by writing a single entry to `.mindlayer/index.md` with `id: ml-onboard-complete, type: onboarding, status: complete`. On every subsequent boot, if this entry exists, skip `ml onboard` entirely.
+### Details
+- Completion uses index entry `ml-onboard-complete`, not a separate flag file, to avoid new install surface and keep the state discoverable.
+- Boot checks `.mindlayer/index.md` for that id before firing `ml onboard`.
+
+## Commands Subfolder Architecture
+id: ml-20260507-008
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [commands, architecture, token-efficiency, prompts, memory-system]
+confidence: high
+status: archived
+source: manual
+### Summary
+All ml command specs live in `memory-system/commands/` as per-command files loaded conditionally by the router. The `prompts/` folder is deleted. Each spec loads only when its command fires (~90 tokens vs ~1,200 for all specs at once).
+### Details
+- `prompts/` deleted because router/boot never guaranteed those specs were loaded.
+- Command specs live in `memory-system/commands/` with `commands/index.md` as dispatch map.
+- Router owns trigger rules; `read-write.md` owns read/write safety only.
+- `memory-system/session.md`, `global-template/index.md`, and `~/.mindlayer/index.md` were removed; `preferences/index.md` is the global catalog.
+
+## V1 Memory Architecture Decisions
+id: ml-20260430-003
+created: 2026-04-30
+updated: 2026-04-30
+scope: project
+type: decision
+tags: [architecture, installer, adapters]
+confidence: high
+status: archived
+source: manual
+### Summary
+MindLayer V1 uses markdown files, global and project memory layers, thin tool adapters, and strict source boundaries.
+### Details
+- Global memory lives in `~/.mindlayer/`; project memory lives in `.mindlayer/`.
+- Adapters (`AGENTS.md`, `CLAUDE.md`, Copilot) are thin instructions, not durable memory stores.
+- README/docs are human documentation, not default AI memory input.
+- Installer is non-destructive: prefer symlink to global memory, pointer fallback if needed, never overwrite user files, fail fast on required write errors.
+- `ml init` skips scaffold-only files and `local.md` by default. V1 intentionally excluded archive/cleanup.

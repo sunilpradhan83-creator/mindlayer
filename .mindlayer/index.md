@@ -28,14 +28,14 @@
 
 - id: ml-20260430-003
   title: V1 Memory Architecture Decisions
-  file: decisions.md
+  file: archive.md
   section: V1 Memory Architecture Decisions
   scope: project
   type: decision
   tags: [architecture, installer, adapters]
   summary: Markdown memory, global/project layers, strict source boundaries, thin adapters, non-destructive install, fail-fast errors, and scaffold-skipping boot behavior.
   importance: high
-  status: active
+  status: archived
   last_updated: 2026-05-02
 
 - id: ml-20260503-001
@@ -256,38 +256,38 @@
 
 - id: ml-20260507-010
   title: ml onboard Three-Phase Migration Flow
-  file: decisions.md
+  file: archive.md
   section: ml onboard Three-Phase Migration Flow
   scope: project
   type: decision
   tags: [onboard, migration, adapters, ml-save, conflict-detection]
   summary: ml onboard runs three phases — adapter conflict migration, inline memory extraction, project context population. Agent reads and reasons per file (like ml save). One proposal per turn, explicit approval. Phase 1 covers project + global adapters including ~/.claude/CLAUDE.md.
   importance: high
-  status: active
+  status: archived
   last_updated: 2026-05-07
 
 - id: ml-20260507-009
   title: ml onboard One-Time Flag via Index Entry
-  file: decisions.md
+  file: archive.md
   section: ml onboard One-Time Flag via Index Entry
   scope: project
   type: decision
   tags: [onboard, ml-onboard, flag, index, architecture]
   summary: ml onboard completion flagged by index entry id:ml-onboard-complete. Boot checks for this entry and skips onboard if present. Chosen over a separate flag file — reuses existing infrastructure, no new file needed.
   importance: high
-  status: active
+  status: archived
   last_updated: 2026-05-07
 
 - id: ml-20260507-008
   title: Commands Subfolder Architecture
-  file: decisions.md
+  file: archive.md
   section: Commands Subfolder Architecture
   scope: project
   type: decision
   tags: [commands, architecture, token-efficiency, prompts, memory-system]
   summary: All ml command specs live in memory-system/commands/ as per-command files loaded conditionally by router. prompts/ deleted. Each spec loads only when its command fires (~90 tokens vs ~1,200). Router is the index for memory-system files.
   importance: high
-  status: active
+  status: archived
   last_updated: 2026-05-07
 
 - id: ml-20260507-004
@@ -316,26 +316,26 @@
 
 - id: ml-20260507-011
   title: Memory Diff Design Decisions
-  file: decisions.md
+  file: archive.md
   section: Memory Diff Design Decisions
   scope: project
   type: decision
   tags: [memory-diff, boot, status, git, session-continuity, v3]
   summary: Memory diff uses git SHA from latest session file as baseline, parses entry-level changes (new/updated/archived), outputs counts + file names grouped by category, fires at boot (step 11) and ml status, skips silently on fallback.
   importance: high
-  status: active
+  status: archived
   last_updated: 2026-05-07
 
 - id: ml-20260507-012
   title: ml load Primary Command and Ranked Loading
-  file: decisions.md
+  file: archive.md
   section: ml load Primary Command and Ranked Loading
   scope: project
   type: decision
   tags: [ml-load, retrieval, commands, ranking, v3]
   summary: ml load is the primary memory-loading command; ml retrieve remains an alias. Ranked loading uses deterministic index scoring by title, tags, summary, type/status, importance, recency, and archive intent. No ML or new storage.
   importance: high
-  status: active
+  status: archived
   last_updated: 2026-05-07
 
 - id: ml-20260507-001
