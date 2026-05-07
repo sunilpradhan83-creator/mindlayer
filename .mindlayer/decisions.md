@@ -1,5 +1,34 @@
 # Decisions
 
+## ml onboard Three-Phase Migration Flow
+
+id: ml-20260507-010
+created: 2026-05-07
+updated: 2026-05-07
+scope: project
+type: decision
+tags: [onboard, migration, adapters, ml-save, conflict-detection]
+confidence: high
+status: active
+source: manual
+
+### Summary
+`ml onboard` runs a three-phase migration flow: (1) adapter conflict detection and migration, (2) inline memory extraction, (3) project context population. Agent reads and reasons about each file — same as `ml save`. One proposal per turn, explicit approval required.
+
+### Details
+- **Phase 1 — Adapter conflict migration**: scan project + global adapter files (AGENTS.md, CLAUDE.md, copilot-instructions.md, ~/.claude/CLAUDE.md). For each conflict, propose adapter edit + optional MindLayer write in a single approval. `apply` executes both; `adapter only` skips the memory write; `skip` leaves conflict untouched.
+- **Phase 2 — Inline memory extraction**: scan adapters for durable content worth migrating to `.mindlayer/` that isn't a conflict. Same `ml save` proposal format. Does not remove from adapter — extraction only.
+- **Phase 3 — Project context population**: scan README/docs/source. Propose entries for `.mindlayer/` one at a time. Only context where README/docs are valid input.
+- Conflicts = boot instructions contradicting MindLayer, inline memory stores, duplicate boot sequences, instructions to write memory into the adapter. Harmless project rules (coding standards, formatting) are not conflicts.
+- Completion flagged via index entry `ml-onboard-complete`. Written even on early stop.
+
+### When to use
+When implementing or modifying `ml onboard` — all three phases must be preserved. Do not collapse phases or batch proposals.
+
+### Related
+ml-20260507-009
+ml-20260507-008
+
 ## ml onboard One-Time Flag via Index Entry
 
 id: ml-20260507-009

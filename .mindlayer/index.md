@@ -254,6 +254,18 @@
   status: active
   last_updated: 2026-05-07
 
+- id: ml-20260507-010
+  title: ml onboard Three-Phase Migration Flow
+  file: decisions.md
+  section: ml onboard Three-Phase Migration Flow
+  scope: project
+  type: decision
+  tags: [onboard, migration, adapters, ml-save, conflict-detection]
+  summary: ml onboard runs three phases — adapter conflict migration, inline memory extraction, project context population. Agent reads and reasons per file (like ml save). One proposal per turn, explicit approval. Phase 1 covers project + global adapters including ~/.claude/CLAUDE.md.
+  importance: high
+  status: active
+  last_updated: 2026-05-07
+
 - id: ml-20260507-009
   title: ml onboard One-Time Flag via Index Entry
   file: decisions.md
