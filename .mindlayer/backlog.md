@@ -52,7 +52,6 @@ V3 phase 4:
 - Programmatic index-first retrieval: strengthen `ml retrieve` with scored ranking by tag match, recency, and importance rather than keyword-only search.
 
 **Deferred:**
-- Existing project onboarding flow: automated way to populate `.mindlayer/` from existing README, docs, or context when installing into a mature project.
 - Memory-system.md changelog: surface what changed when memory-system.md is refreshed on reinstall.
 - Migration guide: document how to adopt new template files (e.g. roadmap.md) in existing installs.
 - `ml script` command (V4): walks any user through S→C→R→I→P→T for their project. Ships in global-template as a first-class user feature. Depends on solid Transfer (V3 ml save + memory health) being in place first.
