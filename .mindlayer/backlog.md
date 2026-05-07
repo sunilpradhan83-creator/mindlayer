@@ -46,7 +46,11 @@ V3 phase 1: ✅ complete
 - ✅ Memory diff: on boot or `ml status`, surface what changed in memory since the last session (new entries, updated entries, archived entries). 22 contract tests shipped. tools/test.sh now 8 suites.
 
 V3 phase 3:
-- Auto-summarization suggestions: when an entry or file exceeds a size threshold, propose compression, splitting, or archiving before the file overflows.
+- [ ] Define size thresholds — entry-level and file-level line thresholds that trigger a suggestion. Reuse WARN/CRITICAL boundaries from commands/status.md where possible.
+- [ ] Per-turn size check — add check to per-turn.md: after each memory write, if target file exceeds threshold, surface a one-line suggestion before Token Burned block.
+- [ ] ml status integration — extend status.md to suggest specific entries to compress, merge, or archive when a file is near limit (beyond the existing health score).
+- [ ] Contract tests — test-autosummarize.sh: suggestion fires at threshold not below, correct format, not fired redundantly when status already covers it.
+- [ ] Global-template sync — apply all per-turn.md and status.md changes to global-template in the same session (per sync rule ml-20260507-007).
 
 V3 phase 4:
 - Programmatic index-first retrieval: strengthen `ml retrieve` with scored ranking by tag match, recency, and importance rather than keyword-only search.
