@@ -177,7 +177,7 @@
   scope: project
   type: progress
   tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
-  summary: V3 phase 2 further advanced. Commands restructured into memory-system/commands/ subfolder, prompts/ deleted, ml onboard added, routing rules consolidated. 94 tests passing. Memory diff remaining.
+  summary: ml onboard three-phase flow shipped (spec, boot/router wiring, 25 tests). Commands in memory-system/commands/. 7 test suites, 185 checks passing. V3 phase 2 remaining: memory diff only.
   importance: high
   status: active
   last_updated: 2026-05-07

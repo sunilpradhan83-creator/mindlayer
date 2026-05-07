@@ -41,8 +41,9 @@ V3 phase 1: ✅ complete
 - ✅ memory-system/ folder split: replace monolithic memory-system.md with indexed folder. Boot loads index + per-turn.md only (~750 tokens). Other sections load conditionally by trigger. Target: ~66% boot cost reduction for memory-system.
 
 **Up next (V3 phase 2):**
-- Memory diff: on boot or `ml status`, surface what changed in memory since the last session (new entries, updated entries, archived entries).
-- Per-turn behavioral contracts: load announcement, memory candidate scan checklist, index-driven retrieval check — defined in `per-turn.md`. Verified by `tests/agent-behavior/test-per-turn.sh` (61 contract tests, all passing). Global `~/.mindlayer/memory-system/per-turn.md` updated. Router.md simplified — announcement format now owned by per-turn.md.
+- ✅ Per-turn behavioral contracts: load announcement, memory candidate scan checklist, index-driven retrieval check — shipped in per-turn.md. 61 tests passing.
+- ✅ ml onboard: three-phase adapter migration + project context flow — spec, boot/router wiring, 25 contract tests shipped. tools/test.sh now 7 suites.
+- Memory diff: on boot or `ml status`, surface what changed in memory since the last session (new entries, updated entries, archived entries). **Last remaining V3 phase 2 item.**
 
 V3 phase 3:
 - Auto-summarization suggestions: when an entry or file exceeds a size threshold, propose compression, splitting, or archiving before the file overflows.
