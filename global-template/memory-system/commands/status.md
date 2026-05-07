@@ -77,6 +77,32 @@ Skip `archive.md` and `local.md`. Mark `index.md` as navigation-only (no score).
 
 Show in Output as a compact table. When any file scores WARN or CRITICAL, append a one-line fix suggestion beneath the table.
 
+## Auto-Summarization Suggestions
+
+When a committed memory file is near or over the size budget, include concrete suggestion targets in `Suggested fixes`.
+
+Use the same size thresholds as the health score:
+- **near limit**: 240+ lines
+- **over limit**: 301+ lines
+
+For each near/over-limit file, suggest 2-4 cleanup options in this preference order:
+- compress the longest broad entries or verbose detail sections
+- merge duplicate or overlapping entries
+- archive stale or completed entries
+- split broad content into a tighter file only when compression/merge/archive will not solve the issue
+
+Suggestion format:
+
+```text
+- <file.md> is <N> lines (<near limit|over limit>): consider compressing <entry/section>, merging <entry/section>, or archiving <entry/section>.
+```
+
+Rules:
+- Do not write, compress, archive, merge, or split anything during `ml status` without explicit approval.
+- Avoid duplicate warnings: if the size issue appears in Per-File Health and Suggested fixes, do not also emit the per-turn `Memory size suggestion` in the same response.
+- Prefer file names and entry/section titles over full entry text.
+- If specific entries cannot be identified from loaded context, suggest file-level cleanup options instead.
+
 ## Output
 
 Return:

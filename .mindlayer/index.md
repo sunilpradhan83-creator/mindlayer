@@ -165,7 +165,7 @@
   scope: project
   type: backlog
   tags: [roadmap]
-  summary: V2 complete. V3 phase 1 complete. V3 phase 2 partial (per-turn contracts shipped; memory diff remaining). V3 phase 3–4 and ml onboard pending. See ROADMAP.md for full vision.
+  summary: V2 complete. V3 phases 1–3 complete. V3 phase 4 ranked retrieval is next. See ROADMAP.md for full vision.
   importance: medium
   status: active
   last_updated: 2026-05-07
@@ -177,7 +177,7 @@
   scope: project
   type: progress
   tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
-  summary: Memory diff shipped (session 11) — surfaces entry-level changes since last session at boot and ml status. V3 phase 2 complete. 8 test suites, 213 checks passing.
+  summary: Auto-summarization suggestions shipped (session 12) — post-write size checks and ml status cleanup suggestions. V3 phase 3 complete. 9 test suites, 229 checks passing.
   importance: high
   status: active
   last_updated: 2026-05-07

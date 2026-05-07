@@ -31,3 +31,6 @@ bash "$ROOT_DIR/tests/agent-behavior/test-onboard.sh"
 
 printf "\n8. Memory diff behavioral contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-diff.sh"
+
+printf "\n9. Auto-summarization suggestion contracts\n"
+bash "$ROOT_DIR/tests/agent-behavior/test-autosummarize.sh"

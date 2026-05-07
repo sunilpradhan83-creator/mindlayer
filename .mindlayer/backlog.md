@@ -40,20 +40,20 @@ V3 phase 1: ✅ complete
 - ✅ Dynamic Next Step queue: `Next Step:` single-action plain text; optional `Coming Up:` for ambiguity or >2 pending. Ambiguity: recommended first, marked `(recommended)`. Long queue: priority order, no markers.
 - ✅ memory-system/ folder split: replace monolithic memory-system.md with indexed folder. Boot loads index + per-turn.md only (~750 tokens). Other sections load conditionally by trigger. Target: ~66% boot cost reduction for memory-system.
 
-**Up next (V3 phase 2):**
+**Completed (V3 phase 2):**
 - ✅ Per-turn behavioral contracts: load announcement, memory candidate scan checklist, index-driven retrieval check — shipped in per-turn.md. 61 tests passing.
 - ✅ ml onboard: three-phase adapter migration + project context flow — spec, boot/router wiring, 25 contract tests shipped. tools/test.sh now 7 suites.
 - ✅ Memory diff: on boot or `ml status`, surface what changed in memory since the last session (new entries, updated entries, archived entries). 22 contract tests shipped. tools/test.sh now 8 suites.
 
-V3 phase 3:
-- [ ] Define size thresholds — entry-level and file-level line thresholds that trigger a suggestion. Reuse WARN/CRITICAL boundaries from commands/status.md where possible.
-- [ ] Per-turn size check — add check to per-turn.md: after each memory write, if target file exceeds threshold, surface a one-line suggestion before Token Burned block.
-- [ ] ml status integration — extend status.md to suggest specific entries to compress, merge, or archive when a file is near limit (beyond the existing health score).
-- [ ] Contract tests — test-autosummarize.sh: suggestion fires at threshold not below, correct format, not fired redundantly when status already covers it.
-- [ ] Global-template sync — apply all per-turn.md and status.md changes to global-template in the same session (per sync rule ml-20260507-007).
+V3 phase 3: ✅ complete
+- ✅ Define size thresholds — reused status.md line-budget boundaries: near limit at 240+ lines, over limit above 300 lines.
+- ✅ Per-turn size check — after approved memory writes, per-turn.md surfaces one memory size suggestion before Token Burned.
+- ✅ ml status integration — status.md now suggests concrete cleanup targets/options for near/over-limit files.
+- ✅ Contract tests — test-autosummarize.sh verifies thresholds, output format, duplicate-warning avoidance, and live/template sync.
+- ✅ Global-template sync — live ~/.mindlayer and global-template per-turn/status specs synced in the same session.
 
-V3 phase 4:
-- Programmatic index-first retrieval: strengthen `ml retrieve` with scored ranking by tag match, recency, and importance rather than keyword-only search.
+**Up next (V3 phase 4):**
+- [ ] Programmatic index-first retrieval: strengthen `ml retrieve` with scored ranking by tag match, recency, and importance rather than keyword-only search.
 
 **Deferred:**
 - Memory-system.md changelog: surface what changed when memory-system.md is refreshed on reinstall.

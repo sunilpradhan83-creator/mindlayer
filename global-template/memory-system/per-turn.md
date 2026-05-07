@@ -133,6 +133,27 @@ Rules:
 - Never target adapter files (AGENTS.md, CLAUDE.md, copilot-instructions.md).
 - `go`, `save`, or `approved` counts as approval for the specific proposed candidate only.
 
+## Post-Write Size Check
+
+After any approved memory write to a committed MindLayer memory file, check the target file size before completing the response.
+
+Thresholds match `memory-system/commands/status.md`:
+- **near limit**: at or above 80% of the 300-line file budget (240+ lines)
+- **over limit**: above the 300-line file budget (301+ lines)
+
+When the written file is near or over limit, append one suggestion before the Token Burned block:
+
+```text
+Memory size suggestion: <file.md> is <N> lines (<near limit|over limit>) — consider <compressing long entries|merging overlapping entries|archiving stale entries|splitting broad content if needed>.
+```
+
+Rules:
+- Fire only after an approved memory write, not after ordinary responses.
+- Surface at most one memory size suggestion per turn.
+- Do not fire during `ml status`; status already owns detailed memory health suggestions.
+- Prefer compression, merging, and archiving before splitting.
+- Do not modify memory based on this suggestion unless the user explicitly approves a follow-up write.
+
 ## Index-Driven Retrieval Check
 
 At the end of every turn, scan loaded index summaries against the current task topic. If any indexed entry is relevant to the current task but not yet loaded this session, flag it:
