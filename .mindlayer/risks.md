@@ -106,3 +106,33 @@ Use when evaluating whether a per-turn behavioral change is actually working, pl
 ### Related
 ml-20260507-003
 ml-20260430-006
+
+## Instruction-Only Architecture Ceiling
+
+id: ml-20260508-001
+created: 2026-05-08
+updated: 2026-05-08
+scope: project
+type: risk
+tags: [architecture, v4, command-runner, enforcement, markdown, runtime]
+confidence: high
+status: active
+source: conversation
+
+### Summary
+MindLayer has reached the architectural ceiling of instruction-only contracts. V4 should prioritize a deterministic local `ml` command runner while keeping markdown as the durable memory store.
+
+### Details
+- Current boot, router, load, save, status, and per-turn behavior are mostly markdown instructions interpreted by agents.
+- Contract tests validate expected transcript shapes and specs, but they do not enforce actual agent execution paths.
+- This was a good V1-V3 bootstrap, but it leaves trust-critical behavior dependent on agent compliance.
+- The preferred next architecture is: markdown files as storage, indexes as discoverability, a local `ml` runtime as deterministic control plane, adapters as thin bootstrappers, and agents as reasoning layer.
+- Start V4 with read-only commands (`ml boot`, `ml load`, `ml status`, `ml diff`, `ml session`) before guarded write flows.
+
+### When to use
+Use when prioritizing V4 work, evaluating whether a behavior belongs in instructions or runtime, or deciding whether a new trust-critical contract needs executable enforcement.
+
+### Related
+ml-20260507-003
+ml-20260507-006
+ml-20260505-003

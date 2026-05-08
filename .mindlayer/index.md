@@ -349,3 +349,15 @@
   importance: high
   status: active
   last_updated: 2026-05-07
+
+- id: ml-20260508-001
+  title: Instruction-Only Architecture Ceiling
+  file: risks.md
+  section: Instruction-Only Architecture Ceiling
+  scope: project
+  type: risk
+  tags: [architecture, v4, command-runner, enforcement, markdown, runtime]
+  summary: MindLayer has reached the ceiling of instruction-only contracts. V4 should prioritize a deterministic local ml command runner while keeping markdown as durable memory storage.
+  importance: high
+  status: active
+  last_updated: 2026-05-08
