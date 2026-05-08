@@ -189,10 +189,10 @@
   scope: project
   type: roadmap
   tags: [roadmap, v2, v3, v4, script, cli]
-  summary: V1, V2, and V3 shipped. V4 targets standardized ml command runner foundation, ml script, and IDE extensions. SCRIPT philosophy defined in ROADMAP.md and context.md (ml-20260507-001).
+  summary: V1, V2, and V3 shipped. V4 targets a SCRIPT product engine and lifecycle runtime first: Signal routing, Roadmap → Backlog → Agent Stories → Progress artifact queue, Transfer to Learning/History paths, then IDE integrations.
   importance: medium
   status: active
-  last_updated: 2026-05-07
+  last_updated: 2026-05-08
 
 - id: ml-20260506-002
   title: Project Router
@@ -358,6 +358,18 @@
   type: risk
   tags: [architecture, v4, command-runner, enforcement, markdown, runtime]
   summary: MindLayer has reached the ceiling of instruction-only contracts. V4 should prioritize a deterministic local ml command runner while keeping markdown as durable memory storage.
+  importance: high
+  status: active
+  last_updated: 2026-05-08
+
+- id: ml-20260508-002
+  title: SCRIPT Product Engine Architecture
+  file: decisions.md
+  section: SCRIPT Product Engine Architecture
+  scope: project
+  type: decision
+  tags: [script, v4, product-engine, lifecycle, roadmap, backlog, agent-stories, transfer]
+  summary: V4 reframes MindLayer as a SCRIPT product engine. Signal is universal ingress; Roadmap → Backlog → Agent Stories → Progress is the artifact queue; Transfer splits into Learning Path and History Path.
   importance: high
   status: active
   last_updated: 2026-05-08

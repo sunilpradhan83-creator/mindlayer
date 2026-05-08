@@ -158,3 +158,25 @@ Handoff is deprecated. Every agent turn ends with a Token Burned block. Next Ste
 - Every turn ends with Token Burned, Session estimate, and nonblank `Next Step`; optional `Coming Up` appears only for ambiguity or long queues.
 - Next Step hierarchy: active task → commit uncommitted changes → next backlog item → next roadmap phase → brainstorm next major version.
 - `Coming Up` lists only lower-priority follow-ups; uncommitted changes always outrank new backlog work.
+
+
+## SCRIPT Product Engine Architecture
+id: ml-20260508-002
+created: 2026-05-08
+updated: 2026-05-08
+scope: project
+type: decision
+tags: [script, v4, product-engine, lifecycle, roadmap, backlog, agent-stories, transfer]
+confidence: high
+status: active
+source: conversation
+### Summary
+V4 reframes MindLayer as a SCRIPT-driven product development engine, not just a memory helper. Signal is the universal ingress point; Roadmap → Backlog → Agent Stories → Progress is the artifact queue; Transfer splits into Learning Path and History Path.
+### Details
+- SCRIPT remains the process flow: Signal → Cut → Refine → Implement → Prove → Transfer.
+- Signal is detected by the agent but remains pending until human-approved routing; no `signals.md` durable queue is planned for V4.
+- Approved Signals route to roadmap for product/version direction, backlog for near-term work, Agent Stories when already refined, progress for active execution state, or learning memory when the content is durable knowledge only.
+- Roadmap, backlog, Agent Stories, and progress are artifact buckets in a queue. Ideas should be promoted through the queue rather than duplicated across files.
+- Refine produces one or more Agent Stories with human in the loop; Agent Stories replace durable user stories/tasks/actions as the post-planning work unit an agent can execute.
+- Transfer has two paths: Learning Path (`.mindlayer/learnings/` typed files for project, decisions, context, risks) and History Path (`.mindlayer/history/` version archives plus archive index for completed or inactive flow artifacts).
+- V4 should be spec-first, then implemented by a local Python `ml` runtime. IDE integrations come after the lifecycle runtime is stable.
