@@ -4,7 +4,7 @@ Memory as intelligence for AI-native developers.
 
 MindLayer is a markdown-first memory system for AI coding agents. It gives agents a safe, predictable way to remember durable preferences, project context, decisions, progress, risks, and next steps without stuffing everything into chat history or tool-specific instruction files.
 
-V1 is intentionally small: markdown files, prompt files, thin tool adapters, and a safe installer. No backend, no embeddings, no vector database, and no editor extension.
+MindLayer is intentionally small today: markdown files, command specs, thin tool adapters, and a safe installer. No backend, no embeddings, no vector database, and no editor extension.
 
 ## Why MindLayer
 
@@ -62,18 +62,21 @@ They tell tools how to use MindLayer, but they are not memory stores.
 
 ## Commands
 
-MindLayer V1 uses prompt files, not a CLI runtime:
+MindLayer currently uses markdown command specs, not a CLI runtime:
 
 - MindLayer boot: initialize the session with minimal useful memory context.
 - `ml load <query>`: fetch specific memory using ranked index matches first. `ml retrieve <query>` remains an alias.
 - `ml save`: propose durable memory writes and wait for approval.
 - `ml status`: check memory health and suggest fixes.
+- `ml session`: report session context cost and recommend compact or a fresh session.
+- `ml archive`: review stale memory and propose archive/delete actions.
+- `ml onboard`: help populate MindLayer when installing into an existing project.
 
-Prompt sources live in [`prompts/`](prompts/).
+Command specs live in `~/.mindlayer/memory-system/commands/` after install and ship from [`global-template/memory-system/commands/`](global-template/memory-system/commands/).
 
 ## Effective Use
 
-MindLayer boot should load `~/.mindlayer/memory-system.md` first, then indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `ml init` remains a legacy/manual refresh alias for showing or rerunning the boot receipt.
+MindLayer boot should load `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, the project router when present, `~/.mindlayer/memory-system/per-turn.md`, indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `ml init` remains a legacy/manual refresh alias for showing or rerunning the boot receipt.
 
 Use `ml load <query>` instead of loading every memory file. Loading should start from indexes and load only relevant sections.
 
@@ -96,7 +99,7 @@ This pattern works across all agents — Claude, ChatGPT, Cursor, Copilot, and a
 - Do not use `README.md` as memory input.
 - Do not dump raw conversations into memory.
 - Prefer updating existing memory over creating duplicates.
-- Keep user-owned global preferences in `~/.mindlayer/preferences.md`.
+- Keep user-owned global preferences in `~/.mindlayer/preferences/personal.md`.
 - Keep project facts in `.mindlayer/`.
 - Keep tool-specific files thin.
 - Commit shared project memory.
@@ -134,7 +137,7 @@ Back up `~/.mindlayer/` with your normal dotfiles, encrypted backup, or private 
 
 ## Safety
 
-The installer creates missing files and preserves existing content. It may refresh managed MindLayer system instructions such as `~/.mindlayer/memory-system.md`, while preserving user-owned global preferences. Adapter files are updated only inside the MindLayer marker block:
+The installer creates missing files and preserves existing content. It may refresh managed MindLayer system instructions such as `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/`, while preserving user-owned global preferences. Adapter files are updated only inside the MindLayer marker block:
 
 ```text
 <!-- mindlayer:start -->
