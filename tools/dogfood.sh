@@ -1,18 +1,25 @@
 #!/usr/bin/env bash
-# MindLayer dogfood check — verifies agent boot behavior against a sandboxed install.
+# MindLayer dogfood check — verifies agent boot behavior against a sandboxed project.
 #
 # Simulates real multi-turn chat to verify MindLayer boots correctly, respects
 # source boundaries, maintains session continuity, and does not write memory
-# without approval. Uses real HOME OAuth credentials.
+# without approval.
+#
+# Isolation: project memory is fully sandboxed (fresh install in /tmp).
+# Global memory (~/.mindlayer/) and agent auth use the real HOME — this is a
+# live health check against your installed config, not a fully isolated product gate.
+#
+# Session continuity (scenario 3) is skipped automatically for single-turn runners
+# like Codex that do not support multi-turn sessions.
 #
 # Usage:
 #   tools/dogfood.sh
 #   AGENT_RUNNER=tools/dogfood-runners/codex.sh tools/dogfood.sh
 #
 # Options (env vars):
-#   AGENT_RUNNER   Path to runner script (default: tools/dogfood-runners/claude.sh)
+#   AGENT_RUNNER     Path to runner script (default: tools/dogfood-runners/claude.sh)
 #   KEEP_TEST_DIR=1  Keep sandbox after run for inspection
-#   CLAUDE_BIN     Override claude binary path (default: claude)
+#   CLAUDE_BIN       Override claude binary path (default: claude)
 
 set -eu
 
@@ -101,7 +108,7 @@ s1_log="$SANDBOX/s1-hi.log"
 
 SESSION_ID=$(run_turn "" "hi" "$s1_response" "$s1_log") || {
   fail "agent call failed for greeting"
-  sed -n '1,40p' "$s1_log" >&2 || true
+  [ -f "$s1_log" ] && sed -n '1,40p' "$s1_log" >&2 || true
   exit 1
 }
 pass "agent responded to greeting"
@@ -124,7 +131,7 @@ s2_log="$SANDBOX/s2-project.log"
 
 SESSION_ID=$(run_turn "$SESSION_ID" "what is this project?" "$s2_response" "$s2_log") || {
   fail "agent call failed for project question"
-  sed -n '1,40p' "$s2_log" >&2 || true
+  [ -f "$s2_log" ] && sed -n '1,40p' "$s2_log" >&2 || true
   exit 1
 }
 pass "agent responded to project question"
@@ -156,8 +163,8 @@ fi
 if awk '
   /^(Loaded:|[*][*]Loaded:[*][*])/ { in_loaded=1; next }
   /^(Skipped:|Missing:|[*][*]Skipped:|[*][*]Missing:)/ { in_loaded=0 }
-  in_loaded && /(README\.md|docs\/)/ { exit 1 }
-  END { exit 0 }
+  in_loaded && /(README\.md|docs\/)/ { found=1 }
+  END { exit found ? 1 : 0 }
 ' "$s2_response"; then
   pass "boot receipt did not load README.md or docs/ (source boundary respected)"
 else
@@ -171,22 +178,26 @@ fi
 printf "\nScenario 3: Session continuity across turns\n"
 printf "%s\n" "-------------------------------------------"
 
-s3_response="$SANDBOX/s3-memory.md"
-s3_log="$SANDBOX/s3-memory.log"
-
-SESSION_ID=$(run_turn "$SESSION_ID" "what did I ask you first in this session?" "$s3_response" "$s3_log") || {
-  fail "agent call failed for continuity check"
-  sed -n '1,40p' "$s3_log" >&2 || true
-  exit 1
-}
-pass "agent responded to continuity question"
-
-if assert_contains "$s3_response" "hi"; then
-  pass "agent remembered first message (session continuity working)"
+if [ -z "$SESSION_ID" ]; then
+  printf "SKIP  runner does not support multi-turn sessions (single-turn only)\n"
 else
-  fail "agent did not recall first message — session continuity broken"
-  sed -n '1,60p' "$s3_response" >&2
-  exit 1
+  s3_response="$SANDBOX/s3-memory.md"
+  s3_log="$SANDBOX/s3-memory.log"
+
+  SESSION_ID=$(run_turn "$SESSION_ID" "what did I ask you first in this session?" "$s3_response" "$s3_log") || {
+    fail "agent call failed for continuity check"
+    [ -f "$s3_log" ] && sed -n '1,40p' "$s3_log" >&2 || true
+    exit 1
+  }
+  pass "agent responded to continuity question"
+
+  if assert_contains "$s3_response" "hi"; then
+    pass "agent remembered first message (session continuity working)"
+  else
+    fail "agent did not recall first message — session continuity broken"
+    sed -n '1,60p' "$s3_response" >&2
+    exit 1
+  fi
 fi
 
 # ── scenario 4: fresh session boots correctly ─────────────────────────────────
@@ -199,7 +210,7 @@ s4_log="$SANDBOX/s4-fresh.log"
 
 FRESH_SESSION=$(run_turn "" "what is this project?" "$s4_response" "$s4_log") || {
   fail "agent call failed for fresh project question"
-  sed -n '1,40p' "$s4_log" >&2 || true
+  [ -f "$s4_log" ] && sed -n '1,40p' "$s4_log" >&2 || true
   exit 1
 }
 pass "agent responded to fresh project question"
@@ -220,21 +231,21 @@ printf "%s\n" "---------------------------------------"
 s5_response="$SANDBOX/s5-nomemwrite.md"
 s5_log="$SANDBOX/s5-nomemwrite.log"
 
-files_before=$(find "$REAL_HOME/.mindlayer" "$SANDBOX/project/.mindlayer" -type f 2>/dev/null | sort | wc -l)
+snapshot_before=$(find "$REAL_HOME/.mindlayer" "$SANDBOX/project/.mindlayer" -type f 2>/dev/null | sort | xargs md5sum 2>/dev/null)
 
 run_turn "$FRESH_SESSION" "show me the files in this project" "$s5_response" "$s5_log" >/dev/null || {
   fail "agent call failed for memory write check"
-  sed -n '1,40p' "$s5_log" >&2 || true
+  [ -f "$s5_log" ] && sed -n '1,40p' "$s5_log" >&2 || true
   exit 1
 }
 
-files_after=$(find "$REAL_HOME/.mindlayer" "$SANDBOX/project/.mindlayer" -type f 2>/dev/null | sort | wc -l)
+snapshot_after=$(find "$REAL_HOME/.mindlayer" "$SANDBOX/project/.mindlayer" -type f 2>/dev/null | sort | xargs md5sum 2>/dev/null)
 
-if [ "$files_before" -eq "$files_after" ]; then
-  pass "no unsolicited memory write (file count unchanged: $files_before)"
+if [ "$snapshot_before" = "$snapshot_after" ]; then
+  pass "no unsolicited memory write (file contents unchanged)"
 else
-  fail "agent wrote memory without approval ($files_before → $files_after files)"
-  find "$REAL_HOME/.mindlayer" "$SANDBOX/project/.mindlayer" -type f | sort >&2
+  fail "agent modified memory without approval"
+  diff <(echo "$snapshot_before") <(echo "$snapshot_after") >&2
   exit 1
 fi
 
