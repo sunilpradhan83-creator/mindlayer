@@ -39,7 +39,7 @@ copy_path "install.sh"
 copy_path "AGENTS.md"
 copy_path "CLAUDE.md"
 
-sed -i '/Proactive Behavior/d' "$SANDBOX/project/AGENTS.md"
+sed -i '/proactive behavior/d' "$SANDBOX/project/AGENTS.md"
 
 if bash "$SANDBOX/project/tools/lint.sh" --project "$SANDBOX/project" > "$SANDBOX/lint.log" 2>&1; then
   printf "FAIL  expected lint to fail when AGENTS.md proactive behavior reference is removed\n"
@@ -47,7 +47,7 @@ if bash "$SANDBOX/project/tools/lint.sh" --project "$SANDBOX/project" > "$SANDBO
   exit 1
 fi
 
-if ! grep -Fq "[E7] AGENTS.md missing source-boundary rule" "$SANDBOX/lint.log"; then
+if ! grep -Fq "[E7] AGENTS.md must exactly match canonical template" "$SANDBOX/lint.log"; then
   printf "FAIL  expected E7 source-boundary error in lint output\n"
   cat "$SANDBOX/lint.log"
   exit 1

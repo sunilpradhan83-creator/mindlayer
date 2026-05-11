@@ -19,8 +19,33 @@ Run once per session, in order, before answering any request:
 9. Check `sessions/` — if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
 10. Check onboard status — scan `.mindlayer/index.md` for `id: ml-onboard-complete`. If absent AND `.mindlayer/project.md` contains only placeholder/scaffold content, load `memory-system/commands/onboard.md` and fire the onboard flow on the first project-relevant turn. Surface in boot receipt as: `Onboarding: pending — ml onboard will run on first project-relevant request.`
 11. Run memory diff — load `memory-system/commands/diff.md` and compute what changed in `.mindlayer/` since the last session. Surface in boot receipt between `Current progress:` and `Context cost:`. Skip silently if no session file or git unavailable.
+12. Run adapter guard — compare known frozen adapter hashes against `.mindlayer/adapters.lock` using canonical templates from `~/.mindlayer/memory-system/templates/`. Complete this guard before answering the first project-relevant request.
 
 Do not treat a plain greeting as a project-relevant request. On the first project-relevant request — including any question about what the project is, what it does, or what is in it — run the full boot sequence and emit the boot receipt BEFORE giving your answer. Never answer a project question without booting first. Never ask the user if they want you to boot — just boot.
+
+## Adapter Guard
+
+Project adapters are frozen files. They are not durable memory stores and must not contain user edits.
+
+Known frozen adapters:
+- `AGENTS.md`
+- `CLAUDE.md`
+- `.github/copilot-instructions.md`
+- `GEMINI.md`
+- `.cursor/rules/mindlayer.md`
+- `.windsurf/rules/mindlayer.md`
+
+At boot, after loading memory and before answering the first project-relevant request:
+
+1. For each known frozen adapter that exists in the project, hash the file.
+2. Compare each hash with `.mindlayer/adapters.lock`. A missing lock entry means the adapter is unverified.
+3. If all hashes match, proceed silently.
+4. If any hash mismatches or has no lock entry, diff the current file against the canonical template in `~/.mindlayer/memory-system/templates/`.
+5. If the diff contains user-added content, alert the user, show the diff, and trigger the `ml save` flow to route that content to the correct MindLayer destination. Restore the adapter only after the user approves or skips the memory write.
+6. If the mismatch is pure template version drift with no user-added content, restore the canonical adapter silently.
+7. After restoring an adapter, update `.mindlayer/adapters.lock` with the new SHA-256 hash.
+
+Never discard user-added adapter content without first routing it through the `ml save` approval flow.
 
 ## Boot Receipt Format
 

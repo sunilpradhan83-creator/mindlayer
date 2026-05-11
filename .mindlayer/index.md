@@ -409,3 +409,15 @@
   importance: high
   status: active
   last_updated: 2026-05-08
+
+- id: ml-20260511-001
+  title: Adapter Boot Wording Drift
+  file: risks.md
+  section: Adapter Boot Wording Drift
+  scope: project
+  type: risk
+  tags: [adapters, boot, non-interactive, trust, drift]
+  summary: Shipped adapter wording may still be softer than the recorded non-interactive boot fix requires; tighten adapter template wording and test for hard boot language.
+  importance: high
+  status: active
+  last_updated: 2026-05-11

@@ -7,7 +7,6 @@ PROJECT_ONLY=0
 NO_ADAPTERS=0
 NO_GITIGNORE=0
 NO_ONBOARD=0
-TOOL="all"
 
 usage() {
   cat <<'EOF'
@@ -17,10 +16,9 @@ Options:
   --project <path>   Install project memory into path. Default: current directory.
   --global-only      Only create/update ~/.mindlayer.
   --project-only     Only create/update project .mindlayer and adapters.
-  --no-adapters      Do not modify AGENTS.md, CLAUDE.md, or Copilot instructions.
+  --no-adapters      Do not modify detected project adapter files.
   --no-gitignore     Do not modify .gitignore.
   --no-onboard       Minimal terminal output.
-  --tool <name>      all, codex, claude, or copilot. Default: all.
   -h, --help         Show this help.
 EOF
 }
@@ -37,20 +35,10 @@ while [ "$#" -gt 0 ]; do
     --no-adapters) NO_ADAPTERS=1; shift ;;
     --no-gitignore) NO_GITIGNORE=1; shift ;;
     --no-onboard) NO_ONBOARD=1; shift ;;
-    --tool)
-      [ "$#" -ge 2 ] || { echo "Missing value for --tool" >&2; exit 1; }
-      TOOL="$2"
-      shift 2
-      ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown option: $1" >&2; usage >&2; exit 1 ;;
   esac
 done
-
-case "$TOOL" in
-  all|codex|claude|copilot) ;;
-  *) echo "Invalid --tool value: $TOOL" >&2; exit 1 ;;
-esac
 
 if [ "$GLOBAL_ONLY" -eq 1 ] && [ "$PROJECT_ONLY" -eq 1 ]; then
   echo "Use only one of --global-only or --project-only." >&2
@@ -120,7 +108,7 @@ write_managed_template() {
   tmp=$(mktemp "${TMPDIR:-/tmp}/mindlayer-managed.XXXXXX") || exit 1
 
   if [ -f "$template_path" ]; then
-    render_template_file "$template_path" > "$tmp"
+    cat "$template_path" > "$tmp"
   else
     printf "%s\n" "$fallback_content" | awk -v date="$DATE" -v date_id="${DATE//-/}" '
       {
@@ -150,50 +138,15 @@ append_gitignore_rule() {
   fi
 }
 
-update_marked_block() {
-  file="$1"
-  block="$2"
-  start="<!-- mindlayer:start -->"
-  end="<!-- mindlayer:end -->"
-  dir=$(dirname "$file")
-  mkdir_p "$dir"
-
-  if [ ! -e "$file" ]; then
-    printf "%s\n" "$block" > "$file"
-    return
+sha256_file() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | awk '{print $1}'
+  elif command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$1" | awk '{print $1}'
+  else
+    echo "sha256sum or shasum is required to lock MindLayer adapters" >&2
+    exit 1
   fi
-
-  tmp=$(mktemp "${TMPDIR:-/tmp}/mindlayer.XXXXXX") || exit 1
-  blockfile=$(mktemp "${TMPDIR:-/tmp}/mindlayer-block.XXXXXX") || exit 1
-  printf "%s\n" "$block" > "$blockfile"
-
-  awk -v start="$start" -v end="$end" -v blockfile="$blockfile" '
-    BEGIN {
-      while ((getline line < blockfile) > 0) {
-        block = block line ORS
-      }
-      inblock = 0
-      replaced = 0
-    }
-    $0 == start {
-      printf "%s", block
-      inblock = 1
-      replaced = 1
-      next
-    }
-    $0 == end && inblock {
-      inblock = 0
-      next
-    }
-    !inblock { print }
-    END {
-      if (!replaced) {
-        print ""
-        printf "%s", block
-      }
-    }
-  ' "$file" > "$tmp" && mv "$tmp" "$file"
-  rm -f "$blockfile"
 }
 
 global_boot='# MindLayer Boot
@@ -214,8 +167,33 @@ Run once per session, in order, before answering any request:
 8. Load project progress and backlog — check progress.md and backlog.md.
 9. Check sessions/ — if a recent session file exists, read only the ## Next section.
 10. Check onboard status — scan .mindlayer/index.md for id: ml-onboard-complete. If absent AND .mindlayer/project.md contains only placeholder/scaffold content, load memory-system/commands/onboard.md and fire the onboard flow on the first project-relevant turn.
+11. Run adapter guard — compare known frozen adapter hashes against .mindlayer/adapters.lock using canonical templates from ~/.mindlayer/memory-system/templates/. Complete this guard before answering the first project-relevant request.
 
 Do not treat a plain greeting as a project-relevant request.
+
+## Adapter Guard
+
+Project adapters are frozen files. They are not durable memory stores and must not contain user edits.
+
+Known frozen adapters:
+- AGENTS.md
+- CLAUDE.md
+- .github/copilot-instructions.md
+- GEMINI.md
+- .cursor/rules/mindlayer.md
+- .windsurf/rules/mindlayer.md
+
+At boot, after loading memory and before answering the first project-relevant request:
+
+1. For each known frozen adapter that exists in the project, hash the file.
+2. Compare each hash with .mindlayer/adapters.lock. A missing lock entry means the adapter is unverified.
+3. If all hashes match, proceed silently.
+4. If any hash mismatches or has no lock entry, diff the current file against the canonical template in ~/.mindlayer/memory-system/templates/.
+5. If the diff contains user-added content, alert the user, show the diff, and trigger the ml save flow to route that content to the correct MindLayer destination. Restore the adapter only after the user approves or skips the memory write.
+6. If the mismatch is pure template version drift with no user-added content, restore the canonical adapter silently.
+7. After restoring an adapter, update .mindlayer/adapters.lock with the new SHA-256 hash.
+
+Never discard user-added adapter content without first routing it through the ml save approval flow.
 
 ## Boot Receipt Format
 
@@ -987,6 +965,15 @@ install_global() {
   write_managed_template "$GLOBAL_DIR/memory-system/read-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/read-write.md" "$global_memory_system_read_write"
   write_managed_template "$GLOBAL_DIR/memory-system/schema.md" "$GLOBAL_TEMPLATE_DIR/memory-system/schema.md" "$global_memory_system_schema"
 
+  # Canonical adapter templates — managed system files
+  mkdir_p "$GLOBAL_DIR/memory-system/templates"
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/AGENTS.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/AGENTS.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/CLAUDE.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/CLAUDE.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/copilot-instructions.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/copilot-instructions.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/GEMINI.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/GEMINI.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/cursor-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/cursor-mindlayer.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/windsurf-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/windsurf-mindlayer.md" ""
+
   # memory-system/commands/ — per-command spec files
   mkdir_p "$GLOBAL_DIR/memory-system/commands"
   write_managed_template "$GLOBAL_DIR/memory-system/commands/index.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/index.md" "$global_memory_system_commands_index"
@@ -1035,94 +1022,129 @@ install_project_memory() {
 install_adapters() {
   [ "$NO_ADAPTERS" -eq 0 ] || return
 
-  codex_block='<!-- mindlayer:start -->
-MindLayer memory is stored outside this adapter.
+  lock_file="$PROJECT_DIR/.mindlayer/adapters.lock"
+  blocked_adapters=""
+  installed_adapters=""
+  mkdir_p "$PROJECT_DIR/.mindlayer"
 
-Global memory: `~/.mindlayer/`
-Project memory: `.mindlayer/`
+  read_locked_adapter_hash() {
+    adapter_name="$1"
+    [ -f "$lock_file" ] || return 0
+    awk -F= -v name="$adapter_name" '$1 == name { print $2; exit }' "$lock_file"
+  }
 
-MindLayer boot should run at session start or tool preflight when the host supports it. If no preflight hook exists, run the full boot sequence and emit the boot receipt BEFORE answering the first project-relevant request — including any question about what the project is, what it does, or what is in it. Never answer a project question without booting first. Never ask the user if they want you to boot — just boot. Do not treat a plain greeting as project-relevant.
+  adapter_is_blocked() {
+    adapter_name="$1"
+    printf "%s" "$blocked_adapters" | grep -Fxq "$adapter_name"
+  }
 
-Boot order:
-1. Read `~/.mindlayer/boot.md` first when available.
-2. Read `~/.mindlayer/router.md` and follow its load triggers.
-3. Read `.mindlayer/index.md` — project memory catalog.
-4. Load project identity and current progress.
+  adapter_was_installed() {
+    adapter_name="$1"
+    printf "%s" "$installed_adapters" | grep -Fxq "$adapter_name"
+  }
 
-Use this exact boot receipt format when the boot is visible to the user:
+  should_install_adapter() {
+    adapter_path="$1"
+    signal="$2"
+    [ -f "$PROJECT_DIR/$adapter_path" ] || [ "$signal" -eq 1 ]
+  }
 
-```text
-MindLayer context loaded.
+  install_canonical_adapter() {
+    adapter_name="$1"
+    dest="$PROJECT_DIR/$adapter_name"
+    template_name="$2"
+    template="$GLOBAL_TEMPLATE_DIR/memory-system/templates/$template_name"
 
-Loaded:
-- ...
+    if [ ! -f "$template" ]; then
+      echo "Missing canonical adapter template: $template" >&2
+      exit 1
+    fi
 
-Skipped:
-- ...
+    mkdir_p "$(dirname "$dest")"
+    tmp_template=$(mktemp "${TMPDIR:-/tmp}/mindlayer-adapter-template.XXXXXX") || exit 1
+    cat "$template" > "$tmp_template"
 
-Missing:
-- ...
+    if [ -f "$dest" ] && ! cmp -s "$tmp_template" "$dest"; then
+      current_hash=$(sha256_file "$dest")
+      locked_hash=$(read_locked_adapter_hash "$adapter_name")
 
-Current understanding:
-...
+      if [ -z "$locked_hash" ] || [ "$current_hash" != "$locked_hash" ]; then
+        echo "MindLayer adapter content detected in $adapter_name." >&2
+        echo "Install will not overwrite this file until the content is routed through ml save." >&2
+        echo "Review the diff below, save or skip the added content in a MindLayer session, then rerun install." >&2
+        diff -u "$tmp_template" "$dest" >&2 || true
+        rm -f "$tmp_template"
+        blocked_adapters="${blocked_adapters}${adapter_name}
+"
+        return
+      fi
+    fi
 
-Current progress:
-...
+    mv "$tmp_template" "$dest"
+    installed_adapters="${installed_adapters}${adapter_name}
+"
+  }
 
-Context cost:
-Approx. N words loaded (~N est. tokens).
+  claude_signal=0
+  codex_signal=0
+  copilot_signal=0
+  gemini_signal=0
+  cursor_signal=0
+  windsurf_signal=0
 
-Context share:
-- Global memory: ~N%
-- Project memory: ~N%
-- Other sources: 0% (README.md, docs/, and adapters skipped)
+  { command -v claude >/dev/null 2>&1 || [ -d "$HOME/.claude" ]; } && claude_signal=1
+  command -v codex >/dev/null 2>&1 && codex_signal=1
+  command -v gh-copilot >/dev/null 2>&1 && copilot_signal=1
+  { command -v gemini >/dev/null 2>&1 || [ -d "$HOME/.gemini" ]; } && gemini_signal=1
+  { [ -d "$HOME/.cursor" ] || [ -d "$PROJECT_DIR/.cursor" ]; } && cursor_signal=1
+  { [ -d "$HOME/.windsurf" ] || [ -d "$PROJECT_DIR/.windsurf" ]; } && windsurf_signal=1
 
-Token strategy:
-L0 boot: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress only.
+  need_agents=0
+  if should_install_adapter "AGENTS.md" "$codex_signal" ||
+     should_install_adapter "CLAUDE.md" "$claude_signal" ||
+     should_install_adapter ".github/copilot-instructions.md" "$copilot_signal" ||
+     should_install_adapter "GEMINI.md" "$gemini_signal" ||
+     should_install_adapter ".cursor/rules/mindlayer.md" "$cursor_signal" ||
+     should_install_adapter ".windsurf/rules/mindlayer.md" "$windsurf_signal"; then
+    need_agents=1
+  fi
 
-Ready.
-What would you like to work on?
-```
+  [ "$need_agents" -eq 1 ] && install_canonical_adapter "AGENTS.md" "AGENTS.md"
+  should_install_adapter "CLAUDE.md" "$claude_signal" && install_canonical_adapter "CLAUDE.md" "CLAUDE.md"
+  should_install_adapter ".github/copilot-instructions.md" "$copilot_signal" && install_canonical_adapter ".github/copilot-instructions.md" "copilot-instructions.md"
+  should_install_adapter "GEMINI.md" "$gemini_signal" && install_canonical_adapter "GEMINI.md" "GEMINI.md"
+  should_install_adapter ".cursor/rules/mindlayer.md" "$cursor_signal" && install_canonical_adapter ".cursor/rules/mindlayer.md" "cursor-mindlayer.md"
+  should_install_adapter ".windsurf/rules/mindlayer.md" "$windsurf_signal" && install_canonical_adapter ".windsurf/rules/mindlayer.md" "windsurf-mindlayer.md"
 
-`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-Use `ml load <query>` when specific memory is needed. `ml retrieve <query>` remains an alias.
-Use `ml save` only to propose memory writes; never write without approval.
-Use `ml status` to check memory health.
-Use `ml session` to report session context cost and recommend compact or new session.
+  if [ -n "$blocked_adapters" ]; then
+    echo "MindLayer install blocked for frozen adapter(s):" >&2
+    printf "%s" "$blocked_adapters" | sed '/^$/d; s/^/- /' >&2
+    echo "Other clean adapters were installed. Route the blocked adapter content through ml save, then rerun install." >&2
+  fi
 
-Commands are also triggered proactively. See the Proactive Behavior section in `~/.mindlayer/memory-system/per-turn.md` for end-of-turn detection rules, trigger phrases, and surface formats.
-<!-- mindlayer:end -->'
+  tmp_lock=$(mktemp "${TMPDIR:-/tmp}/mindlayer-adapters-lock.XXXXXX") || exit 1
+  for adapter_name in AGENTS.md CLAUDE.md .github/copilot-instructions.md GEMINI.md .cursor/rules/mindlayer.md .windsurf/rules/mindlayer.md; do
+    if adapter_is_blocked "$adapter_name"; then
+      locked_hash=$(read_locked_adapter_hash "$adapter_name")
+      if [ -n "$locked_hash" ]; then
+        printf "%s=%s\n" "$adapter_name" "$locked_hash" >> "$tmp_lock"
+      fi
+      continue
+    fi
+    if ! adapter_was_installed "$adapter_name"; then
+      locked_hash=$(read_locked_adapter_hash "$adapter_name")
+      if [ -n "$locked_hash" ]; then
+        printf "%s=%s\n" "$adapter_name" "$locked_hash" >> "$tmp_lock"
+      fi
+      continue
+    fi
+    adapter_path="$PROJECT_DIR/$adapter_name"
+    [ -f "$adapter_path" ] || continue
+    printf "%s=%s\n" "$adapter_name" "$(sha256_file "$adapter_path")" >> "$tmp_lock"
+  done
+  mv "$tmp_lock" "$lock_file"
 
-  claude_block='<!-- mindlayer:start -->
-Follow `AGENTS.md`.
-
-MindLayer memory sources of truth are `~/.mindlayer/` and project `.mindlayer/`. `README.md` and `docs/` are human documentation, not default AI memory input.
-
-Do not duplicate memory into `CLAUDE.md` or retrieve durable context from this adapter. Do not write memory without approval. Follow `AGENTS.md` for automatic MindLayer boot; `ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
-<!-- mindlayer:end -->'
-
-  copilot_block='<!-- mindlayer:start -->
-Follow `AGENTS.md`.
-
-Use project `.mindlayer/` for project context. Use `~/.mindlayer/` for global user memory when available.
-
-Run MindLayer boot at session start or before the first project-relevant request. Read `~/.mindlayer/boot.md` first when available, then `router.md`, then follow load triggers. Report a compact context receipt when visible to the user.
-
-Do not use `README.md` or `docs/` as memory input. Do not retrieve durable context from this adapter. Do not modify memory files unless explicitly requested. Keep generated changes minimal and safe.
-
-MindLayer boot is cheap — prefer starting a new session at each task boundary over compacting mid-session.
-<!-- mindlayer:end -->'
-
-  case "$TOOL" in
-    all)
-      update_marked_block "$PROJECT_DIR/AGENTS.md" "$codex_block"
-      update_marked_block "$PROJECT_DIR/CLAUDE.md" "$claude_block"
-      update_marked_block "$PROJECT_DIR/.github/copilot-instructions.md" "$copilot_block"
-      ;;
-    codex) update_marked_block "$PROJECT_DIR/AGENTS.md" "$codex_block" ;;
-    claude) update_marked_block "$PROJECT_DIR/CLAUDE.md" "$claude_block" ;;
-    copilot) update_marked_block "$PROJECT_DIR/.github/copilot-instructions.md" "$copilot_block" ;;
-  esac
+  [ -z "$blocked_adapters" ] || return 1
 }
 
 install_gitignore() {
@@ -1138,6 +1160,9 @@ install_gitignore() {
   append_gitignore_rule "$file" ".mindlayer/sessions/"
   append_gitignore_rule "$file" ".mindlayer/cache/"
   append_gitignore_rule "$file" ".mindlayer/tmp/"
+  append_gitignore_rule "$file" ".mindlayer/adapters.lock"
+  append_gitignore_rule "$file" ".cursor/rules/mindlayer.md"
+  append_gitignore_rule "$file" ".windsurf/rules/mindlayer.md"
 }
 
 if [ "$PROJECT_ONLY" -eq 0 ]; then

@@ -21,7 +21,6 @@
 #   W3  any committed memory file exceeds --max-lines (default 300)
 #   W4  files still containing "YYYY-MM-DD" placeholders (empty scaffold)
 #   W5  ignorable paths present in git index (local.md, private/, sessions/, cache/, tmp/)
-#   W6  adapter files (AGENTS.md / CLAUDE.md) missing the mindlayer marker block
 
 set -u
 
@@ -75,6 +74,44 @@ require_contains() {
   [ -f "$file" ] || return
   if ! grep -Fq "$pattern" "$file"; then
     err "[E7] $label missing source-boundary rule: $pattern"
+  fi
+}
+
+require_file() {
+  file="$1"
+  label="$2"
+
+  if [ ! -f "$file" ]; then
+    err "[E7] $label missing required file: $file"
+  fi
+}
+
+require_not_contains() {
+  file="$1"
+  pattern="$2"
+  label="$3"
+
+  [ -f "$file" ] || return
+  if grep -Fq "$pattern" "$file"; then
+    err "[E7] $label contains removed adapter delimiter: $pattern"
+  fi
+}
+
+require_same_file() {
+  actual="$1"
+  expected="$2"
+  label="$3"
+
+  if [ ! -f "$actual" ]; then
+    err "[E7] $label missing file: $actual"
+    return
+  fi
+  if [ ! -f "$expected" ]; then
+    err "[E7] $label missing canonical template: $expected"
+    return
+  fi
+  if ! cmp -s "$actual" "$expected"; then
+    err "[E7] $label must exactly match canonical template: $expected"
   fi
 }
 
@@ -260,32 +297,32 @@ lint_repo() {
     done
   fi
 
-  # W6 adapter marker block presence
-  for adapter in "$PROJECT_DIR/AGENTS.md" "$PROJECT_DIR/CLAUDE.md" "$PROJECT_DIR/.github/copilot-instructions.md"; do
-    [ -f "$adapter" ] || continue
-    if ! grep -q "<!-- mindlayer:start -->" "$adapter"; then
-      warn "[W6] $adapter is missing the <!-- mindlayer:start --> marker block"
-    fi
-  done
+  require_file "$PROJECT_DIR/global-template/memory-system/templates/AGENTS.md" "canonical AGENTS.md template"
+  require_file "$PROJECT_DIR/global-template/memory-system/templates/CLAUDE.md" "canonical CLAUDE.md template"
+  require_file "$PROJECT_DIR/global-template/memory-system/templates/copilot-instructions.md" "canonical Copilot template"
+  require_file "$PROJECT_DIR/global-template/memory-system/templates/GEMINI.md" "canonical Gemini template"
+  require_file "$PROJECT_DIR/global-template/memory-system/templates/cursor-mindlayer.md" "canonical Cursor template"
+  require_file "$PROJECT_DIR/global-template/memory-system/templates/windsurf-mindlayer.md" "canonical Windsurf template"
 
   # E7 source-boundary rules
   # Behavior rules live in memory-system/ subfiles; adapters are thin pointers.
-  require_contains "$PROJECT_DIR/AGENTS.md" 'Read `~/.mindlayer/boot.md` first' "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "first project-relevant request" "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Use this exact boot receipt format" "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Context share:" "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Token strategy:" "AGENTS.md"
-  require_contains "$PROJECT_DIR/AGENTS.md" "Proactive Behavior" "AGENTS.md"
+  for adapter in \
+    "$PROJECT_DIR/AGENTS.md" \
+    "$PROJECT_DIR/CLAUDE.md" \
+    "$PROJECT_DIR/.github/copilot-instructions.md" \
+    "$PROJECT_DIR/GEMINI.md" \
+    "$PROJECT_DIR/.cursor/rules/mindlayer.md" \
+    "$PROJECT_DIR/.windsurf/rules/mindlayer.md"; do
+    require_not_contains "$adapter" "<!-- mindlayer:start -->" "$adapter"
+    require_not_contains "$adapter" "<!-- mindlayer:end -->" "$adapter"
+  done
 
-  require_contains "$PROJECT_DIR/CLAUDE.md" '`README.md` and `docs/` are human documentation' "CLAUDE.md"
-  require_contains "$PROJECT_DIR/CLAUDE.md" "Do not duplicate memory into" "CLAUDE.md"
-  require_contains "$PROJECT_DIR/CLAUDE.md" "retrieve durable context from this adapter" "CLAUDE.md"
-  require_contains "$PROJECT_DIR/CLAUDE.md" "automatic MindLayer boot" "CLAUDE.md"
-
-  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.' "Copilot adapter"
-  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter." "Copilot adapter"
-  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" 'Read `~/.mindlayer/boot.md` first' "Copilot adapter"
-  require_contains "$PROJECT_DIR/.github/copilot-instructions.md" "first project-relevant request" "Copilot adapter"
+  require_same_file "$PROJECT_DIR/AGENTS.md" "$PROJECT_DIR/global-template/memory-system/templates/AGENTS.md" "AGENTS.md"
+  require_same_file "$PROJECT_DIR/CLAUDE.md" "$PROJECT_DIR/global-template/memory-system/templates/CLAUDE.md" "CLAUDE.md"
+  require_same_file "$PROJECT_DIR/.github/copilot-instructions.md" "$PROJECT_DIR/global-template/memory-system/templates/copilot-instructions.md" "Copilot adapter"
+  [ -f "$PROJECT_DIR/GEMINI.md" ] && require_same_file "$PROJECT_DIR/GEMINI.md" "$PROJECT_DIR/global-template/memory-system/templates/GEMINI.md" "Gemini adapter"
+  [ -f "$PROJECT_DIR/.cursor/rules/mindlayer.md" ] && require_same_file "$PROJECT_DIR/.cursor/rules/mindlayer.md" "$PROJECT_DIR/global-template/memory-system/templates/cursor-mindlayer.md" "Cursor adapter"
+  [ -f "$PROJECT_DIR/.windsurf/rules/mindlayer.md" ] && require_same_file "$PROJECT_DIR/.windsurf/rules/mindlayer.md" "$PROJECT_DIR/global-template/memory-system/templates/windsurf-mindlayer.md" "Windsurf adapter"
 
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Read `~/.mindlayer/boot.md` first' "ml init command"
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Do not use `README.md` or `docs/` as memory input.' "ml init command"
@@ -312,14 +349,15 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/boot.md" "first project-relevant request" "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" "approximate context share by source" "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" 'check project `.mindlayer/project.md`' "global boot template"
+  require_contains "$PROJECT_DIR/global-template/boot.md" "## Adapter Guard" "global boot template"
+  require_contains "$PROJECT_DIR/global-template/boot.md" ".mindlayer/adapters.lock" "global boot template"
+  require_contains "$PROJECT_DIR/global-template/boot.md" "Never discard user-added adapter content" "global boot template"
 
-  # Installer — check adapter block and embedded fallback vars
-  require_contains "$PROJECT_DIR/install.sh" 'Read `~/.mindlayer/boot.md` first' "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "first project-relevant request" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "Use this exact boot receipt format" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "Context share:" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "Token strategy:" "installer adapter block"
-  require_contains "$PROJECT_DIR/install.sh" "Proactive Behavior" "installer adapter block"
+  # Installer — check canonical adapter template handling and embedded fallback vars
+  require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/AGENTS.md" "installer adapter templates"
+  require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/CLAUDE.md" "installer adapter templates"
+  require_contains "$PROJECT_DIR/install.sh" ".mindlayer/adapters.lock" "installer adapter lock"
+  require_contains "$PROJECT_DIR/install.sh" "sha256_file" "installer adapter lock"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Write Rules" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Read Rules" "installer read-write fallback"

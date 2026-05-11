@@ -136,3 +136,32 @@ Use when prioritizing V4 work, evaluating whether a behavior belongs in instruct
 ml-20260507-003
 ml-20260507-006
 ml-20260505-003
+
+## Adapter Boot Wording Drift
+
+id: ml-20260511-001
+created: 2026-05-11
+updated: 2026-05-11
+scope: project
+type: risk
+tags: [adapters, boot, non-interactive, trust, drift]
+confidence: high
+status: active
+source: conversation
+
+### Summary
+Shipped adapter wording may still be softer than the recorded non-interactive boot fix requires, allowing agents to answer project questions before running MindLayer boot.
+
+### Details
+- `AGENTS.md` currently says to run boot before answering the first project-relevant request, but the recorded root-cause fix requires harder wording: never answer a project question without booting first, never ask permission, just boot.
+- This matters most in headless or non-interactive agent runs where ambiguous instructions can be treated as optional or deferrable.
+- `CLAUDE.md` correctly delegates to `AGENTS.md`, so ambiguity in `AGENTS.md` propagates to tool-specific adapters.
+- Recommended mitigation: tighten the adapter template wording and add a contract test that asserts the hard boot language is present in installed adapters.
+
+### When to use
+Use when editing adapter templates, debugging boot receipt failures, or adding tests for non-interactive agent behavior.
+
+### Related
+ml-20260510-003
+ml-20260430-006
+ml-20260507-003

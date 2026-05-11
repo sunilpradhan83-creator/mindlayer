@@ -4,6 +4,9 @@
 .mindlayer/sessions/
 .mindlayer/cache/
 .mindlayer/tmp/
+.mindlayer/adapters.lock
+.cursor/rules/mindlayer.md
+.windsurf/rules/mindlayer.md
 
 # Local Codex marker
 .codex
