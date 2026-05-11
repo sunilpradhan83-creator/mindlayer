@@ -417,7 +417,19 @@
   scope: project
   type: risk
   tags: [adapters, boot, non-interactive, trust, drift]
-  summary: Shipped adapter wording may still be softer than the recorded non-interactive boot fix requires; tighten adapter template wording and test for hard boot language.
+  summary: Resolved — hard boot wording locked in adapter templates and enforced by lint and install tests.
+  importance: high
+  status: archived
+  last_updated: 2026-05-11
+
+- id: ml-20260511-002
+  title: Adapter Freeze + Auto-Detection Architecture
+  file: decisions.md
+  section: Adapter Freeze + Auto-Detection Architecture
+  scope: project
+  type: decision
+  tags: [adapters, freeze, auto-detection, install, canonical]
+  summary: All adapters are frozen whole-file canonical templates. Install auto-detects tools. User content never lost — routed via ml save before restore. adapters.lock is the authority.
   importance: high
   status: active
   last_updated: 2026-05-11

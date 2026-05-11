@@ -1,5 +1,35 @@
 # Decisions
 
+## Adapter Freeze + Auto-Detection Architecture
+
+id: ml-20260511-002
+created: 2026-05-11
+updated: 2026-05-11
+scope: project
+type: decision
+tags: [adapters, freeze, auto-detection, install, canonical]
+confidence: high
+status: active
+source: conversation
+
+### Summary
+All adapter files are frozen whole-file canonical templates. Install auto-detects tools via system signals and existing project files. User content is never lost — routed via `ml save` before restore.
+
+### Details
+- No delimiters (`<!-- mindlayer:start/end -->`) in any adapter — whole file is the contract.
+- Canonical templates live in `global-template/memory-system/templates/` (repo) and `~/.mindlayer/memory-system/templates/` (installed). Never manually edited.
+- `adapters.lock` in project `.mindlayer/` stores SHA-256 hash of each installed adapter. Authority on what MindLayer last wrote.
+- Install detects tools via `which <tool>` and `~/.tool/` directory signals plus existing project adapter files.
+- Existing project files with user content are never overwritten silently — diffed against canonical, extra content routed via `ml save` flow, then restored.
+- `update_marked_block` removed entirely. All adapters use `install_canonical_adapter`.
+
+### When to use
+Use when adding a new tool adapter, debugging install behavior, or understanding why an adapter was or was not written.
+
+### Related
+ml-20260511-001
+ml-20260510-002
+
 ## Dogfood Two-Script Architecture
 
 id: ml-20260510-002

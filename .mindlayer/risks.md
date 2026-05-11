@@ -146,7 +146,7 @@ scope: project
 type: risk
 tags: [adapters, boot, non-interactive, trust, drift]
 confidence: high
-status: active
+status: archived
 source: conversation
 
 ### Summary
