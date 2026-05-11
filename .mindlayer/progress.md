@@ -4,7 +4,7 @@
 
 id: ml-20260505-006
 created: 2026-05-05
-updated: 2026-05-10 (session 16)
+updated: 2026-05-11
 scope: project
 type: progress
 tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
@@ -27,6 +27,7 @@ V3 phase 4 complete as agent-executed ranked-load contract. Programmatic command
 - V3 phase 4 (session 13): `ml load` primary command shipped — `ml retrieve` alias retained, command spec renamed to load.md, ranked-load behavior specified, archive handling specified, test-load.sh added (14 contract checks). This is a contract/spec and naming change, not a programmatic ranking engine.
 - V3 phase 4 scope decision (session 15): programmatic ranked loader moved to V4 command-runner foundation. V3 remains markdown-first and agent-executed.
 - Dogfood refactor (session 16, 2026-05-10): `dogfood-codex-boot.sh` replaced with agent-agnostic two-script architecture. `dogfood-boot.sh` (product gate, full isolation, API key) + `dogfood-live.sh` (personal health check, OAuth). Five real multi-turn scenarios verified passing with Claude runner. Root cause of boot receipt failure found and fixed in `install.sh` AGENTS.md template and `global-template/boot.md` — ambiguous boot trigger wording. Test fixtures added in `tools/dogfood-fixtures/`. Open source security hardening roadmap item saved (`ml-20260510-001`).
+- Dogfood fix review (2026-05-11): `tools/dogfood.sh` validation false negatives were addressed. Source-boundary check now fails correctly, single-turn runners skip continuity, and memory write detection snapshots file hashes. `tools/test.sh` passed 243 checks; live dogfood still requires local agent tooling (`claude` or Codex with `bwrap`).
 - V4 next: standardized `ml` command runner foundation, then `ml script` command and IDE extensions.
 
 ### When to use
