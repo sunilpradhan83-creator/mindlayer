@@ -130,6 +130,8 @@ assert_no_suggestion_for_loaded_file() {
 assert_has_token_burned_block() {
   file="$1"
   grep -Fq "Token Burned:" "$file" || return 1
+  grep -Eq "^  - Last turn: ~[0-9][0-9,]* words, ~[0-9][0-9,]* est\. tokens$" "$file" || return 1
+  grep -Eq "^  - Session: ~[0-9][0-9,]* words, ~[0-9][0-9,]* est\. tokens$" "$file" || return 1
   grep -Fq "Next Step:" "$file" || return 1
 }
 
@@ -620,6 +622,22 @@ if assert_next_step_not_blank "$f" 2>/dev/null; then
   fail "token burned — violation: blank next step: should have been rejected"
 else
   pass "token burned — violation: blank next step: correctly rejected"
+fi
+
+scenario "token burned — violation: missing estimates"
+f="$SANDBOX/token-burned-missing-estimates.md"
+cat > "$f" <<'EOF'
+Answer here.
+
+-------------------------------------------------------------
+Token Burned:
+Next Step: Continue current task.
+--------------------------------------------------------------
+EOF
+if assert_has_token_burned_block "$f" 2>/dev/null; then
+  fail "token burned — violation: missing estimates: should have been rejected"
+else
+  pass "token burned — violation: missing estimates: correctly rejected"
 fi
 
 scenario "token burned — violation: coming up when single clear next step"

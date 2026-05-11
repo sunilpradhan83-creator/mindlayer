@@ -290,11 +290,19 @@ Signal variants: "ml save", "remember this", "save this", "add to memory", "capt
 
 global_memory_system_per_turn='# Per-Turn Rules
 
-Load this file at the start of every session, immediately after router.md. Rules here fire on every agent turn.
+Load this file at the start of every session, immediately after router.md. Rules here fire on every agent turn for every host agent and adapter. There are no model-specific or tool-specific exceptions.
 
 ## Per-Turn Status Block
 
 Append a status block at the end of every agent turn as the last output.
+
+Required every turn:
+- Token Burned:
+- Last turn approximate words and estimated tokens
+- Session approximate words and estimated tokens
+- Next Step
+
+A bare Token Burned block without the Last turn and Session estimate lines is invalid.
 
 ```text
 -------------------------------------------------------------
@@ -302,11 +310,11 @@ Token Burned:
   - Last turn: ~N words, ~N est. tokens
   - Session: ~N words, ~N est. tokens
 
-*Next Step: <smallest useful action>*
+Next Step: <smallest useful action>
 --------------------------------------------------------------
 ```
 
-Use words x 1.3 or characters / 4 to estimate tokens when exact counts are unavailable. Mark as approximate.
+Use words x 1.3 or characters / 4 to estimate tokens when exact counts are unavailable. Mark estimates with ~. Do not omit estimates because exact token accounting is unavailable.
 
 Next Step prediction hierarchy — always predict something, never leave blank:
 1. Active task in progress -> next action within the current task

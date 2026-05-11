@@ -2,11 +2,19 @@
 
 <!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
 
-Load this file at the start of every session, immediately after router.md. Rules here fire on every agent turn.
+Load this file at the start of every session, immediately after router.md. Rules here fire on every agent turn for every host agent and adapter. There are no model-specific or tool-specific exceptions.
 
 ## Per-Turn Status Block
 
 Append a status block at the end of every agent turn as the last output.
+
+Required every turn:
+- `Token Burned:`
+- `Last turn` approximate words and estimated tokens
+- `Session` approximate words and estimated tokens
+- `Next Step`
+
+A bare `Token Burned` block without the `Last turn` and `Session` estimate lines is invalid.
 
 ```text
 -------------------------------------------------------------
@@ -22,7 +30,7 @@ Coming Up:            ← omit this section when not needed
 --------------------------------------------------------------
 ```
 
-Use words × 1.3 or characters ÷ 4 to estimate tokens when exact counts are unavailable. Mark as approximate.
+Use words × 1.3 or characters ÷ 4 to estimate tokens when exact counts are unavailable. Mark estimates with `~`. Do not omit estimates because exact token accounting is unavailable.
 
 **Next Step** — always a single action, never a list. Always predict something, never leave blank.
 

@@ -13,7 +13,7 @@ status: active
 source: manual
 
 ### Summary
-V3 phase 4 complete as agent-executed ranked-load contract. Adapter freeze + boot-time guard contract shipped. Programmatic command runner moved to V4 foundation. 10 test suites passing.
+V3 phase 4 complete as agent-executed ranked-load contract. Adapter freeze + boot-time guard contract shipped. Strict Token Burned estimates now required every agent turn. Programmatic command runner moved to V4 foundation. 10 test suites passing.
 
 ### Details
 - V1 complete: installer, prompt commands, thin adapters, boot/continuity contracts.
@@ -29,6 +29,7 @@ V3 phase 4 complete as agent-executed ranked-load contract. Adapter freeze + boo
 - Dogfood refactor (session 16, 2026-05-10): `dogfood-codex-boot.sh` replaced with agent-agnostic two-script architecture. `dogfood-boot.sh` (product gate, full isolation, API key) + `dogfood-live.sh` (personal health check, OAuth). Five real multi-turn scenarios verified passing with Claude runner. Root cause of boot receipt failure found and fixed in `install.sh` AGENTS.md template and `global-template/boot.md` — ambiguous boot trigger wording. Test fixtures added in `tools/dogfood-fixtures/`. Open source security hardening roadmap item saved (`ml-20260510-001`).
 - Dogfood fix review (2026-05-11): `tools/dogfood.sh` validation false negatives were addressed. Source-boundary check now fails correctly, single-turn runners skip continuity, and memory write detection snapshots file hashes. `tools/test.sh` passed 243 checks; live dogfood still requires local agent tooling (`claude` or Codex with `bwrap`).
 - Adapter freeze (2026-05-11): `AGENTS.md` and `CLAUDE.md` became delimiter-free canonical files sourced from `global-template/memory-system/templates/`. Installer writes the full canonical files and records `.mindlayer/adapters.lock` hashes. Boot contract now includes an adapter guard: hash check, diff against canonical templates, `ml save` routing for user-added content before restore, silent restore for pure template drift. Lint and install tests enforce exact template matches and lock hashes. `tools/test.sh` passed all 10 suites.
+- Strict Token Burned contract (2026-05-11): `per-turn.md` now requires every host agent and adapter to end every turn with `Last turn` and `Session` approximate word/token estimates plus a nonblank `Next Step`. `test-per-turn.sh` rejects bare Token Burned blocks without estimates. `tools/test.sh` passed all 10 suites.
 - V4 next: standardized `ml` command runner foundation, then `ml script` command and IDE extensions.
 
 ### When to use
