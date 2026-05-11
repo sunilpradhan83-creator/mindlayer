@@ -1041,7 +1041,7 @@ MindLayer memory is stored outside this adapter.
 Global memory: `~/.mindlayer/`
 Project memory: `.mindlayer/`
 
-MindLayer boot should run at session start or tool preflight when the host supports it. If no preflight hook exists, run boot before answering the first project-relevant request. Do not treat a plain greeting as project-relevant.
+MindLayer boot should run at session start or tool preflight when the host supports it. If no preflight hook exists, run the full boot sequence and emit the boot receipt BEFORE answering the first project-relevant request — including any question about what the project is, what it does, or what is in it. Never answer a project question without booting first. Never ask the user if they want you to boot — just boot. Do not treat a plain greeting as project-relevant.
 
 Boot order:
 1. Read `~/.mindlayer/boot.md` first when available.

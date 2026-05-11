@@ -161,10 +161,14 @@ tools/test.sh
 
 It runs memory/adapters linting, sandboxed install readiness tests for fresh and existing projects, and boot receipt contract tests.
 
-For an opt-in real Codex CLI dogfood check:
+For an opt-in live agent dogfood check:
 
 ```sh
-tools/dogfood-codex-boot.sh
+# Claude (default)
+tools/dogfood.sh
+
+# Codex (requires bubblewrap on Linux: sudo apt install bubblewrap)
+AGENT_RUNNER=tools/dogfood-runners/codex.sh tools/dogfood.sh
 ```
 
-This depends on local Codex auth, model availability, and network access.
+Runs five real multi-turn scenarios: greeting suppression, boot receipt on project question, session continuity, fresh-session boot, and no-unsolicited-write discipline. The sandbox is isolated in a temp directory and cleaned up automatically.

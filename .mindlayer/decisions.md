@@ -1,5 +1,86 @@
 # Decisions
 
+## Dogfood Two-Script Architecture
+
+id: ml-20260510-002
+created: 2026-05-10
+updated: 2026-05-10
+scope: project
+type: decision
+tags: [dogfood, testing, ci, open-source, security, architecture]
+confidence: high
+status: active
+source: manual
+
+### Summary
+MindLayer dogfood testing uses two separate scripts with distinct purposes: `dogfood-boot.sh` (product gate, full isolation, API key) and `dogfood-live.sh` (personal health check, real HOME, OAuth).
+
+### Details
+- `tools/dogfood-boot.sh` — full HOME isolation + `ANTHROPIC_API_KEY`. Tests exactly what `install.sh` ships. Reproducible on any machine. CI-safe. Required before releases and on PRs touching `global-template/`.
+- `tools/dogfood-live.sh` — real HOME + OAuth. Tests the contributor's actual live `~/.mindlayer/` config. Zero setup. Personal sanity check, not a product gate.
+- Separation is correct because: (a) the product gate must test what ships, not personal config, (b) the live check needs zero friction for daily use.
+- Docker was evaluated and rejected — security investment belongs at distribution layer (CODEOWNERS, signed releases), not dogfood layer. Docker would be security theater here.
+- Runners live in `tools/dogfood-runners/`: `claude.sh` (isolated), `claude-live.sh` (live), `codex.sh` (Codex, single-turn only).
+
+### When to use
+Load when planning dogfood strategy, adding new agent runners, or evaluating CI integration.
+
+---
+
+## AGENTS.md Boot Trigger Root Cause
+
+id: ml-20260510-003
+created: 2026-05-10
+updated: 2026-05-10
+scope: project
+type: decision
+tags: [agents-md, boot, non-interactive, adapter, install]
+confidence: high
+status: active
+source: manual
+
+### Summary
+In non-interactive (`-p`) mode, agents skip tool calls needed for boot unless `AGENTS.md` explicitly says to boot BEFORE answering. Ambiguous wording causes agents to answer directly from adapter files without running the boot sequence.
+
+### Details
+- Root cause: `AGENTS.md` said "run boot before answering the first project-relevant request" — agents interpreted this as optional or deferrable, and answered from `CLAUDE.md`/`AGENTS.md` context directly.
+- Fix: added "Never answer a project question without booting first. Never ask the user if they want you to boot — just boot." to both `install.sh` (AGENTS.md template) and `global-template/boot.md`.
+- Key insight: "boot before answering" is ambiguous. "boot BEFORE, then answer, never ask permission" is not.
+- Applies to all agents in non-interactive/headless mode — not Claude-specific.
+- Test fixtures in `tools/dogfood-fixtures/` give the sandbox project real identity (non-scaffold `project.md`, `index.md` with `ml-onboard-complete`) so the agent boots confidently without triggering the onboard flow.
+
+### When to use
+Load when modifying AGENTS.md boot instructions, debugging boot receipt failures, or adding new agent runners.
+
+---
+
+## Open Source Security Hardening Decision
+
+id: ml-20260510-004
+created: 2026-05-10
+updated: 2026-05-10
+scope: project
+type: decision
+tags: [security, open-source, governance, supply-chain]
+confidence: high
+status: active
+source: manual
+
+### Summary
+Security investment for open source MindLayer belongs at the distribution and governance layer, not the dogfood test layer. Three distinct threat vectors, each with its own mitigation.
+
+### Details
+- Threat 1 (malicious contributor): CODEOWNERS on `global-template/` + branch protection. Code review is the control — markdown is human-readable, malicious instructions are visible in PR diffs.
+- Threat 2 (supply chain): signed releases + published checksums for `install.sh`.
+- Threat 3 (developer running unreviewed local changes): document in CONTRIBUTING.md. Self-inflicted risk, not a tooling problem.
+- Docker in dogfood was explicitly rejected — it protects the wrong layer and adds contributor friction without meaningful security benefit.
+- Full details in `roadmap.md` entry `ml-20260510-001`.
+
+### When to use
+Load when planning the open source release, evaluating security PRs, or onboarding security contributors.
+
+---
+
 ## Global-Template Sync Rule
 id: ml-20260507-007
 created: 2026-05-07

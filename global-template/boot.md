@@ -20,7 +20,7 @@ Run once per session, in order, before answering any request:
 10. Check onboard status — scan `.mindlayer/index.md` for `id: ml-onboard-complete`. If absent AND `.mindlayer/project.md` contains only placeholder/scaffold content, load `memory-system/commands/onboard.md` and fire the onboard flow on the first project-relevant turn. Surface in boot receipt as: `Onboarding: pending — ml onboard will run on first project-relevant request.`
 11. Run memory diff — load `memory-system/commands/diff.md` and compute what changed in `.mindlayer/` since the last session. Surface in boot receipt between `Current progress:` and `Context cost:`. Skip silently if no session file or git unavailable.
 
-Do not treat a plain greeting as a project-relevant request. If boot has not run, answer naturally and boot before the first project-relevant request.
+Do not treat a plain greeting as a project-relevant request. On the first project-relevant request — including any question about what the project is, what it does, or what is in it — run the full boot sequence and emit the boot receipt BEFORE giving your answer. Never answer a project question without booting first. Never ask the user if they want you to boot — just boot.
 
 ## Boot Receipt Format
 

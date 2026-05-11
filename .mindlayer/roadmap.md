@@ -32,3 +32,43 @@ V1 shipped. V2 shipped. V3 shipped. V4 is next.
 ### Related
 ml-20260430-005
 ml-20260507-001
+
+---
+
+## Open Source Security Hardening
+
+id: ml-20260510-001
+created: 2026-05-10
+updated: 2026-05-10
+scope: project
+type: roadmap
+tags: [security, open-source, release, governance]
+confidence: high
+status: planned
+source: manual
+
+### Summary
+Before open sourcing MindLayer, ship a security hardening layer targeting the distribution and governance threat surface — not the dogfood test layer.
+
+### Details
+Three threat vectors identified, each requiring a distinct mitigation:
+
+**1. Malicious contributor modifying memory templates**
+- Add CODEOWNERS file — any change to `global-template/` requires 2 maintainer approvals
+- GitHub branch protection on `main` — no direct pushes, mandatory PR review
+- Separate CODEOWNERS entries for `global-template/`, `install.sh`, and `tools/`
+
+**2. Supply chain attack on the published package**
+- Sign releases (GPG or sigstore)
+- Publish checksums for `install.sh` alongside each release
+- Pin dependencies and audit them on every release
+
+**3. Developer running unreviewed local changes**
+- Document clearly in CONTRIBUTING.md that dogfood should only be run on reviewed code
+- The dogfood temp dir sandbox is sufficient for this tier — Docker is not needed
+
+### Decision
+Security investment belongs at the distribution and governance layer, not the dogfood test layer. Docker in dogfood would be security theater — it protects the wrong layer.
+
+### Status
+Planned. To be implemented before first public open source release.

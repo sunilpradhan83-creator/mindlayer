@@ -290,6 +290,42 @@
   status: archived
   last_updated: 2026-05-07
 
+- id: ml-20260510-002
+  title: Dogfood Two-Script Architecture
+  file: decisions.md
+  section: Dogfood Two-Script Architecture
+  scope: project
+  type: decision
+  tags: [dogfood, testing, ci, open-source, architecture]
+  summary: dogfood-boot.sh is the product gate (full isolation, API key); dogfood-live.sh is the personal health check (real HOME, OAuth). Docker rejected. Runners in tools/dogfood-runners/.
+  importance: high
+  status: active
+  last_updated: 2026-05-10
+
+- id: ml-20260510-003
+  title: AGENTS.md Boot Trigger Root Cause
+  file: decisions.md
+  section: AGENTS.md Boot Trigger Root Cause
+  scope: project
+  type: decision
+  tags: [agents-md, boot, non-interactive, adapter, install]
+  summary: In -p mode agents skip boot unless AGENTS.md says boot BEFORE answering with no permission ask. Fixed in install.sh template and global-template/boot.md.
+  importance: high
+  status: active
+  last_updated: 2026-05-10
+
+- id: ml-20260510-004
+  title: Open Source Security Hardening Decision
+  file: decisions.md
+  section: Open Source Security Hardening Decision
+  scope: project
+  type: decision
+  tags: [security, open-source, governance, supply-chain]
+  summary: Security belongs at distribution layer (CODEOWNERS, signed releases) not dogfood layer. Docker rejected. Three threat vectors each with distinct mitigation.
+  importance: high
+  status: active
+  last_updated: 2026-05-10
+
 - id: ml-20260507-004
   title: Agent-Agnostic Design Principle
   file: decisions.md
