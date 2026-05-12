@@ -21,7 +21,7 @@ pass() { PASS_COUNT=$((PASS_COUNT + 1)); printf "PASS  %s\n" "$1"; }
 fail() { FAIL_COUNT=$((FAIL_COUNT + 1)); printf "FAIL  %s\n" "$1"; }
 scenario() { CURRENT_SCENARIO="$1"; printf "\n## %s\n" "$CURRENT_SCENARIO"; }
 
-MODULES="load-announce memory-candidate retrieval lateral-intent session-warning pre-push post-write"
+MODULES="load-announce memory-candidate retrieval lateral-intent session-warning post-write"
 
 # ---------------------------------------------------------------------------
 # Spec layout assertions
@@ -832,28 +832,6 @@ if grep -Fq "Lateral intent:" "$f"; then
   pass "dogfood — lateral intent: nudge surfaced"
 else
   fail "dogfood — lateral intent: nudge surfaced"
-fi
-
-scenario "dogfood — pre-push gate fires before push"
-f="$SANDBOX/dogfood-pre-push.md"
-cat > "$f" <<'EOF'
-Ready to push the changes.
-
-Pre-push: tests added and run for this change? Say 'yes' to push or 'skip' to push without testing.
-
--------------------------------------------------------------
-Token Burned:
-  - Last turn: ~30 words, ~39 est. tokens
-  - Session: ~900 words, ~1,170 est. tokens
-
-Next Step: Respond 'yes' or 'skip' to proceed with push.
---------------------------------------------------------------
-EOF
-check "token burned present" assert_has_token_burned_block "$f"
-if grep -Fq "Pre-push:" "$f"; then
-  pass "dogfood — pre-push gate fires"
-else
-  fail "dogfood — pre-push gate fires"
 fi
 
 scenario "dogfood — violation: all contracts missing"

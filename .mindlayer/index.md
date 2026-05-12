@@ -5,7 +5,6 @@ Boot summary. Format: id | title | file | summary. Full metadata: `index-full.md
 - ml-project-20260430-001 | Project Identity | project.md | Markdown-first memory system for AI-native devs.
 - ml-20260503-001 | Source-of-Truth Boundaries | decisions.md | Repo memory vs templates vs live runtime.
 - ml-20260503-002 | Literal Approval | decisions.md | Exact proposal required before memory writes.
-- ml-20260505-008 | Pre-Push Gate | decisions.md | Ask test confirmation before push.
 - ml-20260505-007 | Lateral Intent | decisions.md | Out-of-plan work gets backlog/roadmap nudge.
 - ml-20260505-005 | Token Burned Status | decisions.md | Every turn ends with estimates and Next Step.
 - ml-20260430-004 | Product Philosophy | context.md | Token efficiency; memory is curation.
@@ -35,5 +34,4 @@ Boot summary. Format: id | title | file | summary. Full metadata: `index-full.md
 - ml-per-turn-20260512-retrieval | Retrieval Module | memory-system/per-turn/retrieval.md | Unloaded memory suggestions.
 - ml-per-turn-20260512-lateral-intent | Lateral Module | memory-system/per-turn/lateral-intent.md | Backlog/roadmap nudges.
 - ml-per-turn-20260512-session-warning | Session Module | memory-system/per-turn/session-warning.md | Context warnings.
-- ml-per-turn-20260512-pre-push | Pre-Push Module | memory-system/per-turn/pre-push.md | Push gate.
 - ml-per-turn-20260512-post-write | Post-Write Module | memory-system/per-turn/post-write.md | Size checks.

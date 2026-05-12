@@ -40,15 +40,65 @@ Make stored memory more useful over time and easier to find.
 
 ---
 
-## V4 — IDE Extensions + Intelligence Layer
+## V4 — Harness-as-Runtime
 
-Bring MindLayer into the editor, ship SCRIPT as a user-facing feature, and make retrieval smarter.
+**Thesis:** harness-as-instructions becomes harness-as-runtime. Mechanics move to scripts; judgment stays in instructions. Scripts trigger instruction modules. Conditional modules need machine-checkable triggers.
 
-- `/m-script` command — walks any user through S→C→R→I→P→T for their project; ships in global-template
+The instruction-only boot reads ~7,300 words (~9,500 tokens) every session — far above the ~1,200 token design target. V4 fixes this in two stages:
+
+### V4 Phase 0 — Boot Weight Reduction (instruction compression, no runtime)
+
+Compress the instruction-only system as far as possible before the runtime exists. Each step ships as a separate commit so it is independently reversible.
+
+- **A1** — Split `per-turn.md`: always-loaded core (Token Burned format only, ~150 words) + conditional modules loaded on trigger (`load-announce`, `memory-candidate`, `retrieval`, `lateral-intent`, `session-warning`, `pre-push`, `post-write`).
+- **A2** — Compress `index.md`: boot loads a summary-only index (title + one-line summary + file pointer). Full entry blocks load on `ml load` only.
+- **A3** — Compress `progress.md`: keep current phase only; archive completed phase history.
+- **A4** — Compress `backlog.md`: keep active/planned items only; archive completed V2/V3 items.
+- Build `test-boot-receipt.sh` and ~10 boot fixture sessions before the refactor begins — establishes a receipt-diff harness so regressions are caught per step.
+
+Target: ~3,000 words (~3,900 tokens) at L0 boot. Track A alone cannot reach the original ~1,200 token goal — Track B is required for that.
+
+### V4 Phase 1 — `ml` Command Runner Foundation (read-only)
+
+A local Python script (`~/.mindlayer/ml`). Stdlib-first, tiny, lazy-loaded. Python unless `ml load` latency becomes a measured problem.
+
+Agent interaction changes: instead of reading 7,300 words of instructions, the agent runs `ml boot` and reads ~400 words of output. Instructions become executable, not readable.
+
+Read-only commands first (no agent trust required):
+
+| Command | Behaviour |
+|---|---|
+| `ml boot` | Reads boot files, prints boot receipt to stdout |
+| `ml status` | Scores memory health, prints report |
+| `ml diff` | Computes memory changes since last session |
+| `ml load <query>` | Scores index, returns ranked matches |
+| `ml session` | Reports context cost and recommendation |
+
+### V4 Phase 2 — Guarded Write Commands
+
+| Command | Behaviour |
+|---|---|
+| `ml save` | Proposes candidate → writes on approval |
+| `ml archive` | Proposes stale entries → archives on approval |
+| `ml session write` | Writes session file on approval |
+
+### V4 Phase 3 — SCRIPT Lifecycle Commands
+
+| Command | Behaviour |
+|---|---|
+| `ml script` | Walks user through S→C→R→I→P→T interactively |
+| `ml signal` | Captures a raw signal, routes to roadmap/backlog/discard |
+| `ml story` | Refines a backlog item into an Agent Story |
+
+### V4 Phase 4 — Cross-Agent Boot Parity Testing
+
+`test-boot-receipt.sh` — runs `ml boot` and parses the receipt against structural assertions. Run via `tools/dogfood-boot.sh` against each agent runner (Claude, Codex). Output diffs surfaced as failures. Closes the Codex-vs-Claude compliance gap observed in V3.
+
+### V4 Phase 5 — IDE Extensions
+
 - VS Code extension: memory sidebar, quick-save from selection
 - JetBrains and Cursor support
-- Optional semantic search layer for large memory stores
-- Auto-routing suggestions: agent recommends where to save based on content type
+- `ml script` as first-class user feature in global-template
 
 ---
 

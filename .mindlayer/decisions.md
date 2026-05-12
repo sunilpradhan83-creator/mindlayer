@@ -17,7 +17,7 @@ V4 Phase 0 compresses instruction-only boot weight by splitting per-turn behavio
 
 ### Details
 - `memory-system/per-turn.md` is now the always-loaded core: Token Burned format and Next Step hierarchy only.
-- Conditional per-turn contracts moved to `memory-system/per-turn/`: load announcements, memory candidates, retrieval suggestions, lateral intent, session warnings, pre-push, and post-write size checks.
+- Conditional per-turn contracts moved to `memory-system/per-turn/`: load announcements, memory candidates, retrieval suggestions, lateral intent, session warnings, and post-write size checks.
 - Boot reads `.mindlayer/index.md` as a summary-only catalog; full metadata lives in `.mindlayer/index-full.md` and loads via `ml load`.
 - `progress.md` keeps only current phase state; completed V1/V2/V3 progress history is archived as `ml-progress-archive-v1v2v3`.
 - `backlog.md` keeps active/planned V4 and deferred work; completed V2/V3 backlog history is archived as `ml-backlog-archive-v2v3`.
@@ -247,23 +247,6 @@ Skills that write files (such as the `init` skill triggered by `ml init`) must n
 ### Details
 - Skills/slash commands that write files, including `ml init`-triggered adapter rewrites, require the same literal approval as memory writes.
 - If a skill writes without approval, revert and explain. MindLayer product learnings belong in MindLayer memory, not tool-native memory.
-
-
-## Pre-Push Gate
-id: ml-20260505-008
-created: 2026-05-05
-updated: 2026-05-05
-scope: project
-type: decision
-tags: [pre-push, testing, quality-gate, proactive]
-confidence: high
-status: active
-source: manual
-### Summary
-Before every push, the agent appends a one-line test confirmation. `yes` or `skip` both proceed immediately.
-### Details
-- Fires once per push action with: `Pre-push: tests added and run for this change? Say 'yes' to push or 'skip' to push without testing.`
-- `yes` and `skip` both proceed immediately. Does not fire during boot, status checks, or non-push turns.
 
 
 ## Lateral Intent Routing

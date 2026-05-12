@@ -32,7 +32,6 @@ Loaded: <file.md> — <reason>
 | `memory-system/per-turn/retrieval.md` | Relevant unloaded memory | index match |
 | `memory-system/per-turn/lateral-intent.md` | Out-of-plan work | outside Next Step/backlog, scope change |
 | `memory-system/per-turn/session-warning.md` | Heavy/critical context | 60-80%, >80% |
-| `memory-system/per-turn/pre-push.md` | Push | push, git push, publish |
 | `memory-system/per-turn/post-write.md` | Approved memory write | post-write size check |
 | `memory-system/read-write.md` | Any memory write | before writing `.mindlayer/` or reading memory |
 | `memory-system/schema.md` | Structure | lifecycle, private/sessions/cache/tmp, tokens, folders |

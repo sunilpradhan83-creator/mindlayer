@@ -83,8 +83,8 @@
   tags: [pre-push, testing, quality-gate, proactive]
   summary: Before every push, agent appends a one-line test confirmation — 'yes' or 'skip' both proceed immediately.
   importance: high
-  status: active
-  last_updated: 2026-05-05
+  status: archived
+  last_updated: 2026-05-12
 
 - id: ml-20260505-007
   title: Lateral Intent Routing
@@ -527,7 +527,7 @@
   tags: [per-turn, module, pre-push]
   summary: Lazy per-turn contract for pre-push test confirmation.
   importance: high
-  status: active
+  status: archived
   last_updated: 2026-05-12
 
 - id: ml-per-turn-20260512-post-write
