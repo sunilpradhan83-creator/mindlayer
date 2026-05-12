@@ -30,10 +30,10 @@ Boot summary. Format: id | title | file | summary. Full metadata: `index-full.md
 - ml-20260511-002 | Adapter Freeze | decisions.md | Frozen templates, auto-detect, `ml save` migration.
 - ml-20260512-001 | Phase 0 Architecture | decisions.md | Per-turn split, summary index, compressed state.
 - ml-index-full-20260512-001 | Full Index | index-full.md | Full metadata for `ml load`.
-- ml-per-turn-20260512-load-announce | Load Module | global-template/memory-system/per-turn/load-announce.md | Load announcements.
-- ml-per-turn-20260512-memory-candidate | Candidate Module | global-template/memory-system/per-turn/memory-candidate.md | Memory candidates.
-- ml-per-turn-20260512-retrieval | Retrieval Module | global-template/memory-system/per-turn/retrieval.md | Unloaded memory suggestions.
-- ml-per-turn-20260512-lateral-intent | Lateral Module | global-template/memory-system/per-turn/lateral-intent.md | Backlog/roadmap nudges.
-- ml-per-turn-20260512-session-warning | Session Module | global-template/memory-system/per-turn/session-warning.md | Context warnings.
-- ml-per-turn-20260512-pre-push | Pre-Push Module | global-template/memory-system/per-turn/pre-push.md | Push gate.
-- ml-per-turn-20260512-post-write | Post-Write Module | global-template/memory-system/per-turn/post-write.md | Size checks.
+- ml-per-turn-20260512-load-announce | Load Module | memory-system/per-turn/load-announce.md | Load announcements.
+- ml-per-turn-20260512-memory-candidate | Candidate Module | memory-system/per-turn/memory-candidate.md | Memory candidates.
+- ml-per-turn-20260512-retrieval | Retrieval Module | memory-system/per-turn/retrieval.md | Unloaded memory suggestions.
+- ml-per-turn-20260512-lateral-intent | Lateral Module | memory-system/per-turn/lateral-intent.md | Backlog/roadmap nudges.
+- ml-per-turn-20260512-session-warning | Session Module | memory-system/per-turn/session-warning.md | Context warnings.
+- ml-per-turn-20260512-pre-push | Pre-Push Module | memory-system/per-turn/pre-push.md | Push gate.
+- ml-per-turn-20260512-post-write | Post-Write Module | memory-system/per-turn/post-write.md | Size checks.
