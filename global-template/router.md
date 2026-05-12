@@ -24,7 +24,7 @@ Load each file at most once per session. Load before acting on the trigger, not 
 |---|---|---|
 | `memory-system/commands/index.md` | Any ml * command fires | ml init, ml load, ml retrieve, ml save, ml status, ml archive, ml session, ml clean, ml onboard |
 | `memory-system/commands/init.md` | ml init invoked or boot receipt requested | ml init |
-| `memory-system/commands/load.md` | ml load invoked | ml load, ml retrieve, "load X", "retrieve X", "what do we know about X" |
+| `memory-system/commands/load.md` + project `.mindlayer/index-full.md` | ml load invoked | ml load, ml retrieve, "load X", "retrieve X", "what do we know about X" |
 | `memory-system/commands/save.md` | ml save invoked or save trigger fires | ml save, "remember this", "save this", "add to memory", "capture this" |
 | `memory-system/commands/status.md` | ml status invoked | ml status, "mstatus", "memory status", "what's loaded" |
 | `memory-system/commands/archive.md` | ml archive invoked | ml archive, ml clean, "clean memory", "forget X", "tidy memory", "archive memory" |

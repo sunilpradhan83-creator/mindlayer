@@ -39,6 +39,8 @@ assert_valid_receipt() {
   grep -Fq "Context share:" "$file" || return 1
   grep -Fq "Token strategy:" "$file" || return 1
   grep -Fq "Ready." "$file" || return 1
+  grep -Fq ".mindlayer/index.md" "$file" || return 1
+  ! grep -Fq ".mindlayer/index-full.md" "$file" || return 1
 
   awk '
     /^Loaded:/ { in_loaded = 1; next }
@@ -60,6 +62,41 @@ assert_valid_receipt() {
   ' "$file"; then
     return 1
   fi
+}
+
+assert_index_full_exists() {
+  [ -f ".mindlayer/index-full.md" ] &&
+    grep -Fq "## Entries" ".mindlayer/index-full.md" &&
+    grep -Fq "  title:" ".mindlayer/index-full.md"
+}
+
+assert_boot_index_summary_only() {
+  [ -f ".mindlayer/index.md" ] || return 1
+  grep -Fq "# Project Memory Index — Boot Summary" ".mindlayer/index.md" || return 1
+  grep -Fq "Full entries live in \`index-full.md\`; load via \`ml load\` only." ".mindlayer/index.md" || return 1
+  ! grep -Fq "  title:" ".mindlayer/index.md" || return 1
+  ! grep -Fq "  tags:" ".mindlayer/index.md" || return 1
+}
+
+assert_boot_index_has_active_entry_count() {
+  active_count=$(awk '
+    /^- id:/ { status = "" }
+    /^  status:/ { status = $2 }
+    /^  last_updated:/ { if (status == "active") count++ }
+    END { print count + 0 }
+  ' ".mindlayer/index-full.md")
+  summary_count=$(grep -Ec "^- .+ \\| .+ \\| .+\\.md \\| .+" ".mindlayer/index.md" || true)
+  [ "$active_count" -eq "$summary_count" ]
+}
+
+assert_boot_router_avoids_index_full() {
+  grep -Fq 'Read project `.mindlayer/index.md` — summary-only boot catalog.' "global-template/boot.md" &&
+    grep -Fq 'Do not load `.mindlayer/index-full.md` at boot' "global-template/boot.md"
+}
+
+assert_load_router_mentions_index_full() {
+  grep -Fq 'project `.mindlayer/index-full.md`' "global-template/router.md" &&
+    grep -Fq 'ml load invoked' "global-template/router.md"
 }
 
 assert_invalid_receipt() {
@@ -97,6 +134,37 @@ mkdir -p "$SANDBOX"
 
 printf "MindLayer Agent Behavior Contract\n"
 printf "=================================\n"
+
+scenario "boot index split"
+if assert_index_full_exists 2>/dev/null; then
+  pass "$CURRENT_SCENARIO: index-full.md exists with full entries"
+else
+  fail "$CURRENT_SCENARIO: index-full.md exists with full entries"
+fi
+
+if assert_boot_index_summary_only 2>/dev/null; then
+  pass "$CURRENT_SCENARIO: boot index is summary-only"
+else
+  fail "$CURRENT_SCENARIO: boot index is summary-only"
+fi
+
+if assert_boot_index_has_active_entry_count 2>/dev/null; then
+  pass "$CURRENT_SCENARIO: boot index has one line per active entry"
+else
+  fail "$CURRENT_SCENARIO: boot index has one line per active entry"
+fi
+
+if assert_boot_router_avoids_index_full 2>/dev/null; then
+  pass "$CURRENT_SCENARIO: boot loads index.md not index-full.md"
+else
+  fail "$CURRENT_SCENARIO: boot loads index.md not index-full.md"
+fi
+
+if assert_load_router_mentions_index_full 2>/dev/null; then
+  pass "$CURRENT_SCENARIO: ml load trigger mentions index-full.md"
+else
+  fail "$CURRENT_SCENARIO: ml load trigger mentions index-full.md"
+fi
 
 scenario "substantive project receipt"
 substantive="$SANDBOX/substantive-receipt.md"
@@ -144,7 +212,7 @@ MindLayer context loaded.
 
 Loaded:
 - Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, `~/.mindlayer/index.md`
-- Project memory index
+- Project: `.mindlayer/index.md`
 
 Skipped:
 - `~/.mindlayer/preferences/personal.md` because it is starter-only
