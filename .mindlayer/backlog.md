@@ -17,12 +17,7 @@ Near-term backlog tracks active/planned V4 work only. Full versioned vision live
 
 ### Details
 
-**Active V4 Phase 0 — Boot Weight Reduction:**
-- Split per-turn rules into always-loaded core plus conditional modules.
-- Compress project index, progress, and backlog for cheaper L0 boot.
-- Save architecture decision and verify final boot word count.
-
-**Planned V4 Foundation:**
+**Active V4 Foundation:**
 - Standardized `ml` command runner foundation with read-only commands first: `ml boot`, `ml load`, `ml status`, `ml diff`, and `ml session`.
 - Programmatic ranked loader over global/project indexes with deterministic scoring and archive handling.
 - Guarded write commands: `ml save`, `ml archive`, and session writes after explicit approval.

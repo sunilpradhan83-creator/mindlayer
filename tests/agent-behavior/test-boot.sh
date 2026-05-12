@@ -72,8 +72,8 @@ assert_index_full_exists() {
 
 assert_boot_index_summary_only() {
   [ -f ".mindlayer/index.md" ] || return 1
-  grep -Fq "# Project Memory Index — Boot Summary" ".mindlayer/index.md" || return 1
-  grep -Fq "Full entries live in \`index-full.md\`; load via \`ml load\` only." ".mindlayer/index.md" || return 1
+  grep -Fq "# Project Memory Index" ".mindlayer/index.md" || return 1
+  grep -Fq "Full metadata: \`index-full.md\` via \`ml load\`." ".mindlayer/index.md" || return 1
   ! grep -Fq "  title:" ".mindlayer/index.md" || return 1
   ! grep -Fq "  tags:" ".mindlayer/index.md" || return 1
 }
@@ -96,7 +96,7 @@ assert_boot_router_avoids_index_full() {
 
 assert_load_router_mentions_index_full() {
   grep -Fq 'project `.mindlayer/index-full.md`' "global-template/router.md" &&
-    grep -Fq 'ml load invoked' "global-template/router.md"
+    grep -Fq 'Memory load' "global-template/router.md"
 }
 
 assert_invalid_receipt() {

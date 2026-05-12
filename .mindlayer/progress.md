@@ -13,11 +13,11 @@ status: active
 source: manual
 
 ### Summary
-V4 Phase 0 boot-weight reduction is in progress. Track A compresses the instruction-only boot path before the V4 runtime exists: per-turn core/modules split, summary-only boot index, and compact progress/backlog files.
+V4 Phase 0 boot-weight reduction shipped. Track A compressed instruction-only boot by splitting per-turn modules, loading a summary-only boot index, and trimming progress/backlog to current state.
 
 ### Details
-- Completed in Phase 0 so far: boot receipt fixture harness, per-turn core/module split, and summary-only boot index.
-- Next: compress backlog to active V4 items, save Phase 0 architecture decision, verify boot word count, then commit wrap.
+- Shipped: boot receipt fixture harness, per-turn core/module split, summary-only boot index, current-only progress, active-only backlog, archived V1/V2/V3 history, and Phase 0 architecture decision.
+- Next: V4 command runner foundation with read-only commands first (`ml boot`, `ml load`, `ml status`, `ml diff`, `ml session`).
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.

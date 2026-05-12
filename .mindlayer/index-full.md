@@ -164,23 +164,23 @@
   section: Future Roadmap
   scope: project
   type: backlog
-  tags: [roadmap]
-  summary: V2 complete. V3 phases 1–4 complete as markdown-first, agent-executed behavior. V4 command runner foundation is next. See ROADMAP.md for full vision.
+  tags: [v4, command-runner, script, deferred]
+  summary: Active V4 command runner foundation work plus deferred items. See ROADMAP.md for full versioned vision.
   importance: medium
   status: active
-  last_updated: 2026-05-07
+  last_updated: 2026-05-12
 
 - id: ml-20260505-006
-  title: Current Phase — V3 Memory Quality + Smarter Retrieval
+  title: Current Phase — V4 Phase 0 Boot Weight Reduction
   file: progress.md
   section: Current Phase
   scope: project
   type: progress
-  tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
-  summary: V3 phase 4 complete as agent-executed ranked-load contract. Programmatic command runner/ranked loader moved to V4 foundation. 10 test suites, 243 checks passing.
+  tags: [v4, phase-0, boot-weight, compression]
+  summary: V4 Phase 0 boot compression shipped; V4 command runner foundation is next.
   importance: high
   status: active
-  last_updated: 2026-05-07
+  last_updated: 2026-05-12
 
 - id: ml-20260505-003
   title: MindLayer Product Roadmap
@@ -433,3 +433,111 @@
   importance: high
   status: active
   last_updated: 2026-05-11
+
+- id: ml-20260512-001
+  title: V4 Phase 0 Boot Compression Architecture
+  file: decisions.md
+  section: V4 Phase 0 Boot Compression Architecture
+  scope: project
+  type: decision
+  tags: [v4, boot, compression, per-turn, index, progress, backlog]
+  summary: Per-turn split, summary-only boot index, and progress/backlog history archival reduce L0 boot weight. Track B runtime remains required for the 1,200-token goal.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
+
+- id: ml-index-full-20260512-001
+  title: Full Project Memory Index
+  file: index-full.md
+  section: Project Memory Index
+  scope: project
+  type: context
+  tags: [index, ml-load, boot, retrieval]
+  summary: Full project memory metadata catalog. Boot reads summary index.md; `ml load` reads index-full.md when full metadata is needed.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
+
+- id: ml-per-turn-20260512-load-announce
+  title: Per-Turn Load Announcement Module
+  file: global-template/memory-system/per-turn/load-announce.md
+  section: Load Announcement Module
+  scope: project
+  type: context
+  tags: [per-turn, module, load-announcement]
+  summary: Lazy per-turn contract for visible file-load announcements with non-empty reasons.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
+
+- id: ml-per-turn-20260512-memory-candidate
+  title: Per-Turn Memory Candidate Module
+  file: global-template/memory-system/per-turn/memory-candidate.md
+  section: Memory Candidate Module
+  scope: project
+  type: context
+  tags: [per-turn, module, memory-candidate]
+  summary: Lazy per-turn contract for surfacing durable memory candidates and approval prompts.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
+
+- id: ml-per-turn-20260512-retrieval
+  title: Per-Turn Retrieval Module
+  file: global-template/memory-system/per-turn/retrieval.md
+  section: Retrieval Suggestion Module
+  scope: project
+  type: context
+  tags: [per-turn, module, retrieval]
+  summary: Lazy per-turn contract for suggesting relevant unloaded memory from index matches.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
+
+- id: ml-per-turn-20260512-lateral-intent
+  title: Per-Turn Lateral Intent Module
+  file: global-template/memory-system/per-turn/lateral-intent.md
+  section: Lateral Intent Module
+  scope: project
+  type: context
+  tags: [per-turn, module, lateral-intent]
+  summary: Lazy per-turn contract for out-of-plan backlog or roadmap nudges.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
+
+- id: ml-per-turn-20260512-session-warning
+  title: Per-Turn Session Warning Module
+  file: global-template/memory-system/per-turn/session-warning.md
+  section: Session Warning Module
+  scope: project
+  type: context
+  tags: [per-turn, module, session-warning]
+  summary: Lazy per-turn contract for heavy or critical context warnings.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
+
+- id: ml-per-turn-20260512-pre-push
+  title: Per-Turn Pre-Push Module
+  file: global-template/memory-system/per-turn/pre-push.md
+  section: Pre-Push Module
+  scope: project
+  type: context
+  tags: [per-turn, module, pre-push]
+  summary: Lazy per-turn contract for pre-push test confirmation.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
+
+- id: ml-per-turn-20260512-post-write
+  title: Per-Turn Post-Write Module
+  file: global-template/memory-system/per-turn/post-write.md
+  section: Post-Write Size Module
+  scope: project
+  type: context
+  tags: [per-turn, module, post-write, size]
+  summary: Lazy per-turn contract for checking memory file size after approved writes.
+  importance: high
+  status: active
+  last_updated: 2026-05-12
