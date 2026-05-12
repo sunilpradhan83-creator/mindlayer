@@ -197,3 +197,28 @@ MindLayer V1 uses markdown files, global and project memory layers, thin tool ad
 - README/docs are human documentation, not default AI memory input.
 - Installer is non-destructive: prefer symlink to global memory, pointer fallback if needed, never overwrite user files, fail fast on required write errors.
 - `ml init` skips scaffold-only files and `local.md` by default. V1 intentionally excluded archive/cleanup.
+
+## Completed Progress History — V1/V2/V3
+id: ml-progress-archive-v1v2v3
+created: 2026-05-12
+updated: 2026-05-12
+scope: project
+type: progress
+tags: [v1, v2, v3, dogfood, adapters, history]
+confidence: high
+status: archived
+source: manual
+### Summary
+Completed phase history moved out of `progress.md` during V4 Phase 0 boot compression.
+### Details
+- V1 shipped installer, prompt commands, thin adapters, boot/continuity contracts.
+- V2 shipped proactive behavior, archive mode, `ml session`, private/session/cache/tmp directories, Token Burned block, and goal hierarchy.
+- V3 phase 1 shipped memory-system folder split, dynamic Next Step queue, unified router, and per-file health scoring.
+- V3 phase 2 shipped per-turn behavioral contracts, command spec restructuring, `ml onboard`, and memory diff.
+- V3 phase 3 shipped post-write size suggestions, status cleanup suggestions, global-template sync checks, and autosummarization tests.
+- V3 phase 4 shipped `ml load` as primary command, deterministic ranked-load contract, archive handling, and test-load.sh.
+- Dogfood refactor replaced `dogfood-codex-boot.sh` with `dogfood-boot.sh` and `dogfood-live.sh`.
+- Dogfood fix review addressed validation false negatives, source-boundary checks, continuity skipping, and memory write hash snapshots.
+- Adapter freeze made adapters delimiter-free whole-file canonical templates with adapter lock hashes and boot-time guard behavior.
+- Strict Token Burned contract requires every host agent turn to include last-turn/session estimates and nonblank Next Step.
+- Adapter consolidation froze all tool adapters, added auto-detection, fixed detection bugs, and removed marked-block updates.

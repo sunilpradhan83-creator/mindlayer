@@ -4,34 +4,20 @@
 
 id: ml-20260505-006
 created: 2026-05-05
-updated: 2026-05-11
+updated: 2026-05-12
 scope: project
 type: progress
-tags: [v3, memory-quality, retrieval, per-turn, contracts, commands, onboard]
+tags: [v4, phase-0, boot-weight, compression]
 confidence: high
 status: active
 source: manual
 
 ### Summary
-V3 phase 4 complete as agent-executed ranked-load contract. Adapter freeze + boot-time guard contract shipped. Strict Token Burned estimates now required every agent turn. Programmatic command runner moved to V4 foundation. 10 test suites passing.
+V4 Phase 0 boot-weight reduction is in progress. Track A compresses the instruction-only boot path before the V4 runtime exists: per-turn core/modules split, summary-only boot index, and compact progress/backlog files.
 
 ### Details
-- V1 complete: installer, prompt commands, thin adapters, boot/continuity contracts.
-- V2 complete: proactive behavior, archive mode, ml session, subdirectories (private/sessions/cache/tmp), Token Burned per-turn block, goal hierarchy.
-- V3 phase 1 complete: memory-system/ folder split. Dynamic Next Step queue. Unified router system. Per-file health scoring in ml status.
-- V3 phase 2 (partial): per-turn behavioral contracts shipped — load announcement contract, memory candidate scan checklist, index-driven retrieval check. `test-per-turn.sh` shipped (61 tests, all passing). Router.md simplified — announcement format owned by per-turn.md.
-- V3 phase 2 (session 9): commands restructured into memory-system/commands/ (8 per-command files). prompts/ deleted. Router updated. Routing rules consolidated. boot.md fixed. All renamed m-* → ml *. 94 tests passing.
-- V3 phase 2 (session 10): ml onboard three-phase flow shipped — adapter conflict migration, inline memory extraction, project context population. Boot/router integration complete (step 10, precise trigger condition). test-onboard.sh shipped (25 tests, all passing). tools/test.sh now runs 7 suites.
-- V3 phase 2 (session 11): memory diff shipped — surfaces new/updated/archived entries since last session at boot and ml status. diff.md spec in memory-system/commands/ (live + global-template). Boot step 11 added. Router, status.md, commands/index.md updated. test-diff.sh shipped (22 tests, all passing). tools/test.sh now runs 8 suites, 213 checks.
-- V3 phase 3 (session 12): auto-summarization suggestions shipped — post-write size checks in per-turn.md, detailed cleanup suggestions in status.md, live/global-template sync, test-autosummarize.sh added (16 checks). tools/test.sh now runs 9 suites, 229 checks.
-- V3 phase 4 (session 13): `ml load` primary command shipped — `ml retrieve` alias retained, command spec renamed to load.md, ranked-load behavior specified, archive handling specified, test-load.sh added (14 contract checks). This is a contract/spec and naming change, not a programmatic ranking engine.
-- V3 phase 4 scope decision (session 15): programmatic ranked loader moved to V4 command-runner foundation. V3 remains markdown-first and agent-executed.
-- Dogfood refactor (session 16, 2026-05-10): `dogfood-codex-boot.sh` replaced with agent-agnostic two-script architecture. `dogfood-boot.sh` (product gate, full isolation, API key) + `dogfood-live.sh` (personal health check, OAuth). Five real multi-turn scenarios verified passing with Claude runner. Root cause of boot receipt failure found and fixed in `install.sh` AGENTS.md template and `global-template/boot.md` — ambiguous boot trigger wording. Test fixtures added in `tools/dogfood-fixtures/`. Open source security hardening roadmap item saved (`ml-20260510-001`).
-- Dogfood fix review (2026-05-11): `tools/dogfood.sh` validation false negatives were addressed. Source-boundary check now fails correctly, single-turn runners skip continuity, and memory write detection snapshots file hashes. `tools/test.sh` passed 243 checks; live dogfood still requires local agent tooling (`claude` or Codex with `bwrap`).
-- Adapter freeze (2026-05-11): `AGENTS.md` and `CLAUDE.md` became delimiter-free canonical files sourced from `global-template/memory-system/templates/`. Installer writes the full canonical files and records `.mindlayer/adapters.lock` hashes. Boot contract now includes an adapter guard: hash check, diff against canonical templates, `ml save` routing for user-added content before restore, silent restore for pure template drift. Lint and install tests enforce exact template matches and lock hashes. `tools/test.sh` passed all 10 suites.
-- Strict Token Burned contract (2026-05-11): `per-turn.md` now requires every host agent and adapter to end every turn with `Last turn` and `Session` approximate word/token estimates plus a nonblank `Next Step`. `test-per-turn.sh` rejects bare Token Burned blocks without estimates. `tools/test.sh` passed all 10 suites.
-- Adapter consolidation (2026-05-11, continued): All adapters (AGENTS.md, CLAUDE.md, copilot-instructions.md, GEMINI.md, Cursor, Windsurf) frozen as whole-file canonical templates in `global-template/memory-system/templates/`. Auto-detection replaces `--tool all` — install writes only adapters for detected tools. Shell operator precedence bug fixed in detection lines. Copilot false-positive on `.github/` fixed. Selective detection test added. `assert_lock_hash_for` switched to awk exact-field match. `update_marked_block` removed. All 10 test suites passing.
-- V4 next: standardized `ml` command runner foundation, then `ml script` command and IDE extensions.
+- Completed in Phase 0 so far: boot receipt fixture harness, per-turn core/module split, and summary-only boot index.
+- Next: compress backlog to active V4 items, save Phase 0 architecture decision, verify boot word count, then commit wrap.
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.
