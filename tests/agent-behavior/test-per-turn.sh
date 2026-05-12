@@ -6,6 +6,7 @@
 #   2. Memory Candidate   — durable content must surface a save proposal
 #   3. Retrieval Suggestion — relevant unloaded index entries must be flagged
 #   4. Token Burned Block — must appear on every turn, never blank
+#   5. Lazy module layout — per-turn core stays small and modules route lazily
 #
 # Deterministic — no live model required. Tests output shape of simulated
 # agent responses against per-turn.md contract definitions.
@@ -19,6 +20,43 @@ CURRENT_SCENARIO=""
 pass() { PASS_COUNT=$((PASS_COUNT + 1)); printf "PASS  %s\n" "$1"; }
 fail() { FAIL_COUNT=$((FAIL_COUNT + 1)); printf "FAIL  %s\n" "$1"; }
 scenario() { CURRENT_SCENARIO="$1"; printf "\n## %s\n" "$CURRENT_SCENARIO"; }
+
+MODULES="load-announce memory-candidate retrieval lateral-intent session-warning pre-push post-write"
+
+# ---------------------------------------------------------------------------
+# Spec layout assertions
+# ---------------------------------------------------------------------------
+
+assert_core_per_turn_present() {
+  grep -Fq "# Per-Turn Core" "$1" &&
+    grep -Fq "Token Burned:" "$1" &&
+    grep -Fq "Next Step:" "$1" &&
+    grep -Fq "memory-system/per-turn/" "$1"
+}
+
+assert_core_per_turn_small() {
+  words=$(wc -w < "$1")
+  [ "$words" -le 220 ]
+}
+
+assert_module_exists() {
+  [ -f "global-template/memory-system/per-turn/$1.md" ]
+}
+
+assert_module_synced() {
+  module="$1"
+  cmp -s "$HOME/.mindlayer/memory-system/per-turn/$module.md" "global-template/memory-system/per-turn/$module.md"
+}
+
+assert_core_synced() {
+  cmp -s "$HOME/.mindlayer/memory-system/per-turn.md" "global-template/memory-system/per-turn.md"
+}
+
+assert_router_has_module_trigger() {
+  module="$1"
+  grep -Fq "memory-system/per-turn/$module.md" "global-template/router.md" &&
+    grep -Fq "memory-system/per-turn/$module.md" "$HOME/.mindlayer/router.md"
+}
 
 # ---------------------------------------------------------------------------
 # Load announcement assertions
@@ -196,6 +234,35 @@ mkdir -p "$SANDBOX"
 
 printf "MindLayer Per-Turn Behavioral Contract\n"
 printf "=======================================\n"
+
+# ===========================================================================
+# SPEC LAYOUT: CORE + CONDITIONAL MODULES
+# ===========================================================================
+
+scenario "spec layout — core plus lazy modules"
+check "core per-turn exists with Token Burned contract" assert_core_per_turn_present "global-template/memory-system/per-turn.md"
+check "core per-turn stays small" assert_core_per_turn_small "global-template/memory-system/per-turn.md"
+check "live core synced with global-template" assert_core_synced "global-template/memory-system/per-turn.md"
+
+for module in $MODULES; do
+  if assert_module_exists "$module" 2>/dev/null; then
+    pass "$CURRENT_SCENARIO: module exists: $module"
+  else
+    fail "$CURRENT_SCENARIO: module exists: $module"
+  fi
+
+  if assert_module_synced "$module" 2>/dev/null; then
+    pass "$CURRENT_SCENARIO: live module synced: $module"
+  else
+    fail "$CURRENT_SCENARIO: live module synced: $module"
+  fi
+
+  if assert_router_has_module_trigger "$module" 2>/dev/null; then
+    pass "$CURRENT_SCENARIO: router trigger present: $module"
+  else
+    fail "$CURRENT_SCENARIO: router trigger present: $module"
+  fi
+done
 
 # ===========================================================================
 # CONTRACT 1: LOAD ANNOUNCEMENT

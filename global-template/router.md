@@ -31,6 +31,13 @@ Load each file at most once per session. Load before acting on the trigger, not 
 | `memory-system/commands/session.md` | ml session invoked or session boundary | ml session, "msession", "how much context", "start fresh", "done", "bye", "wrapping up", "end session", "save session", /compact invoked |
 | `memory-system/commands/onboard.md` | First project-relevant turn when onboard not yet complete | `.mindlayer/index.md` does NOT contain `id: ml-onboard-complete` AND `.mindlayer/project.md` contains only placeholder/scaffold content (no real user-written entries) |
 | `memory-system/commands/diff.md` | Boot step 11, or ml status invoked | Always at boot after sessions/ check; also when `ml status` fires |
+| `memory-system/per-turn/load-announce.md` | Any file load this session | boot receipt rendering, conditional memory load, command spec load, project memory load |
+| `memory-system/per-turn/memory-candidate.md` | Save trigger or durable end-of-turn candidate detected | decision made, risk identified, progress completed, context learned, backlog changed, preference observed, pending candidate |
+| `memory-system/per-turn/retrieval.md` | Relevant unloaded index entry found | index scan match, "relevant memory not loaded", task topic matches unloaded memory |
+| `memory-system/per-turn/lateral-intent.md` | Out-of-plan work introduced | outside current Next Step, outside active backlog, new recurring task, scope change |
+| `memory-system/per-turn/session-warning.md` | Context heavy or critical | 60-80% context, >80% context, heavy session, critical session |
+| `memory-system/per-turn/pre-push.md` | Push surfaced or requested | push, git push, publish changes, Next Step is push |
+| `memory-system/per-turn/post-write.md` | Approved memory write completed | memory write completed, post-write size check, written file near limit, written file over limit |
 | `memory-system/read-write.md` | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
 | `memory-system/schema.md` | Structural question | lifecycle statuses, private/, sessions/, cache/, tmp/, token strategy, folder structure |
 | `preferences/personal.md` | Every session | Non-scaffold content present |

@@ -169,13 +169,13 @@ check "status does not duplicate per-turn size warning" assert_status_no_per_tur
 check "cleanup options mentioned" assert_mentions_cleanup_options "$f"
 
 scenario "specs — thresholds and cleanup order documented"
-check "global-template per-turn thresholds" assert_specs_define_thresholds "global-template/memory-system/per-turn.md"
+check "global-template post-write thresholds" assert_specs_define_thresholds "global-template/memory-system/per-turn/post-write.md"
 check "global-template status thresholds" assert_specs_define_thresholds "global-template/memory-system/commands/status.md"
-check "global-template per-turn cleanup options" assert_specs_prefer_cleanup_order "global-template/memory-system/per-turn.md"
+check "global-template post-write cleanup options" assert_specs_prefer_cleanup_order "global-template/memory-system/per-turn/post-write.md"
 check "global-template status cleanup options" assert_specs_prefer_cleanup_order "global-template/memory-system/commands/status.md"
 
-if [ -f "$HOME/.mindlayer/memory-system/per-turn.md" ]; then
-  check2 "live per-turn synced with global-template" assert_files_match "$HOME/.mindlayer/memory-system/per-turn.md" "global-template/memory-system/per-turn.md"
+if [ -f "$HOME/.mindlayer/memory-system/per-turn/post-write.md" ]; then
+  check2 "live post-write synced with global-template" assert_files_match "$HOME/.mindlayer/memory-system/per-turn/post-write.md" "global-template/memory-system/per-turn/post-write.md"
 fi
 
 if [ -f "$HOME/.mindlayer/memory-system/commands/status.md" ]; then
