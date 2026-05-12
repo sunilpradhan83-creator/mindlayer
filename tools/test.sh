@@ -40,3 +40,10 @@ bash "$ROOT_DIR/tests/agent-behavior/test-load.sh"
 
 printf "\n11. Boot receipt fixture contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-boot-receipt.sh"
+
+printf "\n12. ml CLI contracts\n"
+bash "$ROOT_DIR/tests/ml/test-boot.sh"
+bash "$ROOT_DIR/tests/ml/test-status.sh"
+bash "$ROOT_DIR/tests/ml/test-diff.sh"
+bash "$ROOT_DIR/tests/ml/test-load.sh"
+bash "$ROOT_DIR/tests/ml/test-session.sh"

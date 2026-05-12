@@ -1008,6 +1008,16 @@ install_global() {
   git -C "$GLOBAL_DIR/preferences" config user.name "MindLayer" 2>/dev/null || true
   git -C "$GLOBAL_DIR/preferences" add . 2>/dev/null || true
   git -C "$GLOBAL_DIR/preferences" commit -m "mindlayer: init preferences" --quiet --allow-empty 2>/dev/null || true
+
+  # CLI command runner — managed local runtime files
+  mkdir_p "$GLOBAL_DIR/bin"
+  mkdir_p "$GLOBAL_DIR/lib"
+  if [ -f "$SCRIPT_DIR/src/ml" ] && [ -d "$SCRIPT_DIR/src/commands" ]; then
+    cp "$SCRIPT_DIR/src/ml" "$GLOBAL_DIR/bin/ml"
+    chmod +x "$GLOBAL_DIR/bin/ml"
+    rm -rf "$GLOBAL_DIR/lib/commands"
+    cp -R "$SCRIPT_DIR/src/commands" "$GLOBAL_DIR/lib/commands"
+  fi
 }
 
 install_project_memory() {

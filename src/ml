@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""MindLayer CLI entry point."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+import sys
+
+HERE = Path(__file__).resolve().parent
+LIB = HERE.parent.parent / "lib"
+if (LIB / "commands").is_dir():
+    sys.path.insert(0, str(LIB))
+
+from commands import boot, diff, load, session, status
+from commands._paths import project_root
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="ml", description="MindLayer read-only command runner")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    subparsers.add_parser("boot", help="Print the MindLayer boot receipt")
+    subparsers.add_parser("diff", help="Show memory changes since the last session")
+    subparsers.add_parser("status", help="Show memory health status")
+
+    load_parser = subparsers.add_parser("load", help="Rank and load memory for a query")
+    load_parser.add_argument("query", nargs="+")
+
+    retrieve_parser = subparsers.add_parser("retrieve", help="Alias for load")
+    retrieve_parser.add_argument("query", nargs="+")
+
+    session_parser = subparsers.add_parser("session", help="Estimate session context weight")
+    session_parser.add_argument("--words", type=int, default=0)
+    session_parser.add_argument("--context-window", type=int, default=200_000)
+
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    root = project_root(Path.cwd())
+
+    if args.command == "boot":
+        return boot.run(root)
+    if args.command == "diff":
+        return diff.run(root)
+    if args.command in {"load", "retrieve"}:
+        return load.run(root, " ".join(args.query))
+    if args.command == "status":
+        return status.run(root)
+    if args.command == "session":
+        return session.run(root, words=args.words, context_window=args.context_window)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

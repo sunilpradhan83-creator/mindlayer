@@ -7,17 +7,18 @@ created: 2026-05-05
 updated: 2026-05-12
 scope: project
 type: progress
-tags: [v4, phase-0, boot-weight, compression]
+tags: [v4, phase-1, command-runner, read-only-cli]
 confidence: high
 status: active
-source: manual
+source: implementation
 
 ### Summary
-V4 Phase 0 boot-weight reduction shipped. Track A compressed instruction-only boot by splitting per-turn modules, loading a summary-only boot index, and trimming progress/backlog to current state.
+V4 Phase 1 command runner foundation shipped with read-only `ml` commands for boot, load, status, diff, and session reporting.
 
 ### Details
-- Shipped: boot receipt fixture harness, per-turn core/module split, summary-only boot index, current-only progress, active-only backlog, archived V1/V2/V3 history, and Phase 0 architecture decision.
-- Next: V4 command runner foundation with read-only commands first (`ml boot`, `ml load`, `ml status`, `ml diff`, `ml session`).
+- Shipped: `src/ml` argparse entry point, command modules under `src/commands/`, deterministic index ranking, boot receipt output that avoids `index-full.md`, memory diff summary, health scoring, and session threshold reporting.
+- Shipped: `tests/ml/` CLI contract fixtures, `tools/test.sh` integration, and `install.sh` runtime installation to `~/.mindlayer/bin/ml` with support modules in `~/.mindlayer/lib/commands`.
+- Next: review Phase 1 behavior in dogfood use, then plan guarded write commands (`ml save`, `ml archive`, and session writes) behind explicit approval.
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.
