@@ -222,3 +222,25 @@ Completed phase history moved out of `progress.md` during V4 Phase 0 boot compre
 - Adapter freeze made adapters delimiter-free whole-file canonical templates with adapter lock hashes and boot-time guard behavior.
 - Strict Token Burned contract requires every host agent turn to include last-turn/session estimates and nonblank Next Step.
 - Adapter consolidation froze all tool adapters, added auto-detection, fixed detection bugs, and removed marked-block updates.
+
+## Completed Backlog History — V2/V3
+id: ml-backlog-archive-v2v3
+created: 2026-05-12
+updated: 2026-05-12
+scope: project
+type: backlog
+tags: [v2, v3, completed, history]
+confidence: high
+status: archived
+source: manual
+### Summary
+Completed V2 and V3 backlog phase lists moved out of `backlog.md` during V4 Phase 0 boot compression.
+### Details
+- V2 phase 1 shipped proactive behavior, `ml session`, thinner adapters, and V2 roadmap reframing.
+- V2 phase 2 shipped archive mode, stale criteria, archive/delete checkpoints, and `ml clean`.
+- V2 phase 3 shipped private/session/cache/tmp directories plus lifecycle routing.
+- V2 phase 4 shipped Token Burned per-turn status, Next Step hierarchy, and goal flow.
+- V3 phase 1 shipped memory health scoring, dynamic Next Step queue, and memory-system folder split.
+- V3 phase 2 shipped per-turn behavioral contracts, `ml onboard`, and memory diff.
+- V3 phase 3 shipped size thresholds, post-write size suggestions, status cleanup suggestions, and autosummarization tests.
+- V3 phase 4 shipped `ml load` as primary command and ranked-load/archive behavior contract tests.
