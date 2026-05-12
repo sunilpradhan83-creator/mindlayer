@@ -37,3 +37,6 @@ bash "$ROOT_DIR/tests/agent-behavior/test-autosummarize.sh"
 
 printf "\n10. Ranked load behavioral contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-load.sh"
+
+printf "\n11. Boot receipt fixture contracts\n"
+bash "$ROOT_DIR/tests/agent-behavior/test-boot-receipt.sh"

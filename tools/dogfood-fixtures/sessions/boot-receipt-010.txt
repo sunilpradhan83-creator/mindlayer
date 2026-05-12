@@ -1,0 +1,43 @@
+MindLayer context loaded.
+
+Loaded:
+- ~/.mindlayer/boot.md — boot step 1
+- ~/.mindlayer/router.md — boot step 2
+- .mindlayer/router.md — boot step 3
+- ~/.mindlayer/memory-system/per-turn.md — boot step 4
+- ~/.mindlayer/preferences/personal.md — boot step 5, non-scaffold content present
+- .mindlayer/index.md — boot step 6
+- .mindlayer/project.md — boot step 7
+- ~/.mindlayer/memory-system/commands/onboard.md — boot step 10, project.md is placeholder-only
+
+Skipped:
+- progress.md — not loaded, placeholder-only
+- backlog.md — not loaded, placeholder-only
+- sessions/ — no session file found
+- archive.md, local.md, private/, cache/, tmp/
+
+Missing:
+- project.md contains only scaffold content. No real project identity detected.
+
+Current understanding:
+Project identity is missing — project.md is placeholder-only. MindLayer installed but not yet configured for this project.
+
+Current progress:
+No active phase. Onboard flow will populate project identity on first project-relevant request.
+
+Onboarding:
+pending — ml onboard will run on first project-relevant request.
+
+Context cost:
+Approx. 900 words loaded (~1,170 est. tokens).
+
+Context share (approximate context share by source):
+- Global memory: ~70%
+- Project memory: ~30%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress only.
+
+Ready.
+What would you like to work on?

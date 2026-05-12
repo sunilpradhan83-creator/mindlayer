@@ -1,0 +1,39 @@
+MindLayer context loaded.
+
+Loaded:
+- ~/.mindlayer/boot.md — boot step 1
+- ~/.mindlayer/router.md — boot step 2
+- .mindlayer/router.md — boot step 3
+- ~/.mindlayer/memory-system/per-turn.md — boot step 4
+- ~/.mindlayer/preferences/personal.md — boot step 5, non-scaffold content present
+- .mindlayer/index.md — boot step 6
+- .mindlayer/project.md — boot step 7
+- .mindlayer/progress.md — boot step 8
+- .mindlayer/backlog.md — boot step 8
+
+Skipped:
+- sessions/ — no session file found
+- archive.md, local.md, private/, cache/, tmp/
+
+Missing:
+- Nothing critical
+
+Current understanding:
+Acme is a B2B SaaS invoicing tool for freelancers. Core flows: invoice creation, client management, and payment tracking.
+
+Current progress:
+V1 shipped. V2 active: adding recurring invoices and PDF export. Backlog has 3 open items.
+
+Context cost:
+Approx. 1,850 words loaded (~2,405 est. tokens).
+
+Context share (approximate context share by source):
+- Global memory: ~40%
+- Project memory: ~60%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress only.
+
+Ready.
+What would you like to work on?

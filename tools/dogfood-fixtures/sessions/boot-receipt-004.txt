@@ -1,0 +1,45 @@
+MindLayer context loaded.
+
+Loaded:
+- ~/.mindlayer/boot.md — boot step 1
+- ~/.mindlayer/router.md — boot step 2
+- .mindlayer/router.md — boot step 3
+- ~/.mindlayer/memory-system/per-turn.md — boot step 4
+- ~/.mindlayer/preferences/personal.md — boot step 5, non-scaffold content present
+- .mindlayer/index.md — boot step 6
+- .mindlayer/project.md — boot step 7
+- .mindlayer/progress.md — boot step 8
+- .mindlayer/backlog.md — boot step 8
+- .mindlayer/sessions/2026-05-11.md — boot step 9, ## Next section only
+- ~/.mindlayer/memory-system/commands/diff.md — boot step 11
+
+Skipped:
+- archive.md, local.md, private/, cache/, tmp/
+
+Missing:
+- Nothing critical
+
+Current understanding:
+Acme invoicing SaaS. Core flows: invoice creation, client management, payment tracking.
+
+Current progress:
+V2 active: recurring invoices and PDF export in progress.
+
+Memory changes since last session:
+  New:      2 entries (decisions.md, context.md)
+  Updated:  0 entries
+  Archived: 0 entries
+
+Context cost:
+Approx. 2,300 words loaded (~2,990 est. tokens).
+
+Context share (approximate context share by source):
+- Global memory: ~36%
+- Project memory: ~64%
+- Other sources: 0% (README.md, docs/, and adapters skipped)
+
+Token strategy:
+L0 boot: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress only.
+
+Ready.
+What would you like to work on?
