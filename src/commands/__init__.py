@@ -1,2 +1,2 @@
-"""MindLayer read-only command modules."""
+"""MindLayer command modules."""
 

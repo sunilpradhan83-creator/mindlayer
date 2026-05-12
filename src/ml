@@ -12,12 +12,12 @@ LIB = HERE.parent.parent / "lib"
 if (LIB / "commands").is_dir():
     sys.path.insert(0, str(LIB))
 
-from commands import boot, diff, load, session, status
+from commands import archive, boot, diff, load, save, session, status
 from commands._paths import project_root
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="ml", description="MindLayer read-only command runner")
+    parser = argparse.ArgumentParser(prog="ml", description="MindLayer command runner")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("boot", help="Print the MindLayer boot receipt")
@@ -30,9 +30,36 @@ def build_parser() -> argparse.ArgumentParser:
     retrieve_parser = subparsers.add_parser("retrieve", help="Alias for load")
     retrieve_parser.add_argument("query", nargs="+")
 
-    session_parser = subparsers.add_parser("session", help="Estimate session context weight")
+    session_parser = subparsers.add_parser("session", help="Session context and journal commands")
+    session_sub = session_parser.add_subparsers(dest="session_command")
+    write_parser = session_sub.add_parser("write", help="Write a dated session journal")
+    write_parser.add_argument("--date", default="")
+    write_parser.add_argument("--worked-on", dest="worked_on", action="append", default=[])
+    write_parser.add_argument("--decisions", dest="decisions", action="append", default=[])
+    write_parser.add_argument("--completed", dest="completed", action="append", default=[])
+    write_parser.add_argument("--next", dest="next_steps", action="append", default=[])
+    write_parser.add_argument("--approval", default="")
+    write_parser.add_argument("--approve", action="store_true")
     session_parser.add_argument("--words", type=int, default=0)
     session_parser.add_argument("--context-window", type=int, default=200_000)
+
+    save_parser = subparsers.add_parser("save", help="Write a memory entry to a file")
+    save_parser.add_argument("--file", required=True)
+    save_parser.add_argument("--section", required=True)
+    save_parser.add_argument("--content", required=True)
+    save_parser.add_argument("--action", choices=["create", "update"], default="create")
+    save_parser.add_argument("--index-entry", dest="index_entry", default="")
+    save_parser.add_argument("--scope", choices=["project", "global"], default="project")
+    save_parser.add_argument("--approval", default="")
+    save_parser.add_argument("--approve", action="store_true")
+
+    archive_parser = subparsers.add_parser("archive", help="Archive or delete a memory section")
+    archive_parser.add_argument("--file", required=True)
+    archive_parser.add_argument("--section", required=True)
+    archive_parser.add_argument("--action", choices=["archive", "delete"], default="archive")
+    archive_parser.add_argument("--scope", choices=["project", "global"], default="project")
+    archive_parser.add_argument("--approval", default="")
+    archive_parser.add_argument("--approve-all", action="store_true")
 
     return parser
 
@@ -50,7 +77,40 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "status":
         return status.run(root)
     if args.command == "session":
+        if getattr(args, "session_command", None) == "write":
+            return session.write(
+                root,
+                session_date=args.date,
+                worked_on=args.worked_on or None,
+                decisions=args.decisions or None,
+                completed=args.completed or None,
+                next_steps=args.next_steps or None,
+                approval=args.approval,
+                approve=args.approve,
+            )
         return session.run(root, words=args.words, context_window=args.context_window)
+    if args.command == "save":
+        return save.run(
+            root,
+            file=args.file,
+            section=args.section,
+            content=args.content,
+            action=args.action,
+            index_entry=args.index_entry,
+            scope=args.scope,
+            approval=args.approval,
+            approve=args.approve,
+        )
+    if args.command == "archive":
+        return archive.run(
+            root,
+            file=args.file,
+            section=args.section,
+            action=args.action,
+            scope=args.scope,
+            approval=args.approval,
+            approve_all=args.approve_all,
+        )
     return 2
 
 

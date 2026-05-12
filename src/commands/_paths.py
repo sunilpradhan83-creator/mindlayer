@@ -37,3 +37,26 @@ def read_text(path: Path) -> str:
 def count_words(text: str) -> int:
     return len(text.split())
 
+
+PROTECTED_FILES = frozenset({
+    "index.md",
+    "index-full.md",
+    "archive.md",
+    "boot.md",
+    "router.md",
+    "local.md",
+})
+
+
+def is_protected(path: Path) -> bool:
+    if path.name in PROTECTED_FILES:
+        return True
+    parts = path.parts
+    return any(part == "memory-system" for part in parts)
+
+
+def memory_dir_for(root: Path, scope: str = "project") -> Path:
+    if scope == "global":
+        return Path.home() / ".mindlayer"
+    return root / ".mindlayer"
+
