@@ -8,6 +8,10 @@
 .cursor/rules/mindlayer.md
 .windsurf/rules/mindlayer.md
 
+# Python generated files
+__pycache__/
+*.py[cod]
+
 # Local Codex marker
 .codex
 .mindlayer/memory.md
