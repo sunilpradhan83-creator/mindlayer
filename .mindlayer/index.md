@@ -22,6 +22,7 @@ Boot summary. Format: id | title | file | summary. Full metadata: `index-full.md
 - ml-20260510-003 | Boot Trigger Root Cause | decisions.md | Non-interactive agents need hard boot wording.
 - ml-20260510-004 | Security Hardening | decisions.md | Security at distribution/governance layer.
 - ml-20260507-004 | Agent-Agnostic Principle | decisions.md | Product rules stay tool-neutral.
+- ml-20260513-001 | Command Output Standard | decisions.md | `ml boot` and command receipts stay identical across agents.
 - ml-20260507-002 | Skill Approval Gate | decisions.md | Writing skills require approval.
 - ml-20260507-001 | SCRIPT Philosophy | context.md | Signal, Cut, Refine, Implement, Prove, Transfer.
 - ml-20260508-001 | Instruction Ceiling | risks.md | Need deterministic runtime.

@@ -338,6 +338,18 @@
   status: active
   last_updated: 2026-05-07
 
+- id: ml-20260513-001
+  title: Agent-Agnostic Command Output Standard
+  file: decisions.md
+  section: Agent-Agnostic Command Output Standard
+  scope: project
+  type: decision
+  tags: [agent-agnostic, commands, boot, output, runtime]
+  summary: MindLayer command outputs, especially `ml boot`, must be standardized across Claude, Codex, Cursor, Copilot, and future agents.
+  importance: high
+  status: active
+  last_updated: 2026-05-13
+
 - id: ml-20260507-002
   title: Skill Approval Gate
   file: decisions.md

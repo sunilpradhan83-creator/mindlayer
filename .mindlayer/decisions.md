@@ -177,6 +177,31 @@ MindLayer is designed to work across any LLM tool — Claude, Codex, Cursor, Cop
 - Product rules, mitigations, and roadmap items must be agent-agnostic; tool-specific content belongs only in thin adapters.
 - Correct accidental tool lock-in in memory, decisions, risks, or roadmap immediately.
 
+## Agent-Agnostic Command Output Standard
+id: ml-20260513-001
+created: 2026-05-13
+updated: 2026-05-13
+scope: project
+type: decision
+tags: [agent-agnostic, commands, boot, output, runtime]
+confidence: high
+status: active
+source: dogfood
+### Summary
+MindLayer command outputs, especially `ml boot`, must be standardized across Claude, Codex, Cursor, Copilot, and future agents.
+### Details
+- The local `ml` runtime is the authoritative output surface for command receipts and schemas.
+- Agents should relay or execute runtime output without transforming it into tool-specific narration, repo analysis, skill initialization, or adapter rewrites.
+- `ml boot` must emit the same receipt schema everywhere and must not trigger `init` skills or writes to tool adapters.
+- Tool-specific adapters remain bootstraps only; product facts and command behavior belong in `.mindlayer/`, shipped templates, command specs, or runtime code.
+### When to use
+Use when changing command output schemas, boot behavior, dogfood runners, adapter behavior, or cross-agent UX.
+### Related
+ml-20260507-004
+ml-20260511-002
+ml-20260507-002
+ml-20260508-001
+
 
 ## ML-999 Backlog Evaluation Decisions
 id: ml-20260507-005
