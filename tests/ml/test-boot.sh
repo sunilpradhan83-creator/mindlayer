@@ -37,6 +37,7 @@ cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
 mkdir -p "$SANDBOX/home/.mindlayer/memory-system" "$SANDBOX/project/.mindlayer"
+mkdir -p "$SANDBOX/home/.mindlayer/preferences"
 cat > "$SANDBOX/home/.mindlayer/boot.md" <<'EOF'
 # Boot
 EOF
@@ -45,6 +46,19 @@ cat > "$SANDBOX/home/.mindlayer/router.md" <<'EOF'
 EOF
 cat > "$SANDBOX/home/.mindlayer/memory-system/per-turn.md" <<'EOF'
 # Per Turn
+EOF
+cat > "$SANDBOX/home/.mindlayer/preferences/personal.md" <<'EOF'
+# Global Preferences
+
+## Starter Preferences
+
+### Summary
+Use MindLayer memory cautiously.
+
+## Plan-First Approval Before Implementation
+
+### Summary
+Show the plan and wait for explicit approval before implementing any non-trivial task.
 EOF
 cat > "$SANDBOX/project/.mindlayer/index.md" <<'EOF'
 # Project Memory Index
@@ -94,7 +108,7 @@ check "Context cost present" assert_contains "$output" "Context cost:"
 check "Context share present" assert_contains "$output" "Context share"
 check "Ready present" assert_contains "$output" "Ready."
 check "index-full not loaded" assert_not_contains_loaded_index_full "$output"
+check "substantive personal preferences loaded" assert_contains "$output" '`~/.mindlayer/preferences/personal.md`'
 
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]
-

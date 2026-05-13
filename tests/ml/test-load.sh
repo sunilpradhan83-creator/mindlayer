@@ -20,7 +20,7 @@ assert_top_score_at_least_50() {
 cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
-mkdir -p "$SANDBOX/project/.mindlayer"
+mkdir -p "$SANDBOX/project/.mindlayer" "$SANDBOX/project/global-template/memory-system/per-turn"
 cat > "$SANDBOX/project/.mindlayer/index-full.md" <<'EOF'
 # Full Index
 
@@ -46,6 +46,17 @@ cat > "$SANDBOX/project/.mindlayer/index-full.md" <<'EOF'
   tags: [command, runner]
   importance: low
   summary: Archived command runner idea.
+- id: ml-post-write-module
+  title: Per-Turn Post-Write Module
+  file: global-template/memory-system/per-turn/post-write.md
+  section: Post-Write Size Module
+  scope: project
+  type: context
+  status: active
+  last_updated: 2026-05-12
+  tags: [post-write, module]
+  importance: high
+  summary: Lazy per-turn contract for checking memory file size after approved writes.
 EOF
 cat > "$SANDBOX/project/.mindlayer/index.md" <<'EOF'
 # Project Memory Index
@@ -66,6 +77,11 @@ cat > "$SANDBOX/project/.mindlayer/archive.md" <<'EOF'
 ### Summary
 Archived command runner idea.
 EOF
+cat > "$SANDBOX/project/global-template/memory-system/per-turn/post-write.md" <<'EOF'
+# Post-Write Size Module
+
+Load after an approved memory write to a committed MindLayer memory file.
+EOF
 
 printf "MindLayer ml load contract\n"
 printf "==========================\n"
@@ -82,6 +98,16 @@ if assert_contains "$output" "1. Command Runner (ml-command-runner)"; then pass 
 if assert_top_score_at_least_50 "$output"; then pass "$CURRENT_SCENARIO: top score at least 50"; else fail "$CURRENT_SCENARIO: top score at least 50"; fi
 if ! grep -Fq "Old Command Runner (ml-old-command-runner)" "$output"; then pass "$CURRENT_SCENARIO: archived excluded by default"; else fail "$CURRENT_SCENARIO: archived excluded by default"; fi
 
+scenario "repo-relative source path"
+output="$SANDBOX/load-template.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "post write module" > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$output" "Per-Turn Post-Write Module"; then pass "$CURRENT_SCENARIO: module ranked"; else fail "$CURRENT_SCENARIO: module ranked"; fi
+if assert_contains "$output" "$SANDBOX/project/global-template/memory-system/per-turn/post-write.md"; then pass "$CURRENT_SCENARIO: source resolves outside .mindlayer"; else fail "$CURRENT_SCENARIO: source resolves outside .mindlayer"; fi
+if ! grep -Fq "Section not found." "$output"; then pass "$CURRENT_SCENARIO: section found"; else fail "$CURRENT_SCENARIO: section found"; fi
+
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]
-

@@ -38,8 +38,13 @@ def _progress_summary(path: Path) -> str:
 
 
 def _personal_is_substantive(text: str) -> bool:
+    if not text.strip():
+        return False
+    headings = [line.strip() for line in text.splitlines() if line.startswith("## ")]
+    if any(heading != "## Starter Preferences" for heading in headings):
+        return True
     starter_markers = ("Starter Preferences", "Use MindLayer memory cautiously")
-    return bool(text.strip()) and not all(marker in text for marker in starter_markers)
+    return not all(marker in text for marker in starter_markers)
 
 
 def _latest_next(project_root: Path) -> str:
@@ -148,4 +153,3 @@ def run(project_root: Path) -> int:
     print("\nReady.")
     print("What would you like to work on?")
     return 0
-
