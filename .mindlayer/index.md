@@ -11,7 +11,7 @@ Boot summary. Format: id | title | file | summary. Full metadata: `index-full.md
 - ml-20260505-004 | Goal Hierarchy | context.md | Identity -> roadmap -> backlog -> progress -> sessions -> Next Step.
 - ml-20260430-006 | Trust Risks | risks.md | Token, routing, installer, onboarding, adapter risks.
 - ml-20260430-005 | Future Roadmap | backlog.md | Active V4 foundation work.
-- ml-20260505-006 | Current Phase | progress.md | Phase 0 shipped; command runner next.
+- ml-20260505-006 | Current Phase | progress.md | Phase 2 guarded writes shipped; dogfood polish before SCRIPT/runtime expansion.
 - ml-20260505-003 | Product Roadmap | roadmap.md | V4 SCRIPT runtime and IDE path.
 - ml-20260506-002 | Project Router | router.md | Project conditional load triggers.
 - ml-20260507-007 | Template Sync Rule | decisions.md | Keep live and global-template synced.

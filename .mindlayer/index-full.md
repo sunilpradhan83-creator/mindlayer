@@ -171,13 +171,13 @@
   last_updated: 2026-05-12
 
 - id: ml-20260505-006
-  title: Current Phase — V4 Phase 0 Boot Weight Reduction
+  title: Current Phase — V4 Phase 2 Guarded Writes
   file: progress.md
   section: Current Phase
   scope: project
   type: progress
-  tags: [v4, phase-0, boot-weight, compression]
-  summary: V4 Phase 0 boot compression shipped; V4 command runner foundation is next.
+  tags: [v4, phase-2, command-runner, guarded-writes, dogfood]
+  summary: V4 Phase 2 guarded write commands shipped; dogfood polish before SCRIPT/runtime expansion.
   importance: high
   status: active
   last_updated: 2026-05-12

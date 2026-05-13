@@ -78,6 +78,42 @@ def _archived_count(path: Path) -> int:
     return len(re.findall(r"^id:\s*\S+", read_text(path), re.MULTILINE))
 
 
+def _first_block_after_heading(text: str, heading: str) -> str:
+    lines = text.splitlines()
+    for idx, line in enumerate(lines):
+        if line.strip() != heading:
+            continue
+        block: list[str] = []
+        for candidate in lines[idx + 1 :]:
+            stripped = candidate.strip()
+            if stripped.startswith("#"):
+                break
+            if stripped:
+                block.append(stripped)
+            elif block:
+                break
+        return " ".join(block)
+    return ""
+
+
+def _next_detail(text: str) -> str:
+    for raw in text.splitlines():
+        line = raw.strip()
+        if line.startswith("- Next:"):
+            return line.removeprefix("- Next:").strip()
+    return ""
+
+
+def _continuity(memory_dir: Path) -> tuple[str, str]:
+    progress = memory_dir / "progress.md"
+    if not progress.is_file():
+        return "not recorded", "record current progress"
+    text = read_text(progress)
+    current = _first_block_after_heading(text, "### Summary") or "not recorded"
+    next_action = _next_detail(text) or "review current progress"
+    return current, next_action
+
+
 def run(project_root: Path) -> int:
     memory_dir = project_root / ".mindlayer"
     files = sorted(
@@ -114,11 +150,12 @@ def run(project_root: Path) -> int:
     print(f"Archived entries: {_archived_count(memory_dir / 'archive.md')} in archive.md (global: 0, project: {_archived_count(memory_dir / 'archive.md')})")
     print("Conflicts:")
     print("- None detected")
+    current_progress, next_action = _continuity(memory_dir)
     print("Continuity:")
     print("- pending approvals: None")
     print("- blockers: None")
-    print("- unfinished work: command runner foundation")
-    print("- next useful action: run verification")
+    print(f"- current progress: {current_progress}")
+    print(f"- next useful action: {next_action}")
     print("Context:")
     print("- files loaded: .mindlayer/*.md health metadata")
     print("- files skipped: archive.md, local.md")
@@ -134,4 +171,3 @@ def run(project_root: Path) -> int:
     print("Approval needed:")
     print("None")
     return 0
-
