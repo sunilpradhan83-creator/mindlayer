@@ -93,5 +93,3 @@ L0 boot: boot.md, router.md, per-turn.md, indexes, project identity, and latest 
 Ready.
 What would you like to work on?
 ```
-
-`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
