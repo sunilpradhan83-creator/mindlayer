@@ -62,6 +62,36 @@ def build_parser() -> argparse.ArgumentParser:
     script_sub = script_parser.add_subparsers(dest="script_command", required=True)
     script_sub.add_parser("status", help="Show SCRIPT lifecycle status")
 
+    sig_parser = script_sub.add_parser("signal", help="Record a new signal")
+    sig_parser.add_argument("--title", required=True)
+    sig_parser.add_argument("--body", required=True)
+    sig_parser.add_argument("--tier", choices=["auto", "review"], default="auto")
+
+    cut_parser = script_sub.add_parser("cut", help="Route a signal to backlog or roadmap")
+    cut_parser.add_argument("--signal", required=True, dest="sig_id")
+    cut_parser.add_argument("--route", choices=["backlog", "roadmap"], required=True)
+    cut_parser.add_argument("--reason", default="")
+    cut_parser.add_argument("--approve", action="store_true")
+
+    refine_parser = script_sub.add_parser("refine", help="Draft or approve a story")
+    refine_parser.add_argument("--backlog-item", dest="backlog_item")
+    refine_parser.add_argument("--story-title", dest="story_title")
+    refine_parser.add_argument("--approve", action="store_true")
+    refine_parser.add_argument("--check", dest="check_path", metavar="FILE")
+
+    story_parser = script_sub.add_parser("story", help="Transition a story status")
+    story_ex = story_parser.add_mutually_exclusive_group(required=True)
+    story_ex.add_argument("--start", dest="story_id", metavar="ID")
+    story_ex.add_argument("--done", dest="story_done_id", metavar="ID")
+    story_parser.add_argument("--test-cmd", dest="test_cmd", default="")
+
+    transfer_parser = script_sub.add_parser("transfer", help="Archive done stories and optionally write a learning")
+    transfer_parser.add_argument("--backlog-item", required=True, dest="backlog_item")
+    transfer_parser.add_argument("--approve", action="store_true")
+    transfer_parser.add_argument("--learn", default="")
+    transfer_parser.add_argument("--learn-target", choices=["decisions", "project", "risks"], default="decisions", dest="learn_target")
+    transfer_parser.add_argument("--approve-learn", action="store_true", dest="approve_learn")
+
     return parser
 
 
@@ -132,6 +162,32 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "script":
         if args.script_command == "status":
             return script.status(root)
+        if args.script_command == "signal":
+            return script.signal(root, title=args.title, body=args.body, tier=args.tier)
+        if args.script_command == "cut":
+            return script.cut(root, sig_id=args.sig_id, route=args.route, reason=args.reason, approve=args.approve)
+        if args.script_command == "refine":
+            check_path = Path(args.check_path) if args.check_path else None
+            return script.refine(
+                root,
+                backlog_item=args.backlog_item or "",
+                story_title=args.story_title or "",
+                approve=args.approve,
+                check_path=check_path,
+            )
+        if args.script_command == "story":
+            story_id = args.story_id or args.story_done_id
+            action = "start" if args.story_id else "done"
+            return script.story_transition(root, story_id=story_id, action=action, test_cmd=args.test_cmd)
+        if args.script_command == "transfer":
+            return script.transfer(
+                root,
+                backlog_item=args.backlog_item,
+                approve=args.approve,
+                learn=args.learn,
+                learn_target=args.learn_target,
+                approve_learn=args.approve_learn,
+            )
         return 2
     return 2
 

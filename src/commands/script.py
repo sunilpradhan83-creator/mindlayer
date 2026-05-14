@@ -1,12 +1,42 @@
-"""SCRIPT lifecycle command scaffold."""
+"""SCRIPT lifecycle command."""
 
 from __future__ import annotations
 
-from pathlib import Path
 import re
+import subprocess
+from datetime import date
+from pathlib import Path
 
 from ._paths import pipeline_dir, read_text
 
+
+# ---------------------------------------------------------------------------
+# Shared helpers
+# ---------------------------------------------------------------------------
+
+def _today() -> str:
+    return date.today().strftime("%Y-%m-%d")
+
+
+def _git_head_sha() -> str:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            capture_output=True, text=True, timeout=5,
+        )
+        sha = result.stdout.strip()
+        return sha if sha else "unknown"
+    except Exception:
+        return "unknown"
+
+
+def _ensure_dir(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+
+
+# ---------------------------------------------------------------------------
+# status
+# ---------------------------------------------------------------------------
 
 def _count_signal_entries(path: Path) -> int:
     if not path.is_file():
@@ -53,4 +83,469 @@ def status(project_root: Path) -> int:
     print(f"- Roadmap: {'present' if roadmap_exists else 'missing'}")
     print("Approval needed:")
     print("None")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# signal
+# ---------------------------------------------------------------------------
+
+def _next_signal_id(signals_path: Path) -> str:
+    today = _today().replace("-", "")
+    if not signals_path.is_file():
+        return f"ml-signal-{today}-001"
+    text = read_text(signals_path)
+    existing = re.findall(rf"^id:\s*(ml-signal-{today}-\d+)", text, re.MULTILINE)
+    if not existing:
+        return f"ml-signal-{today}-001"
+    nums = [int(e.split("-")[-1]) for e in existing]
+    return f"ml-signal-{today}-{max(nums) + 1:03d}"
+
+
+def signal(project_root: Path, title: str, body: str, tier: str = "auto") -> int:
+    memory_dir = project_root / ".mindlayer"
+    pd = pipeline_dir(memory_dir)
+    _ensure_dir(pd)
+
+    signals_path = pd / "signals.md"
+    sig_id = _next_signal_id(signals_path)
+
+    entry = (
+        f"\n## {title}\n\n"
+        f"id: {sig_id}\n"
+        f"created: {_today()}\n"
+        f"tier: {tier}\n"
+        f"status: pending\n\n"
+        f"{body}\n"
+    )
+
+    if not signals_path.is_file():
+        signals_path.write_text(f"# Signals\n{entry}", encoding="utf-8")
+    else:
+        with signals_path.open("a", encoding="utf-8") as f:
+            f.write(entry)
+
+    print(f"Signal recorded: {sig_id} (tier: {tier})")
+    if tier == "review":
+        print("Approval needed: human must confirm routing")
+    else:
+        print("Approval needed: None")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# cut
+# ---------------------------------------------------------------------------
+
+def _find_signal_block(signals_path: Path, sig_id: str) -> tuple[str, str] | None:
+    """Return (title, body) for a pending signal, or None if not found."""
+    if not signals_path.is_file():
+        return None
+    text = read_text(signals_path)
+    # Each block starts at "## title" and runs until next "## " or EOF
+    pattern = re.compile(
+        r"^##\s+(.+?)\n(.*?)(?=^##\s|\Z)", re.MULTILINE | re.DOTALL
+    )
+    for m in pattern.finditer(text):
+        block = m.group(0)
+        if f"id: {sig_id}" in block:
+            title = m.group(1).strip()
+            return title, block
+    return None
+
+
+def _update_signal_status(signals_path: Path, sig_id: str, new_status: str) -> None:
+    text = read_text(signals_path)
+
+    def replace_in_block(m: re.Match) -> str:
+        block = m.group(0)
+        if f"id: {sig_id}" not in block:
+            return block
+        return re.sub(r"^status: \S+", f"status: {new_status}", block, flags=re.MULTILINE)
+
+    updated = re.sub(
+        r"^##\s+.+?\n.*?(?=^##\s|\Z)",
+        replace_in_block,
+        text,
+        flags=re.MULTILINE | re.DOTALL,
+    )
+    signals_path.write_text(updated, encoding="utf-8")
+
+
+def cut(
+    project_root: Path,
+    sig_id: str,
+    route: str,
+    reason: str = "",
+    approve: bool = False,
+) -> int:
+    memory_dir = project_root / ".mindlayer"
+    pd = pipeline_dir(memory_dir)
+    signals_path = pd / "signals.md"
+
+    result = _find_signal_block(signals_path, sig_id)
+    if result is None:
+        print(f"Error: signal '{sig_id}' not found in signals.md", flush=True)
+        return 1
+    title, _block = result
+
+    target_file = "roadmap.md" if route == "roadmap" else "backlog.md"
+
+    if not approve:
+        print(f"Proposed: route signal '{sig_id}' ({title}) → {route}")
+        if reason:
+            print(f"Reason: {reason}")
+        print("Approval needed: pass --approve to confirm")
+        return 0
+
+    # Approved: update signal status and append to target file
+    _update_signal_status(signals_path, sig_id, "cut-approved")
+
+    target_path = pd / target_file
+    _ensure_dir(pd)
+    line = f"\n- [{sig_id}] {title}"
+    if reason:
+        line += f" — {reason}"
+    line += "\n"
+    with target_path.open("a", encoding="utf-8") as f:
+        f.write(line)
+
+    print(f"Cut approved: {sig_id} routed to {route}")
+    print("Approval needed: None")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# refine
+# ---------------------------------------------------------------------------
+
+_REQUIRED_FIELDS = ("id", "title", "status", "created", "parent")
+
+
+def _parse_frontmatter(text: str) -> dict[str, str]:
+    """Extract YAML-ish frontmatter fields from --- ... --- block."""
+    m = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
+    if not m:
+        return {}
+    fields: dict[str, str] = {}
+    for line in m.group(1).splitlines():
+        if ":" in line:
+            key, _, val = line.partition(":")
+            fields[key.strip()] = val.strip()
+    return fields
+
+
+def _strip_frontmatter(text: str) -> str:
+    m = re.match(r"^---\n.*?\n---\n*", text, re.DOTALL)
+    if m:
+        return text[m.end():]
+    return text
+
+
+def refine_check(story_path: Path) -> int:
+    if not story_path.is_file():
+        print(f"Error: story file not found: {story_path}")
+        return 1
+    text = read_text(story_path)
+    fields = _parse_frontmatter(text)
+    errors = []
+    for field in _REQUIRED_FIELDS:
+        if field not in fields or not fields[field]:
+            errors.append(f"missing field: {field}")
+    body = _strip_frontmatter(text).strip()
+    if not body:
+        errors.append("body is empty — story must contain agent instructions")
+    if errors:
+        for e in errors:
+            print(f"Error: {e}")
+        return 1
+    print("Story valid")
+    return 0
+
+
+def _next_story_id(stories_dir: Path) -> str:
+    if not stories_dir.is_dir():
+        return "ml-story-001"
+    existing = list(stories_dir.glob("ml-story-*.md"))
+    if not existing:
+        return "ml-story-001"
+    nums = []
+    for p in existing:
+        m = re.search(r"ml-story-(\d+)", p.name)
+        if m:
+            nums.append(int(m.group(1)))
+    return f"ml-story-{max(nums) + 1:03d}"
+
+
+def refine(
+    project_root: Path,
+    backlog_item: str,
+    story_title: str,
+    approve: bool = False,
+    check_path: Path | None = None,
+) -> int:
+    if check_path is not None:
+        return refine_check(check_path)
+
+    memory_dir = project_root / ".mindlayer"
+    pd = pipeline_dir(memory_dir)
+    stories_dir = pd / "stories"
+
+    story_id = _next_story_id(stories_dir)
+
+    if not approve:
+        print(f"Draft story: {story_id}")
+        print(f"  title: {story_title}")
+        print(f"  parent: {backlog_item}")
+        print(f"  status: ready")
+        print("Approval needed: pass --approve to confirm story creation")
+        return 0
+
+    _ensure_dir(stories_dir)
+
+    story_content = (
+        f"---\n"
+        f"id: {story_id}\n"
+        f"title: {story_title}\n"
+        f"status: ready\n"
+        f"created: {_today()}\n"
+        f"parent: {backlog_item}\n"
+        f"agent: any\n"
+        f"---\n\n"
+        f"You are implementing: {story_title}\n\n"
+        f"Start by writing failing tests that verify the acceptance criteria.\n"
+        f"Then implement until all tests pass.\n\n"
+        f"Acceptance: all tests pass.\n"
+    )
+
+    story_path = stories_dir / f"{story_id}.md"
+    story_path.write_text(story_content, encoding="utf-8")
+
+    index_path = stories_dir / "index.md"
+    index_row = f"| {story_id} | {story_title} | ready | {_today()} | {backlog_item} |\n"
+    if not index_path.is_file():
+        index_path.write_text(
+            "# Stories Index\n\n"
+            "| id | title | status | created | parent |\n"
+            "| -- | ----- | ------ | ------- | ------ |\n"
+            + index_row,
+            encoding="utf-8",
+        )
+    else:
+        with index_path.open("a", encoding="utf-8") as f:
+            f.write(index_row)
+
+    print(f"Story created: pipeline/stories/{story_id}.md")
+    print(f"  title: {story_title}")
+    print(f"  parent: {backlog_item}")
+    print("Approval needed: None")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# transfer
+# ---------------------------------------------------------------------------
+
+_LEARN_TARGETS = {
+    "decisions": "decisions.md",
+    "project": "project.md",
+    "risks": "risks.md",
+}
+
+
+def _stories_for_backlog_item(stories_dir: Path, backlog_item: str) -> list[tuple[Path, str]]:
+    """Return list of (story_path, status) for all stories with matching parent."""
+    results = []
+    if not stories_dir.is_dir():
+        return results
+    for p in sorted(stories_dir.glob("ml-story-*.md")):
+        text = read_text(p)
+        fields = _parse_frontmatter(text)
+        if fields.get("parent", "").strip() == backlog_item:
+            results.append((p, fields.get("status", "unknown")))
+    return results
+
+
+def _remove_index_rows(index_path: Path, story_ids: list[str]) -> None:
+    if not index_path.is_file():
+        return
+    text = read_text(index_path)
+    lines = text.splitlines(keepends=True)
+    kept = [ln for ln in lines if not any(sid in ln for sid in story_ids)]
+    index_path.write_text("".join(kept), encoding="utf-8")
+
+
+def transfer(
+    project_root: Path,
+    backlog_item: str,
+    approve: bool = False,
+    learn: str = "",
+    learn_target: str = "decisions",
+    approve_learn: bool = False,
+) -> int:
+    memory_dir = project_root / ".mindlayer"
+    pd = pipeline_dir(memory_dir)
+    stories_dir = pd / "stories"
+    archive_dir = pd / "archive"
+
+    stories = _stories_for_backlog_item(stories_dir, backlog_item)
+
+    not_done = [(p, s) for p, s in stories if s != "done"]
+    if not_done and approve:
+        for p, s in not_done:
+            fields = _parse_frontmatter(read_text(p))
+            print(f"Error: story '{fields.get('id', p.name)}' is not done (status: {s})")
+        return 1
+
+    story_ids = [_parse_frontmatter(read_text(p)).get("id", p.stem) for p, _ in stories]
+
+    if not approve:
+        print(f"Proposed transfer for backlog item: {backlog_item}")
+        print(f"  Stories to archive: {len(stories)}")
+        for p, s in stories:
+            fields = _parse_frontmatter(read_text(p))
+            print(f"    {fields.get('id', p.stem)} ({s})")
+        if learn:
+            print(f"  Learning ({learn_target}): {learn}")
+            print("  Pass --approve-learn to confirm the knowledge write.")
+        print("Approval needed: pass --approve to confirm")
+        return 0
+
+    # Write learning first (before archiving) if both flags present
+    if learn and approve_learn:
+        target_file = _LEARN_TARGETS.get(learn_target, "decisions.md")
+        knowledge_dir = memory_dir / "knowledge"
+        _ensure_dir(knowledge_dir)
+        target_path = knowledge_dir / target_file
+        entry = f"\n## Transfer: {backlog_item}\n\ncreated: {_today()}\nsource: transfer\n\n{learn}\n"
+        if not target_path.is_file():
+            target_path.write_text(f"# {target_file.replace('.md', '').title()}\n{entry}", encoding="utf-8")
+        else:
+            with target_path.open("a", encoding="utf-8") as f:
+                f.write(entry)
+        print(f"Learning written to knowledge/{target_file}")
+    elif learn and not approve_learn:
+        print(f"Learning ({learn_target}): {learn}")
+        print("Approval needed: pass --approve-learn to confirm the knowledge write.")
+        return 0
+
+    # Archive stories
+    _ensure_dir(archive_dir)
+    for p, _ in stories:
+        dest = archive_dir / p.name
+        p.rename(dest)
+
+    # Remove rows from index
+    _remove_index_rows(stories_dir / "index.md", story_ids)
+
+    print(f"Transfer complete: {len(stories)} stories archived for {backlog_item}")
+    print("Approval needed: None")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# story --start / --done
+# ---------------------------------------------------------------------------
+
+def _find_story_file(stories_dir: Path, story_id: str) -> Path | None:
+    candidate = stories_dir / f"{story_id}.md"
+    if candidate.is_file():
+        return candidate
+    # Also try glob for partial matches
+    for p in stories_dir.glob("ml-story-*.md"):
+        text = read_text(p)
+        if f"id: {story_id}" in text:
+            return p
+    return None
+
+
+def _update_story_status(
+    story_path: Path,
+    new_status: str,
+    add_sha: bool = False,
+    proved_by: str = "",
+    proved_at: str = "",
+) -> None:
+    text = read_text(story_path)
+    updated = re.sub(r"^status: \S+", f"status: {new_status}", text, flags=re.MULTILINE)
+    if add_sha:
+        sha = _git_head_sha()
+        if "started_from:" not in updated:
+            updated = re.sub(
+                r"^(status: in-progress\n)",
+                rf"\1started_from: {sha}\n",
+                updated,
+                flags=re.MULTILINE,
+            )
+    if proved_by and "proved_by:" not in updated:
+        updated = re.sub(
+            r"^(status: done\n)",
+            rf"\1proved_by: {proved_by}\nproved_at: {proved_at}\n",
+            updated,
+            flags=re.MULTILINE,
+        )
+    story_path.write_text(updated, encoding="utf-8")
+
+
+def _update_index_status(index_path: Path, story_id: str, new_status: str) -> None:
+    if not index_path.is_file():
+        return
+    text = read_text(index_path)
+    # Replace status column in the row matching story_id
+    # Row format: | id | title | status | created | parent |
+    def replace_row(m: re.Match) -> str:
+        row = m.group(0)
+        if story_id not in row:
+            return row
+        # Replace the status cell (3rd pipe-delimited column)
+        parts = row.split("|")
+        if len(parts) >= 4:
+            parts[3] = f" {new_status} "
+        return "|".join(parts)
+
+    updated = re.sub(r"^\|.*\|.*$", replace_row, text, flags=re.MULTILINE)
+    index_path.write_text(updated, encoding="utf-8")
+
+
+def story_transition(project_root: Path, story_id: str, action: str, test_cmd: str = "") -> int:
+    """action: 'start' or 'done'"""
+    memory_dir = project_root / ".mindlayer"
+    pd = pipeline_dir(memory_dir)
+    stories_dir = pd / "stories"
+
+    story_path = _find_story_file(stories_dir, story_id)
+    if story_path is None:
+        print(f"Error: story '{story_id}' not found in pipeline/stories/", flush=True)
+        return 1
+
+    text = read_text(story_path)
+    fields = _parse_frontmatter(text)
+    current_status = fields.get("status", "unknown")
+
+    if action == "start":
+        _update_story_status(story_path, "in-progress", add_sha=True)
+        _update_index_status(stories_dir / "index.md", story_id, "in-progress")
+        print(f"Story {story_id}: {current_status} → in-progress")
+        print("Approval needed: None")
+        return 0
+
+    # action == "done"
+    proved_by = ""
+    proved_at = ""
+    if test_cmd:
+        result = subprocess.run(test_cmd, shell=True)
+        if result.returncode != 0:
+            print(f"Tests failed (exit {result.returncode}): {test_cmd}")
+            print(f"Story {story_id} remains {current_status}.")
+            return 1
+        proved_by = test_cmd
+        proved_at = _today()
+    else:
+        print(f"Warning: no --test-cmd provided; marking done without proof.")
+
+    _update_story_status(story_path, "done", proved_by=proved_by, proved_at=proved_at)
+    _update_index_status(stories_dir / "index.md", story_id, "done")
+
+    print(f"Story {story_id}: {current_status} → done")
+    print("Approval needed: None")
     return 0
