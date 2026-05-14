@@ -11,7 +11,9 @@ Boot summary. Format: id | title | file | summary. Full metadata: `index-full.md
 - ml-20260505-004 | Goal Hierarchy | knowledge/context.md | Identity -> roadmap -> backlog -> progress -> sessions -> Next Step.
 - ml-20260430-006 | Trust Risks | knowledge/risks.md | Token, routing, installer, onboarding, adapter risks.
 - ml-20260430-005 | Future Roadmap | pipeline/backlog.md | Active V4 foundation work.
-- ml-20260505-006 | Current Phase | pipeline/progress.md | Phase 2 guarded writes shipped; dogfood polish before SCRIPT/runtime expansion.
+- ml-20260505-006 | Current Phase | pipeline/progress.md | V4 foundation complete; ml script shipped; next is open source security hardening.
+- ml-20260514-005 | Next Step Story ID Granularity | knowledge/decisions.md | Name story ID in Next Step once stories exist, not backlog item.
+- ml-20260514-006 | Hierarchical Index Tree Architecture | knowledge/decisions.md | Root index maps to subfolder indexes; each folder owns its index; tree replaces flat index+index-full.
 - ml-20260505-003 | Product Roadmap | pipeline/roadmap.md | V4 SCRIPT runtime and IDE path.
 - ml-20260506-002 | Project Router | router.md | Project conditional load triggers.
 - ml-20260507-007 | Template Sync Rule | knowledge/decisions.md | Keep live and global-template synced.

@@ -24,6 +24,9 @@ Near-term backlog tracks active/planned V4 work only. Full versioned vision live
 - `ml script` lifecycle command: Signal -> Cut -> Refine -> Implement -> Prove -> Transfer.
 - IDE extensions after runtime and SCRIPT flows stabilize.
 
+**Next (post-security hardening):**
+- Hierarchical index tree: root index.md → subfolder indexes → leaf files. Split knowledge/decisions.md into decisions/ subfolder. Deprecate index-full.md. Update lint, _paths.py, ml load traversal, ml save routing. Spec-first. (ml-20260514-006)
+
 **Deferred:**
 - Memory-system.md changelog: surface what changed when memory-system.md is refreshed on reinstall.
 - Migration guide: document how to adopt new template files (e.g. roadmap.md) in existing installs.

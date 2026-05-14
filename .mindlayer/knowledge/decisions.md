@@ -668,3 +668,65 @@ ml-20260514-001
 ml-20260514-002
 ml-20260514-003
 ml-20260508-001
+
+
+## Next Step Story ID Granularity
+
+id: ml-20260514-005
+created: 2026-05-14
+updated: 2026-05-14
+scope: project
+type: decision
+tags: [per-turn, next-step, script, stories, orientation]
+confidence: medium
+status: active
+source: conversation
+
+### Summary
+Once `pipeline/stories/` contains ready or in-progress stories, Next Step must name the specific story ID and title, not the parent backlog item.
+
+### Details
+- Before Refine runs: Next Step names the backlog item (e.g. "Open source security hardening").
+- After Refine runs: Next Step names the specific story (`ml-story-NNN — title`).
+- Rationale: stories are the atomic executable unit; pointing at the backlog item once stories exist is too coarse and skips the SCRIPT discipline.
+- In-progress story always takes priority over ready stories in Next Step.
+
+### When to use
+Use when applying the per-turn Next Step hierarchy once SCRIPT is active on a backlog item.
+
+### Related
+ml-20260505-005
+ml-20260514-001
+
+
+## Hierarchical Index Tree Architecture
+
+id: ml-20260514-006
+created: 2026-05-14
+updated: 2026-05-14
+scope: project
+type: decision
+tags: [index, architecture, tree, knowledge, pipeline, ml-load, schema]
+confidence: high
+status: active
+source: conversation
+
+### Summary
+Root index.md maps to subfolder index files, not individual memory files. Each folder owns its own index, forming a navigable tree.
+
+### Details
+- Root `.mindlayer/index.md` maps to `knowledge/index.md` and `pipeline/index.md` — not to leaf files directly.
+- Each subfolder index maps to its own files and further subfolder indexes.
+- Agent load path: root index → subfolder index → specific file. Never loads full tree unless explicitly asked.
+- `knowledge/decisions/` becomes a subfolder with its own `index.md` mapping one file per logical decision group (e.g. `script-v4.md`, `architecture.md`, `process.md`).
+- Replaces flat `index.md` + `index-full.md` pattern with a navigable tree. `index-full.md` is deprecated by this structure.
+- Impacts: index schema, lint E5/E6 file-existence and section-heading checks, `_paths.py` resolve logic, `ml load` traversal (must follow index pointers recursively), `ml save` routing (must update nearest subfolder index).
+- Implementation is spec-first: write failing tests for tree traversal, then implement.
+
+### When to use
+Use when changing index structure, adding new knowledge subfolders, implementing ml load traversal, or planning the decisions/ split.
+
+### Related
+ml-20260512-001
+ml-20260514-002
+ml-20260514-005
