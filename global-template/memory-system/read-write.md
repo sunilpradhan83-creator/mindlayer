@@ -18,7 +18,7 @@ Load this file before any memory read or write operation — before proposing ml
 - Read `~/.mindlayer/boot.md` first when initializing MindLayer behavior, then `router.md`, then follow load triggers.
 - Read `preferences/personal.md` during MindLayer boot only when it contains substantive user-written preferences. If it is missing or starter-only (the file exists but contains only MindLayer scaffold content with no real user data), report it as skipped or missing instead of loading it as useful context.
 - Read indexes before full memory files.
-- During MindLayer boot, always check project `.mindlayer/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.
+- During MindLayer boot, always check project `.mindlayer/knowledge/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.
 - Load full sections only when relevant.
 - Do not use `README.md` or `docs/` as memory input; they are human-facing documentation.
 - Treat tool adapters such as `AGENTS.md`, `CLAUDE.md`, and Copilot instructions as thin instructions, not durable memory stores or retrieval sources.

@@ -7,7 +7,7 @@ Loaded:
 - ~/.mindlayer/memory-system/per-turn.md — boot step 4
 - ~/.mindlayer/preferences/personal.md — boot step 5, non-scaffold content present
 - .mindlayer/index.md — boot step 6
-- .mindlayer/project.md — boot step 7
+- .mindlayer/knowledge/project.md — boot step 7
 - ~/.mindlayer/memory-system/commands/onboard.md — boot step 10, project.md is placeholder-only
 
 Skipped:

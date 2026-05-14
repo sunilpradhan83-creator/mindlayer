@@ -2,37 +2,37 @@
 
 Boot summary. Format: id | title | file | summary. Full metadata: `index-full.md` via `ml load`.
 
-- ml-project-20260430-001 | Project Identity | project.md | Markdown-first memory system for AI-native devs.
-- ml-20260503-001 | Source-of-Truth Boundaries | decisions.md | Repo memory vs templates vs live runtime.
-- ml-20260503-002 | Literal Approval | decisions.md | Exact proposal required before memory writes.
-- ml-20260505-007 | Lateral Intent | decisions.md | Out-of-plan work gets backlog/roadmap nudge.
-- ml-20260505-005 | Token Burned Status | decisions.md | Every turn ends with estimates and Next Step.
-- ml-20260430-004 | Product Philosophy | context.md | Token efficiency; memory is curation.
-- ml-20260505-004 | Goal Hierarchy | context.md | Identity -> roadmap -> backlog -> progress -> sessions -> Next Step.
-- ml-20260430-006 | Trust Risks | risks.md | Token, routing, installer, onboarding, adapter risks.
-- ml-20260430-005 | Future Roadmap | backlog.md | Active V4 foundation work.
-- ml-20260505-006 | Current Phase | progress.md | Phase 2 guarded writes shipped; dogfood polish before SCRIPT/runtime expansion.
-- ml-20260505-003 | Product Roadmap | roadmap.md | V4 SCRIPT runtime and IDE path.
+- ml-project-20260430-001 | Project Identity | knowledge/project.md | Markdown-first memory system for AI-native devs.
+- ml-20260503-001 | Source-of-Truth Boundaries | knowledge/decisions.md | Repo memory vs templates vs live runtime.
+- ml-20260503-002 | Literal Approval | knowledge/decisions.md | Exact proposal required before memory writes.
+- ml-20260505-007 | Lateral Intent | knowledge/decisions.md | Out-of-plan work gets backlog/roadmap nudge.
+- ml-20260505-005 | Token Burned Status | knowledge/decisions.md | Every turn ends with estimates and Next Step.
+- ml-20260430-004 | Product Philosophy | knowledge/context.md | Token efficiency; memory is curation.
+- ml-20260505-004 | Goal Hierarchy | knowledge/context.md | Identity -> roadmap -> backlog -> progress -> sessions -> Next Step.
+- ml-20260430-006 | Trust Risks | knowledge/risks.md | Token, routing, installer, onboarding, adapter risks.
+- ml-20260430-005 | Future Roadmap | pipeline/backlog.md | Active V4 foundation work.
+- ml-20260505-006 | Current Phase | pipeline/progress.md | Phase 2 guarded writes shipped; dogfood polish before SCRIPT/runtime expansion.
+- ml-20260505-003 | Product Roadmap | pipeline/roadmap.md | V4 SCRIPT runtime and IDE path.
 - ml-20260506-002 | Project Router | router.md | Project conditional load triggers.
-- ml-20260507-007 | Template Sync Rule | decisions.md | Keep live and global-template synced.
-- ml-20260507-006 | Per-Turn Compliance Risk | risks.md | Instruction-enforced until runtime.
-- ml-20260507-003 | Router Enforcement Gap | risks.md | Soft trigger rules until runner.
-- ml-20260507-005 | ML-999 Decisions | decisions.md | ML-101-110 outcomes are settled.
-- ml-20260510-002 | Dogfood Scripts | decisions.md | boot gate vs live health check.
-- ml-20260510-003 | Boot Trigger Root Cause | decisions.md | Non-interactive agents need hard boot wording.
-- ml-20260510-004 | Security Hardening | decisions.md | Security at distribution/governance layer.
-- ml-20260507-004 | Agent-Agnostic Principle | decisions.md | Product rules stay tool-neutral.
-- ml-20260513-001 | Command Output Standard | decisions.md | `ml boot` and command receipts stay identical across agents.
-- ml-20260507-002 | Skill Approval Gate | decisions.md | Writing skills require approval.
-- ml-20260507-001 | SCRIPT Philosophy | context.md | Signal, Cut, Refine, Implement, Prove, Transfer.
-- ml-20260508-001 | Instruction Ceiling | risks.md | Need deterministic runtime.
-- ml-20260508-002 | SCRIPT Engine | decisions.md | Signal -> Roadmap -> Backlog -> Stories -> Progress. SUPERSEDED by ml-20260514-001.
-- ml-20260514-001 | SCRIPT Lifecycle Rules | decisions.md | Full file ownership, purge rules, folder structure, Cut routing, story lifecycle, archive folder.
-- ml-20260514-002 | SCRIPT V4 Final Structure | decisions.md | Final folder layout, story=prompt schema, TDD mandatory, Graphify deferred to V5, pipeline/knowledge split.
-- ml-20260514-003 | Transfer Rules and ml script CLI | decisions.md | Transfer trigger/bar/outcomes; `ml script` agent-executed lifecycle namespace.
-- ml-20260514-004 | SCRIPT V4 Review-Driven Refinements | decisions.md | External review fixes: reworded Signal rule, porcelain+SHA resume, refine --check, single+batch approval, CLI index freshness.
-- ml-20260511-002 | Adapter Freeze | decisions.md | Frozen templates, auto-detect, `ml save` migration.
-- ml-20260512-001 | Phase 0 Architecture | decisions.md | Per-turn split, summary index, compressed state.
+- ml-20260507-007 | Template Sync Rule | knowledge/decisions.md | Keep live and global-template synced.
+- ml-20260507-006 | Per-Turn Compliance Risk | knowledge/risks.md | Instruction-enforced until runtime.
+- ml-20260507-003 | Router Enforcement Gap | knowledge/risks.md | Soft trigger rules until runner.
+- ml-20260507-005 | ML-999 Decisions | knowledge/decisions.md | ML-101-110 outcomes are settled.
+- ml-20260510-002 | Dogfood Scripts | knowledge/decisions.md | boot gate vs live health check.
+- ml-20260510-003 | Boot Trigger Root Cause | knowledge/decisions.md | Non-interactive agents need hard boot wording.
+- ml-20260510-004 | Security Hardening | knowledge/decisions.md | Security at distribution/governance layer.
+- ml-20260507-004 | Agent-Agnostic Principle | knowledge/decisions.md | Product rules stay tool-neutral.
+- ml-20260513-001 | Command Output Standard | knowledge/decisions.md | `ml boot` and command receipts stay identical across agents.
+- ml-20260507-002 | Skill Approval Gate | knowledge/decisions.md | Writing skills require approval.
+- ml-20260507-001 | SCRIPT Philosophy | knowledge/context.md | Signal, Cut, Refine, Implement, Prove, Transfer.
+- ml-20260508-001 | Instruction Ceiling | knowledge/risks.md | Need deterministic runtime.
+- ml-20260508-002 | SCRIPT Engine | knowledge/decisions.md | Signal -> Roadmap -> Backlog -> Stories -> Progress. SUPERSEDED by ml-20260514-001.
+- ml-20260514-001 | SCRIPT Lifecycle Rules | knowledge/decisions.md | Full file ownership, purge rules, folder structure, Cut routing, story lifecycle, archive folder.
+- ml-20260514-002 | SCRIPT V4 Final Structure | knowledge/decisions.md | Final folder layout, story=prompt schema, TDD mandatory, Graphify deferred to V5, pipeline/knowledge split.
+- ml-20260514-003 | Transfer Rules and ml script CLI | knowledge/decisions.md | Transfer trigger/bar/outcomes; `ml script` agent-executed lifecycle namespace.
+- ml-20260514-004 | SCRIPT V4 Review-Driven Refinements | knowledge/decisions.md | External review fixes: reworded Signal rule, porcelain+SHA resume, refine --check, single+batch approval, CLI index freshness.
+- ml-20260511-002 | Adapter Freeze | knowledge/decisions.md | Frozen templates, auto-detect, `ml save` migration.
+- ml-20260512-001 | Phase 0 Architecture | knowledge/decisions.md | Per-turn split, summary index, compressed state.
 - ml-index-full-20260512-001 | Full Index | index-full.md | Full metadata for `ml load`.
 - ml-per-turn-20260512-load-announce | Load Module | memory-system/per-turn/load-announce.md | Load announcements.
 - ml-per-turn-20260512-memory-candidate | Candidate Module | memory-system/per-turn/memory-candidate.md | Memory candidates.

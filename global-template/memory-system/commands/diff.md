@@ -6,7 +6,7 @@ Surface what changed in `.mindlayer/` since the last session. Fires automaticall
 
 ## Baseline
 
-1. Find the most recent session file in `.mindlayer/sessions/` by filename (YYYY-MM-DD.md, latest date wins).
+1. Find the most recent session file in `.mindlayer/knowledge/sessions/` by filename (YYYY-MM-DD.md, latest date wins).
 2. Read the `## Commit` section of that file. Extract the git SHA (first token on the line, e.g. `abc1234`).
 3. If no session file exists, or no `## Commit` line is found, skip diff silently — output nothing.
 4. If git is unavailable or the SHA is not reachable, skip diff silently — output nothing.
@@ -17,7 +17,7 @@ Run: `git diff <sha>..HEAD -- .mindlayer/`
 
 Scope: project `.mindlayer/` only. Do not diff `~/.mindlayer/`.
 
-Exclude: `sessions/`, `cache/`, `tmp/`, `private/`, `local.md`, `archive.md`.
+Exclude: `knowledge/sessions/`, `cache/`, `tmp/`, `private/`, `local.md`, `archive.md`.
 
 ## What to Extract
 

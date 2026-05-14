@@ -289,7 +289,7 @@ lint_repo() {
   # W5 ignorable paths committed to git
   if [ -d "$PROJECT_DIR/.git" ] && command -v git >/dev/null 2>&1; then
     tracked=$(cd "$PROJECT_DIR" && git ls-files .mindlayer 2>/dev/null || true)
-    for path in ".mindlayer/local.md" ".mindlayer/private/" ".mindlayer/sessions/" ".mindlayer/cache/" ".mindlayer/tmp/"; do
+    for path in ".mindlayer/local.md" ".mindlayer/private/" ".mindlayer/knowledge/sessions/" ".mindlayer/cache/" ".mindlayer/tmp/"; do
       hit=$(printf "%s\n" "$tracked" | grep -E "^${path}" || true)
       if [ -n "$hit" ]; then
         warn "[W5] git is tracking '$path' — should be gitignored"
@@ -328,7 +328,7 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Do not use `README.md` or `docs/` as memory input.' "ml init command"
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "not memory stores" "ml init command"
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Go outside MindLayer memory only when necessary" "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Always check project `.mindlayer/project.md`' "ml init command"
+  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Always check project `.mindlayer/knowledge/project.md`' "ml init command"
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "low importance or starter-like" "ml init command"
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Automatic Boot Contract" "ml init command"
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Approximate context share by source" "ml init command"
@@ -348,7 +348,7 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/memory-system/commands/session.md" "pending memory-write approvals" "global session command"
   require_contains "$PROJECT_DIR/global-template/boot.md" "first project-relevant request" "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" "approximate context share by source" "global boot template"
-  require_contains "$PROJECT_DIR/global-template/boot.md" 'check project `.mindlayer/project.md`' "global boot template"
+  require_contains "$PROJECT_DIR/global-template/boot.md" 'check project `.mindlayer/knowledge/project.md`' "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" "## Adapter Guard" "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" ".mindlayer/adapters.lock" "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" "Never discard user-added adapter content" "global boot template"

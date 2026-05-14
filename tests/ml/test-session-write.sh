@@ -23,7 +23,7 @@ printf "====================================\n"
 
 # --- basic write ---
 scenario "basic session write"
-mkdir -p "$SANDBOX/basic/.mindlayer"
+mkdir -p "$SANDBOX/basic/.mindlayer" "$SANDBOX/basic/.mindlayer/knowledge" "$SANDBOX/basic/.mindlayer/pipeline" "$SANDBOX/basic/.mindlayer/pipeline/archive" "$SANDBOX/basic/.mindlayer/knowledge/sessions"
 output="$SANDBOX/basic.out"
 if (cd "$SANDBOX/basic" && python3 "$ROOT_DIR/src/ml" session write \
     --date 2026-05-12 \
@@ -36,7 +36,7 @@ if (cd "$SANDBOX/basic" && python3 "$ROOT_DIR/src/ml" session write \
 else
   fail "$CURRENT_SCENARIO: command exits 0"
 fi
-SESSION_FILE="$SANDBOX/basic/.mindlayer/sessions/2026-05-12.md"
+SESSION_FILE="$SANDBOX/basic/.mindlayer/knowledge/sessions/2026-05-12.md"
 if assert_contains "$output" "Session Write Candidate:"; then pass "$CURRENT_SCENARIO: proposal printed"; else fail "$CURRENT_SCENARIO: proposal printed"; fi
 if assert_contains "$output" "Session summary ready"; then pass "$CURRENT_SCENARIO: approval prompt printed"; else fail "$CURRENT_SCENARIO: approval prompt printed"; fi
 if [ ! -f "$SESSION_FILE" ]; then pass "$CURRENT_SCENARIO: no write before approval"; else fail "$CURRENT_SCENARIO: no write before approval"; fi
@@ -67,9 +67,9 @@ if assert_file_contains "$SESSION_FILE" "Implement save"; then pass "$CURRENT_SC
 
 # --- same-day continuation appends with separator ---
 scenario "same-day continuation"
-mkdir -p "$SANDBOX/sameday/.mindlayer/sessions"
+mkdir -p "$SANDBOX/sameday/.mindlayer/knowledge/sessions"
 printf "# Session: 2026-05-12\n\n## Worked on\n- First session.\n\n## Decisions\n- (none)\n\n## Completed\n- (none)\n\n## Next\n- Continue.\n" \
-  > "$SANDBOX/sameday/.mindlayer/sessions/2026-05-12.md"
+  > "$SANDBOX/sameday/.mindlayer/knowledge/sessions/2026-05-12.md"
 output="$SANDBOX/sameday.out"
 if (cd "$SANDBOX/sameday" && python3 "$ROOT_DIR/src/ml" session write \
     --date 2026-05-12 \
@@ -80,26 +80,26 @@ if (cd "$SANDBOX/sameday" && python3 "$ROOT_DIR/src/ml" session write \
 else
   fail "$CURRENT_SCENARIO: command exits 0"
 fi
-SESSION_FILE="$SANDBOX/sameday/.mindlayer/sessions/2026-05-12.md"
+SESSION_FILE="$SANDBOX/sameday/.mindlayer/knowledge/sessions/2026-05-12.md"
 if grep -Fq -- "---" "$SESSION_FILE"; then pass "$CURRENT_SCENARIO: separator present"; else fail "$CURRENT_SCENARIO: separator present"; fi
 if assert_file_contains "$SESSION_FILE" "First session."; then pass "$CURRENT_SCENARIO: original content preserved"; else fail "$CURRENT_SCENARIO: original content preserved"; fi
 if assert_file_contains "$SESSION_FILE" "Second session"; then pass "$CURRENT_SCENARIO: new content appended"; else fail "$CURRENT_SCENARIO: new content appended"; fi
 
 # --- Next section parseable by boot._latest_next ---
 scenario "Next section parseable by boot"
-mkdir -p "$SANDBOX/bootnext/.mindlayer/sessions"
+mkdir -p "$SANDBOX/bootnext/.mindlayer/knowledge/sessions"
 (cd "$SANDBOX/bootnext" && python3 "$ROOT_DIR/src/ml" session write \
     --date 2026-05-01 \
     --worked-on "Something" \
     --next "Boot next step" \
     --approve > /dev/null)
-SESSION_FILE="$SANDBOX/bootnext/.mindlayer/sessions/2026-05-01.md"
+SESSION_FILE="$SANDBOX/bootnext/.mindlayer/knowledge/sessions/2026-05-01.md"
 if assert_file_contains "$SESSION_FILE" "## Next"; then pass "$CURRENT_SCENARIO: Next heading present"; else fail "$CURRENT_SCENARIO: Next heading present"; fi
 if assert_file_contains "$SESSION_FILE" "Boot next step"; then pass "$CURRENT_SCENARIO: Next content present"; else fail "$CURRENT_SCENARIO: Next content present"; fi
 
 # --- post-completion clean failure does not fail session write ---
 scenario "completed session write tolerates clean failure"
-mkdir -p "$SANDBOX/cleanfail/.mindlayer"
+mkdir -p "$SANDBOX/cleanfail/.mindlayer" "$SANDBOX/cleanfail/.mindlayer/knowledge" "$SANDBOX/cleanfail/.mindlayer/pipeline" "$SANDBOX/cleanfail/.mindlayer/pipeline/archive" "$SANDBOX/cleanfail/.mindlayer/knowledge/sessions"
 printf "# Project Memory Index\n" > "$SANDBOX/cleanfail/.mindlayer/index-full.md"
 chmod 000 "$SANDBOX/cleanfail/.mindlayer/index-full.md"
 output="$SANDBOX/cleanfail.out"
@@ -112,7 +112,7 @@ if (cd "$SANDBOX/cleanfail" && python3 "$ROOT_DIR/src/ml" session write \
 else
   fail "$CURRENT_SCENARIO: command exits 0"
 fi
-SESSION_FILE="$SANDBOX/cleanfail/.mindlayer/sessions/2026-05-12.md"
+SESSION_FILE="$SANDBOX/cleanfail/.mindlayer/knowledge/sessions/2026-05-12.md"
 if [ -f "$SESSION_FILE" ]; then pass "$CURRENT_SCENARIO: session file created"; else fail "$CURRENT_SCENARIO: session file created"; fi
 if assert_contains "$output" "Memory check skipped:"; then pass "$CURRENT_SCENARIO: clean failure reported"; else fail "$CURRENT_SCENARIO: clean failure reported"; fi
 

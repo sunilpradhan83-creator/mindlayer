@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ._paths import count_words, global_memory_dir, read_text
+from ._paths import count_words, global_memory_dir, knowledge_file, pipeline_file, read_text, sessions_dir
 from .diff import memory_diff
 
 
@@ -48,7 +48,7 @@ def _personal_is_substantive(text: str) -> bool:
 
 
 def _latest_next(project_root: Path) -> str:
-    sessions = sorted((project_root / ".mindlayer" / "sessions").glob("????-??-??.md"))
+    sessions = sorted(sessions_dir(project_root / ".mindlayer").glob("????-??-??.md"))
     if not sessions:
         return ""
     text = read_text(sessions[-1])
@@ -73,9 +73,9 @@ def run(project_root: Path) -> int:
         ("`.mindlayer/router.md`", memory_dir / "router.md", "project"),
         ("`~/.mindlayer/memory-system/per-turn.md`", global_dir / "memory-system" / "per-turn.md", "global"),
         ("`.mindlayer/index.md`", memory_dir / "index.md", "project"),
-        ("`.mindlayer/project.md`", memory_dir / "project.md", "project"),
-        ("`.mindlayer/progress.md`", memory_dir / "progress.md", "project"),
-        ("`.mindlayer/backlog.md`", memory_dir / "backlog.md", "project"),
+        ("`.mindlayer/knowledge/project.md`", knowledge_file(memory_dir, "project.md"), "project"),
+        ("`.mindlayer/pipeline/progress.md`", pipeline_file(memory_dir, "progress.md"), "project"),
+        ("`.mindlayer/pipeline/backlog.md`", pipeline_file(memory_dir, "backlog.md"), "project"),
     ]:
         text, words = _read_if_file(path)
         if text:
@@ -98,22 +98,22 @@ def run(project_root: Path) -> int:
 
     latest_next = _latest_next(project_root)
     if latest_next:
-        loaded.append("latest `.mindlayer/sessions/YYYY-MM-DD.md` `## Next`")
+        loaded.append("latest `.mindlayer/knowledge/sessions/YYYY-MM-DD.md` `## Next`")
         project_words += len(latest_next.split())
         word_total += len(latest_next.split())
     else:
-        skipped.append("`.mindlayer/sessions/` (no latest Next section)")
+        skipped.append("`.mindlayer/knowledge/sessions/` (no latest Next section)")
 
     skipped.extend(
         [
             "`.mindlayer/index-full.md` (loaded only by `ml load`)",
-            "`.mindlayer/archive.md` and `.mindlayer/local.md`",
+            "`.mindlayer/pipeline/archive/archive.md` and `.mindlayer/local.md`",
             "`README.md`, `docs/`, and adapters as memory sources",
         ]
     )
 
-    understanding = _first_summary(memory_dir / "project.md")
-    progress = _progress_summary(memory_dir / "progress.md")
+    understanding = _first_summary(knowledge_file(memory_dir, "project.md"))
+    progress = _progress_summary(pipeline_file(memory_dir, "progress.md"))
     if latest_next:
         progress = f"{progress} Latest session cue: {latest_next}"
 

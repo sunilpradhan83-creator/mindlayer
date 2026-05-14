@@ -17,11 +17,11 @@ assert_contains() { grep -Fq -- "$2" "$1"; }
 cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
-mkdir -p "$SANDBOX/project/.mindlayer"
+mkdir -p "$SANDBOX/project/.mindlayer" "$SANDBOX/project/.mindlayer/knowledge" "$SANDBOX/project/.mindlayer/pipeline" "$SANDBOX/project/.mindlayer/pipeline/archive" "$SANDBOX/project/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/project/.mindlayer/index.md" <<'EOF'
 # Project Memory Index
 EOF
-cat > "$SANDBOX/project/.mindlayer/progress.md" <<'EOF'
+cat > "$SANDBOX/project/.mindlayer/pipeline/progress.md" <<'EOF'
 # Progress
 
 ## Current Phase
@@ -39,7 +39,7 @@ EOF
     printf "line %s\n" "$i"
     i=$((i + 1))
   done
-} > "$SANDBOX/project/.mindlayer/context.md"
+} > "$SANDBOX/project/.mindlayer/knowledge/context.md"
 
 printf "MindLayer ml status contract\n"
 printf "============================\n"

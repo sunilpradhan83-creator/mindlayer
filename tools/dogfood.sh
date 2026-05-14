@@ -94,7 +94,7 @@ HOME="$SANDBOX/home" bash "$ROOT_DIR/install.sh" \
 
 # Inject test fixtures into sandbox project only
 FIXTURES_DIR="$ROOT_DIR/tools/dogfood-fixtures"
-cp "$FIXTURES_DIR/project.md" "$SANDBOX/project/.mindlayer/project.md"
+cp "$FIXTURES_DIR/project.md" "$SANDBOX/project/.mindlayer/knowledge/project.md"
 cp "$FIXTURES_DIR/index.md"   "$SANDBOX/project/.mindlayer/index.md"
 pass "MindLayer installed into sandbox project (global reads from real ~/.mindlayer/)"
 

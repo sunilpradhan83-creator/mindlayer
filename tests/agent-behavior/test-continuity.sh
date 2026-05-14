@@ -79,7 +79,7 @@ pending="$SANDBOX/pending.md"
 cat > "$pending" <<'EOF'
 Backlog item: Session Continuity Tracking
 Task: Implement pending memory-write approval reminders
-  - Last result: Proposed memory update for `.mindlayer/progress.md`
+  - Last result: Proposed memory update for `.mindlayer/pipeline/progress.md`
   - Next step: Wait for explicit approval before writing memory
   - Status: paused
 
@@ -88,7 +88,7 @@ Context:
   - Session: ~1,200 words, ~1,600 est. tokens
 
 Continuity:
-  - Pending approvals: memory write / `.mindlayer/progress.md` / update
+  - Pending approvals: memory write / `.mindlayer/pipeline/progress.md` / update
   - Blockers: explicit approval is required
   - Unfinished work: apply approved memory update
 EOF

@@ -14,10 +14,10 @@ Run once per session, in order, before answering any request:
 4. Read `~/.mindlayer/memory-system/per-turn.md` — always. Controls every response you generate.
 5. Read `~/.mindlayer/preferences/personal.md` — only if it contains non-scaffold content (file has real user preferences, not just the starter template).
 6. Read project `.mindlayer/index.md` — summary-only boot catalog. Do not load `.mindlayer/index-full.md` at boot; it loads only through `ml load`.
-7. Always check project `.mindlayer/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only identity as missing. Load even if index marks it low importance; report as missing if placeholder-only.
+7. Always check project `.mindlayer/knowledge/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only identity as missing. Load even if index marks it low importance; report as missing if placeholder-only.
 8. Load project progress and backlog — check `progress.md` and `backlog.md` for current phase and next action.
-9. Check `sessions/` — if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
-10. Check onboard status — scan `.mindlayer/index.md` for `id: ml-onboard-complete`. If absent AND `.mindlayer/project.md` contains only placeholder/scaffold content, load `memory-system/commands/onboard.md` and fire the onboard flow on the first project-relevant turn. Surface in boot receipt as: `Onboarding: pending — ml onboard will run on first project-relevant request.`
+9. Check `knowledge/sessions/` — if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
+10. Check onboard status — scan `.mindlayer/index.md` for `id: ml-onboard-complete`. If absent AND `.mindlayer/knowledge/project.md` contains only placeholder/scaffold content, load `memory-system/commands/onboard.md` and fire the onboard flow on the first project-relevant turn. Surface in boot receipt as: `Onboarding: pending — ml onboard will run on first project-relevant request.`
 11. Run memory diff — load `memory-system/commands/diff.md` and compute what changed in `.mindlayer/` since the last session. Surface in boot receipt between `Current progress:` and `Context cost:`. Skip silently if no session file or git unavailable.
 12. Run adapter guard — compare known frozen adapter hashes against `.mindlayer/adapters.lock` using canonical templates from `~/.mindlayer/memory-system/templates/`. Complete this guard before answering the first project-relevant request.
 

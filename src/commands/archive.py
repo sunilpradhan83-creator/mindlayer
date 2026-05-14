@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import re
 from pathlib import Path
 
-from ._paths import is_protected, memory_dir_for, read_text
+from ._paths import archive_file, display_memory_path, is_protected, memory_dir_for, read_text, resolve_memory_file
 from ._write import approved
 
 ARCHIVE_PROTECTED = frozenset({
@@ -83,7 +83,7 @@ def _update_full_index_archived(index_path: Path, entry_id: str) -> None:
             in_entry = line == f"- id: {entry_id}"
             continue
         if in_entry and line.startswith("  file: "):
-            lines[idx] = "  file: archive.md"
+            lines[idx] = "  file: pipeline/archive/archive.md"
         elif in_entry and line.startswith("  status: "):
             lines[idx] = "  status: archived"
     index_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -172,16 +172,16 @@ def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
         if not file_name or file_name in ARCHIVE_PROTECTED:
             continue
 
-        source = memory_dir / file_name
+        source = resolve_memory_file(memory_dir, file_name)
         if status == "archived":
             if source.is_file():
                 candidates.append(CleanCandidate(
                     title=title,
                     file=file_name,
                     section=section,
-                    reason="entry is already status: archived but still lives outside archive.md",
+                    reason="entry is already status: archived but still lives outside pipeline/archive/archive.md",
                     action="archive",
-                    detail="move to archive.md and update index-full.md",
+                    detail="move to pipeline/archive/archive.md and update index-full.md",
                     confidence="high",
                 ))
             else:
@@ -203,7 +203,7 @@ def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
                 section=section,
                 reason=f"{entry_type or 'entry'} is marked {status}",
                 action=action,
-                detail="move to archive.md" if action == "archive" else "no change",
+                detail="move to pipeline/archive/archive.md" if action == "archive" else "no change",
                 confidence="medium",
             ))
     return candidates
@@ -232,7 +232,7 @@ def _apply_candidate(memory_dir: Path, candidate: CleanCandidate) -> tuple[str, 
         _remove_full_index_entry(index_full, candidate.section)
         return "deleted", candidate.title
 
-    target = (memory_dir / candidate.file).resolve()
+    target = resolve_memory_file(memory_dir, candidate.file).resolve()
     try:
         target.relative_to(memory_dir.resolve())
     except ValueError:
@@ -243,8 +243,8 @@ def _apply_candidate(memory_dir: Path, candidate: CleanCandidate) -> tuple[str, 
         return "kept", candidate.title
 
     if candidate.action == "archive":
-        _append_to_archive(memory_dir / "archive.md", block_lines)
-        _update_index_archived(index_path, candidate.section, "archive.md")
+        _append_to_archive(archive_file(memory_dir), block_lines)
+        _update_index_archived(index_path, candidate.section, "pipeline/archive/archive.md")
         for entry in _index_entries(index_full):
             if entry.get("title") == candidate.title or entry.get("section") == candidate.section:
                 _update_full_index_archived(index_full, entry.get("id", ""))
@@ -311,7 +311,7 @@ def run(
     approve_all: bool = False,
 ) -> int:
     memory_dir = memory_dir_for(project_root, scope)
-    target = (memory_dir / file).resolve()
+    target = resolve_memory_file(memory_dir, file).resolve()
 
     try:
         target.relative_to(memory_dir.resolve())
@@ -345,7 +345,7 @@ def run(
     print(f"- File: {file} -> section: {section}")
     print(f"- Reason: explicit internal archive request")
     print(f"- Proposed action: {action}")
-    detail = "move to archive.md" if action == "archive" else "remove entirely"
+    detail = "move to pipeline/archive/archive.md" if action == "archive" else "remove entirely"
     print(f"- Action detail: {detail}")
     print("- Confidence: medium")
     print(f"Summary: {1 if action == 'archive' else 0} to archive, {1 if action == 'delete' else 0} to delete, 0 to keep")
@@ -364,10 +364,10 @@ def run(
     index_path = memory_dir / "index.md"
 
     if action == "archive":
-        archive_path = memory_dir / "archive.md"
+        archive_path = archive_file(memory_dir)
         _append_to_archive(archive_path, block_lines)
-        _update_index_archived(index_path, section, "archive.md")
-        print(f"Archived: '{section}' from {file} → archive.md")
+        _update_index_archived(index_path, section, "pipeline/archive/archive.md")
+        print(f"Archived: '{section}' from {file} → pipeline/archive/archive.md")
     elif action == "delete":
         _remove_from_index(index_path, section)
         print(f"Deleted: '{section}' from {file}")

@@ -1,7 +1,7 @@
 # MindLayer local/private memory
 .mindlayer/local.md
 .mindlayer/private/
-.mindlayer/sessions/
+.mindlayer/knowledge/sessions/
 .mindlayer/cache/
 .mindlayer/tmp/
 .mindlayer/adapters.lock

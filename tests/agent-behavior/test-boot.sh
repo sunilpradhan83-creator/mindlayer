@@ -173,7 +173,7 @@ MindLayer context loaded.
 
 Loaded:
 - Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, `~/.mindlayer/preferences/personal.md`, `~/.mindlayer/index.md`
-- Project: `.mindlayer/index.md`, `.mindlayer/project.md`, latest `.mindlayer/progress.md`
+- Project: `.mindlayer/index.md`, `.mindlayer/knowledge/project.md`, latest `.mindlayer/pipeline/progress.md`
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources

@@ -21,28 +21,28 @@ printf "MindLayer ml diff contract\n"
 printf "==========================\n"
 
 scenario "new entry since session"
-mkdir -p "$SANDBOX/project/.mindlayer/sessions"
+mkdir -p "$SANDBOX/project/.mindlayer/knowledge/sessions"
 cd "$SANDBOX/project" || exit 1
 git init >/dev/null 2>&1
 git config user.email "test@example.com"
 git config user.name "Test User"
-cat > .mindlayer/context.md <<'EOF'
+cat > .mindlayer/knowledge/context.md <<'EOF'
 # Context
 
 ## First
 id: ml-first
 status: active
 EOF
-git add .mindlayer/context.md
+git add .mindlayer/knowledge/context.md
 git commit -m "base" >/dev/null 2>&1
 base_sha=$(git rev-parse HEAD)
-cat > .mindlayer/sessions/2026-05-12.md <<EOF
+cat > .mindlayer/knowledge/sessions/2026-05-12.md <<EOF
 # Session
 
 ## Commit
 $base_sha
 EOF
-cat >> .mindlayer/context.md <<'EOF'
+cat >> .mindlayer/knowledge/context.md <<'EOF'
 
 ## Second
 id: ml-second

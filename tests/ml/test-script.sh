@@ -21,7 +21,7 @@ printf "MindLayer ml script contract\n"
 printf "============================\n"
 
 scenario "script help lists status"
-mkdir -p "$SANDBOX/help/.mindlayer"
+mkdir -p "$SANDBOX/help/.mindlayer" "$SANDBOX/help/.mindlayer/knowledge" "$SANDBOX/help/.mindlayer/pipeline" "$SANDBOX/help/.mindlayer/pipeline/archive" "$SANDBOX/help/.mindlayer/knowledge/sessions"
 output="$SANDBOX/help.out"
 if (cd "$SANDBOX/help" && python3 "$ROOT_DIR/src/ml" script --help > "$output"); then
   pass "$CURRENT_SCENARIO: command exits 0"
@@ -61,7 +61,7 @@ if assert_contains "$output" "Signals: 0"; then pass "$CURRENT_SCENARIO: signal 
 if assert_contains "$output" "Stories: 0 ready, 0 in-progress"; then pass "$CURRENT_SCENARIO: story counts"; else fail "$CURRENT_SCENARIO: story counts"; fi
 
 scenario "unknown script command fails cleanly"
-mkdir -p "$SANDBOX/unknown/.mindlayer"
+mkdir -p "$SANDBOX/unknown/.mindlayer" "$SANDBOX/unknown/.mindlayer/knowledge" "$SANDBOX/unknown/.mindlayer/pipeline" "$SANDBOX/unknown/.mindlayer/pipeline/archive" "$SANDBOX/unknown/.mindlayer/knowledge/sessions"
 output="$SANDBOX/unknown.out"
 if ! (cd "$SANDBOX/unknown" && python3 "$ROOT_DIR/src/ml" script nope > "$output" 2>&1); then
   pass "$CURRENT_SCENARIO: exits non-zero"
@@ -71,7 +71,7 @@ fi
 if assert_contains "$output" "invalid choice"; then pass "$CURRENT_SCENARIO: argparse error"; else fail "$CURRENT_SCENARIO: argparse error"; fi
 
 scenario "existing status command still works"
-mkdir -p "$SANDBOX/existing/.mindlayer"
+mkdir -p "$SANDBOX/existing/.mindlayer" "$SANDBOX/existing/.mindlayer/knowledge" "$SANDBOX/existing/.mindlayer/pipeline" "$SANDBOX/existing/.mindlayer/pipeline/archive" "$SANDBOX/existing/.mindlayer/knowledge/sessions"
 printf "# Project Memory Index\n" > "$SANDBOX/existing/.mindlayer/index.md"
 output="$SANDBOX/existing.out"
 if (cd "$SANDBOX/existing" && python3 "$ROOT_DIR/src/ml" status > "$output"); then

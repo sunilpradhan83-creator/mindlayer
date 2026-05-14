@@ -6,7 +6,7 @@ Use this file as the compact search map for project `.mindlayer/`.
 
 - id: ml-project-YYYYMMDD-001
   title: Project starter context
-  file: project.md
+  file: knowledge/project.md
   section: Entry Template
   scope: project
   type: context
@@ -18,7 +18,7 @@ Use this file as the compact search map for project `.mindlayer/`.
 
 - id: ml-roadmap-YYYYMMDD-001
   title: Project Roadmap
-  file: roadmap.md
+  file: pipeline/roadmap.md
   section: Entry Template
   scope: project
   type: roadmap

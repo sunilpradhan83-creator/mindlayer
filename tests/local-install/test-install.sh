@@ -206,10 +206,10 @@ check assert_not_exists "$fresh_home/.mindlayer/playbook.md"
 check assert_git_has_commit "$fresh_home/.mindlayer/preferences"
 check assert_contains "$fresh_home/.mindlayer/boot.md" "first project-relevant request"
 check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input'
-check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'always check project `.mindlayer/project.md`'
+check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'always check project `.mindlayer/knowledge/project.md`'
 check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" "explicit approval"
 
-for file in project.md progress.md decisions.md context.md backlog.md roadmap.md risks.md index.md local.md; do
+for file in knowledge/project.md pipeline/progress.md knowledge/decisions.md knowledge/context.md pipeline/backlog.md pipeline/roadmap.md knowledge/risks.md index.md local.md; do
   check assert_file_exists "$fresh_project/.mindlayer/$file"
 done
 
@@ -283,7 +283,7 @@ existing_home="$SANDBOX/existing-home"
 existing_project="$SANDBOX/existing-project"
 existing_log_1="$SANDBOX/existing-install-1.log"
 existing_log_2="$SANDBOX/existing-install-2.log"
-mkdir -p "$existing_home/.mindlayer" "$existing_project/.github" "$existing_project/.mindlayer"
+mkdir -p "$existing_home/.mindlayer" "$existing_project/.github" "$existing_project/.mindlayer/knowledge"
 
 cat > "$existing_home/.mindlayer/index.md" <<'EOF'
 # Global Memory Index
@@ -325,7 +325,7 @@ cat > "$existing_project/.gitignore" <<'EOF'
 node_modules/
 EOF
 
-cat > "$existing_project/.mindlayer/project.md" <<'EOF'
+cat > "$existing_project/.mindlayer/knowledge/project.md" <<'EOF'
 # Project Memory
 
 ## Custom Project Identity
@@ -348,7 +348,7 @@ fi
 check assert_contains "$existing_home/.mindlayer/preferences.md" "Custom global preference sentinel."
 check assert_file_exists "$existing_home/.mindlayer/boot.md"
 check assert_contains "$existing_home/.mindlayer/boot.md" "first project-relevant request"
-check assert_contains "$existing_project/.mindlayer/project.md" "Custom project memory sentinel."
+check assert_contains "$existing_project/.mindlayer/knowledge/project.md" "Custom project memory sentinel."
 check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/AGENTS.md" "$existing_project/AGENTS.md"
 check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/CLAUDE.md" "$existing_project/CLAUDE.md"
 check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/copilot-instructions.md" "$existing_project/.github/copilot-instructions.md"

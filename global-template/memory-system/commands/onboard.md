@@ -70,7 +70,7 @@ Proposed changes:
    After:  "<replacement or [remove]>"
 
 2. Migrate to MindLayer — (only when content has durable value):
-   Destination: <~/.mindlayer/preferences/personal.md | .mindlayer/decisions.md | etc.>
+   Destination: <~/.mindlayer/preferences/personal.md | .mindlayer/knowledge/decisions.md | etc.>
    Content: <proposed memory entry>
    Scope: global | project
 
@@ -145,5 +145,5 @@ Route correctly: project identity → `project.md`, decisions → `decisions.md`
 - One proposal per turn. Never batch.
 - Never write or edit without explicit approval. `apply`, `save`, `go`, `approved` count. `ok`, `sure`, `yes` do not count unless clearly approving the specific proposed change.
 - Do not re-propose entries the user has skipped in this session.
-- If `.mindlayer/project.md` already has non-placeholder content when this command fires, skip Phase 3 entirely — treat project context as already populated.
+- If `.mindlayer/knowledge/project.md` already has non-placeholder content when this command fires, skip Phase 3 entirely — treat project context as already populated.
 - Write the completion flag after all phases complete or when user says 'stop'.

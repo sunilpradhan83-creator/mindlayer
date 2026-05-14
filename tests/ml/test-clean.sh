@@ -22,7 +22,7 @@ printf "MindLayer ml clean contract\n"
 printf "===========================\n"
 
 scenario "clean memory reports no stale entries"
-mkdir -p "$SANDBOX/clean/.mindlayer"
+mkdir -p "$SANDBOX/clean/.mindlayer" "$SANDBOX/clean/.mindlayer/knowledge" "$SANDBOX/clean/.mindlayer/pipeline" "$SANDBOX/clean/.mindlayer/pipeline/archive" "$SANDBOX/clean/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/clean/.mindlayer/index-full.md" <<'EOF'
 # Project Memory Index
 
@@ -40,7 +40,7 @@ cat > "$SANDBOX/clean/.mindlayer/index-full.md" <<'EOF'
   status: active
   last_updated: 2026-05-14
 EOF
-printf "# Context\n\n## Live Entry\n\nCurrent.\n" > "$SANDBOX/clean/.mindlayer/context.md"
+printf "# Context\n\n## Live Entry\n\nCurrent.\n" > "$SANDBOX/clean/.mindlayer/knowledge/context.md"
 output="$SANDBOX/clean.out"
 if (cd "$SANDBOX/clean" && python3 "$ROOT_DIR/src/ml" clean > "$output"); then
   pass "$CURRENT_SCENARIO: command exits 0"
@@ -50,7 +50,7 @@ fi
 if assert_contains "$output" "No stale entries found. Memory is clean."; then pass "$CURRENT_SCENARIO: clean message printed"; else fail "$CURRENT_SCENARIO: clean message printed"; fi
 
 scenario "clean proposes archived entry without approval"
-mkdir -p "$SANDBOX/propose/.mindlayer"
+mkdir -p "$SANDBOX/propose/.mindlayer" "$SANDBOX/propose/.mindlayer/knowledge" "$SANDBOX/propose/.mindlayer/pipeline" "$SANDBOX/propose/.mindlayer/pipeline/archive" "$SANDBOX/propose/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/propose/.mindlayer/index-full.md" <<'EOF'
 # Project Memory Index
 
@@ -68,7 +68,7 @@ cat > "$SANDBOX/propose/.mindlayer/index-full.md" <<'EOF'
   status: archived
   last_updated: 2026-05-01
 EOF
-printf "# Context\n\n## Old Entry\n\nStale content.\n" > "$SANDBOX/propose/.mindlayer/context.md"
+printf "# Context\n\n## Old Entry\n\nStale content.\n" > "$SANDBOX/propose/.mindlayer/knowledge/context.md"
 output="$SANDBOX/propose.out"
 if (cd "$SANDBOX/propose" && python3 "$ROOT_DIR/src/ml" clean > "$output"); then
   pass "$CURRENT_SCENARIO: command exits 0"
@@ -77,10 +77,10 @@ else
 fi
 if assert_contains "$output" "Archive Candidate:"; then pass "$CURRENT_SCENARIO: proposal printed"; else fail "$CURRENT_SCENARIO: proposal printed"; fi
 if assert_contains "$output" "approve all"; then pass "$CURRENT_SCENARIO: approval prompt printed"; else fail "$CURRENT_SCENARIO: approval prompt printed"; fi
-if assert_file_contains "$SANDBOX/propose/.mindlayer/context.md" "Old Entry"; then pass "$CURRENT_SCENARIO: source unchanged before approval"; else fail "$CURRENT_SCENARIO: source unchanged before approval"; fi
+if assert_file_contains "$SANDBOX/propose/.mindlayer/knowledge/context.md" "Old Entry"; then pass "$CURRENT_SCENARIO: source unchanged before approval"; else fail "$CURRENT_SCENARIO: source unchanged before approval"; fi
 
 scenario "clean approve all archives and updates index"
-mkdir -p "$SANDBOX/approve/.mindlayer"
+mkdir -p "$SANDBOX/approve/.mindlayer" "$SANDBOX/approve/.mindlayer/knowledge" "$SANDBOX/approve/.mindlayer/pipeline" "$SANDBOX/approve/.mindlayer/pipeline/archive" "$SANDBOX/approve/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/approve/.mindlayer/index-full.md" <<'EOF'
 # Project Memory Index
 
@@ -99,7 +99,7 @@ cat > "$SANDBOX/approve/.mindlayer/index-full.md" <<'EOF'
   last_updated: 2026-05-01
 EOF
 printf "# Project Memory Index\n- ml-old-001 | Old Entry | context.md | Stale entry.\n" > "$SANDBOX/approve/.mindlayer/index.md"
-printf "# Context\n\n## Old Entry\n\nStale content.\n\n## Live Entry\n\nCurrent.\n" > "$SANDBOX/approve/.mindlayer/context.md"
+printf "# Context\n\n## Old Entry\n\nStale content.\n\n## Live Entry\n\nCurrent.\n" > "$SANDBOX/approve/.mindlayer/knowledge/context.md"
 output="$SANDBOX/approve.out"
 if (cd "$SANDBOX/approve" && python3 "$ROOT_DIR/src/ml" clean --approve-all > "$output"); then
   pass "$CURRENT_SCENARIO: command exits 0"
@@ -107,12 +107,12 @@ else
   fail "$CURRENT_SCENARIO: command exits 0"
 fi
 if assert_contains "$output" "Done."; then pass "$CURRENT_SCENARIO: done printed"; else fail "$CURRENT_SCENARIO: done printed"; fi
-if ! grep -Fq "Old Entry" "$SANDBOX/approve/.mindlayer/context.md"; then pass "$CURRENT_SCENARIO: source archived"; else fail "$CURRENT_SCENARIO: source archived"; fi
-if assert_file_contains "$SANDBOX/approve/.mindlayer/archive.md" "Old Entry"; then pass "$CURRENT_SCENARIO: archive contains entry"; else fail "$CURRENT_SCENARIO: archive contains entry"; fi
-if assert_file_contains "$SANDBOX/approve/.mindlayer/index-full.md" "file: archive.md"; then pass "$CURRENT_SCENARIO: index-full points to archive"; else fail "$CURRENT_SCENARIO: index-full points to archive"; fi
+if ! grep -Fq "Old Entry" "$SANDBOX/approve/.mindlayer/knowledge/context.md"; then pass "$CURRENT_SCENARIO: source archived"; else fail "$CURRENT_SCENARIO: source archived"; fi
+if assert_file_contains "$SANDBOX/approve/.mindlayer/pipeline/archive/archive.md" "Old Entry"; then pass "$CURRENT_SCENARIO: archive contains entry"; else fail "$CURRENT_SCENARIO: archive contains entry"; fi
+if assert_file_contains "$SANDBOX/approve/.mindlayer/index-full.md" "file: pipeline/archive/archive.md"; then pass "$CURRENT_SCENARIO: index-full points to archive"; else fail "$CURRENT_SCENARIO: index-full points to archive"; fi
 
 scenario "clean deletes stale missing-file index entry"
-mkdir -p "$SANDBOX/delete/.mindlayer"
+mkdir -p "$SANDBOX/delete/.mindlayer" "$SANDBOX/delete/.mindlayer/knowledge" "$SANDBOX/delete/.mindlayer/pipeline" "$SANDBOX/delete/.mindlayer/pipeline/archive" "$SANDBOX/delete/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/delete/.mindlayer/index-full.md" <<'EOF'
 # Project Memory Index
 
@@ -140,7 +140,7 @@ if assert_contains "$output" "Deleted: Missing Entry"; then pass "$CURRENT_SCENA
 if ! grep -Fq "ml-missing-001" "$SANDBOX/delete/.mindlayer/index-full.md"; then pass "$CURRENT_SCENARIO: stale index entry removed"; else fail "$CURRENT_SCENARIO: stale index entry removed"; fi
 
 scenario "clean global scope scans global memory"
-mkdir -p "$SANDBOX/global/project/.mindlayer" "$SANDBOX/global/home/.mindlayer"
+mkdir -p "$SANDBOX/global/project/.mindlayer" "$SANDBOX/global/home/.mindlayer" "$SANDBOX/global/project/.mindlayer/knowledge" "$SANDBOX/global/project/.mindlayer/pipeline" "$SANDBOX/global/project/.mindlayer/pipeline/archive" "$SANDBOX/global/project/.mindlayer/knowledge/sessions" "$SANDBOX/global/home/.mindlayer/knowledge" "$SANDBOX/global/home/.mindlayer/pipeline" "$SANDBOX/global/home/.mindlayer/pipeline/archive" "$SANDBOX/global/home/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/global/home/.mindlayer/index-full.md" <<'EOF'
 # Global Memory Index
 
@@ -158,7 +158,7 @@ cat > "$SANDBOX/global/home/.mindlayer/index-full.md" <<'EOF'
   status: archived
   last_updated: 2026-05-01
 EOF
-printf "# Context\n\n## Global Old Entry\n\nGlobal stale content.\n" > "$SANDBOX/global/home/.mindlayer/context.md"
+printf "# Context\n\n## Global Old Entry\n\nGlobal stale content.\n" > "$SANDBOX/global/home/.mindlayer/knowledge/context.md"
 output="$SANDBOX/global.out"
 if (cd "$SANDBOX/global/project" && HOME="$SANDBOX/global/home" python3 "$ROOT_DIR/src/ml" clean --scope global > "$output"); then
   pass "$CURRENT_SCENARIO: command exits 0"
@@ -166,10 +166,10 @@ else
   fail "$CURRENT_SCENARIO: command exits 0"
 fi
 if assert_contains "$output" "Global Old Entry"; then pass "$CURRENT_SCENARIO: global candidate printed"; else fail "$CURRENT_SCENARIO: global candidate printed"; fi
-if assert_file_contains "$SANDBOX/global/home/.mindlayer/context.md" "Global Old Entry"; then pass "$CURRENT_SCENARIO: global source unchanged before approval"; else fail "$CURRENT_SCENARIO: global source unchanged before approval"; fi
+if assert_file_contains "$SANDBOX/global/home/.mindlayer/knowledge/context.md" "Global Old Entry"; then pass "$CURRENT_SCENARIO: global source unchanged before approval"; else fail "$CURRENT_SCENARIO: global source unchanged before approval"; fi
 
 scenario "clean flags completed and resolved entries"
-mkdir -p "$SANDBOX/statuses/.mindlayer"
+mkdir -p "$SANDBOX/statuses/.mindlayer" "$SANDBOX/statuses/.mindlayer/knowledge" "$SANDBOX/statuses/.mindlayer/pipeline" "$SANDBOX/statuses/.mindlayer/pipeline/archive" "$SANDBOX/statuses/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/statuses/.mindlayer/index-full.md" <<'EOF'
 # Project Memory Index
 
@@ -199,8 +199,8 @@ cat > "$SANDBOX/statuses/.mindlayer/index-full.md" <<'EOF'
   status: resolved
   last_updated: 2026-05-01
 EOF
-printf "# Progress\n\n## Completed Progress\n\nDone.\n" > "$SANDBOX/statuses/.mindlayer/progress.md"
-printf "# Risks\n\n## Resolved Risk\n\nFixed.\n" > "$SANDBOX/statuses/.mindlayer/risks.md"
+printf "# Progress\n\n## Completed Progress\n\nDone.\n" > "$SANDBOX/statuses/.mindlayer/pipeline/progress.md"
+printf "# Risks\n\n## Resolved Risk\n\nFixed.\n" > "$SANDBOX/statuses/.mindlayer/knowledge/risks.md"
 output="$SANDBOX/statuses.out"
 if (cd "$SANDBOX/statuses" && python3 "$ROOT_DIR/src/ml" clean > "$output"); then
   pass "$CURRENT_SCENARIO: command exits 0"
@@ -212,7 +212,7 @@ if assert_contains "$output" "Resolved Risk"; then pass "$CURRENT_SCENARIO: reso
 if assert_contains "$output" "Summary: 2 to archive, 0 to delete, 0 to keep"; then pass "$CURRENT_SCENARIO: archive summary correct"; else fail "$CURRENT_SCENARIO: archive summary correct"; fi
 
 scenario "clean reports keep action for non-archivable resolved entry"
-mkdir -p "$SANDBOX/keep/.mindlayer"
+mkdir -p "$SANDBOX/keep/.mindlayer" "$SANDBOX/keep/.mindlayer/knowledge" "$SANDBOX/keep/.mindlayer/pipeline" "$SANDBOX/keep/.mindlayer/pipeline/archive" "$SANDBOX/keep/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/keep/.mindlayer/index-full.md" <<'EOF'
 # Project Memory Index
 
@@ -230,7 +230,7 @@ cat > "$SANDBOX/keep/.mindlayer/index-full.md" <<'EOF'
   status: resolved
   last_updated: 2026-05-01
 EOF
-printf "# Context\n\n## Resolved Note\n\nMaybe keep.\n" > "$SANDBOX/keep/.mindlayer/context.md"
+printf "# Context\n\n## Resolved Note\n\nMaybe keep.\n" > "$SANDBOX/keep/.mindlayer/knowledge/context.md"
 output="$SANDBOX/keep.out"
 if (cd "$SANDBOX/keep" && python3 "$ROOT_DIR/src/ml" clean > "$output"); then
   pass "$CURRENT_SCENARIO: command exits 0"
@@ -242,7 +242,7 @@ if assert_contains "$output" "Proposed action: keep"; then pass "$CURRENT_SCENAR
 if assert_contains "$output" "Summary: 0 to archive, 0 to delete, 1 to keep"; then pass "$CURRENT_SCENARIO: keep summary correct"; else fail "$CURRENT_SCENARIO: keep summary correct"; fi
 
 scenario "clean handles mixed archive delete keep candidates"
-mkdir -p "$SANDBOX/mixed/.mindlayer"
+mkdir -p "$SANDBOX/mixed/.mindlayer" "$SANDBOX/mixed/.mindlayer/knowledge" "$SANDBOX/mixed/.mindlayer/pipeline" "$SANDBOX/mixed/.mindlayer/pipeline/archive" "$SANDBOX/mixed/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/mixed/.mindlayer/index-full.md" <<'EOF'
 # Project Memory Index
 
@@ -284,7 +284,7 @@ cat > "$SANDBOX/mixed/.mindlayer/index-full.md" <<'EOF'
   status: resolved
   last_updated: 2026-05-01
 EOF
-printf "# Context\n\n## Old Entry\n\nStale.\n\n## Resolved Note\n\nKeep.\n" > "$SANDBOX/mixed/.mindlayer/context.md"
+printf "# Context\n\n## Old Entry\n\nStale.\n\n## Resolved Note\n\nKeep.\n" > "$SANDBOX/mixed/.mindlayer/knowledge/context.md"
 output="$SANDBOX/mixed.out"
 if (cd "$SANDBOX/mixed" && python3 "$ROOT_DIR/src/ml" clean > "$output"); then
   pass "$CURRENT_SCENARIO: command exits 0"

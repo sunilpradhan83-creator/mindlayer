@@ -12,9 +12,9 @@
 4. Read `~/.mindlayer/memory-system/per-turn.md` — always load, controls every response.
 5. Read project `.mindlayer/index.md` if available.
 6. Check `~/.mindlayer/preferences/personal.md` if available. Load only when it contains substantive user-written preferences; if missing or starter-only, report as skipped.
-7. Always check project `.mindlayer/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
-8. If `.mindlayer/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
-9. Read only the latest useful progress summary from project `.mindlayer/progress.md`.
+7. Always check project `.mindlayer/knowledge/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
+8. If `.mindlayer/knowledge/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
+9. Read only the latest useful progress summary from project `.mindlayer/pipeline/progress.md`.
 10. Do not load empty scaffold files by default.
 11. Do not load `.mindlayer/local.md` by default.
 12. Do not use `README.md` or `docs/` as memory input.

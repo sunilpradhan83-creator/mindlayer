@@ -16,7 +16,7 @@ scenario() { CURRENT_SCENARIO="$1"; printf "\n## %s\n" "$CURRENT_SCENARIO"; }
 cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
-mkdir -p "$SANDBOX/project/.mindlayer"
+mkdir -p "$SANDBOX/project/.mindlayer" "$SANDBOX/project/.mindlayer/knowledge" "$SANDBOX/project/.mindlayer/pipeline" "$SANDBOX/project/.mindlayer/pipeline/archive" "$SANDBOX/project/.mindlayer/knowledge/sessions"
 printf "# Index\n" > "$SANDBOX/project/.mindlayer/index.md"
 
 printf "MindLayer ml session contract\n"

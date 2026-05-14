@@ -9,7 +9,7 @@
 #
 # Strategies measured:
 #   L0           L0 bootstrap files only (memory-system.md + indexes).
-#   L0+identity  L0 plus project/.mindlayer/project.md and progress.md
+#   L0+identity  L0 plus project/.mindlayer/knowledge/project.md and progress.md
 #                (what MindLayer boot typically loads in practice).
 #   FULL_MEM     Everything committed in project/.mindlayer/ except local.md,
 #                private/, sessions/, cache/, tmp/. Worst case for memory.

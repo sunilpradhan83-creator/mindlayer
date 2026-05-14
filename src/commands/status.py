@@ -7,7 +7,7 @@ from datetime import date
 from pathlib import Path
 import re
 
-from ._paths import read_text
+from ._paths import archive_file, pipeline_file, read_text
 from .diff import memory_diff
 
 
@@ -105,7 +105,7 @@ def _next_detail(text: str) -> str:
 
 
 def _continuity(memory_dir: Path) -> tuple[str, str]:
-    progress = memory_dir / "progress.md"
+    progress = pipeline_file(memory_dir, "progress.md")
     if not progress.is_file():
         return "not recorded", "record current progress"
     text = read_text(progress)
@@ -118,8 +118,9 @@ def run(project_root: Path) -> int:
     memory_dir = project_root / ".mindlayer"
     files = sorted(
         path
-        for path in memory_dir.glob("*.md")
-        if path.name not in {"archive.md", "local.md"}
+        for base in (memory_dir, memory_dir / "pipeline", memory_dir / "knowledge")
+        for path in base.glob("*.md")
+        if path.name not in {"archive.md", "local.md", "index-full.md"}
     )
 
     print("Per-File Health:")
@@ -147,7 +148,7 @@ def run(project_root: Path) -> int:
         if any((age or 0) > 90 for age in (_days_old(item) for item in _entry_dates(text))):
             stale_titles.append(path.name)
     print(f"Stale entries: {len(stale_titles)} flagged ({', '.join(stale_titles) if stale_titles else 'none'}) — say 'ml clean' to review")
-    print(f"Archived entries: {_archived_count(memory_dir / 'archive.md')} in archive.md (global: 0, project: {_archived_count(memory_dir / 'archive.md')})")
+    print(f"Archived entries: {_archived_count(archive_file(memory_dir))} in pipeline/archive/archive.md (global: 0, project: {_archived_count(archive_file(memory_dir))})")
     print("Conflicts:")
     print("- None detected")
     current_progress, next_action = _continuity(memory_dir)
@@ -158,7 +159,7 @@ def run(project_root: Path) -> int:
     print(f"- next useful action: {next_action}")
     print("Context:")
     print("- files loaded: .mindlayer/*.md health metadata")
-    print("- files skipped: archive.md, local.md")
+    print("- files skipped: pipeline/archive/archive.md, local.md")
     diff = memory_diff(project_root)
     if diff:
         print(diff)

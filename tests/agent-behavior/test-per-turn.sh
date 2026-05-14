@@ -271,7 +271,7 @@ done
 scenario "load announcement — happy path single file"
 f="$SANDBOX/load-single.md"
 cat > "$f" <<'EOF'
-Loaded: .mindlayer/decisions.md — design question detected
+Loaded: .mindlayer/knowledge/decisions.md — design question detected
 
 Here is the answer to your question about the routing decision.
 
@@ -292,8 +292,8 @@ check "no boot file re-announced" assert_no_duplicate_boot_announcement "$f"
 scenario "load announcement — multiple files loaded"
 f="$SANDBOX/load-multi.md"
 cat > "$f" <<'EOF'
-Loaded: .mindlayer/decisions.md — design question detected
-Loaded: .mindlayer/risks.md — risk concern detected
+Loaded: .mindlayer/knowledge/decisions.md — design question detected
+Loaded: .mindlayer/knowledge/risks.md — risk concern detected
 
 Answer content here.
 
@@ -326,7 +326,7 @@ check "no spurious announcement" assert_no_load_announcement "$f"
 scenario "load announcement — violation: missing reason"
 f="$SANDBOX/load-no-reason.md"
 cat > "$f" <<'EOF'
-Loaded: .mindlayer/decisions.md
+Loaded: .mindlayer/knowledge/decisions.md
 
 Answer here.
 
@@ -737,7 +737,7 @@ fi
 scenario "dogfood — all three contracts in one valid turn"
 f="$SANDBOX/dogfood-full-turn.md"
 cat > "$f" <<'EOF'
-Loaded: .mindlayer/risks.md — risk concern detected in user message
+Loaded: .mindlayer/knowledge/risks.md — risk concern detected in user message
 
 The router enforcement gap is a known risk. The mitigation is the /m-script command in V4.
 

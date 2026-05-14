@@ -36,7 +36,7 @@ check() {
 cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
-mkdir -p "$SANDBOX/home/.mindlayer/memory-system" "$SANDBOX/project/.mindlayer"
+mkdir -p "$SANDBOX/home/.mindlayer/memory-system" "$SANDBOX/project/.mindlayer" "$SANDBOX/project/.mindlayer/knowledge" "$SANDBOX/project/.mindlayer/pipeline" "$SANDBOX/project/.mindlayer/pipeline/archive" "$SANDBOX/project/.mindlayer/knowledge/sessions"
 mkdir -p "$SANDBOX/home/.mindlayer/preferences"
 cat > "$SANDBOX/home/.mindlayer/boot.md" <<'EOF'
 # Boot
@@ -68,7 +68,7 @@ EOF
 cat > "$SANDBOX/project/.mindlayer/index-full.md" <<'EOF'
 # Full index must not load during boot.
 EOF
-cat > "$SANDBOX/project/.mindlayer/project.md" <<'EOF'
+cat > "$SANDBOX/project/.mindlayer/knowledge/project.md" <<'EOF'
 # Project
 
 ## Project Identity
@@ -76,7 +76,7 @@ cat > "$SANDBOX/project/.mindlayer/project.md" <<'EOF'
 ### Summary
 Test project identity.
 EOF
-cat > "$SANDBOX/project/.mindlayer/progress.md" <<'EOF'
+cat > "$SANDBOX/project/.mindlayer/pipeline/progress.md" <<'EOF'
 # Progress
 
 ## Current Phase
@@ -84,7 +84,7 @@ cat > "$SANDBOX/project/.mindlayer/progress.md" <<'EOF'
 ### Summary
 Command runner foundation.
 EOF
-cat > "$SANDBOX/project/.mindlayer/backlog.md" <<'EOF'
+cat > "$SANDBOX/project/.mindlayer/pipeline/backlog.md" <<'EOF'
 # Backlog
 EOF
 

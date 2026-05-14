@@ -66,7 +66,7 @@ Deprecated. The Per-Turn Status Block (Token Burned) replaces Handoff as the ong
 When a session write trigger fires (user says "done for today", "wrapping up", "end session", etc.), append after the main response:
 
 ```text
-Session summary ready — say 'save session' to write sessions/YYYY-MM-DD.md.
+Session summary ready — say 'save session' to write knowledge/sessions/YYYY-MM-DD.md.
 ```
 
 Also fires automatically (with approval) at: pre-`/compact`, post-significant-completion, and when session context exceeds 80%.

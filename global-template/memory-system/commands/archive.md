@@ -112,7 +112,7 @@ Done.
 
 - **`tmp/`**: clear all files when stale (modification date from a prior session). Always propose before deleting.
 - **`cache/`**: flag files older than 7 days as potentially stale. Propose deletion per file — cache is always regenerable.
-- **`sessions/`**: never cleared. Dated snapshots are permanent logs.
+- **`knowledge/sessions/`**: never cleared. Dated snapshots are permanent logs.
 - **`private/`**: never auto-cleared. User deletes manually.
 
 Propose subdirectory cleanup alongside index entry proposals when both are present. Batch under the same approval flow.

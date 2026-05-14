@@ -20,7 +20,7 @@ assert_top_score_at_least_50() {
 cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
 
-mkdir -p "$SANDBOX/project/.mindlayer" "$SANDBOX/project/global-template/memory-system/per-turn"
+mkdir -p "$SANDBOX/project/.mindlayer" "$SANDBOX/project/global-template/memory-system/per-turn" "$SANDBOX/project/.mindlayer/knowledge" "$SANDBOX/project/.mindlayer/pipeline" "$SANDBOX/project/.mindlayer/pipeline/archive" "$SANDBOX/project/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/project/.mindlayer/index-full.md" <<'EOF'
 # Full Index
 
@@ -61,7 +61,7 @@ EOF
 cat > "$SANDBOX/project/.mindlayer/index.md" <<'EOF'
 # Project Memory Index
 EOF
-cat > "$SANDBOX/project/.mindlayer/context.md" <<'EOF'
+cat > "$SANDBOX/project/.mindlayer/knowledge/context.md" <<'EOF'
 # Context
 
 ## Command Runner
@@ -69,7 +69,7 @@ cat > "$SANDBOX/project/.mindlayer/context.md" <<'EOF'
 ### Summary
 Read-only ml command runner foundation.
 EOF
-cat > "$SANDBOX/project/.mindlayer/archive.md" <<'EOF'
+cat > "$SANDBOX/project/.mindlayer/pipeline/archive/archive.md" <<'EOF'
 # Archive
 
 ## Old Command Runner

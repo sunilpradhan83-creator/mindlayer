@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 
 from . import archive
+from ._paths import knowledge_file, pipeline_file, sessions_dir
 from ._write import approved
 
 
@@ -15,9 +16,9 @@ def run(project_root: Path, words: int = 0, context_window: int = 200_000) -> in
     loaded_words = 0
     for path in [
         project_root / ".mindlayer" / "index.md",
-        project_root / ".mindlayer" / "project.md",
-        project_root / ".mindlayer" / "progress.md",
-        project_root / ".mindlayer" / "backlog.md",
+        knowledge_file(project_root / ".mindlayer", "project.md"),
+        pipeline_file(project_root / ".mindlayer", "progress.md"),
+        pipeline_file(project_root / ".mindlayer", "backlog.md"),
     ]:
         if path.is_file():
             loaded_words += len(path.read_text(encoding="utf-8", errors="replace").split())
@@ -71,11 +72,11 @@ def write(
     approve: bool = False,
 ) -> int:
     date_str = session_date or str(_date.today())
-    sessions_dir = project_root / ".mindlayer" / "sessions"
-    session_file = sessions_dir / f"{date_str}.md"
+    sessions_dir_path = sessions_dir(project_root / ".mindlayer")
+    session_file = sessions_dir_path / f"{date_str}.md"
 
     print("Session Write Candidate:")
-    print(f"- Destination: .mindlayer/sessions/{date_str}.md")
+    print(f"- Destination: .mindlayer/knowledge/sessions/{date_str}.md")
     print("- Action: create or append")
     print(f"- Worked on: {', '.join(worked_on or ['(none)'])}")
     print(f"- Next: {', '.join(next_steps or ['(none)'])}")
@@ -85,7 +86,7 @@ def write(
         print("Session summary ready — say 'save session' or re-run with `--approve` to write.")
         return 0
 
-    sessions_dir.mkdir(parents=True, exist_ok=True)
+    sessions_dir_path.mkdir(parents=True, exist_ok=True)
 
     block = (
         f"# Session: {date_str}\n\n"
@@ -102,7 +103,7 @@ def write(
     else:
         session_file.write_text(block + "\n", encoding="utf-8")
 
-    print(f"Session written: .mindlayer/sessions/{date_str}.md")
+    print(f"Session written: .mindlayer/knowledge/sessions/{date_str}.md")
     if completed:
         print("Memory check:")
         try:

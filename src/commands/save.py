@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from ._paths import is_protected, memory_dir_for, read_text
+from ._paths import display_memory_path, is_protected, memory_dir_for, read_text, resolve_memory_file
 from ._write import approved
 
 
@@ -66,7 +66,7 @@ def run(
     approve: bool = False,
 ) -> int:
     memory_dir = memory_dir_for(project_root, scope)
-    target = (memory_dir / file).resolve()
+    target = resolve_memory_file(memory_dir, file).resolve()
 
     try:
         target.relative_to(memory_dir.resolve())
@@ -83,7 +83,7 @@ def run(
     print(f"- Content: {content}")
     print(f"- Scope: {scope}")
     print("- Type: memory")
-    print(f"- Destination: {scope} .mindlayer/{file}")
+    print(f"- Destination: {scope} {display_memory_path(target, memory_dir)}")
     print(f"- Action: {action}")
     print("- Reason: explicit ml save request")
     print("- Duplicate check: section existence checked before write")

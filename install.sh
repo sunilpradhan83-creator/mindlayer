@@ -163,10 +163,10 @@ Run once per session, in order, before answering any request:
 4. Read ~/.mindlayer/memory-system/per-turn.md — always. Controls every response you generate.
 5. Read ~/.mindlayer/preferences/personal.md — only if it contains non-scaffold content.
 6. Read project .mindlayer/index.md — catalog of project memory.
-7. Read project .mindlayer/project.md — stable project identity.
+7. Read project .mindlayer/knowledge/project.md — stable project identity.
 8. Load project progress and backlog — check progress.md and backlog.md.
 9. Check sessions/ — if a recent session file exists, read only the ## Next section.
-10. Check onboard status — scan .mindlayer/index.md for id: ml-onboard-complete. If absent AND .mindlayer/project.md contains only placeholder/scaffold content, load memory-system/commands/onboard.md and fire the onboard flow on the first project-relevant turn.
+10. Check onboard status — scan .mindlayer/index.md for id: ml-onboard-complete. If absent AND .mindlayer/knowledge/project.md contains only placeholder/scaffold content, load memory-system/commands/onboard.md and fire the onboard flow on the first project-relevant turn.
 11. Run adapter guard — compare known frozen adapter hashes against .mindlayer/adapters.lock using canonical templates from ~/.mindlayer/memory-system/templates/. Complete this guard before answering the first project-relevant request.
 
 Do not treat a plain greeting as a project-relevant request.
@@ -257,7 +257,7 @@ Load each file at most once per session. Load before acting on the trigger — n
 | memory-system/commands/status.md | ml status invoked | ml status, "mstatus", "memory status" |
 | memory-system/commands/archive.md | ml clean invoked | ml clean, "clean memory", "forget X", "tidy memory" |
 | memory-system/commands/session.md | ml session invoked or session boundary | ml session, "msession", "how much context", "done", "bye", "end session", /compact invoked |
-| memory-system/commands/onboard.md | First project-relevant turn when onboard not yet complete | .mindlayer/index.md does NOT contain id: ml-onboard-complete AND .mindlayer/project.md is placeholder-only |
+| memory-system/commands/onboard.md | First project-relevant turn when onboard not yet complete | .mindlayer/index.md does NOT contain id: ml-onboard-complete AND .mindlayer/knowledge/project.md is placeholder-only |
 | memory-system/read-write.md | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
 | memory-system/schema.md | Structural question | lifecycle statuses, private/, sessions/, cache/, tmp/, token strategy, folder structure |
 | preferences/personal.md | Every session | Non-scaffold content present |
@@ -275,7 +275,7 @@ Signal variants: "ml save", "remember this", "save this", "add to memory", "capt
 - Cross-project workflows, principles, anti-patterns, and prompt templates belong in ~/.mindlayer/preferences/.
 - Project identity, progress, decisions, context, backlog, and risks belong in project/.mindlayer/.
 - Do not mirror global memory into project/.mindlayer/; read and write it directly from ~/.mindlayer/.
-- Long-term versioned product vision belongs in .mindlayer/roadmap.md; near-term tracked tasks belong in .mindlayer/backlog.md.
+- Long-term versioned product vision belongs in .mindlayer/pipeline/roadmap.md; near-term tracked tasks belong in .mindlayer/pipeline/backlog.md.
 - Private, local, session, cache, and temporary material must stay out of committed project memory.
 - When developing MindLayer itself, treat repo .mindlayer/ as the product-memory source of truth and treat live ~/.mindlayer/ as runtime output.
 - When a user installs MindLayer on an existing project, auto-trigger ml onboard on the first project-relevant turn.
@@ -399,7 +399,7 @@ Trigger phrases (invoke immediately):
 
 Session write format:
 ```text
-Session summary ready — say '"'"'save session'"'"' to write sessions/YYYY-MM-DD.md.
+Session summary ready — say '"'"'save session'"'"' to write knowledge/sessions/YYYY-MM-DD.md.
 ```'
 
 global_memory_system_commands='# Commands
@@ -422,7 +422,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 
 ## Archive Rules
 
-- archive.md exists at ~/.mindlayer/archive.md (global) and .mindlayer/archive.md (project).
+- archive.md exists at ~/.mindlayer/pipeline/archive/archive.md (global) and .mindlayer/pipeline/archive/archive.md (project).
 - Boot always skips archive.md. Load it only when ml load explicitly targets archived content.
 - Archived entries keep their full markdown section in archive.md for future reference.
 - Deleted entries are removed from both the source file and the index.
@@ -451,7 +451,7 @@ Load this file before any memory read or write operation.
 - Read ~/.mindlayer/boot.md first when initializing MindLayer behavior, then router.md, then follow load triggers.
 - Read preferences/personal.md during boot only when it contains substantive user-written preferences.
 - Read indexes before full memory files.
-- During boot, always check project .mindlayer/project.md for stable project identity.
+- During boot, always check project .mindlayer/knowledge/project.md for stable project identity.
 - Load full sections only when relevant.
 - Do not use README.md or docs/ as memory input; they are human-facing documentation.
 - Treat tool adapters such as AGENTS.md, CLAUDE.md, and Copilot instructions as thin instructions, not durable memory stores or retrieval sources.
@@ -750,7 +750,7 @@ Use this file as the compact search map for project .mindlayer/.
 
 - id: ml-project-YYYYMMDD-001
   title: Project starter context
-  file: project.md
+  file: knowledge/project.md
   section: Entry Template
   scope: project
   type: context
@@ -1023,17 +1023,17 @@ install_project_memory() {
   pmem="$PROJECT_DIR/.mindlayer"
   mkdir_p "$pmem"
 
-  write_template_if_missing "$pmem/project.md" "$PROJECT_TEMPLATE_DIR/project.md" "$project_template"
-  write_template_if_missing "$pmem/progress.md" "$PROJECT_TEMPLATE_DIR/progress.md" "$progress_template"
-  write_template_if_missing "$pmem/decisions.md" "$PROJECT_TEMPLATE_DIR/decisions.md" "$decision_template"
-  write_template_if_missing "$pmem/context.md" "$PROJECT_TEMPLATE_DIR/context.md" "$context_template"
-  write_template_if_missing "$pmem/backlog.md" "$PROJECT_TEMPLATE_DIR/backlog.md" "$backlog_template"
-  write_template_if_missing "$pmem/roadmap.md" "$PROJECT_TEMPLATE_DIR/roadmap.md" "$roadmap_template"
-  write_template_if_missing "$pmem/risks.md" "$PROJECT_TEMPLATE_DIR/risks.md" "$risk_template"
+  write_template_if_missing "$pmem/knowledge/project.md" "$PROJECT_TEMPLATE_DIR/knowledge/project.md" "$project_template"
+  write_template_if_missing "$pmem/pipeline/progress.md" "$PROJECT_TEMPLATE_DIR/pipeline/progress.md" "$progress_template"
+  write_template_if_missing "$pmem/knowledge/decisions.md" "$PROJECT_TEMPLATE_DIR/knowledge/decisions.md" "$decision_template"
+  write_template_if_missing "$pmem/knowledge/context.md" "$PROJECT_TEMPLATE_DIR/knowledge/context.md" "$context_template"
+  write_template_if_missing "$pmem/pipeline/backlog.md" "$PROJECT_TEMPLATE_DIR/pipeline/backlog.md" "$backlog_template"
+  write_template_if_missing "$pmem/pipeline/roadmap.md" "$PROJECT_TEMPLATE_DIR/pipeline/roadmap.md" "$roadmap_template"
+  write_template_if_missing "$pmem/knowledge/risks.md" "$PROJECT_TEMPLATE_DIR/knowledge/risks.md" "$risk_template"
   write_template_if_missing "$pmem/index.md" "$PROJECT_TEMPLATE_DIR/index.md" "$project_index"
   write_template_if_missing "$pmem/local.md" "$PROJECT_TEMPLATE_DIR/local.md" "$local_template"
 
-  rmdir "$pmem/private" "$pmem/sessions" "$pmem/cache" "$pmem/tmp" 2>/dev/null || true
+  rmdir "$pmem/private" "$pmem/knowledge/sessions" "$pmem/cache" "$pmem/tmp" 2>/dev/null || true
 }
 
 install_adapters() {
@@ -1174,7 +1174,7 @@ install_gitignore() {
   fi
   append_gitignore_rule "$file" ".mindlayer/local.md"
   append_gitignore_rule "$file" ".mindlayer/private/"
-  append_gitignore_rule "$file" ".mindlayer/sessions/"
+  append_gitignore_rule "$file" ".mindlayer/knowledge/sessions/"
   append_gitignore_rule "$file" ".mindlayer/cache/"
   append_gitignore_rule "$file" ".mindlayer/tmp/"
   append_gitignore_rule "$file" ".mindlayer/adapters.lock"

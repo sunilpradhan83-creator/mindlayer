@@ -4,11 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+
+from ._paths import archive_file, sessions_dir
 import subprocess
 
 
 def _latest_session(memory_dir: Path) -> Path | None:
-    sessions = sorted((memory_dir / "sessions").glob("????-??-??.md"))
+    sessions = sorted(sessions_dir(memory_dir).glob("????-??-??.md"))
     return sessions[-1] if sessions else None
 
 
@@ -71,18 +73,19 @@ def summarize_diff(diff_text: str) -> str:
             continue
         if not current_file or not current_file.startswith(".mindlayer/"):
             continue
-        if any(part in current_file for part in ("/sessions/", "/cache/", "/tmp/", "/private/")):
+        if any(part in current_file for part in ("/knowledge/sessions/", "/cache/", "/tmp/", "/private/")):
             continue
-        if current_file in {".mindlayer/local.md", ".mindlayer/archive.md"}:
-            archive_file = current_file == ".mindlayer/archive.md"
+        archive_path = ".mindlayer/" + str(archive_file(Path(".mindlayer"))).split(".mindlayer/", 1)[1]
+        if current_file in {".mindlayer/local.md", archive_path}:
+            archive_file_flag = current_file == archive_path
         else:
-            archive_file = False
+            archive_file_flag = False
 
         line = raw[1:].strip() if raw[:1] in "+-" else ""
         if raw.startswith("+") and re.match(r"id:\s*\S+", line):
             entry_id = line.split(":", 1)[1].strip()
             new_ids.setdefault(current_file, set()).add(entry_id)
-            if archive_file:
+            if archive_file_flag:
                 added_status_archived.add(entry_id)
         elif raw.startswith("-") and re.match(r"id:\s*\S+", line):
             entry_id = line.split(":", 1)[1].strip()
@@ -99,10 +102,10 @@ def summarize_diff(diff_text: str) -> str:
     if added_status_archived and not removed_status_archived:
         archived_count += len(added_status_archived & {".mindlayer/" + f for f in ()})
 
-    new_files = sorted(file for file, ids in new_ids.items() if ids - updated and file != ".mindlayer/archive.md")
-    updated_files = sorted(file for file, ids in new_ids.items() if ids & updated and file != ".mindlayer/archive.md")
-    new_count = sum(len(ids - updated) for file, ids in new_ids.items() if file != ".mindlayer/archive.md")
-    updated_count = sum(len(ids & updated) for file, ids in new_ids.items() if file != ".mindlayer/archive.md")
+    new_files = sorted(file for file, ids in new_ids.items() if ids - updated and file != ".mindlayer/pipeline/archive/archive.md")
+    updated_files = sorted(file for file, ids in new_ids.items() if ids & updated and file != ".mindlayer/pipeline/archive/archive.md")
+    new_count = sum(len(ids - updated) for file, ids in new_ids.items() if file != ".mindlayer/pipeline/archive/archive.md")
+    updated_count = sum(len(ids & updated) for file, ids in new_ids.items() if file != ".mindlayer/pipeline/archive/archive.md")
 
     lines = []
     if new_count or updated_count or archived_count:

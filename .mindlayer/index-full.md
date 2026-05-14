@@ -4,7 +4,7 @@
 
 - id: ml-project-20260430-001
   title: MindLayer Project Identity
-  file: project.md
+  file: knowledge/project.md
   section: MindLayer Project Identity
   scope: project
   type: context
@@ -16,7 +16,7 @@
 
 - id: ml-20260430-002
   title: Installer-First V1 Seed
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: Installer-First V1 Seed
   scope: project
   type: progress
@@ -28,7 +28,7 @@
 
 - id: ml-20260430-003
   title: V1 Memory Architecture Decisions
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: V1 Memory Architecture Decisions
   scope: project
   type: decision
@@ -40,7 +40,7 @@
 
 - id: ml-20260503-001
   title: MindLayer Source-of-Truth Boundaries
-  file: decisions.md
+  file: knowledge/decisions.md
   section: MindLayer Source-of-Truth Boundaries
   scope: project
   type: decision
@@ -52,7 +52,7 @@
 
 - id: ml-20260503-002
   title: Literal Approval for Memory Writes
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Literal Approval for Memory Writes
   scope: project
   type: decision
@@ -64,7 +64,7 @@
 
 - id: ml-20260504-001
   title: MindLayer Handoff Display Boundaries
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: MindLayer Handoff Display Boundaries
   scope: project
   type: decision
@@ -76,7 +76,7 @@
 
 - id: ml-20260505-007
   title: Lateral Intent Routing
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Lateral Intent Routing
   scope: project
   type: decision
@@ -88,7 +88,7 @@
 
 - id: ml-20260505-005
   title: Token Burned Per-Turn Status Block
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Token Burned Per-Turn Status Block
   scope: project
   type: decision
@@ -100,7 +100,7 @@
 
 - id: ml-20260430-004
   title: Product Design Philosophy
-  file: context.md
+  file: knowledge/context.md
   section: Product Design Philosophy
   scope: project
   type: context
@@ -112,7 +112,7 @@
 
 - id: ml-20260506-001
   title: Memory System Self-Reference Problem
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: Memory System Self-Reference Problem
   scope: project
   type: context
@@ -124,7 +124,7 @@
 
 - id: ml-20260505-004
   title: Goal Hierarchy and Flow
-  file: context.md
+  file: knowledge/context.md
   section: Goal Hierarchy and Flow
   scope: project
   type: context
@@ -136,7 +136,7 @@
 
 - id: ml-20260430-006
   title: V1 Trust and Quality Risks
-  file: risks.md
+  file: knowledge/risks.md
   section: V1 Trust and Quality Risks
   scope: project
   type: risk
@@ -148,7 +148,7 @@
 
 - id: ml-20260430-005
   title: Future Roadmap
-  file: backlog.md
+  file: pipeline/backlog.md
   section: Future Roadmap
   scope: project
   type: backlog
@@ -160,7 +160,7 @@
 
 - id: ml-20260505-006
   title: Current Phase — V4 Phase 2 Guarded Writes
-  file: progress.md
+  file: pipeline/progress.md
   section: Current Phase
   scope: project
   type: progress
@@ -172,7 +172,7 @@
 
 - id: ml-20260505-003
   title: MindLayer Product Roadmap
-  file: roadmap.md
+  file: pipeline/roadmap.md
   section: MindLayer Product Roadmap
   scope: project
   type: roadmap
@@ -196,7 +196,7 @@
 
 - id: ml-20260507-007
   title: Global-Template Sync Rule
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Global-Template Sync Rule
   scope: project
   type: decision
@@ -208,7 +208,7 @@
 
 - id: ml-20260507-006
   title: Per-Turn Behavioral Contract Compliance Risk
-  file: risks.md
+  file: knowledge/risks.md
   section: Per-Turn Behavioral Contract Compliance
   scope: project
   type: risk
@@ -220,7 +220,7 @@
 
 - id: ml-20260507-003
   title: Router Enforcement Gap
-  file: risks.md
+  file: knowledge/risks.md
   section: Router Enforcement Gap
   scope: project
   type: risk
@@ -232,7 +232,7 @@
 
 - id: ml-20260507-005
   title: ML-999 Backlog Evaluation Decisions
-  file: decisions.md
+  file: knowledge/decisions.md
   section: ML-999 Backlog Evaluation Decisions
   scope: project
   type: decision
@@ -244,7 +244,7 @@
 
 - id: ml-20260507-010
   title: ml onboard Three-Phase Migration Flow
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: ml onboard Three-Phase Migration Flow
   scope: project
   type: decision
@@ -256,7 +256,7 @@
 
 - id: ml-20260507-009
   title: ml onboard One-Time Flag via Index Entry
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: ml onboard One-Time Flag via Index Entry
   scope: project
   type: decision
@@ -268,7 +268,7 @@
 
 - id: ml-20260507-008
   title: Commands Subfolder Architecture
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: Commands Subfolder Architecture
   scope: project
   type: decision
@@ -280,7 +280,7 @@
 
 - id: ml-20260510-002
   title: Dogfood Two-Script Architecture
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Dogfood Two-Script Architecture
   scope: project
   type: decision
@@ -292,7 +292,7 @@
 
 - id: ml-20260510-003
   title: AGENTS.md Boot Trigger Root Cause
-  file: decisions.md
+  file: knowledge/decisions.md
   section: AGENTS.md Boot Trigger Root Cause
   scope: project
   type: decision
@@ -304,7 +304,7 @@
 
 - id: ml-20260510-004
   title: Open Source Security Hardening Decision
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Open Source Security Hardening Decision
   scope: project
   type: decision
@@ -316,7 +316,7 @@
 
 - id: ml-20260507-004
   title: Agent-Agnostic Design Principle
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Agent-Agnostic Design Principle
   scope: project
   type: decision
@@ -328,7 +328,7 @@
 
 - id: ml-20260513-001
   title: Agent-Agnostic Command Output Standard
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Agent-Agnostic Command Output Standard
   scope: project
   type: decision
@@ -340,7 +340,7 @@
 
 - id: ml-20260507-002
   title: Skill Approval Gate
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Skill Approval Gate
   scope: project
   type: decision
@@ -352,7 +352,7 @@
 
 - id: ml-20260507-011
   title: Memory Diff Design Decisions
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: Memory Diff Design Decisions
   scope: project
   type: decision
@@ -364,7 +364,7 @@
 
 - id: ml-20260507-012
   title: ml load Primary Command and Ranked Loading
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: ml load Primary Command and Ranked Loading
   scope: project
   type: decision
@@ -376,7 +376,7 @@
 
 - id: ml-20260507-001
   title: SCRIPT Development Philosophy
-  file: context.md
+  file: knowledge/context.md
   section: SCRIPT Development Philosophy
   scope: project
   type: context
@@ -388,7 +388,7 @@
 
 - id: ml-20260508-001
   title: Instruction-Only Architecture Ceiling
-  file: risks.md
+  file: knowledge/risks.md
   section: Instruction-Only Architecture Ceiling
   scope: project
   type: risk
@@ -400,7 +400,7 @@
 
 - id: ml-20260508-002
   title: SCRIPT Product Engine Architecture
-  file: decisions.md
+  file: knowledge/decisions.md
   section: SCRIPT Product Engine Architecture
   scope: project
   type: decision
@@ -412,7 +412,7 @@
 
 - id: ml-20260511-001
   title: Adapter Boot Wording Drift
-  file: archive.md
+  file: pipeline/archive/archive.md
   section: Adapter Boot Wording Drift
   scope: project
   type: risk
@@ -424,7 +424,7 @@
 
 - id: ml-20260511-002
   title: Adapter Freeze + Auto-Detection Architecture
-  file: decisions.md
+  file: knowledge/decisions.md
   section: Adapter Freeze + Auto-Detection Architecture
   scope: project
   type: decision
@@ -436,7 +436,7 @@
 
 - id: ml-20260512-001
   title: V4 Phase 0 Boot Compression Architecture
-  file: decisions.md
+  file: knowledge/decisions.md
   section: V4 Phase 0 Boot Compression Architecture
   scope: project
   type: decision
@@ -448,7 +448,7 @@
 
 - id: ml-20260514-001
   title: SCRIPT Lifecycle File Ownership and Rules
-  file: decisions.md
+  file: knowledge/decisions.md
   section: SCRIPT Lifecycle File Ownership and Rules
   scope: project
   type: decision
@@ -460,7 +460,7 @@
 
 - id: ml-20260514-002
   title: SCRIPT V4 Final Structure, Story Schema, and Graphify Decision
-  file: decisions.md
+  file: knowledge/decisions.md
   section: SCRIPT V4 Final Structure, Story Schema, and Graphify Decision
   scope: project
   type: decision
@@ -472,7 +472,7 @@
 
 - id: ml-20260514-003
   title: SCRIPT Transfer Rules and ml script CLI
-  file: decisions.md
+  file: knowledge/decisions.md
   section: SCRIPT Transfer Rules and ml script CLI
   scope: project
   type: decision
@@ -484,7 +484,7 @@
 
 - id: ml-20260514-004
   title: SCRIPT V4 Review-Driven Refinements
-  file: decisions.md
+  file: knowledge/decisions.md
   section: SCRIPT V4 Review-Driven Refinements
   scope: project
   type: decision

@@ -217,7 +217,7 @@ Loaded:
 - ~/.mindlayer/boot.md
 - ~/.mindlayer/router.md
 - .mindlayer/index.md (24 entries)
-- .mindlayer/project.md
+- .mindlayer/knowledge/project.md
 
 Current understanding:
 MindLayer — markdown-first memory system for AI-native developers.
@@ -367,7 +367,7 @@ Content: \"Always use conventional commits for this project. Format: type(scope)
 Reason: recurring workflow preference worth preserving across sessions.
 
 Proposed write:
-- Destination: .mindlayer/decisions.md
+- Destination: .mindlayer/knowledge/decisions.md
 - Scope: project
 - Type: decision
 
@@ -414,7 +414,7 @@ Source: README.md
 Found: This is a TypeScript monorepo using pnpm workspaces. Core packages: api/, web/, shared/.
 
 Proposed write:
-- File: .mindlayer/project.md
+- File: .mindlayer/knowledge/project.md
 - Section: Project Identity
 - Content: TypeScript monorepo using pnpm workspaces. Core packages: api/ (Express REST API), web/ (Next.js frontend), shared/ (types and utilities).
 - Reason: stable project identity — useful at every session boot.
@@ -456,7 +456,7 @@ Source: README.md
 Found: TypeScript monorepo.
 
 Proposed write:
-- File: .mindlayer/project.md
+- File: .mindlayer/knowledge/project.md
 - Section: Project Identity
 - Content: TypeScript monorepo using pnpm workspaces.
 - Reason: stable identity.
@@ -482,7 +482,7 @@ Source: README.md
 Found: TypeScript monorepo.
 
 Proposed write:
-- File: .mindlayer/project.md
+- File: .mindlayer/knowledge/project.md
 - Section: Project Identity
 - Content: TypeScript monorepo.
 - Reason: stable identity.
