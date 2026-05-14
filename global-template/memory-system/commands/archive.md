@@ -1,4 +1,4 @@
-# ml archive
+# ml clean
 
 <!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
 
@@ -7,7 +7,7 @@ Scan for stale memory entries and propose archive or delete actions. Do not writ
 ## Triggers
 
 Invoke immediately when the user says:
-- "clean memory", "clean up memory", "archive memory", "archive it"
+- "clean memory", "clean up memory"
 - "delete memory", "forget X", "remove X from memory"
 - "memory is getting bloated", "memory is too large", "tidy memory"
 
@@ -108,7 +108,7 @@ Done.
 
 ## Subdirectory Cleanup
 
-`ml archive` also handles ephemeral subdirectory content — not just index entries:
+`ml clean` also handles ephemeral subdirectory content — not just index entries:
 
 - **`tmp/`**: clear all files when stale (modification date from a prior session). Always propose before deleting.
 - **`cache/`**: flag files older than 7 days as potentially stale. Propose deletion per file — cache is always regenerable.
@@ -119,7 +119,7 @@ Propose subdirectory cleanup alongside index entry proposals when both are prese
 
 ## Checkpoints
 
-`ml archive` scans and prompts automatically (approval still required) at these moments:
+`ml clean` scans and prompts automatically (approval still required) at these moments:
 
 1. **Post-backlog completion** — when a backlog item is marked completed, scan for entries made stale by that completion.
 2. **Session heavy/critical** — when `ml session` reports ≥ 60% context usage, suggest an archive pass before compact or new session.
@@ -130,5 +130,5 @@ Propose subdirectory cleanup alongside index entry proposals when both are prese
 At checkpoints, do not interrupt the main response. Append after the primary answer:
 
 ```text
-Memory check: <N> stale entries found — say 'clean' or 'ml archive' to review.
+Memory check: <N> stale entries found — say 'ml clean' to review.
 ```

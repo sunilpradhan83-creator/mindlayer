@@ -250,12 +250,12 @@ Load each file at most once per session. Load before acting on the trigger — n
 
 | File | Load when | Signal variants |
 |---|---|---|
-| memory-system/commands/index.md | Any ml * command fires | ml init, ml load, ml retrieve, ml save, ml status, ml archive, ml session, ml clean, ml onboard |
+| memory-system/commands/index.md | Any ml * command fires | ml init, ml load, ml retrieve, ml save, ml status, ml session, ml clean, ml onboard |
 | memory-system/commands/init.md | ml init invoked | ml init |
 | memory-system/commands/load.md | ml load invoked | ml load, ml retrieve, "load X", "retrieve X", "what do we know about X" |
 | memory-system/commands/save.md | ml save invoked or save trigger fires | ml save, "remember this", "save this", "add to memory" |
 | memory-system/commands/status.md | ml status invoked | ml status, "mstatus", "memory status" |
-| memory-system/commands/archive.md | ml archive invoked | ml archive, ml clean, "clean memory", "forget X", "tidy memory" |
+| memory-system/commands/archive.md | ml clean invoked | ml clean, "clean memory", "forget X", "tidy memory" |
 | memory-system/commands/session.md | ml session invoked or session boundary | ml session, "msession", "how much context", "done", "bye", "end session", /compact invoked |
 | memory-system/commands/onboard.md | First project-relevant turn when onboard not yet complete | .mindlayer/index.md does NOT contain id: ml-onboard-complete AND .mindlayer/project.md is placeholder-only |
 | memory-system/read-write.md | Any memory write | About to write to .mindlayer/, save trigger fired, reading memory for a task |
@@ -394,7 +394,7 @@ Trigger phrases (invoke immediately):
 - "load X", "retrieve X", "what do we know about X" -> ml load <X>
 - "where were we", "memory status", "mstatus", "what'"'"'s loaded" -> ml status
 - "should I compact", "how much context", "start fresh", "msession" -> ml session
-- "clean memory", "archive memory", "forget X", "tidy memory" -> ml archive
+- "clean memory", "forget X", "tidy memory" -> ml clean
 - "done for today", "wrapping up", "bye", "end session", "save session" -> session write offer
 
 Session write format:
@@ -416,7 +416,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 - ml load <query> searches indexes first and loads only relevant sections. ml retrieve <query> is a backward-compatible alias.
 - ml save proposes memory writes from durable learnings and waits for approval.
 - ml status checks memory health and suggests fixes without writing.
-- ml archive scans for stale entries and proposes archive or delete actions with approval.
+- ml clean scans for stale entries and proposes archive or delete actions with approval.
 - ml session reports session context cost and recommends compact or new session.
 - ml onboard runs once post-install on existing projects to populate .mindlayer/ from existing context.
 
@@ -427,8 +427,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 - Archived entries keep their full markdown section in archive.md for future reference.
 - Deleted entries are removed from both the source file and the index.
 - Never archive index.md, boot.md, router.md, or archive.md itself.
-- ml archive is the command that executes archive and delete actions. Full spec in memory-system/commands/archive.md.
-- ml clean is an alias for ml archive.
+- ml clean is the public cleanup command. Archive and delete are internal approved actions. Full spec in memory-system/commands/archive.md.
 
 ## Index-First Retrieval
 
@@ -479,7 +478,7 @@ Load this file when any ml * command fires. Then load the spec file for the spec
 | ml load <query> | commands/load.md | ml load, ml retrieve, "load X", "retrieve X", "what do we know about X" |
 | ml save | commands/save.md | ml save, "remember this", "save this", "add to memory", "capture this" |
 | ml status | commands/status.md | ml status, "mstatus", "memory status", "what'"'"'s loaded" |
-| ml archive | commands/archive.md | ml archive, ml clean, "clean memory", "forget X", "tidy memory", "archive memory" |
+| ml clean | commands/archive.md | ml clean, "clean memory", "forget X", "tidy memory" |
 | ml session | commands/session.md | ml session, "msession", "how much context", "start fresh", "done", "bye", "end session" |
 | ml onboard | commands/onboard.md | First project-relevant turn post-install when .mindlayer/ is starter-only |
 
@@ -487,7 +486,7 @@ Load this file when any ml * command fires. Then load the spec file for the spec
 
 - Load the spec file for the invoked command immediately after this file.
 - Never load all spec files at once — load only the one needed.
-- ml clean is an alias for ml archive.
+- ml clean is the public cleanup command. Archive/delete are internal actions behind approval.
 - ml init is a legacy/manual refresh alias for running the boot receipt.'
 
 global_memory_system_schema='# Schema Reference

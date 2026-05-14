@@ -56,7 +56,7 @@ When a file is near or over budget, proactively tell the user before the next me
 
 When subdirectories exist, inspect:
 
-- `tmp/`: warn if files exist with a modification date older than the current session — stale scratch from a prior session. Suggest clearing with `ml archive`.
+- `tmp/`: warn if files exist with a modification date older than the current session — stale scratch from a prior session. Suggest clearing with `ml clean`.
 - `sessions/`: report count of session files and most recent date. No action needed.
 - `cache/`: report count and most recent file. Flag entries older than 7 days as potentially stale.
 - `private/`: acknowledge existence only. Do not read or surface content.
@@ -113,7 +113,7 @@ Return:
   ```
 - Healthy:
 - Warnings:
-- Stale entries: N flagged (list titles and types) — say 'ml archive' to review
+- Stale entries: N flagged (list titles and types) — say 'ml clean' to review
 - Archived entries: N in archive.md (global: N, project: N)
 - Conflicts:
 - Continuity:

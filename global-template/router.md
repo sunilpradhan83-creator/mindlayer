@@ -18,12 +18,12 @@ Loaded: <file.md> — <reason>
 
 | File | Load when | Signals |
 |---|---|---|
-| `memory-system/commands/index.md` | Any ml command | ml init/load/retrieve/save/status/archive/session/clean/onboard |
+| `memory-system/commands/index.md` | Any ml command | ml init/load/retrieve/save/status/session/clean/onboard |
 | `memory-system/commands/init.md` | Init or boot receipt | ml init |
 | `memory-system/commands/load.md` + project `.mindlayer/index-full.md` | Memory load | ml load/retrieve, load/retrieve X, what do we know about X |
 | `memory-system/commands/save.md` | Save trigger | ml save, remember/save/add/capture/log/keep/preserve this |
 | `memory-system/commands/status.md` | Status | ml status, mstatus, memory status, what's loaded |
-| `memory-system/commands/archive.md` | Archive/clean | ml archive/clean, clean/tidy/archive/forget/remove memory |
+| `memory-system/commands/archive.md` | Memory cleanup | ml clean, clean/tidy/forget/remove memory |
 | `memory-system/commands/session.md` | Session boundary/status | ml session, msession, how much context, start fresh, done, bye, wrapping up, end/save session, /compact |
 | `memory-system/commands/onboard.md` | Onboarding incomplete | no `ml-onboard-complete` + placeholder project.md |
 | `memory-system/commands/diff.md` | Boot step 11 or status | boot diff, status diff |

@@ -146,7 +146,7 @@ def run(project_root: Path) -> int:
         text = read_text(path)
         if any((age or 0) > 90 for age in (_days_old(item) for item in _entry_dates(text))):
             stale_titles.append(path.name)
-    print(f"Stale entries: {len(stale_titles)} flagged ({', '.join(stale_titles) if stale_titles else 'none'}) — say 'ml archive' to review")
+    print(f"Stale entries: {len(stale_titles)} flagged ({', '.join(stale_titles) if stale_titles else 'none'}) — say 'ml clean' to review")
     print(f"Archived entries: {_archived_count(memory_dir / 'archive.md')} in archive.md (global: 0, project: {_archived_count(memory_dir / 'archive.md')})")
     print("Conflicts:")
     print("- None detected")

@@ -97,5 +97,24 @@ SESSION_FILE="$SANDBOX/bootnext/.mindlayer/sessions/2026-05-01.md"
 if assert_file_contains "$SESSION_FILE" "## Next"; then pass "$CURRENT_SCENARIO: Next heading present"; else fail "$CURRENT_SCENARIO: Next heading present"; fi
 if assert_file_contains "$SESSION_FILE" "Boot next step"; then pass "$CURRENT_SCENARIO: Next content present"; else fail "$CURRENT_SCENARIO: Next content present"; fi
 
+# --- post-completion clean failure does not fail session write ---
+scenario "completed session write tolerates clean failure"
+mkdir -p "$SANDBOX/cleanfail/.mindlayer"
+printf "# Project Memory Index\n" > "$SANDBOX/cleanfail/.mindlayer/index-full.md"
+chmod 000 "$SANDBOX/cleanfail/.mindlayer/index-full.md"
+output="$SANDBOX/cleanfail.out"
+if (cd "$SANDBOX/cleanfail" && python3 "$ROOT_DIR/src/ml" session write \
+    --date 2026-05-12 \
+    --completed "Backlog item done" \
+    --next "Continue" \
+    --approve > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits 0"
+else
+  fail "$CURRENT_SCENARIO: command exits 0"
+fi
+SESSION_FILE="$SANDBOX/cleanfail/.mindlayer/sessions/2026-05-12.md"
+if [ -f "$SESSION_FILE" ]; then pass "$CURRENT_SCENARIO: session file created"; else fail "$CURRENT_SCENARIO: session file created"; fi
+if assert_contains "$output" "Memory check skipped:"; then pass "$CURRENT_SCENARIO: clean failure reported"; else fail "$CURRENT_SCENARIO: clean failure reported"; fi
+
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]

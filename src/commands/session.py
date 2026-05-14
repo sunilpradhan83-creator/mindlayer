@@ -6,6 +6,7 @@ from datetime import date as _date
 from pathlib import Path
 import subprocess
 
+from . import archive
 from ._write import approved
 
 
@@ -49,7 +50,7 @@ def run(project_root: Path, words: int = 0, context_window: int = 200_000) -> in
     print(f"Recommendation: {recommendation}")
     print(f"Reason: {reason}")
     if status in {"Heavy", "Critical"}:
-        print("Memory: consider `ml archive` to trim stale entries before the next session")
+        print("Memory: consider `ml clean` to trim stale entries before the next session")
     return 0
 
 
@@ -102,6 +103,12 @@ def write(
         session_file.write_text(block + "\n", encoding="utf-8")
 
     print(f"Session written: .mindlayer/sessions/{date_str}.md")
+    if completed:
+        print("Memory check:")
+        try:
+            archive.clean(project_root)
+        except Exception as exc:
+            print(f"Memory check skipped: {exc}")
     return 0
 
 

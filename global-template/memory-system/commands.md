@@ -14,7 +14,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 - `ml load <query>` searches indexes first and loads only relevant sections. `ml retrieve <query>` is a backward-compatible alias.
 - `ml save` proposes memory writes from durable learnings and waits for approval.
 - `ml status` checks memory health and suggests fixes without writing.
-- `ml archive` scans for stale entries and proposes archive or delete actions with approval.
+- `ml clean` scans for stale entries and proposes archive or delete actions with approval.
 - `ml session` reports session context cost and recommends compact or new session.
 - `ml onboard` runs once post-install on existing projects to populate `.mindlayer/` from existing context.
 
@@ -25,8 +25,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 - Archived entries keep their full markdown section in `archive.md` for future reference.
 - Deleted entries are removed from both the source file and the index.
 - Never archive `index.md`, `boot.md`, `router.md`, or `archive.md` itself.
-- `ml archive` is the command that executes archive and delete actions. Full spec in `memory-system/commands/archive.md`.
-- `ml clean` is an alias for `ml archive`.
+- `ml clean` is the public cleanup command. Archive and delete are internal approved actions. Full spec in `memory-system/commands/archive.md`.
 
 ## Index-First Retrieval
 
