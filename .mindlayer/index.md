@@ -26,7 +26,11 @@ Boot summary. Format: id | title | file | summary. Full metadata: `index-full.md
 - ml-20260507-002 | Skill Approval Gate | decisions.md | Writing skills require approval.
 - ml-20260507-001 | SCRIPT Philosophy | context.md | Signal, Cut, Refine, Implement, Prove, Transfer.
 - ml-20260508-001 | Instruction Ceiling | risks.md | Need deterministic runtime.
-- ml-20260508-002 | SCRIPT Engine | decisions.md | Signal -> Roadmap -> Backlog -> Stories -> Progress.
+- ml-20260508-002 | SCRIPT Engine | decisions.md | Signal -> Roadmap -> Backlog -> Stories -> Progress. SUPERSEDED by ml-20260514-001.
+- ml-20260514-001 | SCRIPT Lifecycle Rules | decisions.md | Full file ownership, purge rules, folder structure, Cut routing, story lifecycle, archive folder.
+- ml-20260514-002 | SCRIPT V4 Final Structure | decisions.md | Final folder layout, story=prompt schema, TDD mandatory, Graphify deferred to V5, pipeline/knowledge split.
+- ml-20260514-003 | Transfer Rules and ml script CLI | decisions.md | Transfer trigger/bar/outcomes; `ml script` agent-executed lifecycle namespace.
+- ml-20260514-004 | SCRIPT V4 Review-Driven Refinements | decisions.md | External review fixes: reworded Signal rule, porcelain+SHA resume, refine --check, single+batch approval, CLI index freshness.
 - ml-20260511-002 | Adapter Freeze | decisions.md | Frozen templates, auto-detect, `ml save` migration.
 - ml-20260512-001 | Phase 0 Architecture | decisions.md | Per-turn split, summary index, compressed state.
 - ml-index-full-20260512-001 | Full Index | index-full.md | Full metadata for `ml load`.

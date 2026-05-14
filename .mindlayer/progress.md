@@ -20,7 +20,7 @@ V4 Phase 2 guarded writes and ml clean consolidation shipped; next work is SCRIP
 - Shipped: `tests/ml/` CLI contract fixtures, `tools/test.sh` integration, and `install.sh` runtime installation to `~/.mindlayer/bin/ml` with support modules in `~/.mindlayer/lib/commands`.
 - Shipped: guarded write commands for `ml save`, `ml clean`, and `ml session write` behind explicit approval.
 - Shipped: `ml clean` as the single public cleanup command, with archive/delete as internal approved actions and post-completion clean scans.
-- Next: plan SCRIPT/runtime expansion from the updated Phase 2 command-runner foundation.
+- Next: SCRIPT lifecycle design is complete and review-hardened (ml-20260514-001/002/003 plus external-review refinements in ml-20260514-004). Design is build-ready; next is spec-first implementation of the `ml script` runtime.
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.

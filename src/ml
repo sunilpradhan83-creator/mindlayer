@@ -13,7 +13,7 @@ for candidate in (HERE, HERE.parent / "lib", HERE.parent.parent / "lib"):
         sys.path.insert(0, str(candidate))
         break
 
-from commands import archive, boot, diff, load, save, session, status
+from commands import archive, boot, diff, load, save, script, session, status
 from commands._paths import project_root
 
 
@@ -57,6 +57,10 @@ def build_parser() -> argparse.ArgumentParser:
     clean_parser = subparsers.add_parser("clean", help="Scan memory and propose cleanup actions")
     clean_parser.add_argument("--approve-all", action="store_true")
     clean_parser.add_argument("--scope", choices=["project", "global"], default="project")
+
+    script_parser = subparsers.add_parser("script", help="Run the SCRIPT lifecycle")
+    script_sub = script_parser.add_subparsers(dest="script_command", required=True)
+    script_sub.add_parser("status", help="Show SCRIPT lifecycle status")
 
     return parser
 
@@ -125,6 +129,10 @@ def main(argv: list[str] | None = None) -> int:
         )
     if args.command == "clean":
         return archive.clean(root, scope=args.scope, approve_all=args.approve_all)
+    if args.command == "script":
+        if args.script_command == "status":
+            return script.status(root)
+        return 2
     return 2
 
 

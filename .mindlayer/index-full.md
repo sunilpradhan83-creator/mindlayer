@@ -446,6 +446,54 @@
   status: active
   last_updated: 2026-05-12
 
+- id: ml-20260514-001
+  title: SCRIPT Lifecycle File Ownership and Rules
+  file: decisions.md
+  section: SCRIPT Lifecycle File Ownership and Rules
+  scope: project
+  type: decision
+  tags: [script, v4, lifecycle, signals, backlog, stories, archive, transfer, purge, file-ownership]
+  summary: Full file ownership, lifecycle rules, purge triggers, and folder structure for the SCRIPT queue: Signal -> Cut -> Refine -> Implement -> Prove -> Transfer.
+  importance: high
+  status: active
+  last_updated: 2026-05-14
+
+- id: ml-20260514-002
+  title: SCRIPT V4 Final Structure, Story Schema, and Graphify Decision
+  file: decisions.md
+  section: SCRIPT V4 Final Structure, Story Schema, and Graphify Decision
+  scope: project
+  type: decision
+  tags: [script, v4, folder-structure, story-schema, graphify, tdd, pipeline, knowledge]
+  summary: Final two-folder .mindlayer/ layout, story-as-executable-prompt schema, TDD mandatory for all stories, Graphify deferred to V5.
+  importance: high
+  status: active
+  last_updated: 2026-05-14
+
+- id: ml-20260514-003
+  title: SCRIPT Transfer Rules and ml script CLI
+  file: decisions.md
+  section: SCRIPT Transfer Rules and ml script CLI
+  scope: project
+  type: decision
+  tags: [script, v4, transfer, cli, ml-script, lifecycle, agent-executed]
+  summary: Transfer trigger/bar/outcomes and the `ml script` agent-executed lifecycle CLI namespace.
+  importance: high
+  status: active
+  last_updated: 2026-05-14
+
+- id: ml-20260514-004
+  title: SCRIPT V4 Review-Driven Refinements
+  file: decisions.md
+  section: SCRIPT V4 Review-Driven Refinements
+  scope: project
+  type: decision
+  tags: [script, v4, design-review, signal, resume, story-validation, refine, index-freshness, determinism]
+  summary: External design-review fixes — reworded Signal rule, git-porcelain+SHA resume, refine --check gate, single+batch approval, CLI index freshness.
+  importance: high
+  status: active
+  last_updated: 2026-05-14
+
 - id: ml-index-full-20260512-001
   title: Full Project Memory Index
   file: index-full.md
