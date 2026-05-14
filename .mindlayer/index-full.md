@@ -74,18 +74,6 @@
   status: archived
   last_updated: 2026-05-05
 
-- id: ml-20260505-008
-  title: Pre-Push Gate
-  file: decisions.md
-  section: Pre-Push Gate
-  scope: project
-  type: decision
-  tags: [pre-push, testing, quality-gate, proactive]
-  summary: Before every push, agent appends a one-line test confirmation — 'yes' or 'skip' both proceed immediately.
-  importance: high
-  status: archived
-  last_updated: 2026-05-12
-
 - id: ml-20260505-007
   title: Lateral Intent Routing
   file: decisions.md
@@ -424,7 +412,7 @@
 
 - id: ml-20260511-001
   title: Adapter Boot Wording Drift
-  file: risks.md
+  file: archive.md
   section: Adapter Boot Wording Drift
   scope: project
   type: risk
@@ -528,18 +516,6 @@
   summary: Lazy per-turn contract for heavy or critical context warnings.
   importance: high
   status: active
-  last_updated: 2026-05-12
-
-- id: ml-per-turn-20260512-pre-push
-  title: Per-Turn Pre-Push Module
-  file: global-template/memory-system/per-turn/pre-push.md
-  section: Pre-Push Module
-  scope: project
-  type: context
-  tags: [per-turn, module, pre-push]
-  summary: Lazy per-turn contract for pre-push test confirmation.
-  importance: high
-  status: archived
   last_updated: 2026-05-12
 
 - id: ml-per-turn-20260512-post-write
