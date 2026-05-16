@@ -65,7 +65,6 @@ def build_parser() -> argparse.ArgumentParser:
     sig_parser = script_sub.add_parser("signal", help="Record a new signal")
     sig_parser.add_argument("--title", required=True)
     sig_parser.add_argument("--body", required=True)
-    sig_parser.add_argument("--tier", choices=["auto", "review"], default="auto")
 
     cut_parser = script_sub.add_parser("cut", help="Route a signal to backlog or roadmap")
     cut_parser.add_argument("--signal", required=True, dest="sig_id")
@@ -163,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.script_command == "status":
             return script.status(root)
         if args.script_command == "signal":
-            return script.signal(root, title=args.title, body=args.body, tier=args.tier)
+            return script.signal(root, title=args.title, body=args.body)
         if args.script_command == "cut":
             return script.cut(root, sig_id=args.sig_id, route=args.route, reason=args.reason, approve=args.approve)
         if args.script_command == "refine":

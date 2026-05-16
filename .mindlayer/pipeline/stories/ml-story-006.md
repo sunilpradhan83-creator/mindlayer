@@ -1,7 +1,10 @@
 ---
 id: ml-story-006
 title: Redesign signal fields for human-reviewed processing
-status: ready
+status: done
+proved_by: bash tools/test.sh
+proved_at: 2026-05-16
+started_from: 580861d
 created: 2026-05-16
 parent: ml-signal-20260516-005
 agent: any

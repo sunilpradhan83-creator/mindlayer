@@ -102,7 +102,7 @@ def _next_signal_id(signals_path: Path) -> str:
     return f"ml-signal-{today}-{max(nums) + 1:03d}"
 
 
-def signal(project_root: Path, title: str, body: str, tier: str = "auto") -> int:
+def signal(project_root: Path, title: str, body: str) -> int:
     memory_dir = project_root / ".mindlayer"
     pd = pipeline_dir(memory_dir)
     _ensure_dir(pd)
@@ -114,7 +114,6 @@ def signal(project_root: Path, title: str, body: str, tier: str = "auto") -> int
         f"\n## {title}\n\n"
         f"id: {sig_id}\n"
         f"created: {_today()}\n"
-        f"tier: {tier}\n"
         f"status: pending\n\n"
         f"{body}\n"
     )
@@ -125,11 +124,9 @@ def signal(project_root: Path, title: str, body: str, tier: str = "auto") -> int
         with signals_path.open("a", encoding="utf-8") as f:
             f.write(entry)
 
-    print(f"Signal recorded: {sig_id} (tier: {tier})")
-    if tier == "review":
-        print("Approval needed: human must confirm routing")
-    else:
-        print("Approval needed: None")
+    print(f"Signal recorded: {sig_id}")
+    print("Status: pending signal processing")
+    print("Approval needed: human review required before routing")
     return 0
 
 

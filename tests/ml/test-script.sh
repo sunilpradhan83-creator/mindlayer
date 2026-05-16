@@ -110,25 +110,46 @@ check "signals.md created" test -f "$SANDBOX/sig-create/.mindlayer/pipeline/sign
 check "id in output" assert_contains "$output" "ml-signal-"
 check "approval line" assert_contains "$output" "Approval needed:"
 
-scenario "signal tier auto by default"
-mkdir -p "$SANDBOX/sig-auto/.mindlayer/pipeline"
-output="$SANDBOX/sig-auto.out"
-(cd "$SANDBOX/sig-auto" && python3 "$ROOT_DIR/src/ml" script signal \
-    --title "Small fix" --body "Typo in error message" > "$output")
-check "tier auto in output" assert_contains "$output" "tier: auto"
-check "no human approval needed" assert_contains "$output" "Approval needed: None"
-signals_file="$SANDBOX/sig-auto/.mindlayer/pipeline/signals.md"
-check "tier auto in file" assert_contains "$signals_file" "tier: auto"
+scenario "signal help does not advertise auto routing"
+mkdir -p "$SANDBOX/sig-help/.mindlayer/pipeline"
+output="$SANDBOX/sig-help.out"
+(cd "$SANDBOX/sig-help" && python3 "$ROOT_DIR/src/ml" script signal --help > "$output")
+check_not "no tier option" assert_contains "$output" "--tier"
+check_not "no auto routing" assert_contains "$output" "auto"
 
-scenario "signal tier review when specified"
-mkdir -p "$SANDBOX/sig-review/.mindlayer/pipeline"
-output="$SANDBOX/sig-review.out"
-(cd "$SANDBOX/sig-review" && python3 "$ROOT_DIR/src/ml" script signal \
-    --title "Rethink the roadmap" --body "V5 direction has shifted" --tier review > "$output")
-check "tier review in output" assert_contains "$output" "tier: review"
-check "human approval message" assert_contains "$output" "human must confirm"
-signals_file="$SANDBOX/sig-review/.mindlayer/pipeline/signals.md"
-check "tier review in file" assert_contains "$signals_file" "tier: review"
+scenario "signal is pending human processing by default"
+mkdir -p "$SANDBOX/sig-pending/.mindlayer/pipeline"
+output="$SANDBOX/sig-pending.out"
+(cd "$SANDBOX/sig-pending" && python3 "$ROOT_DIR/src/ml" script signal \
+    --title "Small fix" --body "Typo in error message" > "$output")
+check "pending processing in output" assert_contains "$output" "pending signal processing"
+check "human review message" assert_contains "$output" "human review required before routing"
+signals_file="$SANDBOX/sig-pending/.mindlayer/pipeline/signals.md"
+check "status pending in file" assert_contains "$signals_file" "status: pending"
+check_not "no auto tier in file" assert_contains "$signals_file" "tier: auto"
+
+scenario "legacy tier field remains parseable"
+mkdir -p "$SANDBOX/sig-legacy/.mindlayer/pipeline"
+cat > "$SANDBOX/sig-legacy/.mindlayer/pipeline/signals.md" <<'EOF'
+# Signals
+
+## Legacy signal
+
+id: ml-signal-20260516-001
+created: 2026-05-16
+tier: review
+status: pending
+
+Legacy body.
+EOF
+output="$SANDBOX/sig-legacy.out"
+if (cd "$SANDBOX/sig-legacy" && python3 "$ROOT_DIR/src/ml" script cut \
+    --signal ml-signal-20260516-001 --route backlog > "$output"); then
+  pass "$CURRENT_SCENARIO: exits 0"
+else
+  fail "$CURRENT_SCENARIO: exits 0"
+fi
+check "legacy signal found" assert_contains "$output" "Legacy signal"
 
 scenario "signal id increments on same day"
 mkdir -p "$SANDBOX/sig-inc/.mindlayer/pipeline"
@@ -197,7 +218,7 @@ check "title in backlog" assert_contains "$SANDBOX/cut-backlog/.mindlayer/pipeli
 scenario "cut --approve routes to roadmap"
 mkdir -p "$SANDBOX/cut-roadmap/.mindlayer/pipeline"
 (cd "$SANDBOX/cut-roadmap" && python3 "$ROOT_DIR/src/ml" script signal \
-    --title "V5 direction change" --body "Major pivot needed" --tier review > /dev/null)
+    --title "V5 direction change" --body "Major pivot needed" > /dev/null)
 sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-roadmap/.mindlayer/pipeline/signals.md" | head -1 | awk '{print $2}')
 output="$SANDBOX/cut-roadmap.out"
 (cd "$SANDBOX/cut-roadmap" && python3 "$ROOT_DIR/src/ml" script cut \
