@@ -227,7 +227,7 @@ check "existing status output" assert_contains "$output" "Per-File Health:"
 # ml script signal
 # ---------------------------------------------------------------------------
 
-scenario "signal creates signals.md when missing"
+scenario "signal creates folder signal and index when missing"
 mkdir -p "$SANDBOX/sig-create/.mindlayer/pipeline"
 output="$SANDBOX/sig-create.out"
 if (cd "$SANDBOX/sig-create" && python3 "$ROOT_DIR/src/ml" script signal \
@@ -236,8 +236,15 @@ if (cd "$SANDBOX/sig-create" && python3 "$ROOT_DIR/src/ml" script signal \
 else
   fail "$CURRENT_SCENARIO: exits 0"
 fi
-check "signals.md created" test -f "$SANDBOX/sig-create/.mindlayer/pipeline/signals.md"
+signal_file=$(find "$SANDBOX/sig-create/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name 'ml-signal-*.md' | sort | head -1)
+check "signals dir created" test -d "$SANDBOX/sig-create/.mindlayer/pipeline/signals"
+check "signals index created" test -f "$SANDBOX/sig-create/.mindlayer/pipeline/signals/index.md"
+case "$(basename "$signal_file")" in
+  ml-signal-????????-???-*) pass "$CURRENT_SCENARIO: file starts with signal id" ;;
+  *) fail "$CURRENT_SCENARIO: file starts with signal id" ;;
+esac
 check "id in output" assert_contains "$output" "ml-signal-"
+check "index references file" assert_contains "$SANDBOX/sig-create/.mindlayer/pipeline/signals/index.md" "$(basename "$signal_file")"
 check "approval line" assert_contains "$output" "Approval needed:"
 
 scenario "signal help does not advertise auto routing"
@@ -254,7 +261,10 @@ output="$SANDBOX/sig-pending.out"
     --title "Small fix" --body "Typo in error message" > "$output")
 check "pending processing in output" assert_contains "$output" "pending signal processing"
 check "human review message" assert_contains "$output" "human review required before routing"
-signals_file="$SANDBOX/sig-pending/.mindlayer/pipeline/signals.md"
+signals_file=$(find "$SANDBOX/sig-pending/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name 'ml-signal-*.md' | sort | head -1)
+check "id in file" assert_contains "$signals_file" "id: ml-signal-"
+check "title in file" assert_contains "$signals_file" "title: Small fix"
+check "created in file" assert_contains "$signals_file" "created:"
 check "status pending in file" assert_contains "$signals_file" "status: pending"
 check_not "no auto tier in file" assert_contains "$signals_file" "tier: auto"
 
@@ -286,30 +296,81 @@ mkdir -p "$SANDBOX/sig-inc/.mindlayer/pipeline"
 (cd "$SANDBOX/sig-inc" && python3 "$ROOT_DIR/src/ml" script signal --title "First" --body "body1" > /dev/null)
 output2="$SANDBOX/sig-inc2.out"
 (cd "$SANDBOX/sig-inc" && python3 "$ROOT_DIR/src/ml" script signal --title "Second" --body "body2" > "$output2")
-signals_file="$SANDBOX/sig-inc/.mindlayer/pipeline/signals.md"
-# Two signal id entries should exist
-count=$(grep -c "^id: ml-signal-" "$signals_file" || true)
-if [ "$count" -eq 2 ]; then pass "$CURRENT_SCENARIO: two signals in file"; else fail "$CURRENT_SCENARIO: two signals in file (got $count)"; fi
+count=$(find "$SANDBOX/sig-inc/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name 'ml-signal-*.md' | wc -l | tr -d ' ')
+if [ "$count" -eq 2 ]; then pass "$CURRENT_SCENARIO: two signal files"; else fail "$CURRENT_SCENARIO: two signal files (got $count)"; fi
 check "second id in output" assert_contains "$output2" "ml-signal-"
+check "index has second row" assert_contains "$SANDBOX/sig-inc/.mindlayer/pipeline/signals/index.md" "Second"
 
 scenario "signal records title and body in file"
 mkdir -p "$SANDBOX/sig-body/.mindlayer/pipeline"
 (cd "$SANDBOX/sig-body" && python3 "$ROOT_DIR/src/ml" script signal \
     --title "Cache invalidation bug" --body "LRU eviction fires too early" > /dev/null)
-signals_file="$SANDBOX/sig-body/.mindlayer/pipeline/signals.md"
+signals_file=$(find "$SANDBOX/sig-body/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name 'ml-signal-*.md' | sort | head -1)
 check "title in file" assert_contains "$signals_file" "Cache invalidation bug"
 check "body in file" assert_contains "$signals_file" "LRU eviction fires too early"
 check "status pending in file" assert_contains "$signals_file" "status: pending"
+
+scenario "signal duplicate titles do not overwrite"
+mkdir -p "$SANDBOX/sig-duplicate/.mindlayer/pipeline"
+(cd "$SANDBOX/sig-duplicate" && python3 "$ROOT_DIR/src/ml" script signal \
+    --title "Repeated title" --body "first body" > /dev/null)
+(cd "$SANDBOX/sig-duplicate" && python3 "$ROOT_DIR/src/ml" script signal \
+    --title "Repeated title" --body "second body" > /dev/null)
+count=$(find "$SANDBOX/sig-duplicate/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name 'ml-signal-*.md' | wc -l | tr -d ' ')
+if [ "$count" -eq 2 ]; then pass "$CURRENT_SCENARIO: two duplicate-title files"; else fail "$CURRENT_SCENARIO: two duplicate-title files (got $count)"; fi
+first_file=$(find "$SANDBOX/sig-duplicate/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name '*001-repeated-title.md' | sort | head -1)
+second_file=$(find "$SANDBOX/sig-duplicate/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name '*002-repeated-title.md' | sort | head -1)
+check "first body preserved" assert_contains "$first_file" "first body"
+check "second body written" assert_contains "$second_file" "second body"
+
+scenario "signal leaves legacy signals file untouched"
+mkdir -p "$SANDBOX/sig-legacy-untouched/.mindlayer/pipeline"
+cat > "$SANDBOX/sig-legacy-untouched/.mindlayer/pipeline/signals.md" <<'EOF'
+# Signals
+
+## Old signal
+
+id: ml-signal-20260516-001
+created: 2026-05-16
+status: pending
+
+Old body.
+EOF
+before="$SANDBOX/sig-legacy-untouched.before"
+after="$SANDBOX/sig-legacy-untouched.after"
+cp "$SANDBOX/sig-legacy-untouched/.mindlayer/pipeline/signals.md" "$before"
+(cd "$SANDBOX/sig-legacy-untouched" && python3 "$ROOT_DIR/src/ml" script signal \
+    --title "New folder signal" --body "New body" > /dev/null)
+cp "$SANDBOX/sig-legacy-untouched/.mindlayer/pipeline/signals.md" "$after"
+if cmp -s "$before" "$after"; then pass "$CURRENT_SCENARIO: legacy file unchanged"; else fail "$CURRENT_SCENARIO: legacy file unchanged"; fi
+check "new signal indexed" assert_contains "$SANDBOX/sig-legacy-untouched/.mindlayer/pipeline/signals/index.md" "New folder signal"
+check_not "legacy file not indexed" assert_contains "$SANDBOX/sig-legacy-untouched/.mindlayer/pipeline/signals/index.md" "signals.md"
 
 # ---------------------------------------------------------------------------
 # ml script cut
 # ---------------------------------------------------------------------------
 
+write_legacy_signal() {
+  local project="$1"
+  local title="$2"
+  local body="$3"
+  mkdir -p "$project/.mindlayer/pipeline"
+  cat > "$project/.mindlayer/pipeline/signals.md" <<EOF
+# Signals
+
+## $title
+
+id: ml-signal-20260516-001
+created: 2026-05-16
+status: pending
+
+$body
+EOF
+}
+
 scenario "cut without --approve prints proposal only"
 mkdir -p "$SANDBOX/cut-dry/.mindlayer/pipeline"
-# Create a signal first
-(cd "$SANDBOX/cut-dry" && python3 "$ROOT_DIR/src/ml" script signal \
-    --title "A fix" --body "Some body" > /dev/null)
+write_legacy_signal "$SANDBOX/cut-dry" "A fix" "Some body"
 sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-dry/.mindlayer/pipeline/signals.md" | head -1 | awk '{print $2}')
 output="$SANDBOX/cut-dry.out"
 before_backlog_size=$(wc -c < "$SANDBOX/cut-dry/.mindlayer/pipeline/backlog.md" 2>/dev/null || echo 0)
@@ -332,8 +393,7 @@ fi
 
 scenario "cut --approve requires processing plan"
 mkdir -p "$SANDBOX/cut-plan-required/.mindlayer/pipeline"
-(cd "$SANDBOX/cut-plan-required" && python3 "$ROOT_DIR/src/ml" script signal \
-    --title "Parser bug" --body "Edge case fails" > /dev/null)
+write_legacy_signal "$SANDBOX/cut-plan-required" "Parser bug" "Edge case fails"
 sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-plan-required/.mindlayer/pipeline/signals.md" | head -1 | awk '{print $2}')
 output="$SANDBOX/cut-plan-required.out"
 if ! (cd "$SANDBOX/cut-plan-required" && python3 "$ROOT_DIR/src/ml" script cut \
@@ -348,8 +408,7 @@ check_not "backlog not written" test -f "$SANDBOX/cut-plan-required/.mindlayer/p
 
 scenario "cut --approve routes plan to backlog"
 mkdir -p "$SANDBOX/cut-backlog/.mindlayer/pipeline"
-(cd "$SANDBOX/cut-backlog" && python3 "$ROOT_DIR/src/ml" script signal \
-    --title "Parser bug" --body "Edge case fails" > /dev/null)
+write_legacy_signal "$SANDBOX/cut-backlog" "Parser bug" "Edge case fails"
 sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-backlog/.mindlayer/pipeline/signals.md" | head -1 | awk '{print $2}')
 output="$SANDBOX/cut-backlog.out"
 if (cd "$SANDBOX/cut-backlog" && python3 "$ROOT_DIR/src/ml" script cut \
@@ -371,8 +430,7 @@ check "plan in backlog" assert_contains "$SANDBOX/cut-backlog/.mindlayer/pipelin
 
 scenario "cut --approve routes plan to roadmap"
 mkdir -p "$SANDBOX/cut-roadmap/.mindlayer/pipeline"
-(cd "$SANDBOX/cut-roadmap" && python3 "$ROOT_DIR/src/ml" script signal \
-    --title "V5 direction change" --body "Major pivot needed" > /dev/null)
+write_legacy_signal "$SANDBOX/cut-roadmap" "V5 direction change" "Major pivot needed"
 sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-roadmap/.mindlayer/pipeline/signals.md" | head -1 | awk '{print $2}')
 output="$SANDBOX/cut-roadmap.out"
 (cd "$SANDBOX/cut-roadmap" && python3 "$ROOT_DIR/src/ml" script cut \

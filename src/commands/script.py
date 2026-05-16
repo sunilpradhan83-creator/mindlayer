@@ -149,16 +149,57 @@ def status(project_root: Path) -> int:
 # signal
 # ---------------------------------------------------------------------------
 
-def _next_signal_id(signals_path: Path) -> str:
+def _next_signal_id(pipeline_dir_path: Path) -> str:
     today = _today().replace("-", "")
-    if not signals_path.is_file():
-        return f"ml-signal-{today}-001"
-    text = read_text(signals_path)
-    existing = re.findall(rf"^id:\s*(ml-signal-{today}-\d+)", text, re.MULTILINE)
+    records = _signal_records(pipeline_dir_path)
+    existing = [
+        record["id"]
+        for record in records
+        if record.get("id", "").startswith(f"ml-signal-{today}-")
+    ]
     if not existing:
         return f"ml-signal-{today}-001"
     nums = [int(e.split("-")[-1]) for e in existing]
     return f"ml-signal-{today}-{max(nums) + 1:03d}"
+
+
+def _signal_slug(title: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+    return slug[:48].strip("-") or "signal"
+
+
+def _signal_path(signals_dir: Path, sig_id: str, title: str) -> Path:
+    base = f"{sig_id}-{_signal_slug(title)}"
+    path = signals_dir / f"{base}.md"
+    if not path.exists():
+        return path
+    suffix = 2
+    while True:
+        candidate = signals_dir / f"{base}-{suffix}.md"
+        if not candidate.exists():
+            return candidate
+        suffix += 1
+
+
+def _write_signal_index(signals_dir: Path, records: list[dict[str, str]]) -> None:
+    rows = [
+        "# Signals Index",
+        "",
+        "| id | title | status | created | file |",
+        "| -- | ----- | ------ | ------- | ---- |",
+    ]
+    for record in sorted(records, key=lambda item: item.get("id", "")):
+        source_path = Path(record.get("source", ""))
+        if source_path.parent != signals_dir:
+            continue
+        source = source_path.name
+        rows.append(
+            f"| {record.get('id', '')} | {record.get('title', '')} | "
+            f"{record.get('status', '')} | {record.get('created', '')} | {source} |"
+        )
+    tmp_path = signals_dir / ".index.md.tmp"
+    tmp_path.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    tmp_path.replace(signals_dir / "index.md")
 
 
 def signal(project_root: Path, title: str, body: str) -> int:
@@ -166,22 +207,23 @@ def signal(project_root: Path, title: str, body: str) -> int:
     pd = pipeline_dir(memory_dir)
     _ensure_dir(pd)
 
-    signals_path = pd / "signals.md"
-    sig_id = _next_signal_id(signals_path)
+    signals_dir = pd / "signals"
+    _ensure_dir(signals_dir)
+    sig_id = _next_signal_id(pd)
+    signal_path = _signal_path(signals_dir, sig_id, title)
+    created = _today()
 
     entry = (
-        f"\n## {title}\n\n"
+        "---\n"
         f"id: {sig_id}\n"
-        f"created: {_today()}\n"
-        f"status: pending\n\n"
+        f"title: {title}\n"
+        f"created: {created}\n"
+        "status: pending\n"
+        "---\n\n"
         f"{body}\n"
     )
-
-    if not signals_path.is_file():
-        signals_path.write_text(f"# Signals\n{entry}", encoding="utf-8")
-    else:
-        with signals_path.open("a", encoding="utf-8") as f:
-            f.write(entry)
+    signal_path.write_text(entry, encoding="utf-8")
+    _write_signal_index(signals_dir, _signal_records(pd))
 
     print(f"Signal recorded: {sig_id}")
     print("Status: pending signal processing")

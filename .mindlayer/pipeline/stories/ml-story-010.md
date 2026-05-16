@@ -1,7 +1,10 @@
 ---
 id: ml-story-010
 title: Write new signals as id-slug files with index rows
-status: ready
+status: done
+proved_by: bash tools/test.sh
+proved_at: 2026-05-16
+started_from: 2417bce
 created: 2026-05-16
 parent: ml-signal-20260516-003
 agent: any
