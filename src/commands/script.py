@@ -264,9 +264,13 @@ def refine_check(story_path: Path) -> int:
 
 
 def _next_story_id(stories_dir: Path) -> str:
-    if not stories_dir.is_dir():
-        return "ml-story-001"
-    existing = list(stories_dir.glob("ml-story-*.md"))
+    pipeline_dir_path = stories_dir.parent
+    archive_dir = pipeline_dir_path / "archive"
+    existing = []
+    if stories_dir.is_dir():
+        existing.extend(stories_dir.glob("ml-story-*.md"))
+    if archive_dir.is_dir():
+        existing.extend(archive_dir.glob("ml-story-*.md"))
     if not existing:
         return "ml-story-001"
     nums = []

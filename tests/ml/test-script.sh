@@ -248,6 +248,52 @@ check "status ready" assert_contains "$story_file" "status: ready"
 check "title in index" assert_contains "$story_dir/index.md" "Fix parser edge case"
 check "ready in index" assert_contains "$story_dir/index.md" "ready"
 
+scenario "refine uses next id after archived stories"
+mkdir -p "$SANDBOX/refine-archive-aware/.mindlayer/pipeline/archive" \
+         "$SANDBOX/refine-archive-aware/.mindlayer/pipeline/stories"
+cat > "$SANDBOX/refine-archive-aware/.mindlayer/pipeline/stories/index.md" <<'EOF'
+# Stories Index
+
+| id | title | status | created | parent |
+| -- | ----- | ------ | ------- | ------ |
+EOF
+for id in 001 002 003 004; do
+  cat > "$SANDBOX/refine-archive-aware/.mindlayer/pipeline/archive/ml-story-$id.md" <<EOF
+---
+id: ml-story-$id
+title: Archived story $id
+status: done
+created: 2026-05-14
+parent: old-parent
+agent: any
+---
+
+Archived body.
+EOF
+done
+before_archived="$SANDBOX/refine-archive-aware.before"
+after_archived="$SANDBOX/refine-archive-aware.after"
+(cd "$SANDBOX/refine-archive-aware" && sha256sum .mindlayer/pipeline/archive/ml-story-*.md > "$before_archived")
+output="$SANDBOX/refine-archive-aware.out"
+if (cd "$SANDBOX/refine-archive-aware" && python3 "$ROOT_DIR/src/ml" script refine \
+    --backlog-item "ml-backlog-archive-aware" \
+    --story-title "Continue after archived stories" \
+    --approve > "$output"); then
+  pass "$CURRENT_SCENARIO: exits 0"
+else
+  fail "$CURRENT_SCENARIO: exits 0"
+fi
+(cd "$SANDBOX/refine-archive-aware" && sha256sum .mindlayer/pipeline/archive/ml-story-*.md > "$after_archived")
+check "creates ml-story-005" test -f "$SANDBOX/refine-archive-aware/.mindlayer/pipeline/stories/ml-story-005.md"
+check_not "does not recreate ml-story-001" test -f "$SANDBOX/refine-archive-aware/.mindlayer/pipeline/stories/ml-story-001.md"
+check "output names ml-story-005" assert_contains "$output" "ml-story-005.md"
+check "index names ml-story-005" assert_contains "$SANDBOX/refine-archive-aware/.mindlayer/pipeline/stories/index.md" "ml-story-005"
+if cmp -s "$before_archived" "$after_archived"; then
+  pass "$CURRENT_SCENARIO: archived stories unchanged"
+else
+  fail "$CURRENT_SCENARIO: archived stories unchanged"
+fi
+
 scenario "refine without --approve prints draft only"
 mkdir -p "$SANDBOX/refine-dry/.mindlayer/pipeline"
 output="$SANDBOX/refine-dry.out"
