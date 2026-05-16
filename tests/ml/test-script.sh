@@ -144,6 +144,26 @@ merged_into: ml-signal-20260516-005
 
 Merged body.
 EOF
+cat > "$SANDBOX/status-folder/.mindlayer/pipeline/signals/ml-signal-20260516-005-folder-completed.md" <<'EOF'
+---
+id: ml-signal-20260516-005
+title: Folder completed
+created: 2026-05-16
+status: completed
+---
+
+Completed body.
+EOF
+cat > "$SANDBOX/status-folder/.mindlayer/pipeline/signals/ml-signal-20260516-006-folder-cut-approved.md" <<'EOF'
+---
+id: ml-signal-20260516-006
+title: Folder cut approved
+created: 2026-05-16
+status: cut-approved
+---
+
+Approved body.
+EOF
 cat > "$SANDBOX/status-folder/.mindlayer/pipeline/signals.md" <<'EOF'
 # Signals
 
@@ -172,6 +192,8 @@ else
 fi
 check "folder plus legacy pending count" assert_contains "$output" "Signals: 2 pending"
 check "folder plus legacy merged count" assert_contains "$output" "Merged signals: 2"
+check_not "completed not counted as pending" assert_contains "$output" "Signals: 3 pending"
+check_not "cut-approved not counted as pending" assert_contains "$output" "Signals: 4 pending"
 
 scenario "folder signal id wins over legacy fallback"
 mkdir -p "$SANDBOX/status-folder-precedence/.mindlayer/pipeline/signals"
@@ -440,6 +462,56 @@ output="$SANDBOX/cut-roadmap.out"
 check "roadmap in output" assert_contains "$output" "roadmap"
 check "title in roadmap" assert_contains "$SANDBOX/cut-roadmap/.mindlayer/pipeline/roadmap.md" "V5 direction change"
 check "plan in roadmap" assert_contains "$SANDBOX/cut-roadmap/.mindlayer/pipeline/roadmap.md" "Clarify the direction change"
+
+scenario "cut --approve routes folder signal"
+mkdir -p "$SANDBOX/cut-folder/.mindlayer/pipeline"
+(cd "$SANDBOX/cut-folder" && python3 "$ROOT_DIR/src/ml" script signal \
+    --title "Folder parser bug" --body "Folder edge case fails" > /dev/null)
+signal_file=$(find "$SANDBOX/cut-folder/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name 'ml-signal-*.md' | sort | head -1)
+sig_id=$(grep "^id: ml-signal-" "$signal_file" | head -1 | awk '{print $2}')
+output="$SANDBOX/cut-folder.out"
+if (cd "$SANDBOX/cut-folder" && python3 "$ROOT_DIR/src/ml" script cut \
+    --signal "$sig_id" --route backlog \
+    --reason "Clarify the folder parser bug and create a refine-ready implementation plan." \
+    --approve > "$output"); then
+  pass "$CURRENT_SCENARIO: exits 0"
+else
+  fail "$CURRENT_SCENARIO: exits 0"
+fi
+check "folder signal marked cut-approved" assert_contains "$signal_file" "status: cut-approved"
+check "folder title in backlog" assert_contains "$SANDBOX/cut-folder/.mindlayer/pipeline/backlog.md" "Folder parser bug"
+check "folder index updated" assert_contains "$SANDBOX/cut-folder/.mindlayer/pipeline/signals/index.md" "cut-approved"
+
+scenario "cut prefers folder duplicate over legacy"
+mkdir -p "$SANDBOX/cut-duplicate/.mindlayer/pipeline"
+(cd "$SANDBOX/cut-duplicate" && python3 "$ROOT_DIR/src/ml" script signal \
+    --title "Folder duplicate" --body "Folder body" > /dev/null)
+signal_file=$(find "$SANDBOX/cut-duplicate/.mindlayer/pipeline/signals" -maxdepth 1 -type f -name 'ml-signal-*.md' | sort | head -1)
+sig_id=$(grep "^id: ml-signal-" "$signal_file" | head -1 | awk '{print $2}')
+cat > "$SANDBOX/cut-duplicate/.mindlayer/pipeline/signals.md" <<EOF
+# Signals
+
+## Legacy duplicate
+
+id: $sig_id
+created: 2026-05-16
+status: pending
+
+Legacy body.
+EOF
+before="$SANDBOX/cut-duplicate.before"
+after="$SANDBOX/cut-duplicate.after"
+cp "$SANDBOX/cut-duplicate/.mindlayer/pipeline/signals.md" "$before"
+output="$SANDBOX/cut-duplicate.out"
+(cd "$SANDBOX/cut-duplicate" && python3 "$ROOT_DIR/src/ml" script cut \
+    --signal "$sig_id" --route backlog \
+    --reason "Clarify the duplicate signal and route the folder version only." \
+    --approve > "$output")
+cp "$SANDBOX/cut-duplicate/.mindlayer/pipeline/signals.md" "$after"
+check "folder duplicate marked cut-approved" assert_contains "$signal_file" "status: cut-approved"
+if cmp -s "$before" "$after"; then pass "$CURRENT_SCENARIO: legacy duplicate unchanged"; else fail "$CURRENT_SCENARIO: legacy duplicate unchanged"; fi
+check "folder duplicate title in backlog" assert_contains "$SANDBOX/cut-duplicate/.mindlayer/pipeline/backlog.md" "Folder duplicate"
+check_not "legacy duplicate title not routed" assert_contains "$SANDBOX/cut-duplicate/.mindlayer/pipeline/backlog.md" "Legacy duplicate"
 
 scenario "cut with unknown signal id fails"
 mkdir -p "$SANDBOX/cut-miss/.mindlayer/pipeline"

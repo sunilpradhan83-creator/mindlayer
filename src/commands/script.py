@@ -235,21 +235,26 @@ def signal(project_root: Path, title: str, body: str) -> int:
 # cut
 # ---------------------------------------------------------------------------
 
-def _find_signal_block(signals_path: Path, sig_id: str) -> tuple[str, str] | None:
-    """Return (title, body) for a pending signal, or None if not found."""
-    if not signals_path.is_file():
-        return None
-    text = read_text(signals_path)
-    # Each block starts at "## title" and runs until next "## " or EOF
-    pattern = re.compile(
-        r"^##\s+(.+?)\n(.*?)(?=^##\s|\Z)", re.MULTILINE | re.DOTALL
-    )
-    for m in pattern.finditer(text):
-        block = m.group(0)
-        if f"id: {sig_id}" in block:
-            title = m.group(1).strip()
-            return title, block
+def _find_signal_record(pipeline_dir_path: Path, sig_id: str) -> dict[str, str] | None:
+    for record in _signal_records(pipeline_dir_path):
+        if record.get("id") == sig_id:
+            return record
     return None
+
+
+def _update_folder_signal_status(signal_path: Path, new_status: str) -> None:
+    text = read_text(signal_path)
+    if re.search(r"^status:\s*\S+", text, flags=re.MULTILINE):
+        updated = re.sub(
+            r"^status:\s*\S+",
+            f"status: {new_status}",
+            text,
+            count=1,
+            flags=re.MULTILINE,
+        )
+    else:
+        updated = re.sub(r"^---\n", f"---\nstatus: {new_status}\n", text, count=1)
+    signal_path.write_text(updated, encoding="utf-8")
 
 
 def _update_signal_status(signals_path: Path, sig_id: str, new_status: str) -> None:
@@ -270,6 +275,20 @@ def _update_signal_status(signals_path: Path, sig_id: str, new_status: str) -> N
     signals_path.write_text(updated, encoding="utf-8")
 
 
+def _update_signal_record_status(
+    pipeline_dir_path: Path,
+    record: dict[str, str],
+    new_status: str,
+) -> None:
+    source_path = Path(record.get("source", ""))
+    signals_dir = pipeline_dir_path / "signals"
+    if source_path.parent == signals_dir:
+        _update_folder_signal_status(source_path, new_status)
+        _write_signal_index(signals_dir, _signal_records(pipeline_dir_path))
+        return
+    _update_signal_status(pipeline_dir_path / "signals.md", record.get("id", ""), new_status)
+
+
 def cut(
     project_root: Path,
     sig_id: str,
@@ -279,13 +298,12 @@ def cut(
 ) -> int:
     memory_dir = project_root / ".mindlayer"
     pd = pipeline_dir(memory_dir)
-    signals_path = pd / "signals.md"
 
-    result = _find_signal_block(signals_path, sig_id)
+    result = _find_signal_record(pd, sig_id)
     if result is None:
-        print(f"Error: signal '{sig_id}' not found in signals.md", flush=True)
+        print(f"Error: signal '{sig_id}' not found in signals store", flush=True)
         return 1
-    title, _block = result
+    title = result.get("title", sig_id)
 
     target_file = "roadmap.md" if route == "roadmap" else "backlog.md"
     plan = reason.strip()
@@ -307,7 +325,7 @@ def cut(
         return 1
 
     # Approved: update signal status and append to target file
-    _update_signal_status(signals_path, sig_id, "cut-approved")
+    _update_signal_record_status(pd, result, "cut-approved")
 
     target_path = pd / target_file
     _ensure_dir(pd)
