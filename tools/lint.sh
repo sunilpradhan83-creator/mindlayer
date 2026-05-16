@@ -303,6 +303,7 @@ lint_repo() {
   require_file "$PROJECT_DIR/global-template/memory-system/templates/GEMINI.md" "canonical Gemini template"
   require_file "$PROJECT_DIR/global-template/memory-system/templates/cursor-mindlayer.md" "canonical Cursor template"
   require_file "$PROJECT_DIR/global-template/memory-system/templates/windsurf-mindlayer.md" "canonical Windsurf template"
+  require_file "$PROJECT_DIR/global-template/memory-system/hooks/claude-user-prompt-submit.sh" "Claude UserPromptSubmit hook"
 
   # E7 source-boundary rules
   # Behavior rules live in memory-system/ subfiles; adapters are thin pointers.
@@ -356,6 +357,9 @@ lint_repo() {
   # Installer — check canonical adapter template handling and embedded fallback vars
   require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/AGENTS.md" "installer adapter templates"
   require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/CLAUDE.md" "installer adapter templates"
+  require_contains "$PROJECT_DIR/install.sh" "claude-user-prompt-submit.sh" "installer Claude hook"
+  require_contains "$PROJECT_DIR/global-template/memory-system/hooks/claude-user-prompt-submit.sh" "UserPromptSubmit" "Claude UserPromptSubmit hook"
+  require_contains "$PROJECT_DIR/global-template/memory-system/hooks/claude-user-prompt-submit.sh" "Token Burned" "Claude UserPromptSubmit hook"
   require_contains "$PROJECT_DIR/install.sh" ".mindlayer/adapters.lock" "installer adapter lock"
   require_contains "$PROJECT_DIR/install.sh" "sha256_file" "installer adapter lock"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer read-write fallback"

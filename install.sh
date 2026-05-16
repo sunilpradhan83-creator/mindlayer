@@ -972,6 +972,11 @@ install_global() {
   write_managed_template "$GLOBAL_DIR/memory-system/read-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/read-write.md" "$global_memory_system_read_write"
   write_managed_template "$GLOBAL_DIR/memory-system/schema.md" "$GLOBAL_TEMPLATE_DIR/memory-system/schema.md" "$global_memory_system_schema"
 
+  # Host hooks — thin tool-specific enforcement layers when supported.
+  mkdir_p "$GLOBAL_DIR/memory-system/hooks"
+  write_managed_template "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$GLOBAL_TEMPLATE_DIR/memory-system/hooks/claude-user-prompt-submit.sh" ""
+  chmod +x "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" 2>/dev/null || true
+
   # Canonical adapter templates — managed system files
   mkdir_p "$GLOBAL_DIR/memory-system/templates"
   write_managed_template "$GLOBAL_DIR/memory-system/templates/AGENTS.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/AGENTS.md" ""
@@ -1066,6 +1071,65 @@ install_adapters() {
     [ -f "$PROJECT_DIR/$adapter_path" ] || [ "$signal" -eq 1 ]
   }
 
+  install_claude_prompt_hook() {
+    [ "$claude_signal" -eq 1 ] || return 0
+    hook_cmd="$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh"
+    [ -x "$hook_cmd" ] || return 0
+
+    settings_file="$PROJECT_DIR/.claude/settings.local.json"
+    mkdir_p "$(dirname "$settings_file")"
+
+    if command -v python3 >/dev/null 2>&1; then
+      python3 - "$settings_file" "$hook_cmd" <<'PY'
+import json
+import os
+import sys
+
+settings_file, hook_cmd = sys.argv[1], sys.argv[2]
+data = {}
+if os.path.exists(settings_file):
+    with open(settings_file, "r", encoding="utf-8") as fh:
+        content = fh.read().strip()
+    if content:
+        data = json.loads(content)
+
+hooks = data.setdefault("hooks", {})
+groups = hooks.setdefault("UserPromptSubmit", [])
+entry = {"type": "command", "command": hook_cmd}
+
+for group in groups:
+    group_hooks = group.setdefault("hooks", [])
+    if any(h.get("type") == "command" and h.get("command") == hook_cmd for h in group_hooks):
+        break
+else:
+    groups.append({"hooks": [entry]})
+
+with open(settings_file, "w", encoding="utf-8") as fh:
+    json.dump(data, fh, indent=2)
+    fh.write("\n")
+PY
+    elif [ ! -e "$settings_file" ]; then
+      cat > "$settings_file" <<EOF
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$hook_cmd"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+    else
+      echo "Claude hook not registered because python3 is unavailable and $settings_file already exists." >&2
+    fi
+  }
+
   install_canonical_adapter() {
     adapter_name="$1"
     dest="$PROJECT_DIR/$adapter_name"
@@ -1132,6 +1196,7 @@ install_adapters() {
   should_install_adapter "GEMINI.md" "$gemini_signal" && install_canonical_adapter "GEMINI.md" "GEMINI.md"
   should_install_adapter ".cursor/rules/mindlayer.md" "$cursor_signal" && install_canonical_adapter ".cursor/rules/mindlayer.md" "cursor-mindlayer.md"
   should_install_adapter ".windsurf/rules/mindlayer.md" "$windsurf_signal" && install_canonical_adapter ".windsurf/rules/mindlayer.md" "windsurf-mindlayer.md"
+  install_claude_prompt_hook
 
   if [ -n "$blocked_adapters" ]; then
     echo "MindLayer install blocked for frozen adapter(s):" >&2
@@ -1178,6 +1243,7 @@ install_gitignore() {
   append_gitignore_rule "$file" ".mindlayer/cache/"
   append_gitignore_rule "$file" ".mindlayer/tmp/"
   append_gitignore_rule "$file" ".mindlayer/adapters.lock"
+  append_gitignore_rule "$file" ".claude/settings.local.json"
   append_gitignore_rule "$file" ".cursor/rules/mindlayer.md"
   append_gitignore_rule "$file" ".windsurf/rules/mindlayer.md"
 }

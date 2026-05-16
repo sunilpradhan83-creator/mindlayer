@@ -186,6 +186,7 @@ check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/status.m
 check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/archive.md"
 check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/session.md"
 check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/onboard.md"
+check assert_file_exists "$fresh_home/.mindlayer/memory-system/hooks/claude-user-prompt-submit.sh"
 check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/AGENTS.md"
 check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/CLAUDE.md"
 check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/copilot-instructions.md"
@@ -215,6 +216,7 @@ done
 
 check assert_file_exists "$fresh_project/AGENTS.md"
 check assert_file_exists "$fresh_project/CLAUDE.md"
+check assert_file_exists "$fresh_project/.claude/settings.local.json"
 check assert_file_exists "$fresh_project/.github/copilot-instructions.md"
 check assert_file_exists "$fresh_project/GEMINI.md"
 check assert_file_exists "$fresh_project/.cursor/rules/mindlayer.md"
@@ -244,11 +246,14 @@ check assert_contains "$fresh_project/AGENTS.md" "Never answer a project questio
 check assert_contains "$fresh_project/AGENTS.md" "Never ask the user if they want you to boot"
 check assert_contains "$fresh_project/CLAUDE.md" "Do not duplicate memory into"
 check assert_contains "$fresh_project/CLAUDE.md" "explicit approval"
+check assert_contains "$fresh_project/.claude/settings.local.json" "UserPromptSubmit"
+check assert_contains "$fresh_project/.claude/settings.local.json" "claude-user-prompt-submit.sh"
 check assert_contains "$fresh_project/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter."
 check assert_contains "$fresh_project/.gitignore" ".mindlayer/local.md"
 check assert_contains "$fresh_project/.gitignore" ".mindlayer/private/"
 check assert_contains "$fresh_project/.gitignore" ".mindlayer/adapters.lock"
+check assert_contains "$fresh_project/.gitignore" ".claude/settings.local.json"
 check assert_contains "$fresh_project/.gitignore" ".cursor/rules/mindlayer.md"
 check assert_contains "$fresh_project/.gitignore" ".windsurf/rules/mindlayer.md"
 check assert_index_sections_exist "$fresh_project/.mindlayer"
@@ -267,6 +272,7 @@ fi
 
 check assert_file_exists "$selective_project/AGENTS.md"
 check assert_file_exists "$selective_project/CLAUDE.md"
+check assert_file_exists "$selective_project/.claude/settings.local.json"
 check assert_not_exists "$selective_project/.github/copilot-instructions.md"
 check assert_not_exists "$selective_project/GEMINI.md"
 check assert_not_exists "$selective_project/.cursor/rules/mindlayer.md"
@@ -369,6 +375,7 @@ check assert_lock_hash_for "$existing_project/.mindlayer/adapters.lock" ".windsu
 check assert_count 1 "$existing_project/.gitignore" ".mindlayer/local.md"
 check assert_count 1 "$existing_project/.gitignore" ".mindlayer/private/"
 check assert_count 1 "$existing_project/.gitignore" ".mindlayer/adapters.lock"
+check assert_count 1 "$existing_project/.gitignore" ".claude/settings.local.json"
 check assert_file_exists "$existing_home/.mindlayer/memory-system/commands/index.md"
 check assert_file_exists "$existing_project/.mindlayer/index.md"
 
