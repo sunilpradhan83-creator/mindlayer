@@ -1,7 +1,10 @@
 ---
 id: ml-story-002
 title: Split decisions.md into decisions/ subfolder
-status: ready
+status: done
+proved_by: bash tools/test.sh
+proved_at: 2026-05-16
+started_from: 587107f
 created: 2026-05-14
 parent: hierarchical-index-tree
 agent: any

@@ -71,6 +71,9 @@ cat > "$SANDBOX/project/.mindlayer/knowledge/decisions/index.md" <<'EOF'
 # Decisions Index
 
 - ml-decisions-entry | Key Decision | knowledge/decisions/decision.md | A key architectural decision.
+- ml-script-v4-entry | SCRIPT V4 Entry | knowledge/decisions/script-v4.md | SCRIPT V4 lifecycle rules.
+- ml-process-entry | Approval Process | knowledge/decisions/process.md | Literal approval process.
+- ml-architecture-entry | Boot Architecture | knowledge/decisions/architecture.md | Boot compression architecture.
 - ml-dedup-entry | Dedup Second | knowledge/decisions/decision.md | Same id as in knowledge/index.md; must be suppressed.
 EOF
 
@@ -96,6 +99,33 @@ cat > "$SANDBOX/project/.mindlayer/knowledge/decisions/decision.md" <<'EOF'
 
 ### Summary
 A key architectural decision.
+EOF
+
+cat > "$SANDBOX/project/.mindlayer/knowledge/decisions/script-v4.md" <<'EOF'
+# SCRIPT V4 Decisions
+
+## SCRIPT V4 Entry
+
+### Summary
+SCRIPT V4 lifecycle rules.
+EOF
+
+cat > "$SANDBOX/project/.mindlayer/knowledge/decisions/process.md" <<'EOF'
+# Process Decisions
+
+## Approval Process
+
+### Summary
+Literal approval process.
+EOF
+
+cat > "$SANDBOX/project/.mindlayer/knowledge/decisions/architecture.md" <<'EOF'
+# Architecture Decisions
+
+## Boot Architecture
+
+### Summary
+Boot compression architecture.
 EOF
 
 cat > "$SANDBOX/project/.mindlayer/knowledge/full-only.md" <<'EOF'
@@ -165,6 +195,43 @@ else
 fi
 if assert_contains "$output" "Key Decision (ml-decisions-entry)"; then pass "$CURRENT_SCENARIO: deep entry ranked via two-level chain"; else fail "$CURRENT_SCENARIO: deep entry ranked via two-level chain"; fi
 
+scenario "split decisions script-v4 file loads"
+output="$SANDBOX/load-script-v4.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "script" > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$output" "SCRIPT V4 Entry (ml-script-v4-entry)"; then pass "$CURRENT_SCENARIO: script-v4 entry ranked"; else fail "$CURRENT_SCENARIO: script-v4 entry ranked"; fi
+if assert_contains "$output" "$SANDBOX/project/.mindlayer/knowledge/decisions/script-v4.md"; then pass "$CURRENT_SCENARIO: script-v4 source returned"; else fail "$CURRENT_SCENARIO: script-v4 source returned"; fi
+
+scenario "split decisions process file loads"
+output="$SANDBOX/load-process.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "approval" > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$output" "Approval Process (ml-process-entry)"; then pass "$CURRENT_SCENARIO: process entry ranked"; else fail "$CURRENT_SCENARIO: process entry ranked"; fi
+if assert_contains "$output" "$SANDBOX/project/.mindlayer/knowledge/decisions/process.md"; then pass "$CURRENT_SCENARIO: process source returned"; else fail "$CURRENT_SCENARIO: process source returned"; fi
+
+scenario "split decisions architecture file loads"
+output="$SANDBOX/load-architecture.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "boot" > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$output" "Boot Architecture (ml-architecture-entry)"; then pass "$CURRENT_SCENARIO: architecture entry ranked"; else fail "$CURRENT_SCENARIO: architecture entry ranked"; fi
+if assert_contains "$output" "$SANDBOX/project/.mindlayer/knowledge/decisions/architecture.md"; then pass "$CURRENT_SCENARIO: architecture source returned"; else fail "$CURRENT_SCENARIO: architecture source returned"; fi
+
+scenario "flat decisions file removed from project memory"
+if [ ! -e "$ROOT_DIR/.mindlayer/knowledge/decisions.md" ]; then
+  pass "$CURRENT_SCENARIO: decisions.md absent"
+else
+  fail "$CURRENT_SCENARIO: decisions.md absent"
+fi
+
 scenario "index-full.md not loaded"
 output="$SANDBOX/load-full.out"
 if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "Full Only Entry" > "$output"); then
@@ -208,13 +275,14 @@ cat > "$CYCLE_PROJ/.mindlayer/knowledge/context.md" <<'EOF'
 A leaf in knowledge.
 EOF
 output="$SANDBOX/load-cycle.out"
-if (cd "$CYCLE_PROJ" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "Real Entry" > "$output" 2>&1); then
+if (cd "$CYCLE_PROJ" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "Leaf Entry" > "$output" 2>&1); then
   pass "$CURRENT_SCENARIO: command exits successfully despite cycle"
 else
   fail "$CURRENT_SCENARIO: command exits successfully despite cycle"
 fi
 if ! assert_contains "$output" "RecursionError"; then pass "$CURRENT_SCENARIO: no RecursionError"; else fail "$CURRENT_SCENARIO: no RecursionError"; fi
 if assert_contains "$output" "Real Entry (ml-real-entry)"; then pass "$CURRENT_SCENARIO: leaf entry before cycle still returned"; else fail "$CURRENT_SCENARIO: leaf entry before cycle still returned"; fi
+if assert_contains "$output" "Knowledge Leaf (ml-knowledge-leaf)"; then pass "$CURRENT_SCENARIO: leaf entry after cycle still returned"; else fail "$CURRENT_SCENARIO: leaf entry after cycle still returned"; fi
 
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]
