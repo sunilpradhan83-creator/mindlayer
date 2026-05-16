@@ -12,3 +12,4 @@
 | ml-signal-20260516-008 | Suppress intentional W4 template placeholder noise | pending | 2026-05-16 | ml-signal-20260516-008-suppress-intentional-w4-template-placeholder.md |
 | ml-signal-20260516-009 | Split or compress script-v4.md before hard limit | pending | 2026-05-16 | ml-signal-20260516-009-split-or-compress-script-v4-md-before-hard.md |
 | ml-signal-20260516-010 | Normalize pipeline index file paths | pending | 2026-05-16 | ml-signal-20260516-010-normalize-pipeline-index-file-paths.md |
+| ml-signal-20260516-011 | Archive completed signals after transfer | cut-approved | 2026-05-16 | ml-signal-20260516-011-archive-completed-signals-after-transfer.md |

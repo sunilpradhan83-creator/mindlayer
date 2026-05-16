@@ -36,3 +36,5 @@ Use when choosing the next near-term MindLayer task. See `ROADMAP.md` for full v
 
 ### Related
 ml-20260430-003
+
+- [ml-signal-20260516-011] Archive completed signals after transfer — Implement completed-signal archiving as a transfer lifecycle improvement. On transfer, when a signal-backed backlog item completes, preserve the signal record but move it from .mindlayer/pipeline/signals/ to .mindlayer/pipeline/archive/signals/, update active and archive signal indexes, and keep merged/dropped/completed provenance available for future context. Active signals should remain focused on pending or cut-approved work; archived signals carry the why-context while archived stories carry the how-context. Add contract tests for transfer behavior, index updates, legacy fallback safety, and status counts after archiving.
