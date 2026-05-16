@@ -5,7 +5,7 @@
 id: ml-signal-20260516-006
 created: 2026-05-16
 tier: review
-status: pending
+status: completed
 
 GEMINI.md is a generated adapter file created on demand by install.sh when gemini_signal fires (Gemini CLI or ~/.gemini detected). It belongs to the same class as .cursor/rules/mindlayer.md and .windsurf/rules/mindlayer.md — both of which are correctly gitignored. GEMINI.md is missing from .gitignore, which allowed it to surface as untracked and get committed to the repo in error (commit 9c8c1ad).
 
@@ -87,3 +87,30 @@ tier: auto
 status: pending
 
 Recursive index traversal currently treats missing pointer targets as empty indexes because parse_index returns [] when the referenced file does not exist. A typo in a pointer entry like knowledge/index.md can silently hide all entries below that pointer. Future work should add a diagnostic or validation path for missing pointer target files before story-002 starts creating and relying on subfolder indexes.
+
+## Suppress intentional W4 template placeholder noise
+
+id: ml-signal-20260516-008
+created: 2026-05-16
+tier: auto
+status: pending
+
+W4 currently warns on deliberate YYYY-MM-DD placeholders in scaffold/template files, especially global-template/memory-system/per-turn/*.md. Consider suppressing W4 for template paths or adding managed-date substitution.
+
+## Split or compress script-v4.md before hard limit
+
+id: ml-signal-20260516-009
+created: 2026-05-16
+tier: auto
+status: pending
+
+knowledge/decisions/script-v4.md is at 277 lines, over W2 and close to W3. Split or compress before adding more SCRIPT V4 decisions.
+
+## Normalize pipeline index file paths
+
+id: ml-signal-20260516-010
+created: 2026-05-16
+tier: auto
+status: pending
+
+pipeline/index.md uses bare filenames resolved by loader knowledge of pipeline files, while decisions entries use explicit root-relative paths. Not broken, but normalize for consistency and future resolver safety.
