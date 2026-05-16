@@ -1,7 +1,10 @@
 ---
 id: ml-story-004
 title: Update lint to follow pointer entries recursively
-status: ready
+status: done
+proved_by: bash tools/test.sh
+proved_at: 2026-05-16
+started_from: 2ca9692
 created: 2026-05-14
 parent: hierarchical-index-tree
 agent: any

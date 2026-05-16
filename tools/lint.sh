@@ -11,10 +11,10 @@
 # Checks performed:
 #   E1  project .mindlayer/ exists
 #   E2  project .mindlayer/index.md exists
-#   E3  every index entry has required keys (id, title, file, section, scope, type, status, last_updated)
+#   E3  every index entry has required keys (id, title, file)
 #   E4  no duplicate ids across project (and global, if --include-global)
-#   E5  every index entry's `file` exists in .mindlayer/
-#   E6  every index entry's `section` appears as a heading in its `file`
+#   E5  every resolved leaf or pointer entry's `file` exists
+#   E6  every resolved leaf entry's `section` appears as a heading in its `file`
 #   E7  source-boundary rules are present in adapters, boot prompt, and templates
 #   W1  entries with last_updated older than --stale-days (default 180)
 #   W2  any committed memory file is nearing --max-lines (default 240 of 300)
@@ -120,6 +120,8 @@ require_same_file() {
 # Each output line looks like:
 #   <indexpath>|<id>|<title>|<file>|<section>|<scope>|<type>|<status>|<last_updated>
 # Missing keys appear as empty strings.
+# Supports both the legacy YAML-ish entry form and summary entries:
+#   - id | title | file | summary
 # ---------------------------------------------------------------------------
 parse_index() {
   index_path="$1"
@@ -131,6 +133,16 @@ parse_index() {
           idx, id, title, file, section, scope, type, status, last_updated
       }
       id=""; title=""; file=""; section=""; scope=""; type=""; status=""; last_updated=""
+    }
+    /^[[:space:]]*-[[:space:]]+[^|]+[[:space:]]*\|/ {
+      emit()
+      line = $0
+      sub(/^[[:space:]]*-[[:space:]]+/, "", line)
+      n = split(line, parts, /[[:space:]]*\|[[:space:]]*/)
+      id = parts[1]
+      title = parts[2]
+      file = parts[3]
+      next
     }
     /^[[:space:]]*-[[:space:]]+id:[[:space:]]*/ {
       emit()
@@ -147,6 +159,90 @@ parse_index() {
     /^[[:space:]]+last_updated:[[:space:]]*/ { sub(/^[[:space:]]+last_updated:[[:space:]]*/, ""); last_updated = $0; next }
     END { emit() }
   ' "$index_path"
+}
+
+is_pointer_entry() {
+  id="$1"
+  file="$2"
+
+  case "$file" in
+    */index.md) return 0 ;;
+  esac
+  case "$id" in
+    ml-index-ptr-*) return 0 ;;
+  esac
+  return 1
+}
+
+record_target_path() {
+  base="$1"
+  idx="$2"
+  file="$3"
+  idx_dir="$(dirname "$idx")"
+
+  case "$file" in
+    /*) printf "%s\n" "$file"; return ;;
+  esac
+
+  if [ -f "$base/$file" ]; then
+    printf "%s\n" "$base/$file"
+    return
+  fi
+  if [ -f "$idx_dir/$file" ]; then
+    printf "%s\n" "$idx_dir/$file"
+    return
+  fi
+  if [ -f "$base/knowledge/$file" ]; then
+    printf "%s\n" "$base/knowledge/$file"
+    return
+  fi
+  if [ -f "$base/pipeline/$file" ]; then
+    printf "%s\n" "$base/pipeline/$file"
+    return
+  fi
+  if [ -f "$PROJECT_DIR/$file" ]; then
+    printf "%s\n" "$PROJECT_DIR/$file"
+    return
+  fi
+  if [ -f "$PROJECT_DIR/global-template/$file" ]; then
+    printf "%s\n" "$PROJECT_DIR/global-template/$file"
+    return
+  fi
+  if [ -f "$HOME/.mindlayer/$file" ]; then
+    printf "%s\n" "$HOME/.mindlayer/$file"
+    return
+  fi
+
+  case "$file" in
+    */*) printf "%s\n" "$base/$file" ;;
+    *) printf "%s\n" "$idx_dir/$file" ;;
+  esac
+}
+
+collect_index_tree() {
+  base="$1"
+  index_path="$2"
+  seen="$3"
+
+  [ -f "$index_path" ] || return 0
+  case "$seen" in
+    *"|$index_path|"*) return 0 ;;
+  esac
+  seen="$seen$index_path|"
+
+  records=$(parse_index "$index_path")
+  printf "%s\n" "$records"
+
+  while IFS='|' read -r idx id title file section scope type status last_updated; do
+    [ -n "$id$title$file" ] || continue
+    if is_pointer_entry "$id" "$file"; then
+      target=$(record_target_path "$base" "$idx" "$file")
+      [ -f "$target" ] || continue
+      collect_index_tree "$base" "$target" "$seen"
+    fi
+  done <<EOF
+$records
+EOF
 }
 
 days_since() {
@@ -175,11 +271,6 @@ heading_exists() {
   ' "$file_path"
 }
 
-list_memory_files() {
-  base="$1"
-  find "$base" -maxdepth 1 -type f -name '*.md' ! -name 'local.md' | sort
-}
-
 # ---------------------------------------------------------------------------
 # Lint a single .mindlayer/ directory.
 # ---------------------------------------------------------------------------
@@ -201,33 +292,33 @@ lint_dir() {
   fi
   ok "$label index.md present"
 
-  records=$(parse_index "$index")
+  records=$(collect_index_tree "$base" "$index" "|")
   count=$(printf "%s\n" "$records" | grep -c . || true)
-  ok "$label index has $count entries"
+  ok "$label index tree has $count entries"
 
   while IFS='|' read -r idx id title file section scope type status last_updated; do
     [ -n "$id$title$file" ] || continue
+
+    pointer=1
+    if is_pointer_entry "$id" "$file"; then
+      pointer=0
+    fi
 
     # E3 required keys
     missing=""
     [ -n "$id" ]           || missing="$missing id"
     [ -n "$title" ]        || missing="$missing title"
     [ -n "$file" ]         || missing="$missing file"
-    [ -n "$section" ]      || missing="$missing section"
-    [ -n "$scope" ]        || missing="$missing scope"
-    [ -n "$type" ]         || missing="$missing type"
-    [ -n "$status" ]       || missing="$missing status"
-    [ -n "$last_updated" ] || missing="$missing last_updated"
     if [ -n "$missing" ]; then
       err "[E3] $idx entry '${id:-<no-id>}' missing keys:$missing"
     fi
 
     # E5 file existence
     if [ -n "$file" ]; then
-      target="$base/$file"
+      target=$(record_target_path "$base" "$idx" "$file")
       if [ ! -f "$target" ]; then
         err "[E5] $idx entry '$id' references missing file: $file"
-      else
+      elif [ "$pointer" -ne 0 ]; then
         # E6 section heading existence
         if [ -n "$section" ] && ! heading_exists "$target" "$section"; then
           err "[E6] $idx entry '$id' references missing section '$section' in $file"
@@ -246,15 +337,27 @@ lint_dir() {
 $records
 EOF
 
-  # E4 duplicate ids within this index
+  # E4 duplicate ids across the resolved tree
   dups=$(printf "%s\n" "$records" | awk -F'|' 'NF>1 && $2!="" {print $2}' | sort | uniq -d)
   if [ -n "$dups" ]; then
     while IFS= read -r dup_id; do
-      [ -n "$dup_id" ] && err "[E4] duplicate id in $index: $dup_id"
+      [ -n "$dup_id" ] && err "[E4] duplicate id in $label index tree: $dup_id"
     done <<EOF
 $dups
 EOF
   fi
+
+  leaf_files=$(
+    while IFS='|' read -r idx id title file section scope type status last_updated; do
+      [ -n "$id$title$file" ] || continue
+      is_pointer_entry "$id" "$file" && continue
+      [ -n "$file" ] || continue
+      target=$(record_target_path "$base" "$idx" "$file")
+      [ -f "$target" ] && printf "%s\n" "$target"
+    done <<EOF_LEAVES
+$records
+EOF_LEAVES
+  )
 
   # W2/W3 file size budgets — actively warn before the hard limit.
   while IFS= read -r p; do
@@ -266,17 +369,17 @@ EOF
       warn "[W2] $p has $lines lines (near limit: $WARN_LINES/$MAX_LINES). Prompt for cleanup soon: archive old entries, compress summaries, or move history into a more specific file."
     fi
   done <<EOF
-$(list_memory_files "$base")
+$(printf "%s\n" "$leaf_files" | sort -u)
 EOF
 
-  # W4 placeholder scaffolds in committed files
+  # W4 placeholder scaffolds in resolved leaf files.
   while IFS= read -r p; do
     [ -n "$p" ] || continue
     if grep -q "YYYY-MM-DD" "$p" 2>/dev/null; then
       warn "[W4] $p still contains 'YYYY-MM-DD' placeholders (likely empty scaffold)"
     fi
   done <<EOF
-$(list_memory_files "$base")
+$(printf "%s\n" "$leaf_files" | sort -u)
 EOF
 }
 
@@ -382,10 +485,10 @@ cross_check_ids() {
   all_ids=""
   proj_idx="$PROJECT_DIR/.mindlayer/index.md"
   glob_idx="$HOME/.mindlayer/index.md"
-  [ -f "$proj_idx" ] && all_ids="$all_ids$(parse_index "$proj_idx" | awk -F'|' '{print $2}')
+  [ -f "$proj_idx" ] && all_ids="$all_ids$(collect_index_tree "$PROJECT_DIR/.mindlayer" "$proj_idx" "|" | awk -F'|' '{print $2}')
 "
   if [ "$INCLUDE_GLOBAL" -eq 1 ] && [ -f "$glob_idx" ]; then
-    all_ids="$all_ids$(parse_index "$glob_idx" | awk -F'|' '{print $2}')
+    all_ids="$all_ids$(collect_index_tree "$HOME/.mindlayer" "$glob_idx" "|" | awk -F'|' '{print $2}')
 "
     dups=$(printf "%s" "$all_ids" | grep -v '^$' | sort | uniq -d)
     if [ -n "$dups" ]; then

@@ -14,34 +14,37 @@ bash "$ROOT_DIR/tools/lint.sh" --project "$ROOT_DIR"
 printf "\n2. Negative source-boundary lint test\n"
 bash "$ROOT_DIR/tests/lint/test-source-boundaries.sh"
 
-printf "\n3. Local install readiness\n"
+printf "\n3. Recursive index-tree lint test\n"
+bash "$ROOT_DIR/tests/lint/test-index-tree.sh"
+
+printf "\n4. Local install readiness\n"
 bash "$ROOT_DIR/tests/local-install/test-install.sh"
 
-printf "\n4. Agent boot contract\n"
+printf "\n5. Agent boot contract\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-boot.sh"
 
-printf "\n5. Session continuity contract\n"
+printf "\n6. Session continuity contract\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-continuity.sh"
 
-printf "\n6. Per-turn behavioral contracts\n"
+printf "\n7. Per-turn behavioral contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-per-turn.sh"
 
-printf "\n7. Onboard behavioral contracts\n"
+printf "\n8. Onboard behavioral contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-onboard.sh"
 
-printf "\n8. Memory diff behavioral contracts\n"
+printf "\n9. Memory diff behavioral contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-diff.sh"
 
-printf "\n9. Auto-summarization suggestion contracts\n"
+printf "\n10. Auto-summarization suggestion contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-autosummarize.sh"
 
-printf "\n10. Ranked load behavioral contracts\n"
+printf "\n11. Ranked load behavioral contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-load.sh"
 
-printf "\n11. Boot receipt fixture contracts\n"
+printf "\n12. Boot receipt fixture contracts\n"
 bash "$ROOT_DIR/tests/agent-behavior/test-boot-receipt.sh"
 
-printf "\n12. ml CLI contracts\n"
+printf "\n13. ml CLI contracts\n"
 bash "$ROOT_DIR/tests/ml/test-boot.sh"
 bash "$ROOT_DIR/tests/ml/test-status.sh"
 bash "$ROOT_DIR/tests/ml/test-diff.sh"
