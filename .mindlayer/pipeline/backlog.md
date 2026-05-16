@@ -25,6 +25,7 @@ Near-term backlog tracks active/planned V4 work only. Full versioned vision live
 - IDE extensions after runtime and SCRIPT flows stabilize.
 
 **Next (post-security hardening):**
+- [ml-signal-20260516-005] Implement human-reviewed signal processing and Cut redesign — redefine Cut as an editorial pass before routing; remove auto-routing/tier assumptions; replace/reshape signal fields for human-first processing; merge ml-signal-20260516-002 and ml-signal-20260516-004 into one enforcement plan for Token Burned/Next Step drift; keep ml-signal-20260516-003 blocked until the new signal workflow is implemented.
 - Hierarchical index tree: root index.md → subfolder indexes → leaf files. Split knowledge/decisions.md into decisions/ subfolder. Deprecate index-full.md. Update lint, _paths.py, ml load traversal, ml save routing. Spec-first. (ml-20260514-006)
 
 **Deferred:**
