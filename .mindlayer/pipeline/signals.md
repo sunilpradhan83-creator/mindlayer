@@ -67,7 +67,7 @@ ml-signal-20260516-003 (signals folder refactor) depends on ml-signal-20260516-0
 id: ml-signal-20260516-003
 created: 2026-05-16
 tier: plan
-status: pending
+status: cut-approved
 
 Signals should move from a single `signals.md` file to a `signals/` folder. Each signal gets its own file named by a unique human-readable name (not the id). A `signals/index.md` serves as the index. Plan the folder structure, naming convention, and migration of existing signals before implementing.
 
