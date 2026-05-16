@@ -184,7 +184,12 @@ sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-dry/.mindlayer/pipeline/signals.md
 output="$SANDBOX/cut-dry.out"
 before_backlog_size=$(wc -c < "$SANDBOX/cut-dry/.mindlayer/pipeline/backlog.md" 2>/dev/null || echo 0)
 (cd "$SANDBOX/cut-dry" && python3 "$ROOT_DIR/src/ml" script cut \
-    --signal "$sig_id" --route backlog > "$output")
+    --signal "$sig_id" --route backlog \
+    --reason "Clarify the fix and route it as a refine-ready backlog item." > "$output")
+check "cut proposal header" assert_contains "$output" "Cut proposal:"
+check "plan mode review" assert_contains "$output" "Plan Mode review"
+check "route in proposal" assert_contains "$output" "Route: backlog"
+check "plan in proposal" assert_contains "$output" "Clarify the fix"
 check "approval needed message" assert_contains "$output" "Approval needed:"
 check "pass --approve hint" assert_contains "$output" "--approve"
 # backlog must not have changed
@@ -195,14 +200,32 @@ else
   fail "$CURRENT_SCENARIO: backlog unchanged"
 fi
 
-scenario "cut --approve routes to backlog"
+scenario "cut --approve requires processing plan"
+mkdir -p "$SANDBOX/cut-plan-required/.mindlayer/pipeline"
+(cd "$SANDBOX/cut-plan-required" && python3 "$ROOT_DIR/src/ml" script signal \
+    --title "Parser bug" --body "Edge case fails" > /dev/null)
+sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-plan-required/.mindlayer/pipeline/signals.md" | head -1 | awk '{print $2}')
+output="$SANDBOX/cut-plan-required.out"
+if ! (cd "$SANDBOX/cut-plan-required" && python3 "$ROOT_DIR/src/ml" script cut \
+    --signal "$sig_id" --route backlog --approve > "$output" 2>&1); then
+  pass "$CURRENT_SCENARIO: exits non-zero"
+else
+  fail "$CURRENT_SCENARIO: exits non-zero"
+fi
+check "plan required error" assert_contains "$output" "Cut plan required"
+check "signal remains pending" assert_contains "$SANDBOX/cut-plan-required/.mindlayer/pipeline/signals.md" "status: pending"
+check_not "backlog not written" test -f "$SANDBOX/cut-plan-required/.mindlayer/pipeline/backlog.md"
+
+scenario "cut --approve routes plan to backlog"
 mkdir -p "$SANDBOX/cut-backlog/.mindlayer/pipeline"
 (cd "$SANDBOX/cut-backlog" && python3 "$ROOT_DIR/src/ml" script signal \
     --title "Parser bug" --body "Edge case fails" > /dev/null)
 sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-backlog/.mindlayer/pipeline/signals.md" | head -1 | awk '{print $2}')
 output="$SANDBOX/cut-backlog.out"
 if (cd "$SANDBOX/cut-backlog" && python3 "$ROOT_DIR/src/ml" script cut \
-    --signal "$sig_id" --route backlog --approve > "$output"); then
+    --signal "$sig_id" --route backlog \
+    --reason "Clarify the parser bug and create a refine-ready implementation plan." \
+    --approve > "$output"); then
   pass "$CURRENT_SCENARIO: exits 0"
 else
   fail "$CURRENT_SCENARIO: exits 0"
@@ -214,17 +237,21 @@ check "Approval needed None" assert_contains "$output" "Approval needed: None"
 check "signal marked cut-approved" assert_contains "$SANDBOX/cut-backlog/.mindlayer/pipeline/signals.md" "status: cut-approved"
 # backlog has the title
 check "title in backlog" assert_contains "$SANDBOX/cut-backlog/.mindlayer/pipeline/backlog.md" "Parser bug"
+check "plan in backlog" assert_contains "$SANDBOX/cut-backlog/.mindlayer/pipeline/backlog.md" "Clarify the parser bug"
 
-scenario "cut --approve routes to roadmap"
+scenario "cut --approve routes plan to roadmap"
 mkdir -p "$SANDBOX/cut-roadmap/.mindlayer/pipeline"
 (cd "$SANDBOX/cut-roadmap" && python3 "$ROOT_DIR/src/ml" script signal \
     --title "V5 direction change" --body "Major pivot needed" > /dev/null)
 sig_id=$(grep "^id: ml-signal-" "$SANDBOX/cut-roadmap/.mindlayer/pipeline/signals.md" | head -1 | awk '{print $2}')
 output="$SANDBOX/cut-roadmap.out"
 (cd "$SANDBOX/cut-roadmap" && python3 "$ROOT_DIR/src/ml" script cut \
-    --signal "$sig_id" --route roadmap --approve > "$output")
+    --signal "$sig_id" --route roadmap \
+    --reason "Clarify the direction change and route it for roadmap-level review." \
+    --approve > "$output")
 check "roadmap in output" assert_contains "$output" "roadmap"
 check "title in roadmap" assert_contains "$SANDBOX/cut-roadmap/.mindlayer/pipeline/roadmap.md" "V5 direction change"
+check "plan in roadmap" assert_contains "$SANDBOX/cut-roadmap/.mindlayer/pipeline/roadmap.md" "Clarify the direction change"
 
 scenario "cut with unknown signal id fails"
 mkdir -p "$SANDBOX/cut-miss/.mindlayer/pipeline"

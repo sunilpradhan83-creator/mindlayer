@@ -187,23 +187,30 @@ def cut(
     title, _block = result
 
     target_file = "roadmap.md" if route == "roadmap" else "backlog.md"
+    plan = reason.strip()
 
     if not approve:
-        print(f"Proposed: route signal '{sig_id}' ({title}) → {route}")
-        if reason:
-            print(f"Reason: {reason}")
+        print("Cut proposal:")
+        print(f"Signal: {sig_id} ({title})")
+        print(f"Route: {route}")
+        if plan:
+            print(f"Plan: {plan}")
+        else:
+            print("Plan: <provide --reason with the reviewed Cut plan>")
+        print("Review: use Plan Mode review before approving this Cut")
         print("Approval needed: pass --approve to confirm")
         return 0
+
+    if len(plan) < 20:
+        print("Error: Cut plan required; provide --reason with the reviewed Cut plan before --approve")
+        return 1
 
     # Approved: update signal status and append to target file
     _update_signal_status(signals_path, sig_id, "cut-approved")
 
     target_path = pd / target_file
     _ensure_dir(pd)
-    line = f"\n- [{sig_id}] {title}"
-    if reason:
-        line += f" — {reason}"
-    line += "\n"
+    line = f"\n- [{sig_id}] {title} — {plan}\n"
     with target_path.open("a", encoding="utf-8") as f:
         f.write(line)
 

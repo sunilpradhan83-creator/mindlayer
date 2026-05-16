@@ -66,7 +66,7 @@ def build_parser() -> argparse.ArgumentParser:
     sig_parser.add_argument("--title", required=True)
     sig_parser.add_argument("--body", required=True)
 
-    cut_parser = script_sub.add_parser("cut", help="Route a signal to backlog or roadmap")
+    cut_parser = script_sub.add_parser("cut", help="Process a signal into an approved backlog or roadmap plan")
     cut_parser.add_argument("--signal", required=True, dest="sig_id")
     cut_parser.add_argument("--route", choices=["backlog", "roadmap"], required=True)
     cut_parser.add_argument("--reason", default="")
