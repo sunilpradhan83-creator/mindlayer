@@ -494,6 +494,30 @@
   status: active
   last_updated: 2026-05-14
 
+- id: ml-20260514-005
+  title: Next Step Story ID Granularity
+  file: knowledge/decisions.md
+  section: Next Step Story ID Granularity
+  scope: project
+  type: decision
+  tags: [per-turn, next-step, script, stories, orientation]
+  summary: Name story ID in Next Step once stories exist, not backlog item.
+  importance: medium
+  status: active
+  last_updated: 2026-05-14
+
+- id: ml-20260514-006
+  title: Hierarchical Index Tree Architecture
+  file: knowledge/decisions.md
+  section: Hierarchical Index Tree Architecture
+  scope: project
+  type: decision
+  tags: [index, architecture, tree, knowledge, pipeline, ml-load, schema]
+  summary: Root index maps to subfolder indexes; each folder owns its index; tree replaces flat index+index-full.
+  importance: high
+  status: active
+  last_updated: 2026-05-14
+
 - id: ml-index-full-20260512-001
   title: Full Project Memory Index
   file: index-full.md

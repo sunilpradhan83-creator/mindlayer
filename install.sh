@@ -972,6 +972,15 @@ install_global() {
   write_managed_template "$GLOBAL_DIR/memory-system/read-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/read-write.md" "$global_memory_system_read_write"
   write_managed_template "$GLOBAL_DIR/memory-system/schema.md" "$GLOBAL_TEMPLATE_DIR/memory-system/schema.md" "$global_memory_system_schema"
 
+  # memory-system/per-turn/ — lazy per-turn behavior modules
+  mkdir_p "$GLOBAL_DIR/memory-system/per-turn"
+  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/load-announce.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/load-announce.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/memory-candidate.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/memory-candidate.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/retrieval.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/retrieval.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/lateral-intent.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/lateral-intent.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/session-warning.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/session-warning.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/post-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/post-write.md" ""
+
   # Host hooks — thin tool-specific enforcement layers when supported.
   mkdir_p "$GLOBAL_DIR/memory-system/hooks"
   write_managed_template "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$GLOBAL_TEMPLATE_DIR/memory-system/hooks/claude-user-prompt-submit.sh" ""
@@ -996,6 +1005,7 @@ install_global() {
   write_managed_template "$GLOBAL_DIR/memory-system/commands/archive.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/archive.md" ""
   write_managed_template "$GLOBAL_DIR/memory-system/commands/session.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/session.md" ""
   write_managed_template "$GLOBAL_DIR/memory-system/commands/onboard.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/onboard.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/diff.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/diff.md" ""
 
   # preferences/ — agent-written cross-project knowledge, git-backed
   mkdir_p "$GLOBAL_DIR/preferences"

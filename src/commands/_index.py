@@ -121,21 +121,51 @@ def parse_index(path: Path) -> list[Entry]:
     return parse_summary_index(path)
 
 
+def _is_pointer(entry: Entry) -> bool:
+    return entry.id.startswith("ml-index-ptr-") or (
+        entry.file.endswith("/index.md") and "Index" in entry.title
+    )
+
+
+def _load_recursive(
+    index_path: Path,
+    mindlayer_dir: Path,
+    seen: set[str],
+    visited: set[Path],
+) -> list[Entry]:
+    resolved = index_path.resolve()
+    if resolved in visited:
+        return []
+    visited.add(resolved)
+
+    entries: list[Entry] = []
+    for entry in parse_index(index_path):
+        key = entry.id or f"{entry.file}:{entry.title}"
+        if _is_pointer(entry):
+            entries.extend(
+                _load_recursive(mindlayer_dir / entry.file, mindlayer_dir, seen, visited)
+            )
+        else:
+            if key not in seen:
+                seen.add(key)
+                entries.append(entry)
+    return entries
+
+
 def load_indexes(project_dir: Path) -> list[Entry]:
-    candidates = [
-        Path.home() / ".mindlayer" / "preferences" / "index.md",
-        project_dir / ".mindlayer" / "index-full.md",
-        project_dir / ".mindlayer" / "index.md",
-    ]
     seen: set[str] = set()
     entries: list[Entry] = []
-    for candidate in candidates:
-        for entry in parse_index(candidate):
-            key = entry.id or f"{entry.file}:{entry.title}"
-            if key in seen:
-                continue
+
+    prefs_index = Path.home() / ".mindlayer" / "preferences" / "index.md"
+    for entry in parse_index(prefs_index):
+        key = entry.id or f"{entry.file}:{entry.title}"
+        if key not in seen:
             seen.add(key)
             entries.append(entry)
+
+    mindlayer_dir = project_dir / ".mindlayer"
+    entries.extend(_load_recursive(mindlayer_dir / "index.md", mindlayer_dir, seen, set()))
+
     return entries
 
 

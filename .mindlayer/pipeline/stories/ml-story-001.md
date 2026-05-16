@@ -1,7 +1,7 @@
 ---
 id: ml-story-001
 title: Recursive load_indexes with pointer detection
-status: ready
+status: done
 created: 2026-05-14
 parent: hierarchical-index-tree
 agent: any
