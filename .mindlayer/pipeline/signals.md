@@ -40,7 +40,7 @@ Agent has been deriving "Next Step" in the Token Burned footer conversationally 
 id: ml-signal-20260516-005
 created: 2026-05-16
 tier: review
-status: cut-approved
+status: completed
 
 Redefine how signals are processed end-to-end, with a new precise definition of Cut.
 
