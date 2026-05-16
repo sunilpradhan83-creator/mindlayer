@@ -1,7 +1,10 @@
 ---
 id: ml-story-012
 title: Migrate project signals to folder layout
-status: ready
+status: done
+proved_by: bash tools/test.sh
+proved_at: 2026-05-16
+started_from: 3372741
 created: 2026-05-16
 parent: ml-signal-20260516-003
 agent: any

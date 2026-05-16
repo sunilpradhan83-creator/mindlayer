@@ -224,6 +224,42 @@ output="$SANDBOX/status-folder-precedence.out"
 check "folder duplicate not counted as pending" assert_contains "$output" "Signals: 0 pending"
 check "folder duplicate counted as merged" assert_contains "$output" "Merged signals: 1"
 
+scenario "status reads migrated folder with legacy note"
+mkdir -p "$SANDBOX/status-migrated/.mindlayer/pipeline/signals"
+cat > "$SANDBOX/status-migrated/.mindlayer/pipeline/signals/ml-signal-20260516-001-one.md" <<'EOF'
+---
+id: ml-signal-20260516-001
+title: One
+created: 2026-05-16
+tier: auto
+status: pending
+---
+
+One body.
+EOF
+cat > "$SANDBOX/status-migrated/.mindlayer/pipeline/signals/ml-signal-20260516-002-two.md" <<'EOF'
+---
+id: ml-signal-20260516-002
+title: Two
+created: 2026-05-16
+tier: auto
+status: merged
+merged_into: ml-signal-20260516-005
+---
+
+Two body.
+EOF
+cat > "$SANDBOX/status-migrated/.mindlayer/pipeline/signals.md" <<'EOF'
+# Signals Migrated
+
+Legacy note only. status: pending should not count without a signal id.
+EOF
+output="$SANDBOX/status-migrated.out"
+(cd "$SANDBOX/status-migrated" && python3 "$ROOT_DIR/src/ml" script status > "$output")
+check "migrated pending count" assert_contains "$output" "Signals: 1 pending"
+check "migrated merged count" assert_contains "$output" "Merged signals: 1"
+check_not "legacy note not counted" assert_contains "$output" "Signals: 2 pending"
+
 scenario "unknown script command fails cleanly"
 mkdir -p "$SANDBOX/unknown/.mindlayer/pipeline" "$SANDBOX/unknown/.mindlayer/knowledge/sessions"
 output="$SANDBOX/unknown.out"
