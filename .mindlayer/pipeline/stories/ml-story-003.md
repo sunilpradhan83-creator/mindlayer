@@ -1,7 +1,10 @@
 ---
 id: ml-story-003
 title: Update root index.md to pointer format and deprecate index-full.md
-status: ready
+status: done
+proved_by: bash tools/test.sh
+proved_at: 2026-05-16
+started_from: 551ee92
 created: 2026-05-14
 parent: hierarchical-index-tree
 agent: any

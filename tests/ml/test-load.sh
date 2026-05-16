@@ -52,8 +52,7 @@ EOF
 cat > "$SANDBOX/project/.mindlayer/index.md" <<'EOF'
 # Project Memory Index
 
-- ml-command-runner | Command Runner | knowledge/context.md | Read-only ml command runner foundation.
-- ml-post-write-module | Per-Turn Post-Write Module | global-template/memory-system/per-turn/post-write.md | Lazy per-turn contract for checking memory file size after approved writes.
+- ml-index-ptr-pipeline | Pipeline Index | pipeline/index.md | Index for pipeline/ subfolder
 - ml-index-ptr-knowledge | Knowledge Index | knowledge/index.md | Index for knowledge/ subfolder
 EOF
 
@@ -61,9 +60,18 @@ EOF
 cat > "$SANDBOX/project/.mindlayer/knowledge/index.md" <<'EOF'
 # Knowledge Index
 
+- ml-project-entry | Project Identity | knowledge/project.md | Project identity entry.
+- ml-command-runner | Command Runner | knowledge/context.md | Read-only ml command runner foundation.
+- ml-post-write-module | Per-Turn Post-Write Module | global-template/memory-system/per-turn/post-write.md | Lazy per-turn contract for checking memory file size after approved writes.
 - ml-knowledge-entry | Knowledge Entry | knowledge/knowledge-entry.md | Entry in knowledge subfolder.
 - ml-dedup-entry | Dedup First | knowledge/knowledge-entry.md | First occurrence of this id.
 - ml-index-ptr-decisions | Decisions Index | knowledge/decisions/index.md | Index for decisions/ subfolder
+EOF
+
+cat > "$SANDBOX/project/.mindlayer/pipeline/index.md" <<'EOF'
+# Pipeline Index
+
+- ml-progress-entry | Current Progress | progress.md | Current progress entry.
 EOF
 
 # knowledge/decisions/index.md — leaf entries plus a second occurrence of the dedup id
@@ -85,6 +93,24 @@ cat > "$SANDBOX/project/.mindlayer/knowledge/context.md" <<'EOF'
 
 ### Summary
 Read-only ml command runner foundation.
+EOF
+
+cat > "$SANDBOX/project/.mindlayer/knowledge/project.md" <<'EOF'
+# Project
+
+## Project Identity
+
+### Summary
+Project identity entry.
+EOF
+
+cat > "$SANDBOX/project/.mindlayer/pipeline/progress.md" <<'EOF'
+# Progress
+
+## Current Progress
+
+### Summary
+Current progress entry.
 EOF
 
 cat > "$SANDBOX/project/.mindlayer/knowledge/knowledge-entry.md" <<'EOF'
@@ -154,6 +180,19 @@ EOF
 printf "MindLayer ml load contract\n"
 printf "==========================\n"
 
+scenario "root index is pointer-only"
+if awk '
+  /^- / {
+    count++
+    if ($0 !~ /^- ml-index-ptr-[^|]+ \| .+ \| .+\/index\.md \| .+/) bad = 1
+  }
+  END { exit count > 0 && !bad ? 0 : 1 }
+' "$ROOT_DIR/.mindlayer/index.md"; then
+  pass "$CURRENT_SCENARIO: root index contains only pointer entries"
+else
+  fail "$CURRENT_SCENARIO: root index contains only pointer entries"
+fi
+
 scenario "exact title ranking"
 output="$SANDBOX/load.out"
 if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "Command Runner" > "$output"); then
@@ -185,6 +224,26 @@ else
   fail "$CURRENT_SCENARIO: command exits successfully"
 fi
 if assert_contains "$output" "Knowledge Entry (ml-knowledge-entry)"; then pass "$CURRENT_SCENARIO: subfolder entry ranked"; else fail "$CURRENT_SCENARIO: subfolder entry ranked"; fi
+
+scenario "root pointer resolves knowledge entry"
+output="$SANDBOX/load-project.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "project" > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$output" "Project Identity (ml-project-entry)"; then pass "$CURRENT_SCENARIO: project entry ranked"; else fail "$CURRENT_SCENARIO: project entry ranked"; fi
+if assert_contains "$output" "$SANDBOX/project/.mindlayer/knowledge/project.md"; then pass "$CURRENT_SCENARIO: project source returned"; else fail "$CURRENT_SCENARIO: project source returned"; fi
+
+scenario "root pointer resolves pipeline entry"
+output="$SANDBOX/load-progress.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "progress" > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$output" "Current Progress (ml-progress-entry)"; then pass "$CURRENT_SCENARIO: progress entry ranked"; else fail "$CURRENT_SCENARIO: progress entry ranked"; fi
+if assert_contains "$output" "$SANDBOX/project/.mindlayer/pipeline/progress.md"; then pass "$CURRENT_SCENARIO: progress source returned"; else fail "$CURRENT_SCENARIO: progress source returned"; fi
 
 scenario "two-level pointer chain resolves"
 output="$SANDBOX/load-chain.out"

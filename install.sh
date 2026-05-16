@@ -744,21 +744,10 @@ When this prompt pattern applies.
 
 project_index="# Project Memory Index
 
-Use this file as the compact search map for project .mindlayer/.
+Boot summary. Pointers to subfolder indexes.
 
-## Entries
-
-- id: ml-project-YYYYMMDD-001
-  title: Project starter context
-  file: knowledge/project.md
-  section: Entry Template
-  scope: project
-  type: context
-  tags: []
-  summary: Starter project context entry.
-  importance: low
-  status: active
-  last_updated: YYYY-MM-DD"
+- ml-index-ptr-knowledge | Knowledge Index | knowledge/index.md | Index for knowledge/ subfolder
+- ml-index-ptr-pipeline | Pipeline Index | pipeline/index.md | Index for pipeline/ subfolder"
 
 project_template="# Project Memory
 
@@ -843,6 +832,23 @@ Decision, rationale, and consequences.
 When revisiting this design or product choice.
 
 ### Related"
+
+decision_index_template="# Decisions Index
+
+- ml-decision-YYYYMMDD-001 | Decision starter entry | knowledge/decisions/process.md | Starter decision entry."
+
+knowledge_index_template="# Knowledge Index
+
+- ml-index-ptr-decisions | Decisions Index | knowledge/decisions/index.md | Index for decisions/ subfolder
+- ml-project-YYYYMMDD-001 | Project starter context | knowledge/project.md | Starter project context entry.
+- ml-context-YYYYMMDD-001 | Project context | knowledge/context.md | Starter project context entry.
+- ml-risk-YYYYMMDD-001 | Project risk | knowledge/risks.md | Starter project risk entry."
+
+pipeline_index_template="# Pipeline Index
+
+- ml-progress-YYYYMMDD-001 | Project progress | pipeline/progress.md | Starter project progress entry.
+- ml-backlog-YYYYMMDD-001 | Project backlog | pipeline/backlog.md | Starter project backlog entry.
+- ml-roadmap-YYYYMMDD-001 | Project Roadmap | pipeline/roadmap.md | Long-term versioned vision."
 
 context_template="# Context
 
@@ -1039,8 +1045,10 @@ install_project_memory() {
   mkdir_p "$pmem"
 
   write_template_if_missing "$pmem/knowledge/project.md" "$PROJECT_TEMPLATE_DIR/knowledge/project.md" "$project_template"
+  write_template_if_missing "$pmem/knowledge/index.md" "$PROJECT_TEMPLATE_DIR/knowledge/index.md" "$knowledge_index_template"
   write_template_if_missing "$pmem/pipeline/progress.md" "$PROJECT_TEMPLATE_DIR/pipeline/progress.md" "$progress_template"
-  write_template_if_missing "$pmem/knowledge/decisions.md" "$PROJECT_TEMPLATE_DIR/knowledge/decisions.md" "$decision_template"
+  write_template_if_missing "$pmem/pipeline/index.md" "$PROJECT_TEMPLATE_DIR/pipeline/index.md" "$pipeline_index_template"
+  write_template_if_missing "$pmem/knowledge/decisions/index.md" "$PROJECT_TEMPLATE_DIR/knowledge/decisions/index.md" "$decision_index_template"
   write_template_if_missing "$pmem/knowledge/context.md" "$PROJECT_TEMPLATE_DIR/knowledge/context.md" "$context_template"
   write_template_if_missing "$pmem/pipeline/backlog.md" "$PROJECT_TEMPLATE_DIR/pipeline/backlog.md" "$backlog_template"
   write_template_if_missing "$pmem/pipeline/roadmap.md" "$PROJECT_TEMPLATE_DIR/pipeline/roadmap.md" "$roadmap_template"

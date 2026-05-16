@@ -22,7 +22,7 @@ Load each file at most once per session. Load before acting on the trigger, not 
 
 | File | Load when | Signal variants |
 |---|---|---|
-| `decisions.md` | Design or architecture question | "why", "how did we decide", "rationale", "design", "architecture", "reasoning", "tradeoff", "alternative", "why does X work", "why did we choose", "what was the decision", "behavior", "rule" |
+| `decisions/index.md` | Design or architecture question | "why", "how did we decide", "rationale", "design", "architecture", "reasoning", "tradeoff", "alternative", "why does X work", "why did we choose", "what was the decision", "behavior", "rule" |
 | `context.md` | Product or philosophy question | "what is this project", "product goals", "philosophy", "purpose", "principles", "constraints", "how does it work", "design goals", "vision", "what are we building" |
 | `risks.md` | Risk or safety question | "risk", "failure", "trust", "safety", "crash", "edge case", "what could go wrong", "concern", "downside", "problem with", "danger", "careful" |
 | `roadmap.md` | Planning or vision question | "roadmap", "future", "what's next", "version", "phase", "long term", "plan", "next major", "coming up", "vision", "after this", "what comes after" |

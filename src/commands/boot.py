@@ -106,7 +106,7 @@ def run(project_root: Path) -> int:
 
     skipped.extend(
         [
-            "`.mindlayer/index-full.md` (loaded only by `ml load`)",
+            "deeper `.mindlayer/` index branches not needed for boot",
             "`.mindlayer/pipeline/archive/archive.md` and `.mindlayer/local.md`",
             "`README.md`, `docs/`, and adapters as memory sources",
         ]

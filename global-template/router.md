@@ -20,7 +20,7 @@ Loaded: <file.md> — <reason>
 |---|---|---|
 | `memory-system/commands/index.md` | Any ml command | ml init/load/retrieve/save/status/session/clean/onboard |
 | `memory-system/commands/init.md` | Init or boot receipt | ml init |
-| `memory-system/commands/load.md` + project `.mindlayer/index-full.md` | Memory load | ml load/retrieve, load/retrieve X, what do we know about X |
+| `memory-system/commands/load.md` + project `.mindlayer/index.md` tree | Memory load | ml load/retrieve, load/retrieve X, what do we know about X |
 | `memory-system/commands/save.md` | Save trigger | ml save, remember/save/add/capture/log/keep/preserve this |
 | `memory-system/commands/status.md` | Status | ml status, mstatus, memory status, what's loaded |
 | `memory-system/commands/archive.md` | Memory cleanup | ml clean, clean/tidy/forget/remove memory |
