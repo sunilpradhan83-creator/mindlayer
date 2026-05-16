@@ -78,3 +78,12 @@ tier: auto
 status: pending
 
 Agent was emitting a stripped-down freeform Token Burned footer instead of the exact block specified in `~/.mindlayer/memory-system/per-turn.md`. Correct format requires separator lines, word/token estimates with `~`, and `Coming Up` section. Root cause: per-turn.md contract not being applied precisely. Revisit to determine if enforcement needs to be strengthened (hook, validator, or spec clarification).
+
+## Warn on broken index pointers
+
+id: ml-signal-20260516-007
+created: 2026-05-16
+tier: auto
+status: pending
+
+Recursive index traversal currently treats missing pointer targets as empty indexes because parse_index returns [] when the referenced file does not exist. A typo in a pointer entry like knowledge/index.md can silently hide all entries below that pointer. Future work should add a diagnostic or validation path for missing pointer target files before story-002 starts creating and relying on subfolder indexes.
