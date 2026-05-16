@@ -946,7 +946,7 @@ check_not "story-002 removed from stories" test -f "$SANDBOX/transfer-ok/.mindla
 # index rows removed
 check_not "index row removed" assert_contains "$SANDBOX/transfer-ok/.mindlayer/pipeline/stories/index.md" "ml-story-001"
 
-scenario "transfer clears backlog and completes folder signal"
+scenario "transfer archives completed folder signal"
 mkdir -p "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/stories"
 mkdir -p "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals"
 _make_story "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/stories" ml-story-001 ml-signal-20260516-101 done
@@ -971,8 +971,14 @@ output="$SANDBOX/transfer-folder-signal.out"
 (cd "$SANDBOX/transfer-folder-signal" && python3 "$ROOT_DIR/src/ml" script transfer \
     --backlog-item ml-signal-20260516-101 --approve > "$output")
 check_not "backlog item removed" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/backlog.md" "ml-signal-20260516-101"
-check "folder signal completed" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals/ml-signal-20260516-101-folder-signal-transfer.md" "status: completed"
-check "folder signal index completed" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals/index.md" "completed"
+check_not "active signal removed" test -f "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals/ml-signal-20260516-101-folder-signal-transfer.md"
+check "archived signal exists" test -f "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/archive/signals/ml-signal-20260516-101-folder-signal-transfer.md"
+check "archived signal completed" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/archive/signals/ml-signal-20260516-101-folder-signal-transfer.md" "status: completed"
+check_not "active signal index removes row" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals/index.md" "ml-signal-20260516-101"
+check "archive signal index contains row" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/archive/signals/index.md" "ml-signal-20260516-101"
+output="$SANDBOX/transfer-folder-signal-status.out"
+(cd "$SANDBOX/transfer-folder-signal" && python3 "$ROOT_DIR/src/ml" script status > "$output")
+check "archived completed signal not pending" assert_contains "$output" "Signals: 0 pending"
 
 scenario "transfer without --approve prints proposal only"
 mkdir -p "$SANDBOX/transfer-dry/.mindlayer/pipeline/stories"

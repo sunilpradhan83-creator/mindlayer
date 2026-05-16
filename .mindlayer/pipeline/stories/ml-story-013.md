@@ -1,7 +1,10 @@
 ---
 id: ml-story-013
 title: Archive completed signals on transfer
-status: ready
+status: done
+proved_by: bash tools/test.sh
+proved_at: 2026-05-16
+started_from: c7aae16
 created: 2026-05-16
 parent: ml-signal-20260516-011
 agent: any

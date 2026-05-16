@@ -69,15 +69,12 @@ def _signal_records(pipeline_dir_path: Path) -> list[dict[str, str]]:
     seen: set[str] = set()
 
     signals_dir = pipeline_dir_path / "signals"
-    if signals_dir.is_dir():
-        for path in sorted(signals_dir.glob("ml-signal-*.md")):
-            fields = _parse_signal_fields(read_text(path))
-            sig_id = fields.get("id", "")
-            if not sig_id or sig_id in seen:
-                continue
-            fields["source"] = str(path)
-            records.append(fields)
-            seen.add(sig_id)
+    for fields in _folder_signal_records(signals_dir):
+        sig_id = fields.get("id", "")
+        if sig_id in seen:
+            continue
+        records.append(fields)
+        seen.add(sig_id)
 
     for sig_id, title, fields, _block in _legacy_signal_blocks(pipeline_dir_path / "signals.md"):
         if sig_id in seen:
@@ -87,6 +84,20 @@ def _signal_records(pipeline_dir_path: Path) -> list[dict[str, str]]:
         records.append(fields)
         seen.add(sig_id)
 
+    return records
+
+
+def _folder_signal_records(signals_dir: Path) -> list[dict[str, str]]:
+    records: list[dict[str, str]] = []
+    if not signals_dir.is_dir():
+        return records
+    for path in sorted(signals_dir.glob("ml-signal-*.md")):
+        fields = _parse_signal_fields(read_text(path))
+        sig_id = fields.get("id", "")
+        if not sig_id:
+            continue
+        fields["source"] = str(path)
+        records.append(fields)
     return records
 
 
@@ -287,6 +298,26 @@ def _update_signal_record_status(
         _write_signal_index(signals_dir, _signal_records(pipeline_dir_path))
         return
     _update_signal_status(pipeline_dir_path / "signals.md", record.get("id", ""), new_status)
+
+
+def _archive_signal_record(
+    pipeline_dir_path: Path,
+    record: dict[str, str],
+    new_status: str,
+) -> None:
+    source_path = Path(record.get("source", ""))
+    signals_dir = pipeline_dir_path / "signals"
+    if source_path.parent != signals_dir:
+        _update_signal_status(pipeline_dir_path / "signals.md", record.get("id", ""), new_status)
+        return
+
+    _update_folder_signal_status(source_path, new_status)
+    archive_signals_dir = pipeline_dir_path / "archive" / "signals"
+    _ensure_dir(archive_signals_dir)
+    dest = archive_signals_dir / source_path.name
+    source_path.replace(dest)
+    _write_signal_index(signals_dir, _signal_records(pipeline_dir_path))
+    _write_signal_index(archive_signals_dir, _folder_signal_records(archive_signals_dir))
 
 
 def cut(
@@ -576,7 +607,7 @@ def transfer(
     _remove_backlog_item(pd / "backlog.md", backlog_item)
     signal_record = _find_signal_record(pd, backlog_item)
     if signal_record is not None:
-        _update_signal_record_status(pd, signal_record, "completed")
+        _archive_signal_record(pd, signal_record, "completed")
 
     print(f"Transfer complete: {len(stories)} stories archived for {backlog_item}")
     print("Approval needed: None")
