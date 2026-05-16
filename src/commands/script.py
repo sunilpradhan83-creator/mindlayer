@@ -38,10 +38,13 @@ def _ensure_dir(path: Path) -> None:
 # status
 # ---------------------------------------------------------------------------
 
-def _count_signal_entries(path: Path) -> int:
+def _signal_status_counts(path: Path) -> tuple[int, int]:
     if not path.is_file():
-        return 0
-    return len(re.findall(r"^id:\s*ml-signal-\S+", read_text(path), re.MULTILINE))
+        return 0, 0
+    text = read_text(path)
+    pending = len(re.findall(r"^status:\s*pending\s*$", text, re.MULTILINE))
+    merged = len(re.findall(r"^status:\s*merged\s*$", text, re.MULTILINE))
+    return pending, merged
 
 
 def _story_status_counts(index_path: Path) -> tuple[int, int, int]:
@@ -67,17 +70,19 @@ def status(project_root: Path) -> int:
         print("None")
         return 0
 
-    signal_count = _count_signal_entries(pipeline_dir_path / "signals.md")
+    pending_signals, merged_signals = _signal_status_counts(pipeline_dir_path / "signals.md")
     ready, in_progress, done = _story_status_counts(pipeline_dir_path / "stories" / "index.md")
     backlog_exists = (pipeline_dir_path / "backlog.md").is_file()
     roadmap_exists = (pipeline_dir_path / "roadmap.md").is_file()
 
-    if signal_count == 0 and ready == 0 and in_progress == 0 and done == 0 and not backlog_exists:
+    if pending_signals == 0 and ready == 0 and in_progress == 0 and done == 0 and not backlog_exists:
         print("- No active SCRIPT work.")
     else:
         print("- Active SCRIPT work detected.")
 
-    print(f"- Signals: {signal_count}")
+    print(f"- Signals: {pending_signals} pending")
+    if merged_signals:
+        print(f"- Merged signals: {merged_signals}")
     print(f"- Stories: {ready} ready, {in_progress} in-progress, {done} done")
     print(f"- Backlog: {'present' if backlog_exists else 'missing'}")
     print(f"- Roadmap: {'present' if roadmap_exists else 'missing'}")

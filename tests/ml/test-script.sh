@@ -72,6 +72,55 @@ check "no active work message" assert_contains "$output" "No active SCRIPT work.
 check "signal count" assert_contains "$output" "Signals: 0"
 check "story counts" assert_contains "$output" "Stories: 0 ready, 0 in-progress"
 
+scenario "status excludes merged signals from pending count"
+mkdir -p "$SANDBOX/status-merged/.mindlayer/pipeline"
+cat > "$SANDBOX/status-merged/.mindlayer/pipeline/signals.md" <<'EOF'
+# Signals
+
+## Pending signal
+
+id: ml-signal-20260516-001
+created: 2026-05-16
+status: pending
+
+Still needs processing.
+
+## Merged token footer drift
+
+id: ml-signal-20260516-002
+created: 2026-05-16
+status: merged
+merged_into: ml-signal-20260516-005
+
+Merged into the signal processing plan.
+
+## Merged next-step drift
+
+id: ml-signal-20260516-004
+created: 2026-05-16
+status: merged
+merged_into: ml-signal-20260516-005
+
+Merged into the signal processing plan.
+
+## Approved signal processing plan
+
+id: ml-signal-20260516-005
+created: 2026-05-16
+status: cut-approved
+
+Parent plan.
+EOF
+output="$SANDBOX/status-merged.out"
+if (cd "$SANDBOX/status-merged" && python3 "$ROOT_DIR/src/ml" script status > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits 0"
+else
+  fail "$CURRENT_SCENARIO: command exits 0"
+fi
+check "only one pending signal" assert_contains "$output" "Signals: 1 pending"
+check "merged provenance counted separately" assert_contains "$output" "Merged signals: 2"
+check_not "does not count all signal ids as pending" assert_contains "$output" "Signals: 4"
+
 scenario "unknown script command fails cleanly"
 mkdir -p "$SANDBOX/unknown/.mindlayer/pipeline" "$SANDBOX/unknown/.mindlayer/knowledge/sessions"
 output="$SANDBOX/unknown.out"

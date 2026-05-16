@@ -30,7 +30,8 @@ personal.md is the correct home for cross-project developer personal preferences
 id: ml-signal-20260516-004
 created: 2026-05-16
 tier: auto
-status: pending
+status: merged
+merged_into: ml-signal-20260516-005
 
 Agent has been deriving "Next Step" in the Token Burned footer conversationally ("awaiting direction", "continue with X") instead of applying the 5-rule priority chain defined in `~/.mindlayer/memory-system/per-turn.md`. Rule 2 (uncommitted changes → commit) was skipped multiple times in this session. Revisit to determine if the rule chain needs to be enforced more explicitly, or if a validator/check can catch drift before it surfaces.
 
@@ -75,7 +76,8 @@ Signals should move from a single `signals.md` file to a `signals/` folder. Each
 id: ml-signal-20260516-002
 created: 2026-05-16
 tier: auto
-status: pending
+status: merged
+merged_into: ml-signal-20260516-005
 
 Agent was emitting a stripped-down freeform Token Burned footer instead of the exact block specified in `~/.mindlayer/memory-system/per-turn.md`. Correct format requires separator lines, word/token estimates with `~`, and `Coming Up` section. Root cause: per-turn.md contract not being applied precisely. Revisit to determine if enforcement needs to be strengthened (hook, validator, or spec clarification).
 
