@@ -1262,6 +1262,7 @@ install_gitignore() {
   append_gitignore_rule "$file" ".mindlayer/tmp/"
   append_gitignore_rule "$file" ".mindlayer/adapters.lock"
   append_gitignore_rule "$file" ".claude/settings.local.json"
+  append_gitignore_rule "$file" "GEMINI.md"
   append_gitignore_rule "$file" ".cursor/rules/mindlayer.md"
   append_gitignore_rule "$file" ".windsurf/rules/mindlayer.md"
 }

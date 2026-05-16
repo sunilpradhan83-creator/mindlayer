@@ -5,6 +5,7 @@
 .mindlayer/cache/
 .mindlayer/tmp/
 .mindlayer/adapters.lock
+GEMINI.md
 .cursor/rules/mindlayer.md
 .windsurf/rules/mindlayer.md
 
