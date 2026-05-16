@@ -36,5 +36,3 @@ Use when choosing the next near-term MindLayer task. See `ROADMAP.md` for full v
 
 ### Related
 ml-20260430-003
-
-- [ml-signal-20260516-003] Refactor signals storage to folder-per-signal layout — Design and implement the V4 signals storage migration from flat .mindlayer/pipeline/signals.md to .mindlayer/pipeline/signals/ with one file per signal plus signals/index.md. Signal filenames must use the stable format <id>-<short-slug>.md, for example ml-signal-20260516-003-refactor-signals-storage.md, with id/title/status preserved inside each file. Keep legacy signals.md readable during migration, but make new writes use the folder layout. Update ml script signal/status/cut to read folder-based signals first, fall back to legacy signals.md when needed, and maintain merged/completed/pending provenance. Add contract tests for new signal creation, status counts, Cut lookup, migration compatibility, and non-overwrite filename behavior.

@@ -946,6 +946,34 @@ check_not "story-002 removed from stories" test -f "$SANDBOX/transfer-ok/.mindla
 # index rows removed
 check_not "index row removed" assert_contains "$SANDBOX/transfer-ok/.mindlayer/pipeline/stories/index.md" "ml-story-001"
 
+scenario "transfer clears backlog and completes folder signal"
+mkdir -p "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/stories"
+mkdir -p "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals"
+_make_story "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/stories" ml-story-001 ml-signal-20260516-101 done
+_make_index "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/stories/index.md" \
+  "| ml-story-001 | Story for ml-story-001 | done | 2026-05-14 | ml-signal-20260516-101 |"
+cat > "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/backlog.md" <<'EOF'
+# Backlog
+
+- [ml-signal-20260516-101] Folder signal transfer — Do the thing.
+EOF
+cat > "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals/ml-signal-20260516-101-folder-signal-transfer.md" <<'EOF'
+---
+id: ml-signal-20260516-101
+title: Folder signal transfer
+created: 2026-05-16
+status: cut-approved
+---
+
+Do the thing.
+EOF
+output="$SANDBOX/transfer-folder-signal.out"
+(cd "$SANDBOX/transfer-folder-signal" && python3 "$ROOT_DIR/src/ml" script transfer \
+    --backlog-item ml-signal-20260516-101 --approve > "$output")
+check_not "backlog item removed" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/backlog.md" "ml-signal-20260516-101"
+check "folder signal completed" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals/ml-signal-20260516-101-folder-signal-transfer.md" "status: completed"
+check "folder signal index completed" assert_contains "$SANDBOX/transfer-folder-signal/.mindlayer/pipeline/signals/index.md" "completed"
+
 scenario "transfer without --approve prints proposal only"
 mkdir -p "$SANDBOX/transfer-dry/.mindlayer/pipeline/stories"
 _make_story "$SANDBOX/transfer-dry/.mindlayer/pipeline/stories" ml-story-001 ml-backlog-001 done

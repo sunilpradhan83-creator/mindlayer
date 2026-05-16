@@ -502,6 +502,15 @@ def _remove_index_rows(index_path: Path, story_ids: list[str]) -> None:
     index_path.write_text("".join(kept), encoding="utf-8")
 
 
+def _remove_backlog_item(backlog_path: Path, backlog_item: str) -> None:
+    if not backlog_path.is_file():
+        return
+    text = read_text(backlog_path)
+    lines = text.splitlines(keepends=True)
+    kept = [ln for ln in lines if f"[{backlog_item}]" not in ln]
+    backlog_path.write_text("".join(kept), encoding="utf-8")
+
+
 def transfer(
     project_root: Path,
     backlog_item: str,
@@ -564,6 +573,10 @@ def transfer(
 
     # Remove rows from index
     _remove_index_rows(stories_dir / "index.md", story_ids)
+    _remove_backlog_item(pd / "backlog.md", backlog_item)
+    signal_record = _find_signal_record(pd, backlog_item)
+    if signal_record is not None:
+        _update_signal_record_status(pd, signal_record, "completed")
 
     print(f"Transfer complete: {len(stories)} stories archived for {backlog_item}")
     print("Approval needed: None")

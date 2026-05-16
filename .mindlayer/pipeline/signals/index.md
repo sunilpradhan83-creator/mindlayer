@@ -4,7 +4,7 @@
 | -- | ----- | ------ | ------- | ---- |
 | ml-signal-20260516-001 | Populate personal.md with developer personal intent | pending | 2026-05-16 | ml-signal-20260516-001-populate-personal-md-with-developer-personal.md |
 | ml-signal-20260516-002 | Agent drift: Token Burned footer format | merged | 2026-05-16 | ml-signal-20260516-002-agent-drift-token-burned-footer-format.md |
-| ml-signal-20260516-003 | Refactor signals storage to folder-per-signal layout | cut-approved | 2026-05-16 | ml-signal-20260516-003-refactor-signals-storage-to-folder-per-signal.md |
+| ml-signal-20260516-003 | Refactor signals storage to folder-per-signal layout | completed | 2026-05-16 | ml-signal-20260516-003-refactor-signals-storage-to-folder-per-signal.md |
 | ml-signal-20260516-004 | Agent drift: Next Step derived conversationally instead of by rule chain | merged | 2026-05-16 | ml-signal-20260516-004-agent-drift-next-step-derived-conversationally.md |
 | ml-signal-20260516-005 | Redefine signal processing workflow and Cut step | completed | 2026-05-16 | ml-signal-20260516-005-redefine-signal-processing-workflow-and-cut.md |
 | ml-signal-20260516-006 | Bug: GEMINI.md missing from .gitignore, incorrectly committed to repo | completed | 2026-05-16 | ml-signal-20260516-006-bug-gemini-md-missing-from-gitignore.md |
