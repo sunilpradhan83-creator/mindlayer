@@ -1,7 +1,10 @@
 ---
 id: ml-story-009
 title: Add folder-based signal store with legacy fallback
-status: ready
+status: done
+proved_by: bash tools/test.sh
+proved_at: 2026-05-16
+started_from: fc8a449
 created: 2026-05-16
 parent: ml-signal-20260516-003
 agent: any

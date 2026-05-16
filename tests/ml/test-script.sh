@@ -121,6 +121,87 @@ check "only one pending signal" assert_contains "$output" "Signals: 1 pending"
 check "merged provenance counted separately" assert_contains "$output" "Merged signals: 2"
 check_not "does not count all signal ids as pending" assert_contains "$output" "Signals: 4"
 
+scenario "status reads folder signals with legacy fallback"
+mkdir -p "$SANDBOX/status-folder/.mindlayer/pipeline/signals"
+cat > "$SANDBOX/status-folder/.mindlayer/pipeline/signals/ml-signal-20260516-001-folder-pending.md" <<'EOF'
+---
+id: ml-signal-20260516-001
+title: Folder pending
+created: 2026-05-16
+status: pending
+---
+
+Folder body.
+EOF
+cat > "$SANDBOX/status-folder/.mindlayer/pipeline/signals/ml-signal-20260516-002-folder-merged.md" <<'EOF'
+---
+id: ml-signal-20260516-002
+title: Folder merged
+created: 2026-05-16
+status: merged
+merged_into: ml-signal-20260516-005
+---
+
+Merged body.
+EOF
+cat > "$SANDBOX/status-folder/.mindlayer/pipeline/signals.md" <<'EOF'
+# Signals
+
+## Legacy pending
+
+id: ml-signal-20260516-003
+created: 2026-05-16
+status: pending
+
+Legacy fallback body.
+
+## Legacy merged
+
+id: ml-signal-20260516-004
+created: 2026-05-16
+status: merged
+merged_into: ml-signal-20260516-005
+
+Legacy merged body.
+EOF
+output="$SANDBOX/status-folder.out"
+if (cd "$SANDBOX/status-folder" && python3 "$ROOT_DIR/src/ml" script status > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits 0"
+else
+  fail "$CURRENT_SCENARIO: command exits 0"
+fi
+check "folder plus legacy pending count" assert_contains "$output" "Signals: 2 pending"
+check "folder plus legacy merged count" assert_contains "$output" "Merged signals: 2"
+
+scenario "folder signal id wins over legacy fallback"
+mkdir -p "$SANDBOX/status-folder-precedence/.mindlayer/pipeline/signals"
+cat > "$SANDBOX/status-folder-precedence/.mindlayer/pipeline/signals/ml-signal-20260516-001-folder.md" <<'EOF'
+---
+id: ml-signal-20260516-001
+title: Folder version
+created: 2026-05-16
+status: merged
+merged_into: ml-signal-20260516-005
+---
+
+Folder body.
+EOF
+cat > "$SANDBOX/status-folder-precedence/.mindlayer/pipeline/signals.md" <<'EOF'
+# Signals
+
+## Legacy duplicate
+
+id: ml-signal-20260516-001
+created: 2026-05-16
+status: pending
+
+Legacy duplicate body.
+EOF
+output="$SANDBOX/status-folder-precedence.out"
+(cd "$SANDBOX/status-folder-precedence" && python3 "$ROOT_DIR/src/ml" script status > "$output")
+check "folder duplicate not counted as pending" assert_contains "$output" "Signals: 0 pending"
+check "folder duplicate counted as merged" assert_contains "$output" "Merged signals: 1"
+
 scenario "unknown script command fails cleanly"
 mkdir -p "$SANDBOX/unknown/.mindlayer/pipeline" "$SANDBOX/unknown/.mindlayer/knowledge/sessions"
 output="$SANDBOX/unknown.out"

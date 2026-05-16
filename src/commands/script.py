@@ -34,16 +34,70 @@ def _ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
+def _parse_signal_fields(text: str) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    frontmatter = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
+    lines = frontmatter.group(1).splitlines() if frontmatter else text.splitlines()
+    for line in lines:
+        if ":" not in line:
+            continue
+        key, _, val = line.partition(":")
+        fields[key.strip()] = val.strip()
+    return fields
+
+
+def _legacy_signal_blocks(signals_path: Path) -> list[tuple[str, str, dict[str, str], str]]:
+    if not signals_path.is_file():
+        return []
+    text = read_text(signals_path)
+    pattern = re.compile(
+        r"^##\s+(.+?)\n(.*?)(?=^##\s|\Z)", re.MULTILINE | re.DOTALL
+    )
+    results = []
+    for m in pattern.finditer(text):
+        title = m.group(1).strip()
+        block = m.group(0)
+        fields = _parse_signal_fields(block)
+        sig_id = fields.get("id", "")
+        if sig_id:
+            results.append((sig_id, title, fields, block))
+    return results
+
+
+def _signal_records(pipeline_dir_path: Path) -> list[dict[str, str]]:
+    records: list[dict[str, str]] = []
+    seen: set[str] = set()
+
+    signals_dir = pipeline_dir_path / "signals"
+    if signals_dir.is_dir():
+        for path in sorted(signals_dir.glob("ml-signal-*.md")):
+            fields = _parse_signal_fields(read_text(path))
+            sig_id = fields.get("id", "")
+            if not sig_id or sig_id in seen:
+                continue
+            fields["source"] = str(path)
+            records.append(fields)
+            seen.add(sig_id)
+
+    for sig_id, title, fields, _block in _legacy_signal_blocks(pipeline_dir_path / "signals.md"):
+        if sig_id in seen:
+            continue
+        fields.setdefault("title", title)
+        fields["source"] = str(pipeline_dir_path / "signals.md")
+        records.append(fields)
+        seen.add(sig_id)
+
+    return records
+
+
 # ---------------------------------------------------------------------------
 # status
 # ---------------------------------------------------------------------------
 
-def _signal_status_counts(path: Path) -> tuple[int, int]:
-    if not path.is_file():
-        return 0, 0
-    text = read_text(path)
-    pending = len(re.findall(r"^status:\s*pending\s*$", text, re.MULTILINE))
-    merged = len(re.findall(r"^status:\s*merged\s*$", text, re.MULTILINE))
+def _signal_status_counts(pipeline_dir_path: Path) -> tuple[int, int]:
+    records = _signal_records(pipeline_dir_path)
+    pending = sum(1 for record in records if record.get("status") == "pending")
+    merged = sum(1 for record in records if record.get("status") == "merged")
     return pending, merged
 
 
@@ -70,7 +124,7 @@ def status(project_root: Path) -> int:
         print("None")
         return 0
 
-    pending_signals, merged_signals = _signal_status_counts(pipeline_dir_path / "signals.md")
+    pending_signals, merged_signals = _signal_status_counts(pipeline_dir_path)
     ready, in_progress, done = _story_status_counts(pipeline_dir_path / "stories" / "index.md")
     backlog_exists = (pipeline_dir_path / "backlog.md").is_file()
     roadmap_exists = (pipeline_dir_path / "roadmap.md").is_file()
