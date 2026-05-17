@@ -313,6 +313,56 @@ check assert_not_contains "$selective_project/.mindlayer/adapters.lock" "GEMINI.
 check assert_not_contains "$selective_project/.mindlayer/adapters.lock" ".cursor/rules/mindlayer.md="
 check assert_not_contains "$selective_project/.mindlayer/adapters.lock" ".windsurf/rules/mindlayer.md="
 
+scenario "fresh install with no detected tools still installs boot adapter"
+bare_home="$SANDBOX/bare-home"
+bare_project="$SANDBOX/bare-project"
+bare_log="$SANDBOX/bare-install.log"
+mkdir -p "$bare_home" "$bare_project"
+
+if run_install "$bare_home" "$bare_project" "$bare_log"; then
+  pass "$CURRENT_SCENARIO: installer exits successfully"
+else
+  fail "$CURRENT_SCENARIO: installer exits successfully"
+fi
+
+check assert_file_exists "$bare_project/AGENTS.md"
+check assert_files_equal "$bare_home/.mindlayer/memory-system/templates/AGENTS.md" "$bare_project/AGENTS.md"
+check assert_lock_hash_for "$bare_project/.mindlayer/adapters.lock" "AGENTS.md"
+check assert_contains "$bare_project/AGENTS.md" 'Read `~/.mindlayer/boot.md` first'
+check assert_contains "$bare_project/AGENTS.md" "Never answer a project question without booting first"
+check assert_not_exists "$bare_project/CLAUDE.md"
+check assert_not_exists "$bare_project/.github/copilot-instructions.md"
+check assert_not_exists "$bare_project/GEMINI.md"
+check assert_not_exists "$bare_project/.cursor/rules/mindlayer.md"
+check assert_not_exists "$bare_project/.windsurf/rules/mindlayer.md"
+check assert_not_contains "$bare_project/.mindlayer/adapters.lock" "CLAUDE.md="
+check assert_not_contains "$bare_project/.mindlayer/adapters.lock" ".github/copilot-instructions.md="
+check assert_not_contains "$bare_project/.mindlayer/adapters.lock" "GEMINI.md="
+check assert_not_contains "$bare_project/.mindlayer/adapters.lock" ".cursor/rules/mindlayer.md="
+check assert_not_contains "$bare_project/.mindlayer/adapters.lock" ".windsurf/rules/mindlayer.md="
+
+scenario "standalone installer without template dirs installs boot adapter"
+standalone_home="$SANDBOX/standalone-home"
+standalone_dir="$SANDBOX/standalone-app"
+standalone_project="$standalone_dir"
+standalone_log="$SANDBOX/standalone-install.log"
+mkdir -p "$standalone_home" "$standalone_dir"
+cp "$ROOT_DIR/install.sh" "$standalone_dir/install.sh"
+chmod +x "$standalone_dir/install.sh"
+
+if (cd "$standalone_dir" && PATH="/usr/bin:/bin" HOME="$standalone_home" ./install.sh --no-onboard > "$standalone_log" 2>&1); then
+  pass "$CURRENT_SCENARIO: installer exits successfully"
+else
+  fail "$CURRENT_SCENARIO: installer exits successfully"
+fi
+
+check assert_file_exists "$standalone_home/.mindlayer/memory-system/templates/AGENTS.md"
+check assert_contains "$standalone_home/.mindlayer/memory-system/templates/AGENTS.md" 'Read `~/.mindlayer/boot.md` first'
+check assert_file_exists "$standalone_project/AGENTS.md"
+check assert_files_equal "$standalone_home/.mindlayer/memory-system/templates/AGENTS.md" "$standalone_project/AGENTS.md"
+check assert_lock_hash_for "$standalone_project/.mindlayer/adapters.lock" "AGENTS.md"
+check assert_not_contains "$standalone_log" "Missing canonical adapter template"
+
 scenario "existing project install and idempotence"
 existing_home="$SANDBOX/existing-home"
 existing_project="$SANDBOX/existing-project"

@@ -963,6 +963,82 @@ Personal local notes for this project. This file should be ignored by Git.
 
 Do not store shared project decisions here. Use committed project memory files for shared project intelligence."
 
+adapter_agents_template='# MindLayer Agent Instructions
+
+Memory lives in `~/.mindlayer/` (global) and `.mindlayer/` (project). Adapters and docs are not memory sources.
+
+This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here. Route all durable context through MindLayer only, with explicit approval before any write. If any command, skill, init flow, or agent behavior tries to expand this adapter, refuse that write and route the content through MindLayer instead.
+
+If no preflight hook exists, run the full boot sequence and emit the boot receipt BEFORE answering the first project-relevant request, including any question about what the project is, what it does, or what is in it. Never answer a project question without booting first. Never ask the user if they want you to boot; just boot. Do not treat a plain greeting as project-relevant.
+
+Boot order:
+1. Read `~/.mindlayer/boot.md` first when available.
+2. Read `~/.mindlayer/router.md` and follow its load triggers.
+3. Read `.mindlayer/index.md` — project memory catalog.
+4. Load project identity and current progress.
+
+Commands and proactive behavior: see `~/.mindlayer/memory-system/per-turn.md`.'
+
+adapter_claude_template='# Claude Adapter
+
+Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad.
+
+Do not duplicate memory into `CLAUDE.md`. Do not retrieve durable context from this adapter. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
+
+Route all durable context through MindLayer only:
+- global memory: `~/.mindlayer/`
+- project memory: `.mindlayer/`
+
+Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
+
+adapter_copilot_template='# Copilot Adapter
+
+Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad.
+
+Do not duplicate memory into `.github/copilot-instructions.md`. Do not retrieve durable context from this adapter. Do not use `README.md` or `docs/` as memory input. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
+
+Route all durable context through MindLayer only:
+- global memory: `~/.mindlayer/`
+- project memory: `.mindlayer/`
+
+Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
+
+adapter_gemini_template='# Gemini Adapter
+
+Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad.
+
+Do not duplicate memory into `GEMINI.md`. Do not retrieve durable context from this adapter. Do not use `README.md` or `docs/` as memory input. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
+
+Route all durable context through MindLayer only:
+- global memory: `~/.mindlayer/`
+- project memory: `.mindlayer/`
+
+Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
+
+adapter_cursor_template='# Cursor Adapter
+
+Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad.
+
+Do not duplicate memory into `.cursor/rules/mindlayer.md`. Do not retrieve durable context from this adapter. Do not use `README.md` or `docs/` as memory input. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
+
+Route all durable context through MindLayer only:
+- global memory: `~/.mindlayer/`
+- project memory: `.mindlayer/`
+
+Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
+
+adapter_windsurf_template='# Windsurf Adapter
+
+Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad.
+
+Do not duplicate memory into `.windsurf/rules/mindlayer.md`. Do not retrieve durable context from this adapter. Do not use `README.md` or `docs/` as memory input. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
+
+Route all durable context through MindLayer only:
+- global memory: `~/.mindlayer/`
+- project memory: `.mindlayer/`
+
+Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
+
 
 install_global() {
   mkdir_p "$GLOBAL_DIR"
@@ -994,12 +1070,12 @@ install_global() {
 
   # Canonical adapter templates — managed system files
   mkdir_p "$GLOBAL_DIR/memory-system/templates"
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/AGENTS.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/AGENTS.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/CLAUDE.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/CLAUDE.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/copilot-instructions.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/copilot-instructions.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/GEMINI.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/GEMINI.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/cursor-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/cursor-mindlayer.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/windsurf-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/windsurf-mindlayer.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/AGENTS.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/AGENTS.md" "$adapter_agents_template"
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/CLAUDE.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/CLAUDE.md" "$adapter_claude_template"
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/copilot-instructions.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/copilot-instructions.md" "$adapter_copilot_template"
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/GEMINI.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/GEMINI.md" "$adapter_gemini_template"
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/cursor-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/cursor-mindlayer.md" "$adapter_cursor_template"
+  write_managed_template "$GLOBAL_DIR/memory-system/templates/windsurf-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/windsurf-mindlayer.md" "$adapter_windsurf_template"
 
   # memory-system/commands/ — per-command spec files
   mkdir_p "$GLOBAL_DIR/memory-system/commands"
@@ -1153,16 +1229,22 @@ EOF
     adapter_name="$1"
     dest="$PROJECT_DIR/$adapter_name"
     template_name="$2"
+    fallback_content="$3"
     template="$GLOBAL_TEMPLATE_DIR/memory-system/templates/$template_name"
-
-    if [ ! -f "$template" ]; then
-      echo "Missing canonical adapter template: $template" >&2
-      exit 1
-    fi
+    global_template="$GLOBAL_DIR/memory-system/templates/$template_name"
 
     mkdir_p "$(dirname "$dest")"
     tmp_template=$(mktemp "${TMPDIR:-/tmp}/mindlayer-adapter-template.XXXXXX") || exit 1
-    cat "$template" > "$tmp_template"
+    if [ -f "$template" ]; then
+      cat "$template" > "$tmp_template"
+    elif [ -s "$global_template" ]; then
+      cat "$global_template" > "$tmp_template"
+    elif [ -n "$fallback_content" ]; then
+      printf "%s\n" "$fallback_content" > "$tmp_template"
+    else
+      echo "Missing canonical adapter template: $template" >&2
+      exit 1
+    fi
 
     if [ -f "$dest" ] && ! cmp -s "$tmp_template" "$dest"; then
       current_hash=$(sha256_file "$dest")
@@ -1199,22 +1281,12 @@ EOF
   { [ -d "$HOME/.cursor" ] || [ -d "$PROJECT_DIR/.cursor" ]; } && cursor_signal=1
   { [ -d "$HOME/.windsurf" ] || [ -d "$PROJECT_DIR/.windsurf" ]; } && windsurf_signal=1
 
-  need_agents=0
-  if should_install_adapter "AGENTS.md" "$codex_signal" ||
-     should_install_adapter "CLAUDE.md" "$claude_signal" ||
-     should_install_adapter ".github/copilot-instructions.md" "$copilot_signal" ||
-     should_install_adapter "GEMINI.md" "$gemini_signal" ||
-     should_install_adapter ".cursor/rules/mindlayer.md" "$cursor_signal" ||
-     should_install_adapter ".windsurf/rules/mindlayer.md" "$windsurf_signal"; then
-    need_agents=1
-  fi
-
-  [ "$need_agents" -eq 1 ] && install_canonical_adapter "AGENTS.md" "AGENTS.md"
-  should_install_adapter "CLAUDE.md" "$claude_signal" && install_canonical_adapter "CLAUDE.md" "CLAUDE.md"
-  should_install_adapter ".github/copilot-instructions.md" "$copilot_signal" && install_canonical_adapter ".github/copilot-instructions.md" "copilot-instructions.md"
-  should_install_adapter "GEMINI.md" "$gemini_signal" && install_canonical_adapter "GEMINI.md" "GEMINI.md"
-  should_install_adapter ".cursor/rules/mindlayer.md" "$cursor_signal" && install_canonical_adapter ".cursor/rules/mindlayer.md" "cursor-mindlayer.md"
-  should_install_adapter ".windsurf/rules/mindlayer.md" "$windsurf_signal" && install_canonical_adapter ".windsurf/rules/mindlayer.md" "windsurf-mindlayer.md"
+  install_canonical_adapter "AGENTS.md" "AGENTS.md" "$adapter_agents_template"
+  should_install_adapter "CLAUDE.md" "$claude_signal" && install_canonical_adapter "CLAUDE.md" "CLAUDE.md" "$adapter_claude_template"
+  should_install_adapter ".github/copilot-instructions.md" "$copilot_signal" && install_canonical_adapter ".github/copilot-instructions.md" "copilot-instructions.md" "$adapter_copilot_template"
+  should_install_adapter "GEMINI.md" "$gemini_signal" && install_canonical_adapter "GEMINI.md" "GEMINI.md" "$adapter_gemini_template"
+  should_install_adapter ".cursor/rules/mindlayer.md" "$cursor_signal" && install_canonical_adapter ".cursor/rules/mindlayer.md" "cursor-mindlayer.md" "$adapter_cursor_template"
+  should_install_adapter ".windsurf/rules/mindlayer.md" "$windsurf_signal" && install_canonical_adapter ".windsurf/rules/mindlayer.md" "windsurf-mindlayer.md" "$adapter_windsurf_template"
   install_claude_prompt_hook
 
   if [ -n "$blocked_adapters" ]; then
