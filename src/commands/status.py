@@ -32,7 +32,7 @@ def _days_old(ymd: str) -> int | None:
 
 
 def _titles(text: str) -> list[str]:
-    return [match.strip().lower() for match in re.findall(r"^##+\s+(.+)$", text, re.MULTILINE)]
+    return [match.strip().lower() for match in re.findall(r"^##\s+(.+)$", text, re.MULTILINE)]
 
 
 def _duplicate_level(text: str) -> tuple[str, str]:

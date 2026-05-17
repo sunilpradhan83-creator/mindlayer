@@ -86,5 +86,51 @@ if assert_contains "$starter_output" "- current progress: not recorded"; then pa
 if assert_not_contains "$starter_output" "ml:starter:progress.summary"; then pass "$CURRENT_SCENARIO: sentinel not leaked"; else fail "$CURRENT_SCENARIO: sentinel not leaked"; fi
 if assert_not_contains "$starter_output" "Current phase and immediate next step."; then pass "$CURRENT_SCENARIO: starter summary not leaked"; else fail "$CURRENT_SCENARIO: starter summary not leaked"; fi
 
+scenario "standard subheadings are not duplicate entries"
+cat > "$SANDBOX/project/.mindlayer/knowledge/context.md" <<'EOF'
+# Context
+
+## First Entry
+
+### Summary
+First summary.
+
+## Second Entry
+
+### Summary
+Second summary.
+EOF
+subheading_output="$SANDBOX/status-subheadings.out"
+if (cd "$SANDBOX/project" && python3 "$ROOT_DIR/src/ml" status > "$subheading_output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$subheading_output" "context.md    OK"; then pass "$CURRENT_SCENARIO: repeated Summary headings allowed"; else fail "$CURRENT_SCENARIO: repeated Summary headings allowed"; fi
+if assert_not_contains "$subheading_output" "near-identical entries"; then pass "$CURRENT_SCENARIO: no duplicate false positive"; else fail "$CURRENT_SCENARIO: no duplicate false positive"; fi
+
+scenario "duplicate entry headings are flagged"
+cat > "$SANDBOX/project/.mindlayer/knowledge/context.md" <<'EOF'
+# Context
+
+## Same Entry
+
+### Summary
+First summary.
+
+## Same Entry
+
+### Summary
+Second summary.
+EOF
+duplicate_output="$SANDBOX/status-duplicate.out"
+if (cd "$SANDBOX/project" && python3 "$ROOT_DIR/src/ml" status > "$duplicate_output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$duplicate_output" "context.md    CRITICAL"; then pass "$CURRENT_SCENARIO: duplicate entry heading flagged"; else fail "$CURRENT_SCENARIO: duplicate entry heading flagged"; fi
+if assert_contains "$duplicate_output" "near-identical entries"; then pass "$CURRENT_SCENARIO: duplicate issue reported"; else fail "$CURRENT_SCENARIO: duplicate issue reported"; fi
+
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]

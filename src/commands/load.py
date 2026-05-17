@@ -53,7 +53,7 @@ def run(project_root: Path, query: str) -> int:
     for item in top[:3]:
         entry = item.entry
         source = _source_for(project_root, entry.file, entry.source_index)
-        section = extract_section(source, entry.section or entry.title)
+        section = extract_section(source, entry.section or entry.title, entry.id)
         print(f"- {entry.title}: {summarize_section(section)}")
         sources.append(str(source))
 

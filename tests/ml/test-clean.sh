@@ -168,6 +168,49 @@ fi
 if assert_contains "$output" "Global Old Entry"; then pass "$CURRENT_SCENARIO: global candidate printed"; else fail "$CURRENT_SCENARIO: global candidate printed"; fi
 if assert_file_contains "$SANDBOX/global/home/.mindlayer/knowledge/context.md" "Global Old Entry"; then pass "$CURRENT_SCENARIO: global source unchanged before approval"; else fail "$CURRENT_SCENARIO: global source unchanged before approval"; fi
 
+scenario "clean scans hierarchical indexes"
+mkdir -p "$SANDBOX/tree/.mindlayer/knowledge" "$SANDBOX/tree/.mindlayer/pipeline" "$SANDBOX/tree/.mindlayer/pipeline/archive" "$SANDBOX/tree/.mindlayer/knowledge/sessions"
+cat > "$SANDBOX/tree/.mindlayer/index.md" <<'EOF'
+# Project Memory Index
+
+- ml-index-ptr-knowledge | Knowledge Index | knowledge/index.md | Index for knowledge/ subfolder
+EOF
+cat > "$SANDBOX/tree/.mindlayer/knowledge/index.md" <<'EOF'
+# Knowledge Index
+
+- ml-tree-risk | Tree Risk | knowledge/risks.md | Resolved risk in hierarchical index.
+EOF
+cat > "$SANDBOX/tree/.mindlayer/knowledge/risks.md" <<'EOF'
+# Risks
+
+## Tree Risk
+
+id: ml-tree-risk
+type: risk
+status: resolved
+
+### Summary
+Resolved risk in hierarchical index.
+EOF
+output="$SANDBOX/tree.out"
+if (cd "$SANDBOX/tree" && python3 "$ROOT_DIR/src/ml" clean > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits 0"
+else
+  fail "$CURRENT_SCENARIO: command exits 0"
+fi
+if assert_contains "$output" "Tree Risk"; then pass "$CURRENT_SCENARIO: hierarchical candidate printed"; else fail "$CURRENT_SCENARIO: hierarchical candidate printed"; fi
+if assert_contains "$output" "Summary: 1 to archive, 0 to delete, 0 to keep"; then pass "$CURRENT_SCENARIO: hierarchical summary correct"; else fail "$CURRENT_SCENARIO: hierarchical summary correct"; fi
+
+output="$SANDBOX/tree-approve.out"
+if (cd "$SANDBOX/tree" && python3 "$ROOT_DIR/src/ml" clean --approve-all > "$output"); then
+  pass "$CURRENT_SCENARIO: approved command exits 0"
+else
+  fail "$CURRENT_SCENARIO: approved command exits 0"
+fi
+if ! grep -Fq "Tree Risk" "$SANDBOX/tree/.mindlayer/knowledge/risks.md"; then pass "$CURRENT_SCENARIO: hierarchical source archived"; else fail "$CURRENT_SCENARIO: hierarchical source archived"; fi
+if assert_file_contains "$SANDBOX/tree/.mindlayer/pipeline/archive/archive.md" "Tree Risk"; then pass "$CURRENT_SCENARIO: hierarchical archive contains entry"; else fail "$CURRENT_SCENARIO: hierarchical archive contains entry"; fi
+if assert_file_contains "$SANDBOX/tree/.mindlayer/knowledge/index.md" "pipeline/archive/archive.md"; then pass "$CURRENT_SCENARIO: nearest index points to archive"; else fail "$CURRENT_SCENARIO: nearest index points to archive"; fi
+
 scenario "clean flags completed and resolved entries"
 mkdir -p "$SANDBOX/statuses/.mindlayer" "$SANDBOX/statuses/.mindlayer/knowledge" "$SANDBOX/statuses/.mindlayer/pipeline" "$SANDBOX/statuses/.mindlayer/pipeline/archive" "$SANDBOX/statuses/.mindlayer/knowledge/sessions"
 cat > "$SANDBOX/statuses/.mindlayer/index-full.md" <<'EOF'

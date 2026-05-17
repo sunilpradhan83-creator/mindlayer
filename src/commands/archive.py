@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import re
 from pathlib import Path
 
+from ._index import extract_section, load_indexes
 from ._paths import archive_file, display_memory_path, is_protected, memory_dir_for, read_text, resolve_memory_file
 from ._write import approved
 
@@ -20,6 +21,7 @@ ARCHIVE_PROTECTED = frozenset({
 
 @dataclass(frozen=True)
 class CleanCandidate:
+    entry_id: str
     title: str
     file: str
     section: str
@@ -28,6 +30,7 @@ class CleanCandidate:
     detail: str
     confidence: str = "medium"
     index_only: bool = False
+    source_index: Path | None = None
 
 
 def _index_entries(index_path: Path) -> list[dict[str, str]]:
@@ -141,6 +144,28 @@ def _remove_from_index(index_path: Path, section: str) -> None:
     index_path.write_text("\n".join(result) + "\n", encoding="utf-8")
 
 
+def _remove_id_from_index(index_path: Path, entry_id: str) -> None:
+    if not index_path.is_file():
+        return
+    lines = index_path.read_text(encoding="utf-8").splitlines()
+    result = [line for line in lines if not line.startswith(f"- {entry_id} |")]
+    index_path.write_text("\n".join(result) + "\n", encoding="utf-8")
+
+
+def _update_index_id_archived(index_path: Path, entry_id: str, archive_file: str) -> None:
+    if not index_path.is_file():
+        return
+    lines = index_path.read_text(encoding="utf-8").splitlines()
+    result: list[str] = []
+    for line in lines:
+        if line.startswith(f"- {entry_id} |"):
+            parts = [p.strip() for p in line.lstrip("- ").split("|")]
+            if len(parts) >= 4:
+                line = f"- {parts[0]} | {parts[1]} | {archive_file} | {' | '.join(parts[3:])}"
+        result.append(line)
+    index_path.write_text("\n".join(result) + "\n", encoding="utf-8")
+
+
 def _remove_section_from_source(target: Path, section: str) -> list[str] | None:
     lines = read_text(target).splitlines()
     bounds = _find_section_bounds(lines, section)
@@ -158,8 +183,71 @@ def _remove_section_from_source(target: Path, section: str) -> list[str] | None:
     return block_lines
 
 
+def _section_metadata(text: str) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    for raw in text.splitlines():
+        if raw.startswith("#"):
+            continue
+        if ":" not in raw:
+            continue
+        key, value = raw.split(":", 1)
+        key = key.strip()
+        if key in {"id", "type", "status", "scope", "updated", "last_updated"}:
+            fields[key] = value.strip()
+    return fields
+
+
+def _scan_hierarchical_candidates(memory_dir: Path) -> list[CleanCandidate]:
+    project_root = memory_dir.parent
+    candidates: list[CleanCandidate] = []
+    for entry in load_indexes(project_root):
+        if entry.source_index is None:
+            continue
+        file_name = entry.file
+        if not file_name or file_name in ARCHIVE_PROTECTED:
+            continue
+        source = resolve_memory_file(memory_dir, file_name)
+        if not source.is_file():
+            continue
+        section = entry.section or entry.title
+        text = extract_section(source, section, entry.id)
+        fields = _section_metadata(text)
+        status = fields.get("status", entry.status)
+        entry_type = fields.get("type", entry.type)
+
+        if status == "archived" and source != archive_file(memory_dir):
+            candidates.append(CleanCandidate(
+                entry_id=entry.id,
+                title=entry.title,
+                file=file_name,
+                section=section,
+                reason="entry is already status: archived but still lives outside pipeline/archive/",
+                action="archive",
+                detail="move to pipeline/archive/archive.md and update nearest index",
+                confidence="high",
+                source_index=entry.source_index,
+            ))
+        elif status in {"completed", "resolved", "mitigated"}:
+            action = "archive" if entry_type in {"progress", "risk", "decision", "roadmap", "backlog"} else "keep"
+            candidates.append(CleanCandidate(
+                entry_id=entry.id,
+                title=entry.title,
+                file=file_name,
+                section=section,
+                reason=f"{entry_type or 'entry'} is marked {status}",
+                action=action,
+                detail="move to pipeline/archive/archive.md" if action == "archive" else "no change",
+                confidence="medium",
+                source_index=entry.source_index,
+            ))
+    return candidates
+
+
 def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
     index_path = memory_dir / "index-full.md"
+    if not index_path.is_file():
+        return _scan_hierarchical_candidates(memory_dir)
+
     candidates: list[CleanCandidate] = []
     for entry in _index_entries(index_path):
         title = entry.get("title") or entry.get("section") or entry.get("id", "(unknown)")
@@ -176,6 +264,7 @@ def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
         if status == "archived":
             if source.is_file():
                 candidates.append(CleanCandidate(
+                    entry_id=entry_id,
                     title=title,
                     file=file_name,
                     section=section,
@@ -186,6 +275,7 @@ def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
                 ))
             else:
                 candidates.append(CleanCandidate(
+                    entry_id=entry_id,
                     title=title,
                     file="index-full.md",
                     section=entry_id,
@@ -198,6 +288,7 @@ def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
         elif status in {"completed", "resolved", "mitigated"}:
             action = "archive" if entry_type in {"progress", "risk", "decision", "roadmap", "backlog"} else "keep"
             candidates.append(CleanCandidate(
+                entry_id=entry_id,
                 title=title,
                 file=file_name,
                 section=section,
@@ -244,19 +335,25 @@ def _apply_candidate(memory_dir: Path, candidate: CleanCandidate) -> tuple[str, 
 
     if candidate.action == "archive":
         _append_to_archive(archive_file(memory_dir), block_lines)
-        _update_index_archived(index_path, candidate.section, "pipeline/archive/archive.md")
-        for entry in _index_entries(index_full):
-            if entry.get("title") == candidate.title or entry.get("section") == candidate.section:
-                _update_full_index_archived(index_full, entry.get("id", ""))
-                break
+        if candidate.source_index:
+            _update_index_id_archived(candidate.source_index, candidate.entry_id, "pipeline/archive/archive.md")
+        else:
+            _update_index_archived(index_path, candidate.section, "pipeline/archive/archive.md")
+            for entry in _index_entries(index_full):
+                if entry.get("title") == candidate.title or entry.get("section") == candidate.section:
+                    _update_full_index_archived(index_full, entry.get("id", ""))
+                    break
         return "archived", candidate.title
 
     if candidate.action == "delete":
-        _remove_from_index(index_path, candidate.section)
-        for entry in _index_entries(index_full):
-            if entry.get("title") == candidate.title or entry.get("section") == candidate.section:
-                _remove_full_index_entry(index_full, entry.get("id", ""))
-                break
+        if candidate.source_index:
+            _remove_id_from_index(candidate.source_index, candidate.entry_id)
+        else:
+            _remove_from_index(index_path, candidate.section)
+            for entry in _index_entries(index_full):
+                if entry.get("title") == candidate.title or entry.get("section") == candidate.section:
+                    _remove_full_index_entry(index_full, entry.get("id", ""))
+                    break
         return "deleted", candidate.title
 
     return "kept", candidate.title

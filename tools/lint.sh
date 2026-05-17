@@ -457,6 +457,16 @@ lint_repo() {
   require_contains "$PROJECT_DIR/global-template/boot.md" ".mindlayer/adapters.lock" "global boot template"
   require_contains "$PROJECT_DIR/global-template/boot.md" "Never discard user-added adapter content" "global boot template"
 
+  # README — public docs must match the current CLI runtime and adapter model.
+  require_contains "$PROJECT_DIR/README.md" 'local `ml` command runner' "README"
+  require_contains "$PROJECT_DIR/README.md" '`ml clean`' "README"
+  require_contains "$PROJECT_DIR/README.md" '`ml diff`' "README"
+  require_contains "$PROJECT_DIR/README.md" '`ml script`' "README"
+  require_contains "$PROJECT_DIR/README.md" "frozen full-file templates" "README"
+  require_contains "$PROJECT_DIR/README.md" ".mindlayer/adapters.lock" "README"
+  require_contains "$PROJECT_DIR/README.md" ".cursor/rules/mindlayer.md" "README"
+  require_contains "$PROJECT_DIR/README.md" ".windsurf/rules/mindlayer.md" "README"
+
   # Installer — check canonical adapter template handling and embedded fallback vars
   require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/AGENTS.md" "installer adapter templates"
   require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/CLAUDE.md" "installer adapter templates"

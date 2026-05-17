@@ -13,7 +13,7 @@ status: in-progress
 source: conversation
 
 ### Summary
-Stage 0.0 for the 0.1 Developer Preview is saved. Item 0 Day 1 starter boot truth, the missing project router install blocker, the `ml diff` archived-movement blocker, and the `ml load` metadata-only ranking blocker are fixed. Next work is to cut another remaining 0.1 correctness roadmap blocker into a focused implementation story.
+Stage 0.0 for the 0.1 Developer Preview is saved, and the verified 0.1 correctness blockers are implemented: starter boot truth, project router install, `ml diff`, `ml load`, `ml status`, `ml clean`, `ml save`, and README/runtime/adapter drift. Next work is 0.1 launch hygiene: open-source files, CI, release notes, rename, and final clean test/lint pass.
 
 ### Details
 - Completed this session: created `knowledge/decisions/script-v0.1.md`, marked `script-v4.md` superseded, updated decisions index, rewrote canonical roadmap, mirrored public ROADMAP, added SCRIPT enforcement backlog item, and wrote the 2026-05-17 session summary.
@@ -21,9 +21,12 @@ Stage 0.0 for the 0.1 Developer Preview is saved. Item 0 Day 1 starter boot trut
 - Completed after Item 0 Day 1: fixed fresh installs so `.mindlayer/router.md` is created from `project-template/router.md`, with local install coverage for fresh and skip-flag installs.
 - Completed after project router fix: fixed `ml diff` so entries moved into `.mindlayer/pipeline/archive/` report as archived instead of new, including Git rename handling and regression coverage.
 - Completed after `ml diff` fix: fixed `ml load` ranking so importance/recency metadata cannot rank entries without a real query hit, with regression coverage for unrelated high-importance preferences.
+- Completed after `ml load` ranking fix: fixed `ml load` section extraction so nested summaries stay attached to their parent heading and title/heading mismatches can resolve by entry id.
+- Completed after `ml load` section fix: fixed `ml status` duplicate detection so repeated standard subheadings like `### Summary` do not trigger duplicate-entry warnings, while duplicate `##` entry headings still do.
+- Completed after `ml status` fix: fixed hierarchical `ml clean`, nearest-index `ml save`, README CLI/runtime drift, and README adapter drift; added regression/lint coverage.
 - Stage 0.1 baseline is frozen as a 0.1 Developer Preview, not a 1.0 launch.
 - Existing V4 runtime work remains shipped, but the next release focus is correctness, positioning, open-source hygiene, and rename.
-- Next: choose the next 0.1 correctness blocker from the roadmap and cut it into a focused SCRIPT story.
+- Next: begin 0.1 launch hygiene from the roadmap: open-source files, CI, release notes, rename, and final clean test/lint output.
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.

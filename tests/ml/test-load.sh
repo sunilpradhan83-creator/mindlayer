@@ -87,6 +87,7 @@ cat > "$SANDBOX/project/.mindlayer/knowledge/index.md" <<'EOF'
 - ml-command-runner | Command Runner | knowledge/context.md | Read-only ml command runner foundation.
 - ml-post-write-module | Per-Turn Post-Write Module | global-template/memory-system/per-turn/post-write.md | Lazy per-turn contract for checking memory file size after approved writes.
 - ml-knowledge-entry | Knowledge Entry | knowledge/knowledge-entry.md | Entry in knowledge subfolder.
+- ml-title-mismatch | Friendly Title | knowledge/title-mismatch.md | Summary index title differs from file heading.
 - ml-dedup-entry | Dedup First | knowledge/knowledge-entry.md | First occurrence of this id.
 - ml-index-ptr-decisions | Decisions Index | knowledge/decisions/index.md | Index for decisions/ subfolder
 EOF
@@ -141,6 +142,18 @@ cat > "$SANDBOX/project/.mindlayer/knowledge/knowledge-entry.md" <<'EOF'
 
 ### Summary
 Entry in knowledge subfolder.
+EOF
+
+cat > "$SANDBOX/project/.mindlayer/knowledge/title-mismatch.md" <<'EOF'
+# Title Mismatch Fixture
+
+## Canonical Heading
+
+id: ml-title-mismatch
+status: active
+
+### Summary
+Section resolved by id when the index title does not match the heading.
 EOF
 
 cat > "$SANDBOX/project/.mindlayer/knowledge/decisions/decision.md" <<'EOF'
@@ -226,6 +239,7 @@ fi
 if assert_contains "$output" "Query: Command Runner"; then pass "$CURRENT_SCENARIO: query printed"; else fail "$CURRENT_SCENARIO: query printed"; fi
 if assert_contains "$output" "1. Command Runner (ml-command-runner)"; then pass "$CURRENT_SCENARIO: exact title is top result"; else fail "$CURRENT_SCENARIO: exact title is top result"; fi
 if assert_top_score_at_least_50 "$output"; then pass "$CURRENT_SCENARIO: top score at least 50"; else fail "$CURRENT_SCENARIO: top score at least 50"; fi
+if assert_contains "$output" "Read-only ml command runner foundation."; then pass "$CURRENT_SCENARIO: nested summary included"; else fail "$CURRENT_SCENARIO: nested summary included"; fi
 if ! grep -Fq "Old Command Runner (ml-old-command-runner)" "$output"; then pass "$CURRENT_SCENARIO: archived excluded by default"; else fail "$CURRENT_SCENARIO: archived excluded by default"; fi
 if ! grep -Fq "Unrelated Preference (ml-pref-unrelated)" "$output"; then pass "$CURRENT_SCENARIO: unrelated metadata-only entry excluded"; else fail "$CURRENT_SCENARIO: unrelated metadata-only entry excluded"; fi
 
@@ -248,6 +262,17 @@ else
   fail "$CURRENT_SCENARIO: command exits successfully"
 fi
 if assert_contains "$output" "Knowledge Entry (ml-knowledge-entry)"; then pass "$CURRENT_SCENARIO: subfolder entry ranked"; else fail "$CURRENT_SCENARIO: subfolder entry ranked"; fi
+
+scenario "section fallback resolves by id"
+output="$SANDBOX/load-section-fallback.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" load "Friendly Title" > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$output" "Friendly Title (ml-title-mismatch)"; then pass "$CURRENT_SCENARIO: mismatched title ranked"; else fail "$CURRENT_SCENARIO: mismatched title ranked"; fi
+if assert_contains "$output" "Section resolved by id when the index title does not match the heading."; then pass "$CURRENT_SCENARIO: id fallback summary returned"; else fail "$CURRENT_SCENARIO: id fallback summary returned"; fi
+if ! grep -Fq "Section not found." "$output"; then pass "$CURRENT_SCENARIO: section found"; else fail "$CURRENT_SCENARIO: section found"; fi
 
 scenario "root pointer resolves knowledge entry"
 output="$SANDBOX/load-project.out"

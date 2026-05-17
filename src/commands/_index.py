@@ -273,26 +273,62 @@ def rank_entries(entries: list[Entry], query: str) -> tuple[list[RankedEntry], l
     return ranked, skipped
 
 
-def extract_section(path: Path, section: str) -> str:
+def _section_bounds(lines: list[str], start: int, start_level: int) -> tuple[int, int]:
+    end = len(lines)
+    heading_re = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
+    for idx in range(start + 1, len(lines)):
+        match = heading_re.match(lines[idx])
+        if match and len(match.group(1)) <= start_level:
+            end = idx
+            break
+    return start, end
+
+
+def _section_containing_id(lines: list[str], entry_id: str) -> str:
+    if not entry_id:
+        return ""
+    id_idx = None
+    for idx, line in enumerate(lines):
+        if line.strip() == f"id: {entry_id}":
+            id_idx = idx
+            break
+    if id_idx is None:
+        return ""
+
+    heading_re = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
+    start = 0
+    start_level = 1
+    for idx in range(id_idx, -1, -1):
+        match = heading_re.match(lines[idx])
+        if match:
+            start = idx
+            start_level = len(match.group(1))
+            break
+    start, end = _section_bounds(lines, start, start_level)
+    return "\n".join(lines[start:end])
+
+
+def extract_section(path: Path, section: str, entry_id: str = "") -> str:
     if not path.is_file():
         return ""
     lines = read_text(path).splitlines()
     if not section:
         return "\n".join(lines[:40])
     start = None
+    start_level = 1
     heading_re = re.compile(r"^#{1,6}\s+(.+?)\s*$")
     for idx, line in enumerate(lines):
         match = heading_re.match(line)
         if match and match.group(1).strip() == section:
             start = idx
+            start_level = len(line) - len(line.lstrip("#"))
             break
     if start is None:
+        by_id = _section_containing_id(lines, entry_id)
+        if by_id:
+            return by_id
         return ""
-    end = len(lines)
-    for idx in range(start + 1, len(lines)):
-        if heading_re.match(lines[idx]):
-            end = idx
-            break
+    start, end = _section_bounds(lines, start, start_level)
     return "\n".join(lines[start:end])
 
 

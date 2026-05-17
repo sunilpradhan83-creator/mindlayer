@@ -54,6 +54,18 @@ def _update_index(index_path: Path, entry_line: str) -> None:
     index_path.write_text("\n".join(result) + "\n", encoding="utf-8")
 
 
+def _nearest_index_for(target: Path, memory_dir: Path) -> Path:
+    current = target.parent
+    memory_dir = memory_dir.resolve()
+    while True:
+        candidate = current / "index.md"
+        if candidate.is_file():
+            return candidate
+        if current == memory_dir or current.parent == current:
+            return memory_dir / "index.md"
+        current = current.parent
+
+
 def run(
     project_root: Path,
     file: str,
@@ -121,9 +133,9 @@ def run(
         return 2
 
     if index_entry:
-        index_path = memory_dir / "index.md"
+        index_path = _nearest_index_for(target, memory_dir)
         if index_path.is_file() or action == "create":
             _update_index(index_path, index_entry)
-            print(f"Index: updated {index_path.name}")
+            print(f"Index: updated {display_memory_path(index_path, memory_dir)}")
 
     return 0

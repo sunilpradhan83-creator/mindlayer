@@ -108,5 +108,28 @@ fi
 if assert_file_contains "$SANDBOX/index/.mindlayer/index.md" "ml-test-001"; then pass "$CURRENT_SCENARIO: id in index"; else fail "$CURRENT_SCENARIO: id in index"; fi
 if assert_file_contains "$SANDBOX/index/.mindlayer/index.md" "My Entry"; then pass "$CURRENT_SCENARIO: title in index"; else fail "$CURRENT_SCENARIO: title in index"; fi
 
+# --- nearest index updated ---
+scenario "nearest index written"
+mkdir -p "$SANDBOX/nearest/.mindlayer" "$SANDBOX/nearest/.mindlayer/knowledge" "$SANDBOX/nearest/.mindlayer/pipeline" "$SANDBOX/nearest/.mindlayer/pipeline/archive" "$SANDBOX/nearest/.mindlayer/knowledge/sessions"
+cat > "$SANDBOX/nearest/.mindlayer/index.md" <<'EOF'
+# Project Memory Index
+
+- ml-index-ptr-knowledge | Knowledge Index | knowledge/index.md | Index for knowledge/ subfolder
+EOF
+printf "# Knowledge Index\n" > "$SANDBOX/nearest/.mindlayer/knowledge/index.md"
+printf "# Context\n" > "$SANDBOX/nearest/.mindlayer/knowledge/context.md"
+output="$SANDBOX/nearest.out"
+if (cd "$SANDBOX/nearest" && python3 "$ROOT_DIR/src/ml" save \
+    --file context.md --section "Nearest Entry" --content "Body text." \
+    --action create --approve \
+    --index-entry "ml-nearest-001 | Nearest Entry | knowledge/context.md | Body text." > "$output"); then
+  pass "$CURRENT_SCENARIO: command exits 0"
+else
+  fail "$CURRENT_SCENARIO: command exits 0"
+fi
+if assert_file_contains "$SANDBOX/nearest/.mindlayer/knowledge/index.md" "ml-nearest-001"; then pass "$CURRENT_SCENARIO: id in nearest index"; else fail "$CURRENT_SCENARIO: id in nearest index"; fi
+if ! grep -Fq "ml-nearest-001" "$SANDBOX/nearest/.mindlayer/index.md"; then pass "$CURRENT_SCENARIO: root index unchanged"; else fail "$CURRENT_SCENARIO: root index unchanged"; fi
+if assert_contains "$output" "Index: updated .mindlayer/knowledge/index.md"; then pass "$CURRENT_SCENARIO: nearest index reported"; else fail "$CURRENT_SCENARIO: nearest index reported"; fi
+
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]

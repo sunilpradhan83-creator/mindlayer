@@ -4,7 +4,7 @@ Memory as intelligence for AI-native developers.
 
 MindLayer is a markdown-first memory system for AI coding agents. It gives agents a safe, predictable way to remember durable preferences, project context, decisions, progress, risks, and next steps without stuffing everything into chat history or tool-specific instruction files.
 
-MindLayer is intentionally small today: markdown files, command specs, thin tool adapters, and a safe installer. No backend, no embeddings, no vector database, and no editor extension.
+MindLayer is intentionally small today: markdown files, a local `ml` command runner, thin tool adapters, and a safe installer. No backend, no embeddings, no vector database, and no editor extension.
 
 ## Why MindLayer
 
@@ -56,20 +56,25 @@ Tool adapters stay thin:
 AGENTS.md
 CLAUDE.md
 .github/copilot-instructions.md
+GEMINI.md
+.cursor/rules/mindlayer.md
+.windsurf/rules/mindlayer.md
 ```
 
 They tell tools how to use MindLayer, but they are not memory stores.
 
 ## Commands
 
-MindLayer currently uses markdown command specs, not a CLI runtime:
+MindLayer installs a local `ml` command runner plus markdown command specs that define the expected behavior:
 
-- MindLayer boot: initialize the session with minimal useful memory context.
+- `ml boot`: print the session boot receipt with minimal useful memory context.
 - `ml load <query>`: fetch specific memory using ranked index matches first. `ml retrieve <query>` remains an alias.
 - `ml save`: propose durable memory writes and wait for approval.
 - `ml status`: check memory health and suggest fixes.
 - `ml session`: report session context cost and recommend compact or a fresh session.
-- `ml archive`: review stale memory and propose archive/delete actions.
+- `ml clean`: review stale memory and propose archive/delete actions. `ml archive` is the lower-level internal archive/delete command.
+- `ml diff`: show project memory changes since the last session commit.
+- `ml script`: run the SCRIPT lifecycle commands.
 - `ml onboard`: help populate MindLayer when installing into an existing project.
 
 Command specs live in `~/.mindlayer/memory-system/commands/` after install and ship from [`global-template/memory-system/commands/`](global-template/memory-system/commands/).
@@ -108,13 +113,18 @@ This pattern works across all agents — Claude, ChatGPT, Cursor, Copilot, and a
 Commit:
 
 ```text
-.mindlayer/project.md
-.mindlayer/progress.md
-.mindlayer/decisions.md
-.mindlayer/context.md
-.mindlayer/backlog.md
-.mindlayer/risks.md
 .mindlayer/index.md
+.mindlayer/router.md
+.mindlayer/knowledge/index.md
+.mindlayer/knowledge/project.md
+.mindlayer/knowledge/context.md
+.mindlayer/knowledge/risks.md
+.mindlayer/knowledge/decisions/index.md
+.mindlayer/knowledge/decisions/*.md
+.mindlayer/pipeline/index.md
+.mindlayer/pipeline/progress.md
+.mindlayer/pipeline/backlog.md
+.mindlayer/pipeline/roadmap.md
 ```
 
 Ignore:
@@ -137,13 +147,9 @@ Back up `~/.mindlayer/` with your normal dotfiles, encrypted backup, or private 
 
 ## Safety
 
-The installer creates missing files and preserves existing content. It may refresh managed MindLayer system instructions such as `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/`, while preserving user-owned global preferences. Adapter files are updated only inside the MindLayer marker block:
+The installer creates missing files and preserves existing content. It may refresh managed MindLayer system instructions such as `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/`, and canonical adapter templates, while preserving user-owned global preferences.
 
-```text
-<!-- mindlayer:start -->
-...
-<!-- mindlayer:end -->
-```
+Project adapters are frozen full-file templates. When an adapter hash matches `.mindlayer/adapters.lock`, reinstall may refresh it to the current canonical template and update the lock. If an adapter contains user-added content, install refuses to overwrite it and asks you to route that content through MindLayer first.
 
 The installer does not overwrite user-owned memory files, delete files, move files, clean/archive memory, or duplicate global memory into project memory.
 
@@ -159,7 +165,7 @@ Run the local validation suite before release or deploy:
 tools/test.sh
 ```
 
-It runs memory/adapters linting, sandboxed install readiness tests for fresh and existing projects, and boot receipt contract tests.
+It runs memory/adapters linting, sandboxed install readiness tests for fresh and existing projects, behavior contract tests, and `ml` CLI contract tests.
 
 For an opt-in live agent dogfood check:
 
