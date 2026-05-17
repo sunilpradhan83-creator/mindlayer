@@ -7,6 +7,31 @@ from pathlib import Path
 from ._paths import count_words, global_memory_dir, knowledge_file, pipeline_file, read_text, sessions_dir
 from .diff import memory_diff
 
+EMPTY_PROJECT_IDENTITY = "No substantive project identity saved yet."
+EMPTY_PROJECT_PROGRESS = "No substantive project progress has been saved yet."
+STARTER_SENTINEL_PREFIX = "<!-- ml:starter:"
+# Compatibility shims for installs created before starter sentinels existed.
+KNOWN_STARTER_STRINGS = frozenset({
+    "Short summary.",
+    "Short summary of this version or phase.",
+    "Useful details.",
+    "Current phase and immediate next step.",
+    "Starter Preferences",
+    "Use MindLayer memory cautiously.",
+    "No user preferences saved yet.",
+    "Add durable cross-project preferences here only after explicit approval.",
+    "Skip this section during boot until real user preferences are saved.",
+    "When this project context matters.",
+})
+# Preference file boilerplate is ignored unless authored content appears in a section.
+PERSONAL_BOILERPLATE = frozenset({
+    "# Personal Preferences",
+    "User-owned cross-project preferences for how AI coding agents should work with you.",
+    "This file is git-backed at `~/.mindlayer/preferences/`. Add a remote to back it up:",
+    "`git -C ~/.mindlayer/preferences remote add origin <your-private-repo>`",
+    "Do not store secrets, raw conversations, or project-specific facts here.",
+})
+
 
 def _read_if_file(path: Path) -> tuple[str, int]:
     if not path.is_file():
@@ -15,15 +40,35 @@ def _read_if_file(path: Path) -> tuple[str, int]:
     return text, count_words(text)
 
 
+def _is_starter_sentinel(line: str) -> bool:
+    stripped = line.strip()
+    return stripped.startswith(STARTER_SENTINEL_PREFIX) and stripped.endswith("-->")
+
+
+def _is_known_starter(line: str) -> bool:
+    return line.strip() in KNOWN_STARTER_STRINGS
+
+
 def _first_summary(path: Path) -> str:
     text, _ = _read_if_file(path)
     lines = text.splitlines()
     for idx, line in enumerate(lines):
         if line.strip() == "### Summary":
             for candidate in lines[idx + 1 :]:
-                if candidate.strip():
-                    return candidate.strip()
-    return "No substantive project identity saved yet."
+                stripped = candidate.strip()
+                if stripped.startswith("### "):
+                    break
+                if not stripped or _is_starter_sentinel(stripped):
+                    continue
+                if _is_known_starter(stripped):
+                    return EMPTY_PROJECT_IDENTITY
+                return stripped
+    return EMPTY_PROJECT_IDENTITY
+
+
+def _is_empty_bullet_label(line: str) -> bool:
+    stripped = line.strip()
+    return stripped.startswith("- ") and stripped.endswith(":")
 
 
 def _progress_summary(path: Path) -> str:
@@ -31,20 +76,47 @@ def _progress_summary(path: Path) -> str:
     lines = text.splitlines()
     for idx, line in enumerate(lines):
         if line.strip() == "### Details":
-            details = [candidate.strip("- ").strip() for candidate in lines[idx + 1 :] if candidate.strip()]
+            details = []
+            for candidate in lines[idx + 1 :]:
+                stripped = candidate.strip()
+                if stripped.startswith("### "):
+                    break
+                if not stripped:
+                    continue
+                if _is_starter_sentinel(stripped) or _is_known_starter(stripped) or _is_empty_bullet_label(stripped):
+                    continue
+                details.append(stripped.strip("- ").strip())
             if details:
                 return " ".join(details[:2])
-    return _first_summary(path)
+    summary = _first_summary(path)
+    if summary == EMPTY_PROJECT_IDENTITY:
+        return EMPTY_PROJECT_PROGRESS
+    return summary
 
 
 def _personal_is_substantive(text: str) -> bool:
-    if not text.strip():
-        return False
-    headings = [line.strip() for line in text.splitlines() if line.startswith("## ")]
-    if any(heading != "## Starter Preferences" for heading in headings):
+    """Return True only when personal preferences contain authored content."""
+    in_content_section = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("### "):
+            in_content_section = True
+            continue
+        if stripped.startswith("#"):
+            in_content_section = False
+            continue
+        if _is_starter_sentinel(stripped) or _is_known_starter(stripped):
+            continue
+        if stripped in PERSONAL_BOILERPLATE:
+            continue
+        if stripped.startswith("<!--"):
+            continue
+        if not in_content_section and ":" in stripped and stripped.split(":", 1)[0].replace("_", "-").replace("-", "").isalnum():
+            continue
         return True
-    starter_markers = ("Starter Preferences", "Use MindLayer memory cautiously")
-    return not all(marker in text for marker in starter_markers)
+    return False
 
 
 def _latest_next(project_root: Path) -> str:

@@ -14,6 +14,7 @@ fail() { FAIL_COUNT=$((FAIL_COUNT + 1)); printf "FAIL  %s\n" "$1"; }
 scenario() { CURRENT_SCENARIO="$1"; printf "\n## %s\n" "$CURRENT_SCENARIO"; }
 
 assert_contains() { grep -Fq "$2" "$1"; }
+assert_not_contains() { ! grep -Fq "$2" "$1"; }
 assert_not_contains_loaded_index_full() {
   awk '
     /^Loaded:/ { loaded = 1; next }
@@ -109,6 +110,155 @@ check "Context share present" assert_contains "$output" "Context share"
 check "Ready present" assert_contains "$output" "Ready."
 check "index-full not loaded" assert_not_contains_loaded_index_full "$output"
 check "substantive personal preferences loaded" assert_contains "$output" '`~/.mindlayer/preferences/personal.md`'
+
+scenario "starter sentinels do not leak"
+cat > "$SANDBOX/home/.mindlayer/preferences/personal.md" <<'EOF'
+# Personal Preferences
+
+User-owned cross-project preferences for how AI coding agents should work with you.
+
+This file is git-backed at `~/.mindlayer/preferences/`. Add a remote to back it up:
+`git -C ~/.mindlayer/preferences remote add origin <your-private-repo>`
+
+Do not store secrets, raw conversations, or project-specific facts here.
+
+## User Preferences
+
+id: ml-global-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+scope: global
+type: preference
+tags: [preferences]
+confidence: medium
+status: active
+source: starter
+
+### Summary
+<!-- ml:starter:personal.summary -->
+No user preferences saved yet.
+
+### Details
+<!-- ml:starter:personal.details -->
+Add durable cross-project preferences here only after explicit approval.
+
+### When to use
+<!-- ml:starter:personal.when-to-use -->
+Skip this section during boot until real user preferences are saved.
+
+### Related
+EOF
+cat > "$SANDBOX/project/.mindlayer/knowledge/project.md" <<'EOF'
+# Project Memory
+
+## Entry Template
+
+### Summary
+<!-- ml:starter:project.summary -->
+Short summary.
+
+### Details
+<!-- ml:starter:project.details -->
+Useful details.
+EOF
+cat > "$SANDBOX/project/.mindlayer/pipeline/progress.md" <<'EOF'
+# Progress
+
+## Current State
+
+### Summary
+Current phase and immediate next step.
+
+### Details
+- Current phase:
+- Completed:
+- Active:
+- Next step:
+EOF
+sentinel_output="$SANDBOX/boot-sentinel.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" boot > "$sentinel_output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+
+check "starter personal preferences skipped" assert_contains "$sentinel_output" '`~/.mindlayer/preferences/personal.md` (missing or starter-only)'
+check "starter project summary suppressed" assert_contains "$sentinel_output" "No substantive project identity saved yet."
+check "starter project summary not leaked" assert_not_contains "$sentinel_output" "Short summary."
+check "starter progress suppressed" assert_contains "$sentinel_output" "No substantive project progress has been saved yet."
+check "starter progress labels not leaked" assert_not_contains "$sentinel_output" "Current phase: Completed:"
+
+scenario "legacy starter strings do not leak"
+cat > "$SANDBOX/home/.mindlayer/preferences/personal.md" <<'EOF'
+# Personal Preferences
+
+User-owned cross-project preferences for how AI coding agents should work with you.
+
+This file is git-backed at `~/.mindlayer/preferences/`. Add a remote to back it up:
+`git -C ~/.mindlayer/preferences remote add origin <your-private-repo>`
+
+Do not store secrets, raw conversations, or project-specific facts here.
+
+## User Preferences
+
+id: ml-global-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+scope: global
+type: preference
+tags: [preferences]
+confidence: medium
+status: active
+source: starter
+
+### Summary
+No user preferences saved yet.
+
+### Details
+Add durable cross-project preferences here only after explicit approval.
+
+### When to use
+Skip this section during boot until real user preferences are saved.
+
+### Related
+EOF
+cat > "$SANDBOX/project/.mindlayer/knowledge/project.md" <<'EOF'
+# Project Memory
+
+## Entry Template
+
+### Summary
+Short summary.
+
+### Details
+Useful details.
+EOF
+cat > "$SANDBOX/project/.mindlayer/pipeline/progress.md" <<'EOF'
+# Progress
+
+## Current State
+
+### Summary
+Current phase and immediate next step.
+
+### Details
+- Current phase:
+- Completed:
+- Active:
+- Next step:
+EOF
+legacy_output="$SANDBOX/boot-legacy.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" boot > "$legacy_output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+
+check "legacy personal preferences skipped" assert_contains "$legacy_output" '`~/.mindlayer/preferences/personal.md` (missing or starter-only)'
+check "legacy project summary suppressed" assert_contains "$legacy_output" "No substantive project identity saved yet."
+check "legacy project summary not leaked" assert_not_contains "$legacy_output" "Short summary."
+check "legacy progress suppressed" assert_contains "$legacy_output" "No substantive project progress has been saved yet."
+check "legacy progress labels not leaked" assert_not_contains "$legacy_output" "Current phase: Completed:"
 
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]

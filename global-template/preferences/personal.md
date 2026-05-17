@@ -20,12 +20,15 @@ status: active
 source: starter
 
 ### Summary
+<!-- ml:starter:personal.summary -->
 No user preferences saved yet.
 
 ### Details
+<!-- ml:starter:personal.details -->
 Add durable cross-project preferences here only after explicit approval.
 
 ### When to use
+<!-- ml:starter:personal.when-to-use -->
 Skip this section during boot until real user preferences are saved.
 
 ### Related

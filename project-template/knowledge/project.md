@@ -15,12 +15,15 @@ status: active
 source: manual
 
 ### Summary
+<!-- ml:starter:project.summary -->
 Short summary.
 
 ### Details
+<!-- ml:starter:project.details -->
 Useful details.
 
 ### When to use
+<!-- ml:starter:project.when-to-use -->
 When this project context matters.
 
 ### Related

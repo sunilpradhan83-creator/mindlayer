@@ -15,9 +15,11 @@ status: active
 source: manual
 
 ### Summary
+<!-- ml:starter:progress.summary -->
 Current phase and immediate next step.
 
 ### Details
+<!-- ml:starter:progress.details -->
 - Current phase:
 - Completed:
 - Active:
