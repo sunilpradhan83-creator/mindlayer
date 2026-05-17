@@ -1,8 +1,10 @@
-# ml init
+# ml boot
 
 <!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
 
-`ml init` is a legacy/manual refresh alias for running the boot receipt. The primary path is automatic session-start or tool-preflight boot.
+`ml boot` shows or reruns the MindLayer boot receipt. The primary path is automatic session-start or tool-preflight boot.
+
+`ml init` is a legacy/manual refresh alias for `ml boot`.
 
 ## Procedure
 
@@ -55,4 +57,4 @@ When exact host usage is unavailable, estimate tokens as words multiplied by rou
 
 MindLayer-aware adapters should trigger this procedure at session start or tool preflight when possible. If a host cannot run preflight hooks, run it before the first project-relevant request. A plain greeting is not project-relevant.
 
-`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+`ml boot` is the manual command for showing or rerunning the boot receipt. `ml init` is a legacy alias.

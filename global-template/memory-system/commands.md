@@ -10,7 +10,8 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 - Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run it before answering the first project-relevant request.
 - Do not treat a plain greeting as a project-relevant request. If boot has not already run, answer naturally and boot before the first substantive project task.
 - A transparent boot receipt should describe what was loaded, skipped, missing, the rough token or word cost, and approximate context share by source when visible to the user.
-- `ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+- `ml boot` shows or reruns the MindLayer boot receipt.
+- `ml init` is a legacy/manual refresh alias for `ml boot`.
 - `ml load <query>` searches indexes first and loads only relevant sections. `ml retrieve <query>` is a backward-compatible alias.
 - `ml save` proposes memory writes from durable learnings and waits for approval.
 - `ml status` checks memory health and suggests fixes without writing.

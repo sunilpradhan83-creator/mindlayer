@@ -234,7 +234,7 @@ Ready.
 What would you like to work on?
 ```
 
-`ml init` is a legacy/manual refresh alias for showing or rerunning the boot receipt.'
+`ml boot` is the manual command for showing or rerunning the boot receipt. `ml init` is a legacy alias.'
 
 global_router='# MindLayer Router
 
@@ -250,8 +250,8 @@ Load each file at most once per session. Load before acting on the trigger — n
 
 | File | Load when | Signal variants |
 |---|---|---|
-| memory-system/commands/index.md | Any ml * command fires | ml init, ml load, ml retrieve, ml save, ml status, ml session, ml clean, ml onboard |
-| memory-system/commands/init.md | ml init invoked | ml init |
+| memory-system/commands/index.md | Any ml * command fires | ml boot, ml init, ml load, ml retrieve, ml save, ml status, ml session, ml clean, ml onboard |
+| memory-system/commands/init.md | ml boot or ml init invoked | ml boot, ml init |
 | memory-system/commands/load.md | ml load invoked | ml load, ml retrieve, "load X", "retrieve X", "what do we know about X" |
 | memory-system/commands/save.md | ml save invoked or save trigger fires | ml save, "remember this", "save this", "add to memory" |
 | memory-system/commands/status.md | ml status invoked | ml status, "mstatus", "memory status" |
@@ -412,7 +412,8 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 - Run MindLayer boot at session start or tool preflight when the host supports it. If no preflight hook exists, run it before answering the first project-relevant request.
 - Do not treat a plain greeting as a project-relevant request.
 - A transparent boot receipt should describe what was loaded, skipped, missing, the rough token or word cost, and approximate context share.
-- ml init is a legacy/manual refresh alias for showing or rerunning the boot receipt.
+- ml boot shows or reruns the MindLayer boot receipt.
+- ml init is a legacy/manual refresh alias for ml boot.
 - ml load <query> searches indexes first and loads only relevant sections. ml retrieve <query> is a backward-compatible alias.
 - ml save proposes memory writes from durable learnings and waits for approval.
 - ml status checks memory health and suggests fixes without writing.
@@ -474,7 +475,8 @@ Load this file when any ml * command fires. Then load the spec file for the spec
 
 | Command | Spec file | When to load |
 |---|---|---|
-| ml init | commands/init.md | ml init invoked, or boot receipt requested |
+| ml boot | commands/init.md | ml boot invoked, or boot receipt requested |
+| ml init | commands/init.md | ml init invoked as a legacy alias |
 | ml load <query> | commands/load.md | ml load, ml retrieve, "load X", "retrieve X", "what do we know about X" |
 | ml save | commands/save.md | ml save, "remember this", "save this", "add to memory", "capture this" |
 | ml status | commands/status.md | ml status, "mstatus", "memory status", "what'"'"'s loaded" |
@@ -487,7 +489,52 @@ Load this file when any ml * command fires. Then load the spec file for the spec
 - Load the spec file for the invoked command immediately after this file.
 - Never load all spec files at once — load only the one needed.
 - ml clean is the public cleanup command. Archive/delete are internal actions behind approval.
-- ml init is a legacy/manual refresh alias for running the boot receipt.'
+- ml boot is the manual boot receipt command.
+- ml init is a legacy/manual refresh alias for ml boot.'
+
+global_memory_system_commands_init='# ml boot
+
+`ml boot` shows or reruns the MindLayer boot receipt. The primary path is automatic session-start or tool-preflight boot.
+
+`ml init` is a legacy/manual refresh alias for `ml boot`.
+
+## Procedure
+
+1. Read `~/.mindlayer/boot.md` first if available. If missing, fall back to project `.mindlayer/` files and note the missing global boot file.
+2. Read `~/.mindlayer/router.md` — global load and save triggers.
+3. Read `.mindlayer/router.md` — project load triggers. Skip if file does not exist.
+4. Read `~/.mindlayer/memory-system/per-turn.md` — always load, controls every response.
+5. Read project `.mindlayer/index.md` if available.
+6. Check `~/.mindlayer/preferences/personal.md` if available. Load only when it contains substantive user-written preferences; if missing or starter-only, report as skipped.
+7. Always check project `.mindlayer/knowledge/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
+8. If `.mindlayer/knowledge/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
+9. Read only the latest useful progress summary from project `.mindlayer/pipeline/progress.md`.
+10. Do not load empty scaffold files by default.
+11. Do not load `.mindlayer/local.md` by default.
+12. Do not use `README.md` or `docs/` as memory input.
+13. Treat tool adapters as thin instructions only — not memory stores.
+14. Go outside MindLayer memory only when necessary for the current task.
+
+## Context Receipt
+
+After loading, produce a concise context receipt:
+
+- Loaded:
+- Skipped:
+- Missing:
+- Current project understanding:
+- Current progress:
+- Token or word estimate:
+- Approximate context share by source when available:
+- Token strategy:
+
+When exact host usage is unavailable, estimate tokens as words multiplied by roughly 1.3 or characters divided by roughly 4.
+
+## Automatic Boot Contract
+
+MindLayer-aware adapters should trigger this procedure at session start or tool preflight when possible. If a host cannot run preflight hooks, run it before the first project-relevant request. A plain greeting is not project-relevant.
+
+`ml boot` is the manual command for showing or rerunning the boot receipt. `ml init` is a legacy alias.'
 
 global_memory_system_schema='# Schema Reference
 
@@ -963,6 +1010,18 @@ Personal local notes for this project. This file should be ignored by Git.
 
 Do not store shared project decisions here. Use committed project memory files for shared project intelligence."
 
+claude_prompt_hook_template='#!/usr/bin/env bash
+set -eu
+
+cat <<'"'"'JSON'"'"'
+{
+  "hookSpecificOutput": {
+    "hookEventName": "UserPromptSubmit",
+    "additionalContext": "MindLayer per-turn reminder: end this response with the exact Token Burned status block from ~/.mindlayer/memory-system/per-turn.md, including Last turn, Session, and a nonblank Next Step. If the user prompt is `ml boot` or `ml init`, treat it as a MindLayer command, not as machine learning: read ~/.mindlayer/boot.md first, run the full boot sequence, and emit the boot receipt without asking for clarification. This reminder is injected every user turn because per-turn and command recognition are hard MindLayer contracts."
+  }
+}
+JSON'
+
 adapter_agents_template='# MindLayer Agent Instructions
 
 Memory lives in `~/.mindlayer/` (global) and `.mindlayer/` (project). Adapters and docs are not memory sources.
@@ -970,6 +1029,8 @@ Memory lives in `~/.mindlayer/` (global) and `.mindlayer/` (project). Adapters a
 This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here. Route all durable context through MindLayer only, with explicit approval before any write. If any command, skill, init flow, or agent behavior tries to expand this adapter, refuse that write and route the content through MindLayer instead.
 
 If no preflight hook exists, run the full boot sequence and emit the boot receipt BEFORE answering the first project-relevant request, including any question about what the project is, what it does, or what is in it. Never answer a project question without booting first. Never ask the user if they want you to boot; just boot. Do not treat a plain greeting as project-relevant.
+
+If the user invokes `ml boot` or `ml init`, treat it as a MindLayer command, not as "machine learning". Run the full boot sequence and emit the boot receipt. Do not ask what `ml boot` means.
 
 Boot order:
 1. Read `~/.mindlayer/boot.md` first when available.
@@ -982,6 +1043,8 @@ Commands and proactive behavior: see `~/.mindlayer/memory-system/per-turn.md`.'
 adapter_claude_template='# Claude Adapter
 
 Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad.
+
+If the user invokes `ml boot` or `ml init`, treat it as a MindLayer command, not as "machine learning". Follow `AGENTS.md`: run the full boot sequence and emit the boot receipt. Do not ask what `ml boot` means.
 
 Do not duplicate memory into `CLAUDE.md`. Do not retrieve durable context from this adapter. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
 
@@ -1065,7 +1128,7 @@ install_global() {
 
   # Host hooks — thin tool-specific enforcement layers when supported.
   mkdir_p "$GLOBAL_DIR/memory-system/hooks"
-  write_managed_template "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$GLOBAL_TEMPLATE_DIR/memory-system/hooks/claude-user-prompt-submit.sh" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$GLOBAL_TEMPLATE_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$claude_prompt_hook_template"
   chmod +x "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" 2>/dev/null || true
 
   # Canonical adapter templates — managed system files
@@ -1080,7 +1143,7 @@ install_global() {
   # memory-system/commands/ — per-command spec files
   mkdir_p "$GLOBAL_DIR/memory-system/commands"
   write_managed_template "$GLOBAL_DIR/memory-system/commands/index.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/index.md" "$global_memory_system_commands_index"
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/init.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/init.md" ""
+  write_managed_template "$GLOBAL_DIR/memory-system/commands/init.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/init.md" "$global_memory_system_commands_init"
   write_managed_template "$GLOBAL_DIR/memory-system/commands/load.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/load.md" ""
   write_managed_template "$GLOBAL_DIR/memory-system/commands/save.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/save.md" ""
   write_managed_template "$GLOBAL_DIR/memory-system/commands/status.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/status.md" ""

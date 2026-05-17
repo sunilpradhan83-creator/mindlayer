@@ -18,8 +18,8 @@ Loaded: <file.md> — <reason>
 
 | File | Load when | Signals |
 |---|---|---|
-| `memory-system/commands/index.md` | Any ml command | ml init/load/retrieve/save/status/session/clean/onboard |
-| `memory-system/commands/init.md` | Init or boot receipt | ml init |
+| `memory-system/commands/index.md` | Any ml command | ml boot/init/load/retrieve/save/status/session/clean/onboard |
+| `memory-system/commands/init.md` | Init or boot receipt | ml boot, ml init |
 | `memory-system/commands/load.md` + project `.mindlayer/index.md` tree | Memory load | ml load/retrieve, load/retrieve X, what do we know about X |
 | `memory-system/commands/save.md` | Save trigger | ml save, remember/save/add/capture/log/keep/preserve this |
 | `memory-system/commands/status.md` | Status | ml status, mstatus, memory status, what's loaded |
