@@ -13,7 +13,7 @@ status: in-progress
 source: conversation
 
 ### Summary
-Stage 0.0 for the 0.1 Developer Preview is saved, and the verified 0.1 correctness blockers are implemented: starter boot truth, project router install, `ml diff`, `ml load`, `ml status`, `ml clean`, `ml save`, and README/runtime/adapter drift. Next work is 0.1 launch hygiene: open-source files, CI, release notes, rename, and final clean test/lint pass.
+Stage 0.1 Developer Preview hygiene complete. All open-source files shipped: CONTRIBUTING, CHANGELOG, README rewrite, SECURITY, CODE_OF_CONDUCT, CI workflow, issue templates, CODEOWNERS, comparison.md, examples/quickstart.md, RELEASE_NOTES. tools/test.sh passes with 0 failures, 0 lint errors, 1 known W2. Next: PyPI rename, then rc soak (48–72h, 3 independent fresh installs) before public launch.
 
 ### Details
 - Completed this session: created `knowledge/decisions/script-v0.1.md`, marked `script-v4.md` superseded, updated decisions index, rewrote canonical roadmap, mirrored public ROADMAP, added SCRIPT enforcement backlog item, and wrote the 2026-05-17 session summary.
