@@ -33,7 +33,6 @@ Planned scope:
 - Add `comparison.md` with dated, fact-only competitor context.
 - Add open-source basics: CONTRIBUTING, SECURITY, Code of Conduct, issue/PR templates, CODEOWNERS, one worked example, minimal CI, CHANGELOG, and release notes.
 - Clean passing test/lint output.
-- Rename before public launch because the `mindlayer` PyPI name is already taken.
 
 Public launch is gated by an rc soak period: at least 48-72 hours and at least 3 independent fresh installs that complete install -> boot -> save without maintainer help.
 
@@ -46,7 +45,6 @@ Public launch is gated by an rc soak period: at least 48-72 hours and at least 3
 Planned scope:
 
 - Reduce boot weight toward roughly 3,500 L0 tokens.
-- Add pip install under the new name.
 - Expand CI to Ubuntu Python 3.9-3.12.
 - Add boot-weight regression checks.
 - Add `ml status --lifecycle` once SCRIPT v0.1 data exists in real dogfood.
@@ -81,6 +79,19 @@ MindLayer should not ship 1.0 until all of these hold:
 - 0.1 correctness invariants still hold.
 - CHANGELOG covers every change since 0.1.
 - Adapter/CLI behavior is stable across at least 2 of Codex, Claude Code, and Cursor.
+- VS Code extension available so VS Code users can install without touching a terminal.
+
+---
+
+## 2.0 Ecosystem Reach
+
+**Goal:** reach users in environments where `curl | bash` is blocked or insufficient.
+
+Planned scope:
+
+- Rename package if `mindlayer` is taken on PyPI at the time of 2.0.
+- PyPI package (`pip install mindlayer`) for corporate environments using internal package registries.
+- `ml install` Python command that replaces install.sh logic, making pip install a complete one-step setup path.
 
 ---
 

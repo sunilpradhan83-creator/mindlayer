@@ -33,7 +33,6 @@ Scope:
 - Fix 11 verified correctness findings: starter boot truth, personal preference starter detection, missing project router, `ml load` section resolution, ranking without query hits, false duplicate headings, hierarchical `ml clean`, nearest-index `ml save`, README CLI drift, adapter-doc drift, and archived items appearing as new in `ml diff`.
 - Rewrite README around "human-approved, git-trackable memory for AI coding agents."
 - Add `comparison.md`, CONTRIBUTING, SECURITY, Code of Conduct, issue/PR templates, CODEOWNERS, one quickstart example, minimal CI, CHANGELOG, release notes, and clean test/lint output.
-- Rename before public launch because `mindlayer` is already taken on PyPI.
 
 Exit criteria:
 - Full install -> boot -> load -> save -> status -> `ml script status` path works from public docs without maintainer help.
@@ -47,7 +46,6 @@ Goal: make the preview dependable enough for repeat daily use.
 
 Scope:
 - Boot bloat reduction toward roughly 3,500 L0 tokens.
-- Pip-installable package under the new name.
 - Python CI matrix on Ubuntu 3.9-3.12, and macOS only after bash 3.2 compatibility is verified.
 - Boot-weight regression guard.
 - `ml status --lifecycle` and SCRIPT runtime enforcement where dogfood shows decay.
@@ -73,12 +71,22 @@ Ship only when all hold:
 - Correctness invariants from 0.1 still hold.
 - CHANGELOG covers every change since 0.1.
 - Adapter/CLI behavior is stable across at least 2 of Codex, Claude Code, and Cursor.
+- VS Code extension available so VS Code users can install without touching a terminal.
+
+### Stage 2.0 - Ecosystem Reach
+Goal: reach users in environments where curl | bash is blocked or insufficient.
+
+Scope:
+- Rename package if `mindlayer` is taken on PyPI at the time of 2.0.
+- PyPI package (`pip install mindlayer`) for corporate environments using internal registries.
+- `ml install` Python command that replaces install.sh logic, so pip install is a complete setup path.
 
 ### Out of Scope Until Signal Says Otherwise
 - MCP server before 1.1.
 - Hosted/SaaS layer.
 - Teams/shared memory before 1.0 ships.
 - Embeddings/vector store, because that breaks the zero-infra wedge.
+- Homebrew — install.sh already covers macOS and Linux without it.
 
 ### Related
 ml-20260517-001
