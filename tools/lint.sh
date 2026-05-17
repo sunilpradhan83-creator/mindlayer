@@ -375,7 +375,7 @@ EOF
   # W4 placeholder scaffolds in resolved leaf files.
   while IFS= read -r p; do
     [ -n "$p" ] || continue
-    if grep -q "YYYY-MM-DD" "$p" 2>/dev/null; then
+    if grep "YYYY-MM-DD" "$p" 2>/dev/null | grep -v "YYYY-MM-DD\.md" | grep -qv "managed by MindLayer installer"; then
       warn "[W4] $p still contains 'YYYY-MM-DD' placeholders (likely empty scaffold)"
     fi
   done <<EOF
@@ -489,6 +489,34 @@ lint_repo() {
 }
 
 # ---------------------------------------------------------------------------
+# E8 installed commands sync check
+# ---------------------------------------------------------------------------
+lint_installed_commands() {
+  installed="$HOME/.mindlayer/lib/commands"
+  src="$PROJECT_DIR/src/commands"
+
+  [ -d "$installed" ] || return 0
+  [ -d "$src" ] || return 0
+
+  for f in "$src"/*.py; do
+    name="$(basename "$f")"
+    if [ ! -f "$installed/$name" ]; then
+      err "[E8] installed commands out of sync: $name missing from $installed — run install.sh or: cp src/commands/$name $installed/$name"
+    elif ! cmp -s "$f" "$installed/$name"; then
+      err "[E8] installed commands out of sync: $name differs — run install.sh or: cp -R src/commands $HOME/.mindlayer/lib/commands"
+    fi
+  done
+
+  for f in "$installed"/*.py; do
+    [ -f "$f" ] || continue
+    name="$(basename "$f")"
+    if [ ! -f "$src/$name" ]; then
+      err "[E8] installed commands out of sync: $name in $installed but not in src/commands — run install.sh to resync"
+    fi
+  done
+}
+
+# ---------------------------------------------------------------------------
 # Cross-index duplicate id check
 # ---------------------------------------------------------------------------
 cross_check_ids() {
@@ -523,6 +551,7 @@ fi
 
 echo
 lint_repo
+lint_installed_commands
 cross_check_ids
 
 echo

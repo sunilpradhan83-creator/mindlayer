@@ -259,6 +259,14 @@ check assert_contains "$fresh_project/.gitignore" ".cursor/rules/mindlayer.md"
 check assert_contains "$fresh_project/.gitignore" ".windsurf/rules/mindlayer.md"
 check assert_index_sections_exist "$fresh_project/.mindlayer"
 
+scenario "installed commands match src/commands"
+check assert_dir_exists "$fresh_home/.mindlayer/lib/commands"
+for _f in "$ROOT_DIR/src/commands/"*.py; do
+  _name="$(basename "$_f")"
+  check assert_files_equal "$_f" "$fresh_home/.mindlayer/lib/commands/$_name"
+done
+unset _f _name
+
 scenario "install skip flags"
 skip_home="$SANDBOX/skip-home"
 skip_project="$SANDBOX/skip-project"
