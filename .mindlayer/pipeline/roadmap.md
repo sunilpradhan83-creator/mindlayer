@@ -1,74 +1,85 @@
 # Roadmap
 
-Long-term versioned vision. Full roadmap lives in `ROADMAP.md` in the repo root.
+Canonical project roadmap for MindLayer. Public `ROADMAP.md` mirrors this file for human readers; `.mindlayer/` remains the source of truth.
 
-## MindLayer Product Roadmap
+## MindLayer 0.1 Developer Preview Roadmap
 
-id: ml-20260505-003
-created: 2026-05-05
-updated: 2026-05-08
+id: ml-20260517-002
+created: 2026-05-17
+updated: 2026-05-17
 scope: project
 type: roadmap
-tags: [roadmap, v2, v3, v4, script, cli]
-confidence: medium
+tags: [roadmap, open-source, developer-preview, script, correctness]
+confidence: high
 status: active
-source: manual
+source: conversation
 
 ### Summary
-V1, V2, and V3 shipped. V4 targets a SCRIPT-driven product engine and lifecycle runtime first: Signal routing, Roadmap → Backlog → Agent Stories → Progress artifact queue, Transfer to Learning/History paths, and then IDE integrations.
+MindLayer will ship a 0.1 Developer Preview before any 1.0 announcement. The first public version is correctness-first: fix verified boot/load/status/save/clean/diff problems, align docs with the real CLI architecture, add open-source hygiene, and rename before public launch.
 
-### Details
-- V1 (shipped): installer, prompt commands, thin adapters, boot/continuity/install contracts.
-- V2 (shipped): proactive behavior, archive mode, `ml session`, `private/` `sessions/` `cache/` `tmp/` subdirectories, Token Burned per-turn block.
-- V3 (shipped): memory health scoring, memory diff, auto-summarization, `ml load` primary command, and ranked-load contract for agent-executed retrieval.
-- V4: SCRIPT product engine and deterministic lifecycle runtime. Signal is universal ingress; Roadmap → Backlog → Agent Stories → Progress is the artifact queue; Transfer writes to Learning Path (`.mindlayer/learnings/`) and History Path (`.mindlayer/history/`). Start spec-first, then build a local Python `ml` runtime. IDE extensions follow after lifecycle runtime stability.
-- V5+: teams, SaaS. Full vision in `ROADMAP.md`.
-- SCRIPT development philosophy defined in `ROADMAP.md` and `context.md` (ml-20260507-001).
-- SCRIPT Product Engine Architecture saved in `decisions.md` (ml-20260508-002).
+### Product Direction
+Audience: solo AI-native developers using Codex, Claude Code, Cursor, or similar coding agents.
 
-### Status
-V1 shipped. V2 shipped. V3 shipped. V4 is next.
+Positioning: human-approved, git-trackable memory for AI coding agents. SCRIPT is the workflow inside the product, not the top-level marketing claim.
+
+Architecture: keep the two-layer markdown memory model, thin adapters, adapter/CLI-first runtime, explicit approval before writes, and SCRIPT lifecycle. No MCP server in 0.1.
+
+Methodology in force: `knowledge/decisions/script-v0.1.md`.
+
+### Stage 0.1 - Developer Preview
+Goal: correctness, positioning, and open-source basics with honest preview framing.
+
+Scope:
+- Fix 11 verified correctness findings: starter boot truth, personal preference starter detection, missing project router, `ml load` section resolution, ranking without query hits, false duplicate headings, hierarchical `ml clean`, nearest-index `ml save`, README CLI drift, adapter-doc drift, and archived items appearing as new in `ml diff`.
+- Rewrite README around "human-approved, git-trackable memory for AI coding agents."
+- Add `comparison.md`, CONTRIBUTING, SECURITY, Code of Conduct, issue/PR templates, CODEOWNERS, one quickstart example, minimal CI, CHANGELOG, release notes, and clean test/lint output.
+- Rename before public launch because `mindlayer` is already taken on PyPI.
+
+Exit criteria:
+- Full install -> boot -> load -> save -> status -> `ml script status` path works from public docs without maintainer help.
+- `tools/test.sh` passes and strict lint is clean.
+- Fresh boot does not leak starter content and reports no missing project router.
+- README, ROADMAP, `.mindlayer/knowledge/project.md`, and this roadmap tell the same story.
+- Public launch waits for rc soak: 48-72 hours and at least 3 independent fresh installs.
+
+### Stage 0.2 - Reliability
+Goal: make the preview dependable enough for repeat daily use.
+
+Scope:
+- Boot bloat reduction toward roughly 3,500 L0 tokens.
+- Pip-installable package under the new name.
+- Python CI matrix on Ubuntu 3.9-3.12, and macOS only after bash 3.2 compatibility is verified.
+- Boot-weight regression guard.
+- `ml status --lifecycle` and SCRIPT runtime enforcement where dogfood shows decay.
+- Read-only docs drift checker that proposes sync; no silent README/ROADMAP generation.
+
+### Stage 0.3 - Cross-Agent Proof
+Goal: prove MindLayer works across the AI-native developer tools it claims to support.
+
+Scope:
+- Public dogfood transcripts for Codex, Claude Code, and Cursor.
+- At least 3 worked examples in the repo.
+- Migration notes from adjacent tools when real migration data exists.
+- Fewer "what just happened?" moments in fresh-user runs.
+
+### Stage 1.0 - Public Stable
+Goal: earned stability, not a calendar milestone.
+
+Ship only when all hold:
+- At least 5 external users run MindLayer for at least 4 weeks.
+- Zero open critical bugs.
+- At least one unsolicited third-party blog post or public repo uses MindLayer.
+- Install -> boot -> load -> save -> status -> SCRIPT flow works from docs alone.
+- Correctness invariants from 0.1 still hold.
+- CHANGELOG covers every change since 0.1.
+- Adapter/CLI behavior is stable across at least 2 of Codex, Claude Code, and Cursor.
+
+### Out of Scope Until Signal Says Otherwise
+- MCP server before 1.1.
+- Hosted/SaaS layer.
+- Teams/shared memory before 1.0 ships.
+- Embeddings/vector store, because that breaks the zero-infra wedge.
 
 ### Related
-ml-20260430-005
-ml-20260507-001
-
----
-
-## Open Source Security Hardening
-
-id: ml-20260510-001
-created: 2026-05-10
-updated: 2026-05-10
-scope: project
-type: roadmap
-tags: [security, open-source, release, governance]
-confidence: high
-status: planned
-source: manual
-
-### Summary
-Before open sourcing MindLayer, ship a security hardening layer targeting the distribution and governance threat surface — not the dogfood test layer.
-
-### Details
-Three threat vectors identified, each requiring a distinct mitigation:
-
-**1. Malicious contributor modifying memory templates**
-- Add CODEOWNERS file — any change to `global-template/` requires 2 maintainer approvals
-- GitHub branch protection on `main` — no direct pushes, mandatory PR review
-- Separate CODEOWNERS entries for `global-template/`, `install.sh`, and `tools/`
-
-**2. Supply chain attack on the published package**
-- Sign releases (GPG or sigstore)
-- Publish checksums for `install.sh` alongside each release
-- Pin dependencies and audit them on every release
-
-**3. Developer running unreviewed local changes**
-- Document clearly in CONTRIBUTING.md that dogfood should only be run on reviewed code
-- The dogfood temp dir sandbox is sufficient for this tier — Docker is not needed
-
-### Decision
-Security investment belongs at the distribution and governance layer, not the dogfood test layer. Docker in dogfood would be security theater — it protects the wrong layer.
-
-### Status
-Planned. To be implemented before first public open source release.
+ml-20260517-001
+ml-20260510-001

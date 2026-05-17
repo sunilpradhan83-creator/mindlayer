@@ -1,4 +1,7 @@
 # SCRIPT V4 Decisions
+
+> **Superseded by [script-v0.1.md](script-v0.1.md) on 2026-05-17.** Kept for historical context - see new file for current model.
+
 ## SCRIPT Lifecycle File Ownership and Rules
 id: ml-20260514-001
 created: 2026-05-14

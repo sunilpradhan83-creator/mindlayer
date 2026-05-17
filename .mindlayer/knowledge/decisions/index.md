@@ -1,9 +1,10 @@
 # Decisions Index
 
-- ml-20260514-001 | SCRIPT Lifecycle Rules | knowledge/decisions/script-v4.md | Full file ownership, purge rules, folder structure, Cut routing, story lifecycle, archive folder.
-- ml-20260514-002 | SCRIPT V4 Final Structure | knowledge/decisions/script-v4.md | Final folder layout, story=prompt schema, TDD mandatory, Graphify deferred to V5, pipeline/knowledge split.
-- ml-20260514-003 | Transfer Rules and ml script CLI | knowledge/decisions/script-v4.md | Transfer trigger/bar/outcomes; `ml script` agent-executed lifecycle namespace.
-- ml-20260514-004 | SCRIPT V4 Review-Driven Refinements | knowledge/decisions/script-v4.md | External review fixes: reworded Signal rule, porcelain+SHA resume, refine --check, single+batch approval, CLI index freshness.
+- ml-20260517-001 | SCRIPT v0.1 Simplified Lifecycle | knowledge/decisions/script-v0.1.md | Active 0.1 methodology: Signal -> Cut -> Refine -> Implement -> Prove -> Transfer with size-based routing and approval-gated Transfer.
+- ml-20260514-001 | SCRIPT Lifecycle Rules | knowledge/decisions/script-v4.md | SUPERSEDED by ml-20260517-001. Historical V4 file ownership, purge rules, Cut routing, story lifecycle, archive folder.
+- ml-20260514-002 | SCRIPT V4 Final Structure | knowledge/decisions/script-v4.md | SUPERSEDED by ml-20260517-001. Historical V4 folder layout, story=prompt schema, TDD rule, Graphify deferral, pipeline/knowledge split.
+- ml-20260514-003 | Transfer Rules and ml script CLI | knowledge/decisions/script-v4.md | SUPERSEDED by ml-20260517-001. Historical Transfer trigger/bar/outcomes and `ml script` lifecycle namespace.
+- ml-20260514-004 | SCRIPT V4 Review-Driven Refinements | knowledge/decisions/script-v4.md | SUPERSEDED by ml-20260517-001. Historical review fixes: Signal wording, porcelain+SHA resume, refine --check, approvals, index freshness.
 - ml-20260512-001 | Phase 0 Architecture | knowledge/decisions/architecture.md | Per-turn split, summary index, compressed state.
 - ml-20260511-002 | Adapter Freeze | knowledge/decisions/architecture.md | Frozen templates, auto-detect, `ml save` migration.
 - ml-20260510-002 | Dogfood Scripts | knowledge/decisions/architecture.md | boot gate vs live health check.

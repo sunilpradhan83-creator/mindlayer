@@ -17,6 +17,9 @@ Near-term backlog tracks active/planned V4 work only. Full versioned vision live
 
 ### Details
 
+**Active 0.1 Planning:**
+- SCRIPT v0.1 enforcement mechanisms: decide per required rule whether it should be CLI-enforced via `ml save`/future lifecycle commands, warned by `ml status --strict`, or documented as convention-only. Rules to classify: linked signal for XS direct fixes, `proof_type` enum, transfer check at story close, non-empty Cut destination, and backlog cap warnings. Priority: medium. Target: 0.1.x or 0.2 after dogfood shows which gaps actually decay. 0.1 ships the methodology and documented field conventions, not full runtime enforcement.
+
 **Active V4 Foundation:**
 - Standardized `ml` command runner foundation with read-only commands first: `ml boot`, `ml load`, `ml status`, `ml diff`, and `ml session`.
 - Programmatic ranked loader over global/project indexes with deterministic scoring and archive handling.
@@ -36,4 +39,3 @@ Use when choosing the next near-term MindLayer task. See `ROADMAP.md` for full v
 
 ### Related
 ml-20260430-003
-
