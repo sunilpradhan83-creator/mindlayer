@@ -48,6 +48,29 @@ cat > "$SANDBOX/project/.mindlayer/index-full.md" <<'EOF'
   summary: Unique entry only in index-full.md; must not appear after deprecation.
 EOF
 
+mkdir -p "$SANDBOX/home/.mindlayer/preferences"
+cat > "$SANDBOX/home/.mindlayer/preferences/index.md" <<'EOF'
+# Preferences Index
+
+- id: ml-pref-unrelated
+  title: Unrelated Preference
+  file: unrelated.md
+  section: Unrelated Preference
+  scope: global
+  type: preference
+  status: active
+  last_updated: 2026-05-12
+  tags: [unrelated]
+  importance: high
+  summary: This entry has strong metadata only.
+EOF
+cat > "$SANDBOX/home/.mindlayer/preferences/unrelated.md" <<'EOF'
+# Unrelated Preference
+
+### Summary
+This entry should not rank for unrelated queries.
+EOF
+
 # Root index — summary format with leaf entries and a pointer to knowledge/
 cat > "$SANDBOX/project/.mindlayer/index.md" <<'EOF'
 # Project Memory Index
@@ -204,6 +227,7 @@ if assert_contains "$output" "Query: Command Runner"; then pass "$CURRENT_SCENAR
 if assert_contains "$output" "1. Command Runner (ml-command-runner)"; then pass "$CURRENT_SCENARIO: exact title is top result"; else fail "$CURRENT_SCENARIO: exact title is top result"; fi
 if assert_top_score_at_least_50 "$output"; then pass "$CURRENT_SCENARIO: top score at least 50"; else fail "$CURRENT_SCENARIO: top score at least 50"; fi
 if ! grep -Fq "Old Command Runner (ml-old-command-runner)" "$output"; then pass "$CURRENT_SCENARIO: archived excluded by default"; else fail "$CURRENT_SCENARIO: archived excluded by default"; fi
+if ! grep -Fq "Unrelated Preference (ml-pref-unrelated)" "$output"; then pass "$CURRENT_SCENARIO: unrelated metadata-only entry excluded"; else fail "$CURRENT_SCENARIO: unrelated metadata-only entry excluded"; fi
 
 scenario "repo-relative source path"
 output="$SANDBOX/load-template.out"

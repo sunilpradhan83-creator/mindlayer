@@ -45,7 +45,7 @@ def memory_diff(project_root: Path) -> str:
             check=True,
         )
         result = subprocess.run(
-            ["git", "diff", f"{sha}..HEAD", "--", ".mindlayer/"],
+            ["git", "diff", "--no-renames", f"{sha}..HEAD", "--", ".mindlayer/"],
             cwd=project_root,
             text=True,
             stdout=subprocess.PIPE,
@@ -63,49 +63,67 @@ def memory_diff(project_root: Path) -> str:
 def summarize_diff(diff_text: str) -> str:
     new_ids: dict[str, set[str]] = {}
     removed_ids: dict[str, set[str]] = {}
-    added_status_archived: set[str] = set()
-    removed_status_archived: set[str] = set()
-    current_file = ""
+    archived_ids: set[str] = set()
+    status_archived_ids: set[str] = set()
+    old_file = ""
+    new_file = ""
+    current_entry_id = ""
+    archive_path = ".mindlayer/" + str(archive_file(Path(".mindlayer"))).split(".mindlayer/", 1)[1]
+
+    def usable(path: str) -> bool:
+        if not path or not path.startswith(".mindlayer/"):
+            return False
+        if any(part in path for part in ("/knowledge/sessions/", "/cache/", "/tmp/", "/private/")):
+            return False
+        return path != ".mindlayer/local.md"
+
+    def is_archive(path: str) -> bool:
+        return path == archive_path or "/archive/" in path
 
     for raw in diff_text.splitlines():
+        if raw.startswith("--- a/"):
+            old_file = raw[6:]
+            continue
         if raw.startswith("+++ b/"):
-            current_file = raw[6:]
+            new_file = raw[6:]
+            current_entry_id = ""
             continue
-        if not current_file or not current_file.startswith(".mindlayer/"):
+        if raw.startswith("+++ /dev/null"):
+            new_file = ""
+            current_entry_id = ""
             continue
-        if any(part in current_file for part in ("/knowledge/sessions/", "/cache/", "/tmp/", "/private/")):
-            continue
-        archive_path = ".mindlayer/" + str(archive_file(Path(".mindlayer"))).split(".mindlayer/", 1)[1]
-        if current_file in {".mindlayer/local.md", archive_path}:
-            archive_file_flag = current_file == archive_path
-        else:
-            archive_file_flag = False
 
         line = raw[1:].strip() if raw[:1] in "+-" else ""
+        context_line = raw[1:].strip() if raw[:1] in "+- " else ""
+        if re.match(r"id:\s*\S+", context_line):
+            current_entry_id = context_line.split(":", 1)[1].strip()
         if raw.startswith("+") and re.match(r"id:\s*\S+", line):
+            if not usable(new_file):
+                continue
             entry_id = line.split(":", 1)[1].strip()
-            new_ids.setdefault(current_file, set()).add(entry_id)
-            if archive_file_flag:
-                added_status_archived.add(entry_id)
+            if is_archive(new_file):
+                archived_ids.add(entry_id)
+            else:
+                new_ids.setdefault(new_file, set()).add(entry_id)
         elif raw.startswith("-") and re.match(r"id:\s*\S+", line):
+            if not usable(old_file):
+                continue
             entry_id = line.split(":", 1)[1].strip()
-            removed_ids.setdefault(current_file, set()).add(entry_id)
+            if not is_archive(old_file):
+                removed_ids.setdefault(old_file, set()).add(entry_id)
         elif raw.startswith("+") and line == "status: archived":
-            added_status_archived.add(current_file)
-        elif raw.startswith("-") and line == "status: archived":
-            removed_status_archived.add(current_file)
+            if usable(new_file) and current_entry_id:
+                status_archived_ids.add(current_entry_id)
 
     all_new = {entry_id for ids in new_ids.values() for entry_id in ids}
     all_removed = {entry_id for ids in removed_ids.values() for entry_id in ids}
     updated = all_new & all_removed
-    archived_count = len((all_removed - all_new) & added_status_archived)
-    if added_status_archived and not removed_status_archived:
-        archived_count += len(added_status_archived & {".mindlayer/" + f for f in ()})
+    archived_count = len((archived_ids & all_removed) | status_archived_ids)
 
-    new_files = sorted(file for file, ids in new_ids.items() if ids - updated and file != ".mindlayer/pipeline/archive/archive.md")
-    updated_files = sorted(file for file, ids in new_ids.items() if ids & updated and file != ".mindlayer/pipeline/archive/archive.md")
-    new_count = sum(len(ids - updated) for file, ids in new_ids.items() if file != ".mindlayer/pipeline/archive/archive.md")
-    updated_count = sum(len(ids & updated) for file, ids in new_ids.items() if file != ".mindlayer/pipeline/archive/archive.md")
+    new_files = sorted(file for file, ids in new_ids.items() if ids - updated)
+    updated_files = sorted(file for file, ids in new_ids.items() if ids & updated)
+    new_count = sum(len(ids - updated) for ids in new_ids.values())
+    updated_count = sum(len(ids & updated) for ids in new_ids.values())
 
     lines = []
     if new_count or updated_count or archived_count:
@@ -124,4 +142,3 @@ def run(project_root: Path) -> int:
     if output:
         print(output)
     return 0
-

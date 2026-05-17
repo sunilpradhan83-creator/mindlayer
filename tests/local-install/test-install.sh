@@ -210,7 +210,7 @@ check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'Do n
 check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'always check project `.mindlayer/knowledge/project.md`'
 check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" "explicit approval"
 
-for file in knowledge/project.md knowledge/index.md pipeline/progress.md pipeline/index.md knowledge/decisions/index.md knowledge/context.md pipeline/backlog.md pipeline/roadmap.md knowledge/risks.md index.md local.md; do
+for file in router.md knowledge/project.md knowledge/index.md pipeline/progress.md pipeline/index.md knowledge/decisions/index.md knowledge/context.md pipeline/backlog.md pipeline/roadmap.md knowledge/risks.md index.md local.md; do
   check assert_file_exists "$fresh_project/.mindlayer/$file"
 done
 
@@ -272,6 +272,7 @@ else
 fi
 
 check assert_file_exists "$skip_home/.mindlayer/bin/ml"
+check assert_file_exists "$skip_project/.mindlayer/router.md"
 check assert_file_exists "$skip_project/.mindlayer/knowledge/project.md"
 check assert_not_exists "$skip_project/AGENTS.md"
 check assert_not_exists "$skip_project/CLAUDE.md"

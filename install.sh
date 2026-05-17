@@ -1044,6 +1044,7 @@ install_project_memory() {
   pmem="$PROJECT_DIR/.mindlayer"
   mkdir_p "$pmem"
 
+  write_template_if_missing "$pmem/router.md" "$PROJECT_TEMPLATE_DIR/router.md" ""
   write_template_if_missing "$pmem/knowledge/project.md" "$PROJECT_TEMPLATE_DIR/knowledge/project.md" "$project_template"
   write_template_if_missing "$pmem/knowledge/index.md" "$PROJECT_TEMPLATE_DIR/knowledge/index.md" "$knowledge_index_template"
   write_template_if_missing "$pmem/pipeline/progress.md" "$PROJECT_TEMPLATE_DIR/pipeline/progress.md" "$progress_template"

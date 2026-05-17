@@ -187,51 +187,59 @@ def score_entry(entry: Entry, query: str) -> RankedEntry:
     title = entry.title.lower()
     summary_words = words(entry.summary)
     score = 0
+    matched = False
     reasons: list[str] = []
 
     if q and q in title:
         score += 50
+        matched = True
         reasons.append("exact title phrase")
 
     title_words = set(words(entry.title))
     title_hits = title_words & set(query_words)
     if title_hits:
         score += 25
+        matched = True
         reasons.append("title keywords: " + ", ".join(sorted(title_hits)))
 
     for tag in entry.tags:
         tag_words = set(words(tag))
         if tag == q or tag_words & set(query_words):
             score += 20
+            matched = True
             reasons.append(f"tag: {tag}")
 
     summary_hits = set(summary_words) & set(query_words)
     for hit in sorted(summary_hits):
         score += 10
+        matched = True
         reasons.append(f"summary: {hit}")
 
     if entry.type.lower() in query_words:
         score += 5
+        matched = True
         reasons.append(f"type: {entry.type}")
     if entry.status.lower() in query_words:
         score += 5
+        matched = True
         reasons.append(f"status: {entry.status}")
 
-    if entry.importance == "high":
-        score += 10
-        reasons.append("high importance")
-    elif entry.importance == "medium":
-        score += 5
-        reasons.append("medium importance")
-
-    age = _days_old(entry.last_updated)
-    if age is not None:
-        if age <= 30:
+    if matched:
+        if entry.importance == "high":
+            score += 10
+            reasons.append("high importance")
+        elif entry.importance == "medium":
             score += 5
-            reasons.append("updated within 30 days")
-        elif age <= 90:
-            score += 2
-            reasons.append("updated within 90 days")
+            reasons.append("medium importance")
+
+        age = _days_old(entry.last_updated)
+        if age is not None:
+            if age <= 30:
+                score += 5
+                reasons.append("updated within 30 days")
+            elif age <= 90:
+                score += 2
+                reasons.append("updated within 90 days")
 
     if entry.status == "archived":
         score -= 10
@@ -306,4 +314,3 @@ def summarize_section(text: str) -> str:
         return " ".join(summary_lines)
     compact = " ".join(line.strip() for line in text.splitlines() if line.strip())
     return compact[:320] + ("..." if len(compact) > 320 else "")
-
