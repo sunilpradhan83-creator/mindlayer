@@ -260,5 +260,30 @@ check "legacy project summary not leaked" assert_not_contains "$legacy_output" "
 check "legacy progress suppressed" assert_contains "$legacy_output" "No substantive project progress has been saved yet."
 check "legacy progress labels not leaked" assert_not_contains "$legacy_output" "Current phase: Completed:"
 
+scenario "authored section after starter is used"
+cat > "$SANDBOX/project/.mindlayer/knowledge/project.md" <<'EOF'
+# Project Memory
+
+## Entry Template
+
+### Summary
+<!-- ml:starter:project.summary -->
+Short summary.
+
+## Real Project Identity
+
+### Summary
+Sandbox project has real saved identity.
+EOF
+authored_output="$SANDBOX/boot-authored.out"
+if (cd "$SANDBOX/project" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" boot > "$authored_output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+
+check "authored project summary used" assert_contains "$authored_output" "Sandbox project has real saved identity."
+check "empty identity not used when authored summary exists" assert_not_contains "$authored_output" "No substantive project identity saved yet."
+
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]

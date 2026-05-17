@@ -61,7 +61,7 @@ def _first_summary(path: Path) -> str:
                 if not stripped or _is_starter_sentinel(stripped):
                     continue
                 if _is_known_starter(stripped):
-                    return EMPTY_PROJECT_IDENTITY
+                    break
                 return stripped
     return EMPTY_PROJECT_IDENTITY
 

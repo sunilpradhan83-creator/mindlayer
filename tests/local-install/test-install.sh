@@ -259,6 +259,25 @@ check assert_contains "$fresh_project/.gitignore" ".cursor/rules/mindlayer.md"
 check assert_contains "$fresh_project/.gitignore" ".windsurf/rules/mindlayer.md"
 check assert_index_sections_exist "$fresh_project/.mindlayer"
 
+scenario "install skip flags"
+skip_home="$SANDBOX/skip-home"
+skip_project="$SANDBOX/skip-project"
+skip_log="$SANDBOX/skip-install.log"
+mkdir -p "$skip_home" "$skip_project"
+
+if PATH="/usr/bin:/bin" HOME="$skip_home" bash "$ROOT_DIR/install.sh" --project "$skip_project" --no-adapters --no-gitignore --no-onboard > "$skip_log" 2>&1; then
+  pass "$CURRENT_SCENARIO: installer exits successfully"
+else
+  fail "$CURRENT_SCENARIO: installer exits successfully"
+fi
+
+check assert_file_exists "$skip_home/.mindlayer/bin/ml"
+check assert_file_exists "$skip_project/.mindlayer/knowledge/project.md"
+check assert_not_exists "$skip_project/AGENTS.md"
+check assert_not_exists "$skip_project/CLAUDE.md"
+check assert_not_exists "$skip_project/.mindlayer/adapters.lock"
+check assert_not_exists "$skip_project/.gitignore"
+
 scenario "selective detection installs only detected adapters"
 selective_home="$SANDBOX/selective-home"
 selective_project="$SANDBOX/selective-project"

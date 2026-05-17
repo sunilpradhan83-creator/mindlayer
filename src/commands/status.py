@@ -10,6 +10,15 @@ import re
 from ._paths import archive_file, pipeline_file, read_text
 from .diff import memory_diff
 
+STARTER_SENTINEL_PREFIX = "<!-- ml:starter:"
+STARTER_PROGRESS_LINES = frozenset({
+    "Current phase and immediate next step.",
+    "- Current phase:",
+    "- Completed:",
+    "- Active:",
+    "- Next step:",
+})
+
 
 def _entry_dates(text: str) -> list[str]:
     return re.findall(r"^(?:last_updated|updated):\s*([0-9]{4}-[0-9]{2}-[0-9]{2})$", text, re.MULTILINE)
@@ -88,6 +97,10 @@ def _first_block_after_heading(text: str, heading: str) -> str:
             stripped = candidate.strip()
             if stripped.startswith("#"):
                 break
+            if stripped.startswith(STARTER_SENTINEL_PREFIX) and stripped.endswith("-->"):
+                continue
+            if stripped in STARTER_PROGRESS_LINES:
+                continue
             if stripped:
                 block.append(stripped)
             elif block:

@@ -13,6 +13,7 @@ pass() { PASS_COUNT=$((PASS_COUNT + 1)); printf "PASS  %s\n" "$1"; }
 fail() { FAIL_COUNT=$((FAIL_COUNT + 1)); printf "FAIL  %s\n" "$1"; }
 scenario() { CURRENT_SCENARIO="$1"; printf "\n## %s\n" "$CURRENT_SCENARIO"; }
 assert_contains() { grep -Fq -- "$2" "$1"; }
+assert_not_contains() { ! grep -Fq -- "$2" "$1"; }
 
 cleanup() { rm -rf "$SANDBOX"; }
 trap cleanup EXIT
@@ -57,6 +58,33 @@ if assert_contains "$output" "context.md    WARN"; then pass "$CURRENT_SCENARIO:
 if assert_contains "$output" "- current progress: Dogfood polish is active."; then pass "$CURRENT_SCENARIO: progress continuity read"; else fail "$CURRENT_SCENARIO: progress continuity read"; fi
 if assert_contains "$output" "- next useful action: verify status continuity from progress memory."; then pass "$CURRENT_SCENARIO: next action read"; else fail "$CURRENT_SCENARIO: next action read"; fi
 if ! assert_contains "$output" "command runner foundation"; then pass "$CURRENT_SCENARIO: no hardcoded continuity"; else fail "$CURRENT_SCENARIO: no hardcoded continuity"; fi
+
+scenario "starter progress is not surfaced"
+cat > "$SANDBOX/project/.mindlayer/pipeline/progress.md" <<'EOF'
+# Progress
+
+## Current State
+
+### Summary
+<!-- ml:starter:progress.summary -->
+Current phase and immediate next step.
+
+### Details
+<!-- ml:starter:progress.details -->
+- Current phase:
+- Completed:
+- Active:
+- Next step:
+EOF
+starter_output="$SANDBOX/status-starter.out"
+if (cd "$SANDBOX/project" && python3 "$ROOT_DIR/src/ml" status > "$starter_output"); then
+  pass "$CURRENT_SCENARIO: command exits successfully"
+else
+  fail "$CURRENT_SCENARIO: command exits successfully"
+fi
+if assert_contains "$starter_output" "- current progress: not recorded"; then pass "$CURRENT_SCENARIO: starter progress suppressed"; else fail "$CURRENT_SCENARIO: starter progress suppressed"; fi
+if assert_not_contains "$starter_output" "ml:starter:progress.summary"; then pass "$CURRENT_SCENARIO: sentinel not leaked"; else fail "$CURRENT_SCENARIO: sentinel not leaked"; fi
+if assert_not_contains "$starter_output" "Current phase and immediate next step."; then pass "$CURRENT_SCENARIO: starter summary not leaked"; else fail "$CURRENT_SCENARIO: starter summary not leaked"; fi
 
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]

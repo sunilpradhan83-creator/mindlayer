@@ -1060,7 +1060,7 @@ install_project_memory() {
 }
 
 install_adapters() {
-  [ "$NO_ADAPTERS" -eq 0 ] || return
+  [ "$NO_ADAPTERS" -eq 0 ] || return 0
 
   lock_file="$PROJECT_DIR/.mindlayer/adapters.lock"
   blocked_adapters=""
@@ -1248,7 +1248,7 @@ EOF
 }
 
 install_gitignore() {
-  [ "$NO_GITIGNORE" -eq 0 ] || return
+  [ "$NO_GITIGNORE" -eq 0 ] || return 0
   file="$PROJECT_DIR/.gitignore"
   if [ ! -e "$file" ]; then
     printf "# MindLayer local/private memory\n" > "$file"
