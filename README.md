@@ -1,35 +1,34 @@
 # MindLayer
 
-Memory as intelligence for AI-native developers.
+Human-approved, git-trackable memory for AI coding agents.
 
-MindLayer is a markdown-first memory system for AI coding agents. It gives agents a safe, predictable way to remember durable preferences, project context, decisions, progress, risks, and next steps without stuffing everything into chat history or tool-specific instruction files.
+MindLayer gives AI coding agents a safe, predictable place to store and retrieve durable context — project decisions, preferences, progress, risks, and backlog — without stuffing everything into chat history or tool-specific instruction files.
 
-MindLayer is intentionally small today: markdown files, a local `ml` command runner, thin tool adapters, and a safe installer. No backend, no embeddings, no vector database, and no editor extension.
+It is intentionally small: markdown files, a local `ml` command runner, thin tool adapters, and a safe installer. No backend, no embeddings, no vector database, no editor extension.
 
-## Why MindLayer
+> **0.1 Developer Preview.** MindLayer is usable for early adopters who want to dogfood it, but it is not a polished stable release. Expect rough edges and breaking changes before 1.0.
 
-AI coding agents are useful in the moment, but they often lose the durable context that makes a project coherent over time.
+## Why
 
-MindLayer helps by:
+AI coding agents are useful in the moment but lose the durable context that makes a project coherent over time. The usual workarounds — pasting notes into the system prompt, duplicating facts across tool-specific files, or relying on chat compaction — all drift, bloat, or disappear across sessions.
 
-- separating memory from tool adapters
-- keeping user-owned global preferences separate from project facts
-- using indexes before loading full memory files
-- requiring explicit approval before memory writes
-- preserving existing files during install
-- reducing token bloat, duplication, and memory drift
+MindLayer fixes this by:
 
-Good memory is not a chat dump. It is curated, routed, indexed, compact, and maintained.
+- keeping project memory in plain markdown, committed to git alongside the code
+- separating global preferences (`~/.mindlayer/`) from project facts (`.mindlayer/`)
+- loading from indexes first, not from full files
+- requiring explicit human approval before any memory write
+- preserving existing content on reinstall
+
+Good memory is curated, indexed, compact, and approval-gated. Not a chat dump.
 
 ## Install
-
-Remote install:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/sunilpradhan83-creator/mindlayer/main/install.sh | bash
 ```
 
-Local install:
+Or from a local clone:
 
 ```sh
 bash install.sh --project .
@@ -42,15 +41,13 @@ Then open your AI coding tool. MindLayer-aware adapters boot minimal context aut
 MindLayer creates two memory layers:
 
 ```text
-~/.mindlayer/      global memory shared across projects
-./.mindlayer/      project memory for the current repo
+~/.mindlayer/      global memory — shared across all projects
+./.mindlayer/      project memory — committed to the repo
 ```
 
-Global memory stores user-owned cross-project preferences, habits, principles, reusable workflows, anti-patterns, and prompt patterns.
+Global memory stores user-owned preferences, habits, principles, reusable workflows, and anti-patterns. Project memory stores project identity, progress, decisions, context, backlog, risks, and an index.
 
-Project memory stores project identity, progress, decisions, context, backlog, risks, and an index.
-
-Tool adapters stay thin:
+Tool adapters stay thin and are not memory stores:
 
 ```text
 AGENTS.md
@@ -61,54 +58,50 @@ GEMINI.md
 .windsurf/rules/mindlayer.md
 ```
 
-They tell tools how to use MindLayer, but they are not memory stores.
-
 ## Commands
 
-MindLayer installs a local `ml` command runner plus markdown command specs that define the expected behavior:
+MindLayer installs a local `ml` command runner plus markdown command specs that define expected behavior:
 
-- `ml boot`: print the session boot receipt with minimal useful memory context.
-- `ml load <query>`: fetch specific memory using ranked index matches first. `ml retrieve <query>` remains an alias.
-- `ml save`: propose durable memory writes and wait for approval.
-- `ml status`: check memory health and suggest fixes.
-- `ml session`: report session context cost and recommend compact or a fresh session.
-- `ml clean`: review stale memory and propose archive/delete actions. `ml archive` is the lower-level internal archive/delete command.
-- `ml diff`: show project memory changes since the last session commit.
-- `ml script`: run the SCRIPT lifecycle commands.
-- `ml onboard`: help populate MindLayer when installing into an existing project.
+- `ml boot` — print the session boot receipt with minimal useful memory context.
+- `ml load <query>` — fetch specific memory using ranked index matches first. `ml retrieve <query>` is an alias.
+- `ml save` — propose durable memory writes and wait for approval.
+- `ml status` — check memory health and suggest fixes.
+- `ml diff` — show project memory changes since the last session commit.
+- `ml clean` — review stale memory and propose archive or delete actions.
+- `ml session` — report session context cost and recommend compact or a fresh session.
+- `ml script` — run the SCRIPT lifecycle commands (Signal → Cut → Refine → Implement → Prove → Transfer).
+- `ml onboard` — help populate MindLayer when installing into an existing project.
 
 Command specs live in `~/.mindlayer/memory-system/commands/` after install and ship from [`global-template/memory-system/commands/`](global-template/memory-system/commands/).
 
 ## Effective Use
 
-MindLayer boot should load `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, the project router when present, `~/.mindlayer/memory-system/per-turn.md`, indexes, substantive user preferences when present, project identity, and current progress. Starter-only preferences are skipped. `ml init` remains a legacy/manual refresh alias for showing or rerunning the boot receipt.
+Boot loads `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, the project router, `~/.mindlayer/memory-system/per-turn.md`, indexes, substantive user preferences, project identity, and current progress. Starter-only placeholders are skipped.
 
-Use `ml load <query>` instead of loading every memory file. Loading should start from indexes and load only relevant sections.
+Use `ml load <query>` instead of loading every memory file. Loading starts from indexes and loads only relevant sections.
 
-Use `ml save` after durable learning happens: new decisions, stable preferences, meaningful progress, risks, reusable workflows, or backlog items. MindLayer should propose writes first and only save after approval.
+Use `ml save` after durable learning happens — new decisions, stable preferences, meaningful progress, risks, reusable workflows, or backlog items. MindLayer proposes writes first and only saves after approval.
 
 Use `ml status` when memory feels stale, duplicated, oversized, or inconsistent.
 
 ## Session Strategy
 
-MindLayer makes new sessions cheap. Boot loads the minimum useful context — command rules, indexes, substantive preferences, project identity, and current progress — regardless of how long the previous session was.
+MindLayer makes new sessions cheap. Boot loads the minimum useful context regardless of how long the previous session was.
 
-Prefer starting a new session at each task boundary over compacting mid-session. Save progress with `ml save`, finish the task, and start fresh. The next session boots from durable memory, not from chat history.
+Prefer starting a new session at each task boundary: save progress with `ml save`, finish the task, and start fresh. The next session boots from durable memory, not from chat history.
 
-Use `/compact` only when mid-task and hitting the context limit with active work still in progress. Compacting preserves history at a cost: every subsequent message in that session pays for the summary. A new session has zero history overhead.
+Use `/compact` only when mid-task and hitting the context limit with active work still in progress. A new session has zero history overhead; compaction adds per-message cost for every message that follows.
 
-This pattern works across all agents — Claude, ChatGPT, Cursor, Copilot, and any LLM-backed tool. Durable memory is what makes new sessions viable; without it, every session restart means re-explaining everything.
+This pattern works across all agents — Claude, Cursor, Codex, Copilot, and any LLM-backed tool. Durable memory is what makes new sessions viable.
 
 ## Best Practices
 
-- Do not use `README.md` as memory input.
+- Do not use `README.md` or `docs/` as memory input.
 - Do not dump raw conversations into memory.
 - Prefer updating existing memory over creating duplicates.
 - Keep user-owned global preferences in `~/.mindlayer/preferences/personal.md`.
-- Keep project facts in `.mindlayer/`.
-- Keep tool-specific files thin.
-- Commit shared project memory.
-- Ignore personal, private, generated, and session memory.
+- Keep project facts in `.mindlayer/` and commit them.
+- Keep tool-specific adapter files thin.
 
 Commit:
 
@@ -132,7 +125,7 @@ Ignore:
 ```text
 .mindlayer/local.md
 .mindlayer/private/
-.mindlayer/sessions/
+.mindlayer/knowledge/sessions/
 .mindlayer/cache/
 .mindlayer/tmp/
 ```
@@ -143,31 +136,27 @@ Do not ignore the entire `.mindlayer/` directory.
 
 `~/.mindlayer/` is outside project Git by design. It survives deleting or recloning a project, but project commits do not back it up.
 
-Back up `~/.mindlayer/` with your normal dotfiles, encrypted backup, or private personal repository if you want cross-project preferences and global memory preserved across machine loss. Do not store secrets, tokens, raw conversations, or project-specific facts in global preferences.
+Back it up with your normal dotfiles, encrypted backup, or a private personal repository. Do not store secrets, tokens, raw conversations, or project-specific facts in global memory.
 
 ## Safety
 
-The installer creates missing files and preserves existing content. It may refresh managed MindLayer system instructions such as `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/`, and canonical adapter templates, while preserving user-owned global preferences.
+The installer creates missing files and preserves existing content. It may refresh managed system files (`~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/`, and canonical adapter templates) while preserving user-owned preferences and memory.
 
-Project adapters are frozen full-file templates. When an adapter hash matches `.mindlayer/adapters.lock`, reinstall may refresh it to the current canonical template and update the lock. If an adapter contains user-added content, install refuses to overwrite it and asks you to route that content through MindLayer first.
+Project adapters are frozen full-file templates tracked by `.mindlayer/adapters.lock`. Reinstall refreshes an adapter only when its hash matches the lock. If an adapter contains user-added content, install refuses to overwrite it and asks you to route that content through MindLayer first.
 
-The installer does not overwrite user-owned memory files, delete files, move files, clean/archive memory, or duplicate global memory into project memory.
-
-## Roadmap
-
-See [`ROADMAP.md`](ROADMAP.md) for the full product vision across versions.
+The installer never overwrites user-owned memory files, deletes files, moves files, or duplicates global memory into project memory.
 
 ## Validation
 
-Run the local validation suite before release or deploy:
+Run the full test suite before contributing or releasing:
 
 ```sh
-tools/test.sh
+bash tools/test.sh
 ```
 
-It runs memory/adapters linting, sandboxed install readiness tests for fresh and existing projects, behavior contract tests, and `ml` CLI contract tests.
+Runs memory/adapter lint, sandboxed install tests, behavior contract tests, and `ml` CLI contract tests.
 
-For an opt-in live agent dogfood check:
+Optional live agent dogfood:
 
 ```sh
 # Claude (default)
@@ -177,4 +166,14 @@ tools/dogfood.sh
 AGENT_RUNNER=tools/dogfood-runners/codex.sh tools/dogfood.sh
 ```
 
-Runs five real multi-turn scenarios: greeting suppression, boot receipt on project question, session continuity, fresh-session boot, and no-unsolicited-write discipline. The sandbox is isolated in a temp directory and cleaned up automatically.
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). Open an issue before writing code.
+
+## Changelog
+
+See [`CHANGELOG.md`](CHANGELOG.md).
+
+## Roadmap
+
+See [`ROADMAP.md`](ROADMAP.md) for the full product vision.
