@@ -66,6 +66,29 @@ Planned scope:
 
 ---
 
+## MCP Micro-Kernel Track
+
+**Goal:** explore whether MCP should become MindLayer's future runtime boundary without changing the 0.1 product surface.
+
+This track is research first. MindLayer 0.1 still ships without an MCP server, MCP install path, or FastMCP runtime dependency. A non-shipping Resource Plane spike may run in parallel to gather signal, but the public preview remains focused on rename, release-candidate soak, and launch hygiene.
+
+Planned spike:
+
+- Prototype read-only MCP resources over existing markdown memory and index-first retrieval.
+- Evaluate FastMCP as a candidate dependency without adding it to the 0.1 shipping runtime.
+- Compare MCP Resource Plane behavior against `ml load` for targeted queries and entry-id retrieval.
+- Record a go/no-go decision before any full MCP runtime work moves onto the shipping path.
+
+Guardrails:
+
+- Markdown remains the durable storage format.
+- No vector database, embeddings layer, or RAG stack.
+- Write-capable tools must preserve approval-before-write semantics.
+- Full Tool Plane and Prompt Plane work waits for a later decision and no earlier than 1.1.
+- Any Prompt Plane cutover requires cross-agent proof across supported clients.
+
+---
+
 ## 1.0 Public Stable
 
 1.0 is earned, not scheduled.
@@ -104,3 +127,4 @@ Planned scope:
 - Docs are human-facing mirrors, not boot memory.
 - No silent README/ROADMAP generation; future tooling may propose sync, never overwrite.
 - Zero-infra is a core wedge, so embeddings/vector stores stay off-roadmap unless the strategy changes deliberately.
+- MCP may become a future runtime boundary, but only after research proves it improves the agent-agnostic control plane without weakening 0.1's markdown-first wedge.

@@ -22,3 +22,4 @@
 - ml-20260508-002 | SCRIPT Engine | knowledge/decisions/process.md | Signal -> Roadmap -> Backlog -> Stories -> Progress. SUPERSEDED by ml-20260514-001.
 - ml-20260514-005 | Next Step Story ID Granularity | knowledge/decisions/process.md | Name story ID in Next Step once stories exist, not backlog item.
 - ml-20260514-006 | Hierarchical Index Tree Architecture | knowledge/decisions/process.md | Root index maps to subfolder indexes; each folder owns its index; tree replaces flat index+index-full.
+- ml-20260627-002 | MCP Resource Plane Research Spike | knowledge/decisions/architecture.md | MCP and FastMCP are approved only as a non-shipping research spike before a later go/no-go decision.

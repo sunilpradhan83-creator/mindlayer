@@ -201,3 +201,36 @@ ml-20260507-004
 ml-20260511-002
 ml-20260507-002
 ml-20260508-001
+
+## MCP Resource Plane Research Spike
+
+id: ml-20260627-002
+created: 2026-06-27
+updated: 2026-06-27
+scope: project
+type: decision
+tags: [architecture, mcp, fastmcp, research-spike, dependencies, agent-agnostic]
+confidence: medium
+status: active
+source: conversation
+
+### Summary
+MindLayer may explore MCP as a future micro-kernel runtime, but the approved near-term work is a non-shipping Resource Plane research spike. FastMCP is accepted for evaluation only and must not become a 0.1 runtime dependency without a later go/no-go decision.
+
+### Details
+- The 0.1 Developer Preview remains focused on rename, release-candidate soak, and public launch hygiene.
+- The spike may prototype read-only MCP resources over existing markdown memory and index-first retrieval.
+- The spike must not alter install behavior, boot behavior, public docs, or the shipping `ml` command path.
+- FastMCP introduces the project's first runtime dependency, so adoption requires an explicit follow-up decision covering version pinning, install impact, offline/corporate environments, and fallback if the dependency churns.
+- Docker remains deferred for MCP Tool Plane work. The prior Docker rejection was dogfood-specific, so future tool execution needs its own threat model before choosing an isolation backend.
+- Prompt Plane cutover requires proof that supported agent clients can carry the contract; no existing hook should be deprecated on a single-client assumption.
+
+### When to use
+Use when planning MCP work, evaluating FastMCP, changing runtime dependencies, or deciding whether MCP work is allowed before 1.1.
+
+### Related
+ml-20260627-001
+ml-20260517-002
+ml-20260507-004
+ml-20260510-002
+ml-20260510-004
