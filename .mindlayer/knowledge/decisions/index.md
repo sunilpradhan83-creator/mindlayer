@@ -1,16 +1,17 @@
 # Decisions Index
 
+- ml-adr-0001 | MindLayer Memory and Runtime Architecture | knowledge/decisions/adr-0001-mindlayer-architecture.md | ACCEPTED target architecture: `.mindlayer/` as project resource root, global preferences only, executable runtime behavior, thin adapters, lazy file creation, and MCP mapping.
 - ml-20260517-001 | SCRIPT v0.1 Simplified Lifecycle | knowledge/decisions/script-v0.1.md | Active 0.1 methodology: Signal -> Cut -> Refine -> Implement -> Prove -> Transfer with size-based routing and approval-gated Transfer.
 - ml-20260514-001 | SCRIPT Lifecycle Rules | knowledge/decisions/script-v4.md | SUPERSEDED by ml-20260517-001. Historical V4 file ownership, purge rules, Cut routing, story lifecycle, archive folder.
 - ml-20260514-002 | SCRIPT V4 Final Structure | knowledge/decisions/script-v4.md | SUPERSEDED by ml-20260517-001. Historical V4 folder layout, story=prompt schema, TDD rule, Graphify deferral, pipeline/knowledge split.
 - ml-20260514-003 | Transfer Rules and ml script CLI | knowledge/decisions/script-v4.md | SUPERSEDED by ml-20260517-001. Historical Transfer trigger/bar/outcomes and `ml script` lifecycle namespace.
 - ml-20260514-004 | SCRIPT V4 Review-Driven Refinements | knowledge/decisions/script-v4.md | SUPERSEDED by ml-20260517-001. Historical review fixes: Signal wording, porcelain+SHA resume, refine --check, approvals, index freshness.
-- ml-20260512-001 | Phase 0 Architecture | knowledge/decisions/architecture.md | Per-turn split, summary index, compressed state.
+- ml-20260512-001 | Phase 0 Architecture | knowledge/decisions/architecture.md | SUPERSEDED as target architecture by ml-adr-0001. Historical per-turn split, summary index, compressed state.
 - ml-20260511-002 | Adapter Freeze | knowledge/decisions/architecture.md | Frozen templates, auto-detect, `ml save` migration.
 - ml-20260510-002 | Dogfood Scripts | knowledge/decisions/architecture.md | boot gate vs live health check.
 - ml-20260510-003 | Boot Trigger Root Cause | knowledge/decisions/architecture.md | Non-interactive agents need hard boot wording.
 - ml-20260510-004 | Security Hardening | knowledge/decisions/architecture.md | Security at distribution/governance layer.
-- ml-20260507-007 | Template Sync Rule | knowledge/decisions/architecture.md | Keep live and global-template synced.
+- ml-20260507-007 | Template Sync Rule | knowledge/decisions/architecture.md | SUPERSEDED as target architecture by ml-adr-0001. Transitional/historical live and global-template sync rule.
 - ml-20260507-004 | Agent-Agnostic Principle | knowledge/decisions/architecture.md | Product rules stay tool-neutral.
 - ml-20260513-001 | Command Output Standard | knowledge/decisions/architecture.md | `ml boot` and command receipts stay identical across agents.
 - ml-20260507-005 | ML-999 Decisions | knowledge/decisions/process.md | ML-101-110 outcomes are settled.
@@ -22,4 +23,4 @@
 - ml-20260508-002 | SCRIPT Engine | knowledge/decisions/process.md | Signal -> Roadmap -> Backlog -> Stories -> Progress. SUPERSEDED by ml-20260514-001.
 - ml-20260514-005 | Next Step Story ID Granularity | knowledge/decisions/process.md | Name story ID in Next Step once stories exist, not backlog item.
 - ml-20260514-006 | Hierarchical Index Tree Architecture | knowledge/decisions/process.md | Root index maps to subfolder indexes; each folder owns its index; tree replaces flat index+index-full.
-- ml-20260627-002 | MCP Resource Plane Research Spike | knowledge/decisions/architecture.md | MCP and FastMCP are approved only as a non-shipping research spike before a later go/no-go decision.
+- ml-20260627-002 | MCP Resource Plane Research Spike | knowledge/decisions/architecture.md | Active gate: MCP and FastMCP are approved only as a non-shipping research spike before a later go/no-go decision; ml-adr-0001 defines target ownership, not shipping approval.

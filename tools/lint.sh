@@ -481,7 +481,7 @@ lint_repo() {
   require_contains "$PROJECT_DIR/install.sh" "## Routing Rules" "installer router fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Token Rules" "installer schema fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Approval Rules" "installer read-write fallback"
-  require_contains "$PROJECT_DIR/install.sh" "## Lifecycle Statuses" "installer schema fallback"
+  require_contains "$PROJECT_DIR/install.sh" "## Status Fields" "installer schema fallback"
   require_contains "$PROJECT_DIR/install.sh" "## Index-First Retrieval" "installer commands fallback"
   require_contains "$PROJECT_DIR/install.sh" "literal explicit approval" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "Approval must be literal" "installer read-write fallback"

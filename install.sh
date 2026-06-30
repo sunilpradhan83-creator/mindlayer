@@ -549,12 +549,27 @@ Load this file when the user asks about lifecycle statuses, subdirectory rules, 
 - Treat placeholder scaffolds and local notes as skipped unless relevant or non-placeholder.
 - Warn when memory files are nearing their size budget.
 
-## Lifecycle Statuses
+## Status Fields
+
+status: is a typed field, not one global enum for every file. Interpret values by entry type.
+
+### Record Lifecycle Statuses
 
 - active: current and trusted.
 - experimental: useful but not fully proven.
 - deprecated: superseded but retained for reference.
 - archived: inactive history. Content lives in archive.md. Boot skips archive.md.
+
+### ADR Statuses
+
+- proposed: drafted but not accepted.
+- accepted: approved target architecture or policy.
+- superseded: replaced by a later ADR but retained for reference.
+- rejected: considered and explicitly not adopted.
+
+### Workflow Statuses
+
+SCRIPT and command-owned workflow files may use workflow-specific statuses such as pending, cut-approved, ready, in-progress, done, completed, merged, and dropped. These are valid only inside the workflow type that defines them; do not reuse workflow statuses for stable knowledge records.
 
 ## Subdirectory Rules
 

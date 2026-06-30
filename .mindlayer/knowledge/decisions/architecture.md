@@ -1,5 +1,7 @@
 # Architecture Decisions
 
+Historical decision bundle. The accepted target architecture is `knowledge/decisions/adr-0001-mindlayer-architecture.md`; this file is retained for context and for still-valid local decisions, not as a final architecture summary.
+
 ## V4 Phase 0 Boot Compression Architecture
 
 id: ml-20260512-001
@@ -9,7 +11,7 @@ scope: project
 type: decision
 tags: [v4, boot, compression, per-turn, index, progress, backlog]
 confidence: high
-status: active
+status: superseded
 source: implementation
 
 ### Summary
@@ -29,6 +31,7 @@ Use when changing boot sequence, per-turn modules, index loading, progress/backl
 ### Related
 ml-20260508-001
 ml-20260508-002
+ml-adr-0001
 ml-20260507-007
 
 ## Adapter Freeze + Auto-Detection Architecture
@@ -150,7 +153,7 @@ scope: project
 type: decision
 tags: [global-template, sync, installer, per-turn, memory-system]
 confidence: high
-status: active
+status: superseded
 source: manual
 ### Summary
 When any file in `~/.mindlayer/memory-system/` is updated, `global-template/memory-system/` must be synced in the same session. New users only receive what ships in global-template.
@@ -158,6 +161,7 @@ When any file in `~/.mindlayer/memory-system/` is updated, `global-template/memo
 - Live `~/.mindlayer/memory-system/` is runtime output; `global-template/memory-system/` is what new users install.
 - Divergence creates silent regressions for new installs.
 - Any memory-system change must update live + global-template, run `tools/test.sh`, and commit both together.
+- Superseded as target architecture by `ml-adr-0001`; retained as a transitional rule while the current installer still depends on global runtime markdown and global-template sync.
 
 
 ## Agent-Agnostic Design Principle

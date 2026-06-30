@@ -14,12 +14,27 @@ Load this file when the user asks about lifecycle statuses, subdirectory rules, 
 - Warn when memory files are nearing their size budget, not only after they overflow.
 - When a file nears its limit, prompt for cleanup, merge, compression, or archive before adding more memory.
 
-## Lifecycle Statuses
+## Status Fields
+
+`status:` is a typed field, not one global enum for every file. Interpret values by entry type.
+
+### Record Lifecycle Statuses
 
 - `active`: current and trusted.
 - `experimental`: useful but not fully proven.
 - `deprecated`: superseded but retained for reference.
 - `archived`: inactive history. Content lives in `archive.md` (global or project scope). Index entry remains with `status: archived` and `file: archive.md` so `ml load` can still find it. Boot skips `archive.md`.
+
+### ADR Statuses
+
+- `proposed`: drafted but not accepted.
+- `accepted`: approved target architecture or policy.
+- `superseded`: replaced by a later ADR but retained for reference.
+- `rejected`: considered and explicitly not adopted.
+
+### Workflow Statuses
+
+SCRIPT and command-owned workflow files may use workflow-specific statuses such as `pending`, `cut-approved`, `ready`, `in-progress`, `done`, `completed`, `merged`, and `dropped`. These are valid only inside the workflow type that defines them; do not reuse workflow statuses for stable knowledge records.
 
 ## Subdirectory Rules
 
