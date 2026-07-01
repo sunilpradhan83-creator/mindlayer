@@ -2,38 +2,6 @@
 
 Historical decision bundle. The accepted target architecture is `knowledge/decisions/adr-0001-mindlayer-architecture.md`; this file is retained for context and for still-valid local decisions, not as a final architecture summary.
 
-## V4 Phase 0 Boot Compression Architecture
-
-id: ml-20260512-001
-created: 2026-05-12
-updated: 2026-05-12
-scope: project
-type: decision
-tags: [v4, boot, compression, per-turn, index, progress, backlog]
-confidence: high
-status: superseded
-source: implementation
-
-### Summary
-V4 Phase 0 compresses instruction-only boot weight by splitting per-turn behavior into lazy modules, loading a summary-only project index at boot, and archiving completed progress/backlog history.
-
-### Details
-- `memory-system/per-turn.md` is now the always-loaded core: Token Burned format and Next Step hierarchy only.
-- Conditional per-turn contracts moved to `memory-system/per-turn/`: load announcements, memory candidates, retrieval suggestions, lateral intent, session warnings, and post-write size checks.
-- Boot reads `.mindlayer/index.md` as a summary-only catalog; full metadata lives in `.mindlayer/index-full.md` and loads via `ml load`.
-- `progress.md` keeps only current phase state; completed V1/V2/V3 progress history is archived as `ml-progress-archive-v1v2v3`.
-- `backlog.md` keeps active/planned V4 and deferred work; completed V2/V3 backlog history is archived as `ml-backlog-archive-v2v3`.
-- Track A targets roughly 3,900 boot tokens. Track B, the V4 command runner, is still required for the original roughly 1,200-token goal.
-
-### When to use
-Use when changing boot sequence, per-turn modules, index loading, progress/backlog compression, or planning V4 command-runner work.
-
-### Related
-ml-20260508-001
-ml-20260508-002
-ml-adr-0001
-ml-20260507-007
-
 ## Adapter Freeze + Auto-Detection Architecture
 
 id: ml-20260511-002
@@ -145,25 +113,6 @@ Load when planning the open source release, evaluating security PRs, or onboardi
 
 ---
 
-## Global-Template Sync Rule
-id: ml-20260507-007
-created: 2026-05-07
-updated: 2026-05-07
-scope: project
-type: decision
-tags: [global-template, sync, installer, per-turn, memory-system]
-confidence: high
-status: superseded
-source: manual
-### Summary
-When any file in `~/.mindlayer/memory-system/` is updated, `global-template/memory-system/` must be synced in the same session. New users only receive what ships in global-template.
-### Details
-- Live `~/.mindlayer/memory-system/` is runtime output; `global-template/memory-system/` is what new users install.
-- Divergence creates silent regressions for new installs.
-- Any memory-system change must update live + global-template, run `tools/test.sh`, and commit both together.
-- Superseded as target architecture by `ml-adr-0001`; retained as a transitional rule while the current installer still depends on global runtime markdown and global-template sync.
-
-
 ## Agent-Agnostic Design Principle
 id: ml-20260507-004
 created: 2026-05-07
@@ -238,3 +187,36 @@ ml-20260517-002
 ml-20260507-004
 ml-20260510-002
 ml-20260510-004
+
+## Size-Aware Consolidation Mapping (ADR-0001 Refinement)
+
+id: ml-20260701-002
+created: 2026-07-01
+updated: 2026-07-01
+scope: project
+type: decision
+tags: [adr, migration, layout, work, consolidation]
+confidence: high
+status: active
+source: conversation
+
+### Summary
+Refines ADR-0001's pipeline/ -> work/ mapping: consolidate progress+backlog into a
+single work/current.md only while it stays under the memory line budget; otherwise
+keep backlog as a sibling work/backlog.md.
+
+### Details
+- ADR-0001's consolidation intent is "keep fresh installs small," not "force a mature
+  project's now+later state into one file."
+- ml migrate collapses to one current.md when the projected file stays under the
+  240-line warn threshold; past it, backlog splits to work/backlog.md. Deterministic,
+  avoids re-split churn for growing memory such as MindLayer's own dogfood repo.
+- roadmap always moves to knowledge/roadmap.md; sessions to work/sessions/; archive to
+  top-level archive/. Root index stays pointer-only; router/roadmap rows relocate to
+  knowledge/index.md.
+
+### When to use
+Use when changing ml migrate, the work/ layout, or the memory size budget.
+
+### Related
+ml-adr-0001
