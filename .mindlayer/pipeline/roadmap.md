@@ -2,6 +2,44 @@
 
 Canonical project roadmap for MindLayer. Public `ROADMAP.md` mirrors this file for human readers; `.mindlayer/` remains the source of truth.
 
+## ADR-0001 Migration Execution Plan
+
+id: ml-20260701-001
+created: 2026-07-01
+updated: 2026-07-01
+scope: project
+type: roadmap
+tags: [adr, migration, execution-plan, mcp, sequencing]
+confidence: high
+status: active
+source: conversation
+
+### Summary
+Ordered execution plan for adopting the ADR-0001 target architecture. Combined but
+strictly ordered: freeze the target, make the current control plane consistent, migrate
+in slices, then expose via MCP. Governing principle: MCP is an exposure layer, not a fix
+for unclear architecture — make the architecture deterministic first, then expose it.
+
+### Steps
+- Step 0 (done): commit ADR-0001 + typed-status schema. Freeze the target. Branch
+  `adr-0001-architecture`, commit `c669261`.
+- Step 1 (done): fix the 13 spec-layout failures. Symptom fix for control-plane drift.
+- Step 2 (next): ADR migration foundation, back-compat first per ADR Migration Notes:
+  - 2a: runtime + verification scaffold reading both old and new layouts; no file moves.
+  - 2b: consolidate `pipeline/` -> `work/current.md` (mapping defined in ADR-0001).
+  - 2c: move `project-template/` + `global-template/` -> `seed/project/` + `seed/adapters/`.
+  - 2d: move router behavior from markdown to executable runtime (the drift cure; last).
+- Step 3: read-only, isolated MCP resource spike. Only after runtime boundaries exist.
+- Step 4: MCP tools, only after executable runtime boundaries exist.
+
+### When to use
+Use when sequencing ADR-0001 migration work or deciding whether MCP work may start.
+See `knowledge/decisions/adr-0001-mindlayer-architecture.md` for the target architecture.
+
+### Related
+ml-adr-0001
+ml-20260517-002
+
 ## MindLayer 0.1 Developer Preview Roadmap
 
 id: ml-20260517-002
