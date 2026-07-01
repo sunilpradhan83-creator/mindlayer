@@ -33,7 +33,7 @@ copy_path() {
 
 copy_path ".mindlayer"
 copy_path ".github"
-copy_path "global-template"
+copy_path "seed/adapters"
 copy_path "tools"
 copy_path "install.sh"
 copy_path "AGENTS.md"

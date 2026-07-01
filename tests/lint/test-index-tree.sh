@@ -38,7 +38,7 @@ make_project() {
 
   mkdir -p "$case_dir"
   copy_path "$case_dir" ".github"
-  copy_path "$case_dir" "global-template"
+  copy_path "$case_dir" "seed/adapters"
   copy_path "$case_dir" "tools"
   copy_path "$case_dir" "install.sh"
   copy_path "$case_dir" "AGENTS.md"

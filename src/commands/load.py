@@ -25,7 +25,7 @@ def _source_for(project_root: Path, entry_file: str, source_index: Path | None) 
         return memory_source
 
     if relative.parts and relative.parts[0] == "memory-system":
-        template_source = project_root / "global-template" / relative
+        template_source = project_root / "seed/adapters" / relative
         if template_source.is_file():
             return template_source
         return Path.home() / ".mindlayer" / relative

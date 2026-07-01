@@ -40,21 +40,21 @@ assert_core_per_turn_small() {
 }
 
 assert_module_exists() {
-  [ -f "global-template/memory-system/per-turn/$1.md" ]
+  [ -f "seed/adapters/memory-system/per-turn/$1.md" ]
 }
 
 assert_module_synced() {
   module="$1"
-  cmp -s "$HOME/.mindlayer/memory-system/per-turn/$module.md" "global-template/memory-system/per-turn/$module.md"
+  cmp -s "$HOME/.mindlayer/memory-system/per-turn/$module.md" "seed/adapters/memory-system/per-turn/$module.md"
 }
 
 assert_core_synced() {
-  cmp -s "$HOME/.mindlayer/memory-system/per-turn.md" "global-template/memory-system/per-turn.md"
+  cmp -s "$HOME/.mindlayer/memory-system/per-turn.md" "seed/adapters/memory-system/per-turn.md"
 }
 
 assert_router_has_module_trigger() {
   module="$1"
-  grep -Fq "memory-system/per-turn/$module.md" "global-template/router.md" &&
+  grep -Fq "memory-system/per-turn/$module.md" "seed/adapters/router.md" &&
     grep -Fq "memory-system/per-turn/$module.md" "$HOME/.mindlayer/router.md"
 }
 
@@ -240,9 +240,9 @@ printf "=======================================\n"
 # ===========================================================================
 
 scenario "spec layout — core plus lazy modules"
-check "core per-turn exists with Token Burned contract" assert_core_per_turn_present "global-template/memory-system/per-turn.md"
-check "core per-turn stays small" assert_core_per_turn_small "global-template/memory-system/per-turn.md"
-check "live core synced with global-template" assert_core_synced "global-template/memory-system/per-turn.md"
+check "core per-turn exists with Token Burned contract" assert_core_per_turn_present "seed/adapters/memory-system/per-turn.md"
+check "core per-turn stays small" assert_core_per_turn_small "seed/adapters/memory-system/per-turn.md"
+check "live core synced with seed/adapters" assert_core_synced "seed/adapters/memory-system/per-turn.md"
 
 for module in $MODULES; do
   if assert_module_exists "$module" 2>/dev/null; then

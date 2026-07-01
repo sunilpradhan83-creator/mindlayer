@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-# Guards that Step 2a does NOT ship the target layout early: the shipped project
-# seed stays legacy-shaped, and a project created from it is detected as legacy.
-# The seed -> target layout change is Step 2b, not here.
+# Guards that fresh project seeds use the ADR-0001 target work/ layout.
+# Legacy pipeline/ fixtures remain covered by the migration compatibility tests.
 
 set -u
 
 ROOT_DIR="$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)"
 SANDBOX="${TMPDIR:-/tmp}/mindlayer-fresh-install.$$"
-SEED="$ROOT_DIR/project-template"
+SEED="$ROOT_DIR/seed/project"
 PASS_COUNT=0
 FAIL_COUNT=0
 CURRENT_SCENARIO=""
@@ -30,13 +29,17 @@ detect() {
 printf "MindLayer fresh-install layout guard\n"
 printf "====================================\n"
 
-scenario "shipped seed is still legacy-shaped"
-check "seed has pipeline/progress.md" test -f "$SEED/pipeline/progress.md"
-check "seed has pipeline/backlog.md" test -f "$SEED/pipeline/backlog.md"
-check "seed has no work/current.md" test ! -f "$SEED/work/current.md"
-check "seed has no top-level archive/" test ! -d "$SEED/archive"
+scenario "shipped seed is target-shaped"
+check "seed has work/current.md" test -f "$SEED/work/current.md"
+check "seed has work/index.md" test -f "$SEED/work/index.md"
+check "seed has archive/index.md" test -f "$SEED/archive/index.md"
+check "seed has no pipeline/progress.md" test ! -f "$SEED/pipeline/progress.md"
+check "seed has no pipeline/backlog.md" test ! -f "$SEED/pipeline/backlog.md"
+check "seed has no pipeline/index.md" test ! -f "$SEED/pipeline/index.md"
+check "seed has no pipeline/ dir" test ! -d "$SEED/pipeline"
+check "seed has no archive/archive.md" test ! -f "$SEED/archive/archive.md"
 
-scenario "a project built from the seed detects as legacy"
+scenario "a project built from the seed detects as target"
 mkdir -p "$SANDBOX/home/.mindlayer/memory-system" "$SANDBOX/home/.mindlayer/preferences"
 : > "$SANDBOX/home/.mindlayer/boot.md"
 : > "$SANDBOX/home/.mindlayer/router.md"
@@ -44,7 +47,7 @@ mkdir -p "$SANDBOX/home/.mindlayer/memory-system" "$SANDBOX/home/.mindlayer/pref
 P="$SANDBOX/project"
 mkdir -p "$P/.mindlayer"
 cp -R "$SEED/." "$P/.mindlayer/"
-check "detected as legacy" test "$(detect "$P/.mindlayer")" = "legacy"
+check "detected as target" test "$(detect "$P/.mindlayer")" = "target"
 check "boot exits 0 on fresh seed" sh -c "cd '$P' && HOME='$SANDBOX/home' python3 '$ROOT_DIR/src/ml' boot >/dev/null 2>&1"
 
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"

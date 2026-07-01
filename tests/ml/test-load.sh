@@ -22,12 +22,12 @@ trap cleanup EXIT
 
 mkdir -p \
   "$SANDBOX/project/.mindlayer" \
-  "$SANDBOX/project/global-template/memory-system/per-turn" \
+  "$SANDBOX/project/seed/adapters/memory-system/per-turn" \
   "$SANDBOX/project/.mindlayer/knowledge" \
   "$SANDBOX/project/.mindlayer/knowledge/decisions" \
   "$SANDBOX/project/.mindlayer/pipeline" \
   "$SANDBOX/project/.mindlayer/pipeline/archive" \
-  "$SANDBOX/project/.mindlayer/knowledge/sessions"
+  "$SANDBOX/project/.mindlayer/work/sessions"
 
 # index-full.md — deprecated; must NOT be loaded after story-001 is implemented.
 # ml-full-only has a dedicated file so the old implementation's section lookup succeeds
@@ -85,7 +85,7 @@ cat > "$SANDBOX/project/.mindlayer/knowledge/index.md" <<'EOF'
 
 - ml-project-entry | Project Identity | knowledge/project.md | Project identity entry.
 - ml-command-runner | Command Runner | knowledge/context.md | Read-only ml command runner foundation.
-- ml-post-write-module | Per-Turn Post-Write Module | global-template/memory-system/per-turn/post-write.md | Lazy per-turn contract for checking memory file size after approved writes.
+- ml-post-write-module | Per-Turn Post-Write Module | seed/adapters/memory-system/per-turn/post-write.md | Lazy per-turn contract for checking memory file size after approved writes.
 - ml-knowledge-entry | Knowledge Entry | knowledge/knowledge-entry.md | Entry in knowledge subfolder.
 - ml-title-mismatch | Friendly Title | knowledge/title-mismatch.md | Summary index title differs from file heading.
 - ml-dedup-entry | Dedup First | knowledge/knowledge-entry.md | First occurrence of this id.
@@ -128,7 +128,7 @@ cat > "$SANDBOX/project/.mindlayer/knowledge/project.md" <<'EOF'
 Project identity entry.
 EOF
 
-cat > "$SANDBOX/project/.mindlayer/pipeline/progress.md" <<'EOF'
+cat > "$SANDBOX/project/.mindlayer/work/current.md" <<'EOF'
 # Progress
 
 ## Current Progress
@@ -207,7 +207,7 @@ Archived command runner idea.
 EOF
 
 # Heading matches summary-format title so extract_section succeeds
-cat > "$SANDBOX/project/global-template/memory-system/per-turn/post-write.md" <<'EOF'
+cat > "$SANDBOX/project/seed/adapters/memory-system/per-turn/post-write.md" <<'EOF'
 # Per-Turn Post-Write Module
 
 Load after an approved memory write to a committed MindLayer memory file.
@@ -251,7 +251,7 @@ else
   fail "$CURRENT_SCENARIO: command exits successfully"
 fi
 if assert_contains "$output" "Per-Turn Post-Write Module"; then pass "$CURRENT_SCENARIO: module ranked"; else fail "$CURRENT_SCENARIO: module ranked"; fi
-if assert_contains "$output" "$SANDBOX/project/global-template/memory-system/per-turn/post-write.md"; then pass "$CURRENT_SCENARIO: source resolves outside .mindlayer"; else fail "$CURRENT_SCENARIO: source resolves outside .mindlayer"; fi
+if assert_contains "$output" "$SANDBOX/project/seed/adapters/memory-system/per-turn/post-write.md"; then pass "$CURRENT_SCENARIO: source resolves outside .mindlayer"; else fail "$CURRENT_SCENARIO: source resolves outside .mindlayer"; fi
 if ! grep -Fq "Section not found." "$output"; then pass "$CURRENT_SCENARIO: section found"; else fail "$CURRENT_SCENARIO: section found"; fi
 
 scenario "pointer entry resolves subfolder index"
@@ -292,7 +292,7 @@ else
   fail "$CURRENT_SCENARIO: command exits successfully"
 fi
 if assert_contains "$output" "Current Progress (ml-progress-entry)"; then pass "$CURRENT_SCENARIO: progress entry ranked"; else fail "$CURRENT_SCENARIO: progress entry ranked"; fi
-if assert_contains "$output" "$SANDBOX/project/.mindlayer/pipeline/progress.md"; then pass "$CURRENT_SCENARIO: progress source returned"; else fail "$CURRENT_SCENARIO: progress source returned"; fi
+if assert_contains "$output" "$SANDBOX/project/.mindlayer/work/current.md"; then pass "$CURRENT_SCENARIO: progress source returned"; else fail "$CURRENT_SCENARIO: progress source returned"; fi
 
 scenario "two-level pointer chain resolves"
 output="$SANDBOX/load-chain.out"

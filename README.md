@@ -72,7 +72,7 @@ MindLayer installs a local `ml` command runner plus markdown command specs that 
 - `ml script` — run the SCRIPT lifecycle commands (Signal → Cut → Refine → Implement → Prove → Transfer).
 - `ml onboard` — help populate MindLayer when installing into an existing project.
 
-Command specs live in `~/.mindlayer/memory-system/commands/` after install and ship from [`global-template/memory-system/commands/`](global-template/memory-system/commands/).
+Command specs live in `~/.mindlayer/memory-system/commands/` after install and ship from [`seed/adapters/memory-system/commands/`](seed/adapters/memory-system/commands/).
 
 ## Effective Use
 
@@ -114,10 +114,9 @@ Commit:
 .mindlayer/knowledge/risks.md
 .mindlayer/knowledge/decisions/index.md
 .mindlayer/knowledge/decisions/*.md
-.mindlayer/pipeline/index.md
-.mindlayer/pipeline/progress.md
-.mindlayer/pipeline/backlog.md
-.mindlayer/pipeline/roadmap.md
+.mindlayer/work/index.md
+.mindlayer/work/current.md
+.mindlayer/knowledge/roadmap.md
 ```
 
 Ignore:
@@ -125,7 +124,7 @@ Ignore:
 ```text
 .mindlayer/local.md
 .mindlayer/private/
-.mindlayer/knowledge/sessions/
+.mindlayer/work/sessions/
 .mindlayer/cache/
 .mindlayer/tmp/
 ```

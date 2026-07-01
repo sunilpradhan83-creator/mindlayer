@@ -16,7 +16,7 @@
 6. Check `~/.mindlayer/preferences/personal.md` if available. Load only when it contains substantive user-written preferences; if missing or starter-only, report as skipped.
 7. Always check project `.mindlayer/knowledge/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
 8. If `.mindlayer/knowledge/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
-9. Read only the latest useful progress summary from project `.mindlayer/pipeline/progress.md`.
+9. Read only the latest useful progress summary from project `.mindlayer/work/current.md`.
 10. Do not load empty scaffold files by default.
 11. Do not load `.mindlayer/local.md` by default.
 12. Do not use `README.md` or `docs/` as memory input.
@@ -29,8 +29,8 @@ When initializing inside the MindLayer repo:
 
 - Treat repo `.mindlayer/` as the source of truth for MindLayer product improvement memory.
 - Treat live `~/.mindlayer/` as runtime/install/test output; load it only as needed for current context.
-- Treat `project-template` files as starter placeholders for future users, not product memory.
-- Treat `global-template` as the source for shipped default global behavior.
+- Treat `seed/project` files as starter placeholders for future users, not product memory.
+- Treat `seed/adapters` as the source for shipped default global behavior.
 
 ## Token Discipline
 

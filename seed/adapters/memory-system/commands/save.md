@@ -46,9 +46,9 @@ When content is marked sensitive or private by the user, route to `.mindlayer/pr
 When working inside the MindLayer repo, follow the repo source-of-truth boundaries:
 
 - Do not write product learnings to the live `~/.mindlayer/` folder.
-- Do not write product learnings into `project-template` placeholders.
+- Do not write product learnings into `seed/project` placeholders.
 - Use repo `.mindlayer/` for MindLayer product improvement memory.
-- Use `global-template` only when intentionally changing default global behavior that should ship to MindLayer users.
+- Use `seed/adapters` only when intentionally changing default global behavior that should ship to MindLayer users.
 - Update command specs or adapters when a saved product rule must become operational command behavior.
 
 ## Duplicate Check

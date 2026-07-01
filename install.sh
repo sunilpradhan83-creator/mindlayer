@@ -48,8 +48,8 @@ fi
 GLOBAL_DIR="${HOME}/.mindlayer"
 DATE="$(date +%Y-%m-%d 2>/dev/null || printf 'YYYY-MM-DD')"
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
-GLOBAL_TEMPLATE_DIR="$SCRIPT_DIR/global-template"
-PROJECT_TEMPLATE_DIR="$SCRIPT_DIR/project-template"
+GLOBAL_TEMPLATE_DIR="$SCRIPT_DIR/seed/adapters"
+PROJECT_TEMPLATE_DIR="$SCRIPT_DIR/seed/project"
 
 mkdir_p() {
   mkdir -p "$1"
@@ -275,7 +275,7 @@ Signal variants: "ml save", "remember this", "save this", "add to memory", "capt
 - Cross-project workflows, principles, anti-patterns, and prompt templates belong in ~/.mindlayer/preferences/.
 - Project identity, progress, decisions, context, backlog, and risks belong in project/.mindlayer/.
 - Do not mirror global memory into project/.mindlayer/; read and write it directly from ~/.mindlayer/.
-- Long-term versioned product vision belongs in .mindlayer/pipeline/roadmap.md; near-term tracked tasks belong in .mindlayer/pipeline/backlog.md.
+- Long-term versioned product vision belongs in .mindlayer/knowledge/roadmap.md; near-term tracked tasks belong in .mindlayer/work/current.md.
 - Private, local, session, cache, and temporary material must stay out of committed project memory.
 - When developing MindLayer itself, treat repo .mindlayer/ as the product-memory source of truth and treat live ~/.mindlayer/ as runtime output.
 - When a user installs MindLayer on an existing project, auto-trigger ml onboard on the first project-relevant turn.
@@ -399,7 +399,7 @@ Trigger phrases (invoke immediately):
 
 Session write format:
 ```text
-Session summary ready — say '"'"'save session'"'"' to write knowledge/sessions/YYYY-MM-DD.md.
+Session summary ready — say '"'"'save session'"'"' to write work/sessions/YYYY-MM-DD.md.
 ```'
 
 global_memory_system_commands='# Commands
@@ -423,7 +423,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 
 ## Archive Rules
 
-- archive.md exists at ~/.mindlayer/pipeline/archive/archive.md (global) and .mindlayer/pipeline/archive/archive.md (project).
+- archive.md exists at .mindlayer/archive/archive.md when durable project archive content exists.
 - Boot always skips archive.md. Load it only when ml load explicitly targets archived content.
 - Archived entries keep their full markdown section in archive.md for future reference.
 - Deleted entries are removed from both the source file and the index.
@@ -508,7 +508,7 @@ global_memory_system_commands_init='# ml boot
 6. Check `~/.mindlayer/preferences/personal.md` if available. Load only when it contains substantive user-written preferences; if missing or starter-only, report as skipped.
 7. Always check project `.mindlayer/knowledge/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
 8. If `.mindlayer/knowledge/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
-9. Read only the latest useful progress summary from project `.mindlayer/pipeline/progress.md`.
+9. Read only the latest useful progress summary from project `.mindlayer/work/current.md`.
 10. Do not load empty scaffold files by default.
 11. Do not load `.mindlayer/local.md` by default.
 12. Do not use `README.md` or `docs/` as memory input.
@@ -809,7 +809,7 @@ project_index="# Project Memory Index
 Boot summary. Pointers to subfolder indexes.
 
 - ml-index-ptr-knowledge | Knowledge Index | knowledge/index.md | Index for knowledge/ subfolder
-- ml-index-ptr-pipeline | Pipeline Index | pipeline/index.md | Index for pipeline/ subfolder"
+- ml-index-ptr-work | Work Index | work/index.md | Index for work/ subfolder"
 
 project_template="# Project Memory
 
@@ -838,7 +838,7 @@ When this project context matters.
 
 ### Related"
 
-progress_template="# Progress
+current_template="# Current Work
 
 Current working state: phase, completed work, active work, and next steps.
 
@@ -865,6 +865,29 @@ Current phase and immediate next step.
 
 ### When to use
 Use during MindLayer boot to understand current project state.
+
+### Related
+
+## Future Roadmap
+
+id: ml-backlog-YYYYMMDD-001
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+scope: project
+type: backlog
+tags: []
+confidence: medium
+status: active
+source: manual
+
+### Summary
+Short task or idea.
+
+### Details
+Useful details.
+
+### When to use
+When planning future work.
 
 ### Related"
 
@@ -902,15 +925,14 @@ decision_index_template="# Decisions Index
 knowledge_index_template="# Knowledge Index
 
 - ml-index-ptr-decisions | Decisions Index | knowledge/decisions/index.md | Index for decisions/ subfolder
-- ml-project-YYYYMMDD-001 | Project starter context | knowledge/project.md | Starter project context entry.
-- ml-context-YYYYMMDD-001 | Project context | knowledge/context.md | Starter project context entry.
-- ml-risk-YYYYMMDD-001 | Project risk | knowledge/risks.md | Starter project risk entry."
+- ml-project-YYYYMMDD-001 | Project starter context | knowledge/project.md | Starter project context entry."
 
-pipeline_index_template="# Pipeline Index
+work_index_template="# Work Index
 
-- ml-progress-YYYYMMDD-001 | Project progress | pipeline/progress.md | Starter project progress entry.
-- ml-backlog-YYYYMMDD-001 | Project backlog | pipeline/backlog.md | Starter project backlog entry.
-- ml-roadmap-YYYYMMDD-001 | Project Roadmap | pipeline/roadmap.md | Long-term versioned vision."
+- ml-progress-YYYYMMDD-001 | Current State | work/current.md | Starter project progress entry.
+- ml-backlog-YYYYMMDD-001 | Future Roadmap | work/current.md | Starter backlog entry."
+
+archive_index_template="# Archive Index"
 
 context_template="# Context
 
@@ -1201,17 +1223,13 @@ install_project_memory() {
   write_template_if_missing "$pmem/router.md" "$PROJECT_TEMPLATE_DIR/router.md" ""
   write_template_if_missing "$pmem/knowledge/project.md" "$PROJECT_TEMPLATE_DIR/knowledge/project.md" "$project_template"
   write_template_if_missing "$pmem/knowledge/index.md" "$PROJECT_TEMPLATE_DIR/knowledge/index.md" "$knowledge_index_template"
-  write_template_if_missing "$pmem/pipeline/progress.md" "$PROJECT_TEMPLATE_DIR/pipeline/progress.md" "$progress_template"
-  write_template_if_missing "$pmem/pipeline/index.md" "$PROJECT_TEMPLATE_DIR/pipeline/index.md" "$pipeline_index_template"
   write_template_if_missing "$pmem/knowledge/decisions/index.md" "$PROJECT_TEMPLATE_DIR/knowledge/decisions/index.md" "$decision_index_template"
-  write_template_if_missing "$pmem/knowledge/context.md" "$PROJECT_TEMPLATE_DIR/knowledge/context.md" "$context_template"
-  write_template_if_missing "$pmem/pipeline/backlog.md" "$PROJECT_TEMPLATE_DIR/pipeline/backlog.md" "$backlog_template"
-  write_template_if_missing "$pmem/pipeline/roadmap.md" "$PROJECT_TEMPLATE_DIR/pipeline/roadmap.md" "$roadmap_template"
-  write_template_if_missing "$pmem/knowledge/risks.md" "$PROJECT_TEMPLATE_DIR/knowledge/risks.md" "$risk_template"
+  write_template_if_missing "$pmem/work/current.md" "$PROJECT_TEMPLATE_DIR/work/current.md" "$current_template"
+  write_template_if_missing "$pmem/work/index.md" "$PROJECT_TEMPLATE_DIR/work/index.md" "$work_index_template"
+  write_template_if_missing "$pmem/archive/index.md" "$PROJECT_TEMPLATE_DIR/archive/index.md" "$archive_index_template"
   write_template_if_missing "$pmem/index.md" "$PROJECT_TEMPLATE_DIR/index.md" "$project_index"
-  write_template_if_missing "$pmem/local.md" "$PROJECT_TEMPLATE_DIR/local.md" "$local_template"
 
-  rmdir "$pmem/private" "$pmem/knowledge/sessions" "$pmem/cache" "$pmem/tmp" 2>/dev/null || true
+  rmdir "$pmem/private" "$pmem/work/sessions" "$pmem/cache" "$pmem/tmp" 2>/dev/null || true
 }
 
 install_adapters() {
@@ -1408,7 +1426,7 @@ install_gitignore() {
   fi
   append_gitignore_rule "$file" ".mindlayer/local.md"
   append_gitignore_rule "$file" ".mindlayer/private/"
-  append_gitignore_rule "$file" ".mindlayer/knowledge/sessions/"
+  append_gitignore_rule "$file" ".mindlayer/work/sessions/"
   append_gitignore_rule "$file" ".mindlayer/cache/"
   append_gitignore_rule "$file" ".mindlayer/tmp/"
   append_gitignore_rule "$file" ".mindlayer/adapters.lock"

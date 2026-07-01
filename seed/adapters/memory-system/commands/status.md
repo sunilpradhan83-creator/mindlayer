@@ -33,10 +33,10 @@ When a file is near or over budget, proactively tell the user before the next me
 
 ```text
 .mindlayer/knowledge/project.md
-.mindlayer/pipeline/progress.md
+.mindlayer/work/current.md
 .mindlayer/knowledge/decisions.md
 .mindlayer/knowledge/context.md
-.mindlayer/pipeline/backlog.md
+.mindlayer/work/current.md
 .mindlayer/knowledge/risks.md
 .mindlayer/index.md
 .mindlayer/local.md
@@ -47,7 +47,7 @@ When a file is near or over budget, proactively tell the user before the next me
 ```text
 .mindlayer/local.md
 .mindlayer/private/
-.mindlayer/knowledge/sessions/
+.mindlayer/work/sessions/
 .mindlayer/cache/
 .mindlayer/tmp/
 ```
@@ -57,7 +57,7 @@ When a file is near or over budget, proactively tell the user before the next me
 When subdirectories exist, inspect:
 
 - `tmp/`: warn if files exist with a modification date older than the current session — stale scratch from a prior session. Suggest clearing with `ml clean`.
-- `knowledge/sessions/`: report count of session files and most recent date. No action needed.
+- `work/sessions/`: report count of session files and most recent date. No action needed.
 - `cache/`: report count and most recent file. Flag entries older than 7 days as potentially stale.
 - `private/`: acknowledge existence only. Do not read or surface content.
 

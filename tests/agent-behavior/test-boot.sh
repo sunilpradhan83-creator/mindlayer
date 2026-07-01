@@ -87,13 +87,13 @@ assert_boot_index_pointer_only() {
 }
 
 assert_boot_router_avoids_index_full() {
-  grep -Fq 'Read project `.mindlayer/index.md` — pointer-only boot catalog.' "global-template/boot.md" &&
-    grep -Fq 'index-full.md` is deprecated' "global-template/boot.md"
+  grep -Fq 'Read project `.mindlayer/index.md` — pointer-only boot catalog.' "seed/adapters/boot.md" &&
+    grep -Fq 'index-full.md` is deprecated' "seed/adapters/boot.md"
 }
 
 assert_load_router_mentions_index_tree() {
-  grep -Fq 'project `.mindlayer/index.md` tree' "global-template/router.md" &&
-    grep -Fq 'Memory load' "global-template/router.md"
+  grep -Fq 'project `.mindlayer/index.md` tree' "seed/adapters/router.md" &&
+    grep -Fq 'Memory load' "seed/adapters/router.md"
 }
 
 assert_invalid_receipt() {
@@ -170,7 +170,7 @@ MindLayer context loaded.
 
 Loaded:
 - Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, `~/.mindlayer/preferences/personal.md`, `~/.mindlayer/index.md`
-- Project: `.mindlayer/index.md`, `.mindlayer/knowledge/project.md`, latest `.mindlayer/pipeline/progress.md`
+- Project: `.mindlayer/index.md`, `.mindlayer/knowledge/project.md`, latest `.mindlayer/work/current.md`
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources

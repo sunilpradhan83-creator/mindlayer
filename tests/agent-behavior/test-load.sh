@@ -5,7 +5,7 @@
 #   1. ml load is the primary command and ml retrieve is an alias
 #   2. ranked matches include score and reason
 #   3. title/tag/importance/recency/archive behavior is deterministic
-#   4. live/global-template load specs stay synced
+#   4. live/seed/adapters load specs stay synced
 
 set -u
 
@@ -27,7 +27,7 @@ assert_load_primary_command() {
 }
 
 assert_no_template_retrieve_spec() {
-  [ ! -e "global-template/memory-system/commands/retrieve.md" ]
+  [ ! -e "seed/adapters/memory-system/commands/retrieve.md" ]
 }
 
 assert_ranked_matches_present() {
@@ -88,7 +88,7 @@ printf "MindLayer Ranked Load Contracts\n"
 printf "===============================\n"
 
 scenario "command naming — ml load primary, retrieve alias"
-check "load.md declares primary command and alias" assert_load_primary_command "global-template/memory-system/commands/load.md"
+check "load.md declares primary command and alias" assert_load_primary_command "seed/adapters/memory-system/commands/load.md"
 if assert_no_template_retrieve_spec 2>/dev/null; then
   pass "$CURRENT_SCENARIO: retrieve.md removed from template commands"
 else
@@ -171,9 +171,9 @@ EOF
 
 check "archived match present and downranked when requested" assert_archived_present_downranked "$f"
 
-scenario "spec sync — live and global-template load specs match"
+scenario "spec sync — live and seed/adapters load specs match"
 if [ -f "$HOME/.mindlayer/memory-system/commands/load.md" ]; then
-  check2 "live load synced with global-template" assert_files_match "$HOME/.mindlayer/memory-system/commands/load.md" "global-template/memory-system/commands/load.md"
+  check2 "live load synced with seed/adapters" assert_files_match "$HOME/.mindlayer/memory-system/commands/load.md" "seed/adapters/memory-system/commands/load.md"
 fi
 
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"

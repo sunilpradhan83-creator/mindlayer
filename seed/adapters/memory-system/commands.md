@@ -21,7 +21,7 @@ Load this file when the user invokes any ml * command. Then load the spec file f
 
 ## Archive Rules
 
-- `archive.md` exists at `~/.mindlayer/pipeline/archive/archive.md` (global) and `.mindlayer/pipeline/archive/archive.md` (project).
+- `archive.md` exists at `.mindlayer/archive/archive.md` when durable project archive content exists.
 - Boot always skips `archive.md`. Load it only when `ml load` explicitly targets archived content.
 - Archived entries keep their full markdown section in `archive.md` for future reference.
 - Deleted entries are removed from both the source file and the index.

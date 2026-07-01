@@ -204,8 +204,8 @@ record_target_path() {
     printf "%s\n" "$PROJECT_DIR/$file"
     return
   fi
-  if [ -f "$PROJECT_DIR/global-template/$file" ]; then
-    printf "%s\n" "$PROJECT_DIR/global-template/$file"
+  if [ -f "$PROJECT_DIR/seed/adapters/$file" ]; then
+    printf "%s\n" "$PROJECT_DIR/seed/adapters/$file"
     return
   fi
   if [ -f "$HOME/.mindlayer/$file" ]; then
@@ -392,7 +392,7 @@ lint_repo() {
   # W5 ignorable paths committed to git
   if [ -d "$PROJECT_DIR/.git" ] && command -v git >/dev/null 2>&1; then
     tracked=$(cd "$PROJECT_DIR" && git ls-files .mindlayer 2>/dev/null || true)
-    for path in ".mindlayer/local.md" ".mindlayer/private/" ".mindlayer/knowledge/sessions/" ".mindlayer/cache/" ".mindlayer/tmp/"; do
+    for path in ".mindlayer/local.md" ".mindlayer/private/" ".mindlayer/work/sessions/" ".mindlayer/cache/" ".mindlayer/tmp/"; do
       hit=$(printf "%s\n" "$tracked" | grep -E "^${path}" || true)
       if [ -n "$hit" ]; then
         warn "[W5] git is tracking '$path' — should be gitignored"
@@ -400,13 +400,13 @@ lint_repo() {
     done
   fi
 
-  require_file "$PROJECT_DIR/global-template/memory-system/templates/AGENTS.md" "canonical AGENTS.md template"
-  require_file "$PROJECT_DIR/global-template/memory-system/templates/CLAUDE.md" "canonical CLAUDE.md template"
-  require_file "$PROJECT_DIR/global-template/memory-system/templates/copilot-instructions.md" "canonical Copilot template"
-  require_file "$PROJECT_DIR/global-template/memory-system/templates/GEMINI.md" "canonical Gemini template"
-  require_file "$PROJECT_DIR/global-template/memory-system/templates/cursor-mindlayer.md" "canonical Cursor template"
-  require_file "$PROJECT_DIR/global-template/memory-system/templates/windsurf-mindlayer.md" "canonical Windsurf template"
-  require_file "$PROJECT_DIR/global-template/memory-system/hooks/claude-user-prompt-submit.sh" "Claude UserPromptSubmit hook"
+  require_file "$PROJECT_DIR/seed/adapters/memory-system/templates/AGENTS.md" "canonical AGENTS.md template"
+  require_file "$PROJECT_DIR/seed/adapters/memory-system/templates/CLAUDE.md" "canonical CLAUDE.md template"
+  require_file "$PROJECT_DIR/seed/adapters/memory-system/templates/copilot-instructions.md" "canonical Copilot template"
+  require_file "$PROJECT_DIR/seed/adapters/memory-system/templates/GEMINI.md" "canonical Gemini template"
+  require_file "$PROJECT_DIR/seed/adapters/memory-system/templates/cursor-mindlayer.md" "canonical Cursor template"
+  require_file "$PROJECT_DIR/seed/adapters/memory-system/templates/windsurf-mindlayer.md" "canonical Windsurf template"
+  require_file "$PROJECT_DIR/seed/adapters/memory-system/hooks/claude-user-prompt-submit.sh" "Claude UserPromptSubmit hook"
 
   # E7 source-boundary rules
   # Behavior rules live in memory-system/ subfiles; adapters are thin pointers.
@@ -421,41 +421,41 @@ lint_repo() {
     require_not_contains "$adapter" "<!-- mindlayer:end -->" "$adapter"
   done
 
-  require_same_file "$PROJECT_DIR/AGENTS.md" "$PROJECT_DIR/global-template/memory-system/templates/AGENTS.md" "AGENTS.md"
-  require_same_file "$PROJECT_DIR/CLAUDE.md" "$PROJECT_DIR/global-template/memory-system/templates/CLAUDE.md" "CLAUDE.md"
-  require_same_file "$PROJECT_DIR/.github/copilot-instructions.md" "$PROJECT_DIR/global-template/memory-system/templates/copilot-instructions.md" "Copilot adapter"
-  [ -f "$PROJECT_DIR/GEMINI.md" ] && require_same_file "$PROJECT_DIR/GEMINI.md" "$PROJECT_DIR/global-template/memory-system/templates/GEMINI.md" "Gemini adapter"
-  [ -f "$PROJECT_DIR/.cursor/rules/mindlayer.md" ] && require_same_file "$PROJECT_DIR/.cursor/rules/mindlayer.md" "$PROJECT_DIR/global-template/memory-system/templates/cursor-mindlayer.md" "Cursor adapter"
-  [ -f "$PROJECT_DIR/.windsurf/rules/mindlayer.md" ] && require_same_file "$PROJECT_DIR/.windsurf/rules/mindlayer.md" "$PROJECT_DIR/global-template/memory-system/templates/windsurf-mindlayer.md" "Windsurf adapter"
+  require_same_file "$PROJECT_DIR/AGENTS.md" "$PROJECT_DIR/seed/adapters/memory-system/templates/AGENTS.md" "AGENTS.md"
+  require_same_file "$PROJECT_DIR/CLAUDE.md" "$PROJECT_DIR/seed/adapters/memory-system/templates/CLAUDE.md" "CLAUDE.md"
+  require_same_file "$PROJECT_DIR/.github/copilot-instructions.md" "$PROJECT_DIR/seed/adapters/memory-system/templates/copilot-instructions.md" "Copilot adapter"
+  [ -f "$PROJECT_DIR/GEMINI.md" ] && require_same_file "$PROJECT_DIR/GEMINI.md" "$PROJECT_DIR/seed/adapters/memory-system/templates/GEMINI.md" "Gemini adapter"
+  [ -f "$PROJECT_DIR/.cursor/rules/mindlayer.md" ] && require_same_file "$PROJECT_DIR/.cursor/rules/mindlayer.md" "$PROJECT_DIR/seed/adapters/memory-system/templates/cursor-mindlayer.md" "Cursor adapter"
+  [ -f "$PROJECT_DIR/.windsurf/rules/mindlayer.md" ] && require_same_file "$PROJECT_DIR/.windsurf/rules/mindlayer.md" "$PROJECT_DIR/seed/adapters/memory-system/templates/windsurf-mindlayer.md" "Windsurf adapter"
 
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Read `~/.mindlayer/boot.md` first' "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Do not use `README.md` or `docs/` as memory input.' "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "not memory stores" "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Go outside MindLayer memory only when necessary" "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" 'Always check project `.mindlayer/knowledge/project.md`' "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "low importance or starter-like" "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Automatic Boot Contract" "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/init.md" "Approximate context share by source" "ml init command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/save.md" "pending destination, action, duplicate check, and confidence" "ml save command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/status.md" "pending approvals" "ml status command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/status.md" "next useful action" "ml status command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/status.md" "Per-File Health" "ml status command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/status.md" "OK | WARN | CRITICAL" "ml status command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" 'Read `~/.mindlayer/boot.md` first' "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" 'Do not use `README.md` or `docs/` as memory input.' "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" "not memory stores" "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" "Go outside MindLayer memory only when necessary" "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" 'Always check project `.mindlayer/knowledge/project.md`' "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" "low importance or starter-like" "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" "Automatic Boot Contract" "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" "Approximate context share by source" "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/save.md" "pending destination, action, duplicate check, and confidence" "ml save command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/status.md" "pending approvals" "ml status command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/status.md" "next useful action" "ml status command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/status.md" "Per-File Health" "ml status command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/status.md" "OK | WARN | CRITICAL" "ml status command"
 
   # Global template — rules split across memory-system/ subfiles
-  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input' "global read-write template"
-  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "not durable memory stores or retrieval sources" "global read-write template"
-  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "Go outside MindLayer memory only when necessary" "global read-write template"
-  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "Approval must be literal" "global read-write template"
-  require_contains "$PROJECT_DIR/global-template/memory-system/read-write.md" "literal explicit approval" "global read-write template"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/session.md" "## Session Continuity Behavior" "global session command"
-  require_contains "$PROJECT_DIR/global-template/memory-system/commands/session.md" "pending memory-write approvals" "global session command"
-  require_contains "$PROJECT_DIR/global-template/boot.md" "first project-relevant request" "global boot template"
-  require_contains "$PROJECT_DIR/global-template/boot.md" "approximate context share by source" "global boot template"
-  require_contains "$PROJECT_DIR/global-template/boot.md" 'check project `.mindlayer/knowledge/project.md`' "global boot template"
-  require_contains "$PROJECT_DIR/global-template/boot.md" "## Adapter Guard" "global boot template"
-  require_contains "$PROJECT_DIR/global-template/boot.md" ".mindlayer/adapters.lock" "global boot template"
-  require_contains "$PROJECT_DIR/global-template/boot.md" "Never discard user-added adapter content" "global boot template"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input' "global read-write template"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "not durable memory stores or retrieval sources" "global read-write template"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "Go outside MindLayer memory only when necessary" "global read-write template"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "Approval must be literal" "global read-write template"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "literal explicit approval" "global read-write template"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/session.md" "## Session Continuity Behavior" "global session command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/session.md" "pending memory-write approvals" "global session command"
+  require_contains "$PROJECT_DIR/seed/adapters/boot.md" "first project-relevant request" "global boot template"
+  require_contains "$PROJECT_DIR/seed/adapters/boot.md" "approximate context share by source" "global boot template"
+  require_contains "$PROJECT_DIR/seed/adapters/boot.md" 'check project `.mindlayer/knowledge/project.md`' "global boot template"
+  require_contains "$PROJECT_DIR/seed/adapters/boot.md" "## Adapter Guard" "global boot template"
+  require_contains "$PROJECT_DIR/seed/adapters/boot.md" ".mindlayer/adapters.lock" "global boot template"
+  require_contains "$PROJECT_DIR/seed/adapters/boot.md" "Never discard user-added adapter content" "global boot template"
 
   # README — public docs must match the current CLI runtime and adapter model.
   require_contains "$PROJECT_DIR/README.md" 'local `ml` command runner' "README"
@@ -471,8 +471,8 @@ lint_repo() {
   require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/AGENTS.md" "installer adapter templates"
   require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/CLAUDE.md" "installer adapter templates"
   require_contains "$PROJECT_DIR/install.sh" "claude-user-prompt-submit.sh" "installer Claude hook"
-  require_contains "$PROJECT_DIR/global-template/memory-system/hooks/claude-user-prompt-submit.sh" "UserPromptSubmit" "Claude UserPromptSubmit hook"
-  require_contains "$PROJECT_DIR/global-template/memory-system/hooks/claude-user-prompt-submit.sh" "Token Burned" "Claude UserPromptSubmit hook"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/hooks/claude-user-prompt-submit.sh" "UserPromptSubmit" "Claude UserPromptSubmit hook"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/hooks/claude-user-prompt-submit.sh" "Token Burned" "Claude UserPromptSubmit hook"
   require_contains "$PROJECT_DIR/install.sh" ".mindlayer/adapters.lock" "installer adapter lock"
   require_contains "$PROJECT_DIR/install.sh" "sha256_file" "installer adapter lock"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer read-write fallback"

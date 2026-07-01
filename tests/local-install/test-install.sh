@@ -210,8 +210,11 @@ check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'Do n
 check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'always check project `.mindlayer/knowledge/project.md`'
 check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" "explicit approval"
 
-for file in router.md knowledge/project.md knowledge/index.md pipeline/progress.md pipeline/index.md knowledge/decisions/index.md knowledge/context.md pipeline/backlog.md pipeline/roadmap.md knowledge/risks.md index.md local.md; do
+for file in router.md knowledge/project.md knowledge/index.md knowledge/decisions/index.md work/current.md work/index.md archive/index.md index.md; do
   check assert_file_exists "$fresh_project/.mindlayer/$file"
+done
+for file in pipeline pipeline/progress.md pipeline/index.md pipeline/backlog.md pipeline/roadmap.md knowledge/context.md knowledge/risks.md local.md archive/archive.md; do
+  check assert_not_exists "$fresh_project/.mindlayer/$file"
 done
 
 check assert_file_exists "$fresh_project/AGENTS.md"
@@ -409,12 +412,12 @@ Custom global preference sentinel.
 EOF
 
 mkdir -p "$existing_project/.cursor/rules" "$existing_project/.windsurf/rules"
-cp "$ROOT_DIR/global-template/memory-system/templates/AGENTS.md" "$existing_project/AGENTS.md"
-cp "$ROOT_DIR/global-template/memory-system/templates/CLAUDE.md" "$existing_project/CLAUDE.md"
-cp "$ROOT_DIR/global-template/memory-system/templates/copilot-instructions.md" "$existing_project/.github/copilot-instructions.md"
-cp "$ROOT_DIR/global-template/memory-system/templates/GEMINI.md" "$existing_project/GEMINI.md"
-cp "$ROOT_DIR/global-template/memory-system/templates/cursor-mindlayer.md" "$existing_project/.cursor/rules/mindlayer.md"
-cp "$ROOT_DIR/global-template/memory-system/templates/windsurf-mindlayer.md" "$existing_project/.windsurf/rules/mindlayer.md"
+cp "$ROOT_DIR/seed/adapters/memory-system/templates/AGENTS.md" "$existing_project/AGENTS.md"
+cp "$ROOT_DIR/seed/adapters/memory-system/templates/CLAUDE.md" "$existing_project/CLAUDE.md"
+cp "$ROOT_DIR/seed/adapters/memory-system/templates/copilot-instructions.md" "$existing_project/.github/copilot-instructions.md"
+cp "$ROOT_DIR/seed/adapters/memory-system/templates/GEMINI.md" "$existing_project/GEMINI.md"
+cp "$ROOT_DIR/seed/adapters/memory-system/templates/cursor-mindlayer.md" "$existing_project/.cursor/rules/mindlayer.md"
+cp "$ROOT_DIR/seed/adapters/memory-system/templates/windsurf-mindlayer.md" "$existing_project/.windsurf/rules/mindlayer.md"
 
 cat > "$existing_project/.gitignore" <<'EOF'
 node_modules/

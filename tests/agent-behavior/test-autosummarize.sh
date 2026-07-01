@@ -5,7 +5,7 @@
 #   1. Per-turn post-write size suggestions
 #   2. ml status detailed cleanup suggestions
 #   3. duplicate-warning avoidance
-#   4. live/global-template spec sync
+#   4. live/seed/adapters spec sync
 #
 # Deterministic — no live model required. Tests output shape of simulated
 # agent responses against per-turn.md and status.md contract definitions.
@@ -169,17 +169,17 @@ check "status does not duplicate per-turn size warning" assert_status_no_per_tur
 check "cleanup options mentioned" assert_mentions_cleanup_options "$f"
 
 scenario "specs — thresholds and cleanup order documented"
-check "global-template post-write thresholds" assert_specs_define_thresholds "global-template/memory-system/per-turn/post-write.md"
-check "global-template status thresholds" assert_specs_define_thresholds "global-template/memory-system/commands/status.md"
-check "global-template post-write cleanup options" assert_specs_prefer_cleanup_order "global-template/memory-system/per-turn/post-write.md"
-check "global-template status cleanup options" assert_specs_prefer_cleanup_order "global-template/memory-system/commands/status.md"
+check "seed/adapters post-write thresholds" assert_specs_define_thresholds "seed/adapters/memory-system/per-turn/post-write.md"
+check "seed/adapters status thresholds" assert_specs_define_thresholds "seed/adapters/memory-system/commands/status.md"
+check "seed/adapters post-write cleanup options" assert_specs_prefer_cleanup_order "seed/adapters/memory-system/per-turn/post-write.md"
+check "seed/adapters status cleanup options" assert_specs_prefer_cleanup_order "seed/adapters/memory-system/commands/status.md"
 
 if [ -f "$HOME/.mindlayer/memory-system/per-turn/post-write.md" ]; then
-  check2 "live post-write synced with global-template" assert_files_match "$HOME/.mindlayer/memory-system/per-turn/post-write.md" "global-template/memory-system/per-turn/post-write.md"
+  check2 "live post-write synced with seed/adapters" assert_files_match "$HOME/.mindlayer/memory-system/per-turn/post-write.md" "seed/adapters/memory-system/per-turn/post-write.md"
 fi
 
 if [ -f "$HOME/.mindlayer/memory-system/commands/status.md" ]; then
-  check2 "live status synced with global-template" assert_files_match "$HOME/.mindlayer/memory-system/commands/status.md" "global-template/memory-system/commands/status.md"
+  check2 "live status synced with seed/adapters" assert_files_match "$HOME/.mindlayer/memory-system/commands/status.md" "seed/adapters/memory-system/commands/status.md"
 fi
 
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
