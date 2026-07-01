@@ -17,6 +17,12 @@ bash "$ROOT_DIR/verify/lint/test-source-boundaries.sh"
 printf "\n3. Recursive index-tree lint test\n"
 bash "$ROOT_DIR/verify/lint/test-index-tree.sh"
 
+printf "\n3b. Adapter template consistency lint test\n"
+bash "$ROOT_DIR/verify/lint/test-adapter-consistency.sh"
+
+printf "\n3c. Cross-agent skill consistency lint test\n"
+bash "$ROOT_DIR/verify/lint/test-skill-consistency.sh"
+
 printf "\n4. Local install readiness\n"
 bash "$ROOT_DIR/verify/local-install/test-install.sh"
 

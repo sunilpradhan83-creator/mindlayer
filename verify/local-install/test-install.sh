@@ -237,8 +237,8 @@ check assert_contains "$fresh_project/AGENTS.md" "Token Burned:"
 check assert_contains "$fresh_project/AGENTS.md" "Last turn: ~N words, ~N est. tokens"
 check assert_contains "$fresh_project/AGENTS.md" "**Next Step**"
 check assert_contains "$fresh_project/CLAUDE.md" "Do not duplicate memory into"
-check assert_contains "$fresh_project/CLAUDE.md" 'If the user invokes `ml boot` or `ml init`'
-check assert_contains "$fresh_project/CLAUDE.md" 'Do not ask what `ml boot` means'
+check assert_contains "$fresh_project/CLAUDE.md" 'Do not use `README.md` or `docs/` as memory input.'
+check assert_not_contains "$fresh_project/CLAUDE.md" 'Do not ask what `ml boot` means'
 check assert_contains "$fresh_project/CLAUDE.md" "explicit approval"
 check assert_contains "$fresh_project/.claude/settings.local.json" "UserPromptSubmit"
 check assert_contains "$fresh_project/.claude/settings.local.json" "claude-user-prompt-submit.sh"
