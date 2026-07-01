@@ -14,3 +14,7 @@
 - ml-per-turn-20260512-lateral-intent | Lateral Module | memory-system/per-turn/lateral-intent.md | Backlog/roadmap nudges.
 - ml-per-turn-20260512-session-warning | Session Module | memory-system/per-turn/session-warning.md | Context warnings.
 - ml-per-turn-20260512-post-write | Post-Write Module | memory-system/per-turn/post-write.md | Size checks.
+- ml-20260701-001 | ADR-0001 Migration Execution Plan | knowledge/roadmap.md | Ordered Step 0-4 plan; MCP is exposure, not an architecture fix.
+- ml-20260505-003 | Product Roadmap | knowledge/roadmap.md | 0.1 Developer Preview -> 0.2 Reliability -> 0.3 Cross-Agent Proof -> 1.0 Stable.
+- ml-20260627-001 | MCP Micro-Kernel Track | knowledge/roadmap.md | Non-shipping MCP Resource Plane research spike; full MCP runtime waits for go/no-go and no earlier than 1.1.
+- ml-20260506-002 | Project Router | router.md | Project conditional load triggers.

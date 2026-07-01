@@ -2,6 +2,7 @@
 .mindlayer/local.md
 .mindlayer/private/
 .mindlayer/knowledge/sessions/
+.mindlayer/work/sessions/
 .mindlayer/cache/
 .mindlayer/tmp/
 .mindlayer/adapters.lock

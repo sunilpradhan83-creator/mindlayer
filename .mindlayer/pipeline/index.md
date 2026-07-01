@@ -1,8 +1,0 @@
-# Pipeline Index
-
-- ml-20260430-005 | Future Roadmap | backlog.md | Active 0.1 planning and SCRIPT v0.1 enforcement follow-up.
-- ml-20260505-006 | Current Phase | progress.md | ADR-0001 frozen + 13 spec-layout fixed; next is Step 2 ADR migration foundation.
-- ml-20260701-001 | ADR-0001 Migration Execution Plan | roadmap.md | Ordered Step 0-4 plan; MCP is exposure, not an architecture fix.
-- ml-20260505-003 | Product Roadmap | roadmap.md | 0.1 Developer Preview -> 0.2 Reliability -> 0.3 Cross-Agent Proof -> 1.0 Stable.
-- ml-20260627-001 | MCP Micro-Kernel Track | roadmap.md | Non-shipping MCP Resource Plane research spike; full MCP runtime waits for go/no-go and no earlier than 1.1.
-- ml-20260506-002 | Project Router | router.md | Project conditional load triggers.
