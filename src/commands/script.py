@@ -7,7 +7,8 @@ import subprocess
 from datetime import date
 from pathlib import Path
 
-from ._paths import pipeline_dir, read_text
+from . import _layout
+from ._paths import read_text
 
 
 # ---------------------------------------------------------------------------
@@ -124,12 +125,12 @@ def _story_status_counts(index_path: Path) -> tuple[int, int, int]:
 
 def status(project_root: Path) -> int:
     memory_dir = project_root / ".mindlayer"
-    pipeline_dir_path = pipeline_dir(memory_dir)
+    pipeline_dir_path = _layout.work_dir(memory_dir)
 
     print("SCRIPT Status:")
     if not pipeline_dir_path.is_dir():
         print("- SCRIPT is not initialized yet.")
-        print("- Pipeline: missing .mindlayer/pipeline/")
+        print("- Working area: missing .mindlayer/work/ (or legacy .mindlayer/pipeline/)")
         print("- Next: run a future `ml script signal` or migration command to begin.")
         print("Approval needed:")
         print("None")
@@ -137,8 +138,8 @@ def status(project_root: Path) -> int:
 
     pending_signals, merged_signals = _signal_status_counts(pipeline_dir_path)
     ready, in_progress, done = _story_status_counts(pipeline_dir_path / "stories" / "index.md")
-    backlog_exists = (pipeline_dir_path / "backlog.md").is_file()
-    roadmap_exists = (pipeline_dir_path / "roadmap.md").is_file()
+    backlog_exists = (pipeline_dir_path / "backlog.md").is_file() or _layout.resolve_memory_file(memory_dir, "backlog.md").is_file()
+    roadmap_exists = _layout.resolve_memory_file(memory_dir, "roadmap.md").is_file()
 
     if pending_signals == 0 and ready == 0 and in_progress == 0 and done == 0 and not backlog_exists:
         print("- No active SCRIPT work.")
@@ -215,7 +216,7 @@ def _write_signal_index(signals_dir: Path, records: list[dict[str, str]]) -> Non
 
 def signal(project_root: Path, title: str, body: str) -> int:
     memory_dir = project_root / ".mindlayer"
-    pd = pipeline_dir(memory_dir)
+    pd = _layout.work_dir(memory_dir)
     _ensure_dir(pd)
 
     signals_dir = pd / "signals"
@@ -312,7 +313,7 @@ def _archive_signal_record(
         return
 
     _update_folder_signal_status(source_path, new_status)
-    archive_signals_dir = pipeline_dir_path / "archive" / "signals"
+    archive_signals_dir = _layout.archive_dir(pipeline_dir_path.parent) / "signals"
     _ensure_dir(archive_signals_dir)
     dest = archive_signals_dir / source_path.name
     source_path.replace(dest)
@@ -328,7 +329,7 @@ def cut(
     approve: bool = False,
 ) -> int:
     memory_dir = project_root / ".mindlayer"
-    pd = pipeline_dir(memory_dir)
+    pd = _layout.work_dir(memory_dir)
 
     result = _find_signal_record(pd, sig_id)
     if result is None:
@@ -336,7 +337,11 @@ def cut(
         return 1
     title = result.get("title", sig_id)
 
-    target_file = "roadmap.md" if route == "roadmap" else "backlog.md"
+    # Roadmap moved to knowledge/ under ADR-0001; backlog stays in the work area.
+    if route == "roadmap":
+        target_path_resolved = _layout.resolve_memory_file(memory_dir, "roadmap.md")
+    else:
+        target_path_resolved = pd / "backlog.md"
     plan = reason.strip()
 
     if not approve:
@@ -358,8 +363,8 @@ def cut(
     # Approved: update signal status and append to target file
     _update_signal_record_status(pd, result, "cut-approved")
 
-    target_path = pd / target_file
-    _ensure_dir(pd)
+    target_path = target_path_resolved
+    _ensure_dir(target_path.parent)
     line = f"\n- [{sig_id}] {title} — {plan}\n"
     with target_path.open("a", encoding="utf-8") as f:
         f.write(line)
@@ -418,8 +423,7 @@ def refine_check(story_path: Path) -> int:
 
 
 def _next_story_id(stories_dir: Path) -> str:
-    pipeline_dir_path = stories_dir.parent
-    archive_dir = pipeline_dir_path / "archive"
+    archive_dir = _layout.archive_dir(stories_dir.parent.parent)
     existing = []
     if stories_dir.is_dir():
         existing.extend(stories_dir.glob("ml-story-*.md"))
@@ -446,7 +450,7 @@ def refine(
         return refine_check(check_path)
 
     memory_dir = project_root / ".mindlayer"
-    pd = pipeline_dir(memory_dir)
+    pd = _layout.work_dir(memory_dir)
     stories_dir = pd / "stories"
 
     story_id = _next_story_id(stories_dir)
@@ -493,7 +497,7 @@ def refine(
         with index_path.open("a", encoding="utf-8") as f:
             f.write(index_row)
 
-    print(f"Story created: pipeline/stories/{story_id}.md")
+    print(f"Story created: {stories_dir.relative_to(memory_dir)}/{story_id}.md")
     print(f"  title: {story_title}")
     print(f"  parent: {backlog_item}")
     print("Approval needed: None")
@@ -551,9 +555,9 @@ def transfer(
     approve_learn: bool = False,
 ) -> int:
     memory_dir = project_root / ".mindlayer"
-    pd = pipeline_dir(memory_dir)
+    pd = _layout.work_dir(memory_dir)
     stories_dir = pd / "stories"
-    archive_dir = pd / "archive"
+    archive_dir = _layout.archive_dir(memory_dir)
 
     stories = _stories_for_backlog_item(stories_dir, backlog_item)
 
@@ -681,12 +685,12 @@ def _update_index_status(index_path: Path, story_id: str, new_status: str) -> No
 def story_transition(project_root: Path, story_id: str, action: str, test_cmd: str = "") -> int:
     """action: 'start' or 'done'"""
     memory_dir = project_root / ".mindlayer"
-    pd = pipeline_dir(memory_dir)
+    pd = _layout.work_dir(memory_dir)
     stories_dir = pd / "stories"
 
     story_path = _find_story_file(stories_dir, story_id)
     if story_path is None:
-        print(f"Error: story '{story_id}' not found in pipeline/stories/", flush=True)
+        print(f"Error: story '{story_id}' not found in {stories_dir.relative_to(memory_dir)}/", flush=True)
         return 1
 
     text = read_text(story_path)

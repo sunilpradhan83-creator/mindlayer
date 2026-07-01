@@ -60,7 +60,7 @@ def resolve_memory_file(memory_dir: Path, file: str, prefer_existing: bool = Tru
     backlog = _target_work_dir(memory_dir) / "backlog.md"
     roadmap = memory_dir / "knowledge" / "roadmap.md"
 
-    if name in {"progress.md", "signals.md"}:
+    if name in {"progress.md", "signals.md", "current.md"}:
         if current.is_file():
             return current
     elif name == "backlog.md":
@@ -152,6 +152,23 @@ def archive_file(memory_dir: Path) -> Path:
     if target.is_file():
         return target
     return _paths.archive_file(memory_dir)
+
+
+def archive_dir(memory_dir: Path) -> Path:
+    """Archive directory: top-level `archive/` (target) or `pipeline/archive/` (legacy)."""
+    return archive_file(memory_dir).parent
+
+
+def work_dir(memory_dir: Path) -> Path:
+    """SCRIPT working-state base: `work/` in the target layout, else legacy `pipeline/`.
+
+    Signals, stories, and backlog live under this base in both layouts. The archive
+    (top-level in the target layout) is resolved separately via `archive_dir`.
+    """
+    target = _target_work_dir(memory_dir)
+    if target.is_dir():
+        return target
+    return _paths.pipeline_dir(memory_dir)
 
 
 def is_session_path(path: str) -> bool:

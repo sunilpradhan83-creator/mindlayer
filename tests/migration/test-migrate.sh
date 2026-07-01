@@ -252,6 +252,21 @@ small_load="$SANDBOX/small-load.out"
 if [ $? -eq 0 ]; then pass "$CURRENT_SCENARIO: load exits 0"; else fail "$CURRENT_SCENARIO: load exits 0"; fi
 check "load returns the migrated progress entry" assert_contains "$small_load" "ALPHAPROGRESS"
 
+scenario "SMALL post-migration write commands are target-aware"
+# ml script must read work/signals (not the gone pipeline/), and ml archive must
+# target the top-level archive/, not recreate pipeline/archive/ (post-2b regressions).
+small_script="$SANDBOX/small-script.out"
+(cd "$SMALL" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" script status > "$small_script" 2>/dev/null)
+check "script status is not 'not initialized'" assert_not_contains "$small_script" "not initialized"
+check "script status reads migrated signals" assert_contains "$small_script" "Signals:"
+small_arch="$SANDBOX/small-archive.out"
+(cd "$SMALL" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" archive --file work/current.md --section 'Future Roadmap' --action archive > "$small_arch" 2>/dev/null)
+check "archive targets top-level archive/archive.md" assert_contains "$small_arch" "move to archive/archive.md"
+check "archive does not target legacy pipeline/archive" assert_not_contains "$small_arch" "pipeline/archive"
+small_arch_short="$SANDBOX/small-archive-short.out"
+(cd "$SMALL" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" archive --file current.md --section 'Future Roadmap' --action archive > "$small_arch_short" 2>/dev/null)
+check "current.md shorthand resolves to work/current.md" assert_not_contains "$small_arch_short" "not found"
+
 # ---------------------------------------------------------------------------
 # Fixture LARGE: padded progress forces backlog to split into work/backlog.md
 # ---------------------------------------------------------------------------

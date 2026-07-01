@@ -8,8 +8,13 @@ from pathlib import Path
 
 from . import _layout
 from ._index import extract_section, load_indexes
-from ._paths import archive_file, display_memory_path, is_protected, memory_dir_for, read_text
+from ._paths import display_memory_path, is_protected, memory_dir_for, read_text
 from ._write import approved
+
+def _archive_rel(memory_dir: Path) -> str:
+    """Relative path of the archive file for the active layout (e.g. archive/archive.md)."""
+    return str(_layout.archive_file(memory_dir).relative_to(memory_dir))
+
 
 ARCHIVE_PROTECTED = frozenset({
     "archive.md",
@@ -77,7 +82,7 @@ def _remove_full_index_entry(index_path: Path, entry_id: str) -> None:
     index_path.write_text("\n".join(result).rstrip("\n") + "\n", encoding="utf-8")
 
 
-def _update_full_index_archived(index_path: Path, entry_id: str) -> None:
+def _update_full_index_archived(index_path: Path, entry_id: str, archive_rel: str) -> None:
     if not index_path.is_file():
         return
     lines = read_text(index_path).splitlines()
@@ -87,7 +92,7 @@ def _update_full_index_archived(index_path: Path, entry_id: str) -> None:
             in_entry = line == f"- id: {entry_id}"
             continue
         if in_entry and line.startswith("  file: "):
-            lines[idx] = "  file: pipeline/archive/archive.md"
+            lines[idx] = f"  file: {archive_rel}"
         elif in_entry and line.startswith("  status: "):
             lines[idx] = "  status: archived"
     index_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -216,15 +221,15 @@ def _scan_hierarchical_candidates(memory_dir: Path) -> list[CleanCandidate]:
         status = fields.get("status", entry.status)
         entry_type = fields.get("type", entry.type)
 
-        if status == "archived" and source != archive_file(memory_dir):
+        if status == "archived" and source != _layout.archive_file(memory_dir):
             candidates.append(CleanCandidate(
                 entry_id=entry.id,
                 title=entry.title,
                 file=file_name,
                 section=section,
-                reason="entry is already status: archived but still lives outside pipeline/archive/",
+                reason="entry is already status: archived but still lives outside the archive file",
                 action="archive",
-                detail="move to pipeline/archive/archive.md and update nearest index",
+                detail=f"move to {_archive_rel(memory_dir)} and update nearest index",
                 confidence="high",
                 source_index=entry.source_index,
             ))
@@ -237,7 +242,7 @@ def _scan_hierarchical_candidates(memory_dir: Path) -> list[CleanCandidate]:
                 section=section,
                 reason=f"{entry_type or 'entry'} is marked {status}",
                 action=action,
-                detail="move to pipeline/archive/archive.md" if action == "archive" else "no change",
+                detail=f"move to {_archive_rel(memory_dir)}" if action == "archive" else "no change",
                 confidence="medium",
                 source_index=entry.source_index,
             ))
@@ -269,9 +274,9 @@ def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
                     title=title,
                     file=file_name,
                     section=section,
-                    reason="entry is already status: archived but still lives outside pipeline/archive/archive.md",
+                    reason="entry is already status: archived but still lives outside the archive file",
                     action="archive",
-                    detail="move to pipeline/archive/archive.md and update index-full.md",
+                    detail=f"move to {_archive_rel(memory_dir)} and update index-full.md",
                     confidence="high",
                 ))
             else:
@@ -295,7 +300,7 @@ def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
                 section=section,
                 reason=f"{entry_type or 'entry'} is marked {status}",
                 action=action,
-                detail="move to pipeline/archive/archive.md" if action == "archive" else "no change",
+                detail=f"move to {_archive_rel(memory_dir)}" if action == "archive" else "no change",
                 confidence="medium",
             ))
     return candidates
@@ -335,14 +340,16 @@ def _apply_candidate(memory_dir: Path, candidate: CleanCandidate) -> tuple[str, 
         return "kept", candidate.title
 
     if candidate.action == "archive":
-        _append_to_archive(archive_file(memory_dir), block_lines)
+        archive_path = _layout.archive_file(memory_dir)
+        archive_rel = str(archive_path.relative_to(memory_dir))
+        _append_to_archive(archive_path, block_lines)
         if candidate.source_index:
-            _update_index_id_archived(candidate.source_index, candidate.entry_id, "pipeline/archive/archive.md")
+            _update_index_id_archived(candidate.source_index, candidate.entry_id, archive_rel)
         else:
-            _update_index_archived(index_path, candidate.section, "pipeline/archive/archive.md")
+            _update_index_archived(index_path, candidate.section, archive_rel)
             for entry in _index_entries(index_full):
                 if entry.get("title") == candidate.title or entry.get("section") == candidate.section:
-                    _update_full_index_archived(index_full, entry.get("id", ""))
+                    _update_full_index_archived(index_full, entry.get("id", ""), archive_rel)
                     break
         return "archived", candidate.title
 
@@ -443,7 +450,7 @@ def run(
     print(f"- File: {file} -> section: {section}")
     print(f"- Reason: explicit internal archive request")
     print(f"- Proposed action: {action}")
-    detail = "move to pipeline/archive/archive.md" if action == "archive" else "remove entirely"
+    detail = f"move to {_archive_rel(memory_dir)}" if action == "archive" else "remove entirely"
     print(f"- Action detail: {detail}")
     print("- Confidence: medium")
     print(f"Summary: {1 if action == 'archive' else 0} to archive, {1 if action == 'delete' else 0} to delete, 0 to keep")
@@ -462,10 +469,11 @@ def run(
     index_path = memory_dir / "index.md"
 
     if action == "archive":
-        archive_path = archive_file(memory_dir)
+        archive_path = _layout.archive_file(memory_dir)
+        archive_rel = str(archive_path.relative_to(memory_dir))
         _append_to_archive(archive_path, block_lines)
-        _update_index_archived(index_path, section, "pipeline/archive/archive.md")
-        print(f"Archived: '{section}' from {file} → pipeline/archive/archive.md")
+        _update_index_archived(index_path, section, archive_rel)
+        print(f"Archived: '{section}' from {file} → {archive_rel}")
     elif action == "delete":
         _remove_from_index(index_path, section)
         print(f"Deleted: '{section}' from {file}")
