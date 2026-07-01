@@ -442,12 +442,12 @@ lint_repo() {
   require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/status.md" "Per-File Health" "ml status command"
   require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/status.md" "OK | WARN | CRITICAL" "ml status command"
 
-  # Global template — rules split across memory-system/ subfiles
-  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input' "global read-write template"
-  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "not durable memory stores or retrieval sources" "global read-write template"
-  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "Go outside MindLayer memory only when necessary" "global read-write template"
-  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "Approval must be literal" "global read-write template"
-  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "literal explicit approval" "global read-write template"
+  # Compatibility markdown seeds for adapter-driven hosts.
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input' "compatibility read-write seed"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "not durable memory stores or retrieval sources" "compatibility read-write seed"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "Go outside MindLayer memory only when necessary" "compatibility read-write seed"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "Approval must be literal" "compatibility read-write seed"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/read-write.md" "literal explicit approval" "compatibility read-write seed"
   require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/session.md" "## Session Continuity Behavior" "global session command"
   require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/session.md" "pending memory-write approvals" "global session command"
   require_contains "$PROJECT_DIR/seed/adapters/boot.md" "first project-relevant request" "global boot template"
@@ -486,6 +486,10 @@ lint_repo() {
   require_contains "$PROJECT_DIR/install.sh" "literal explicit approval" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "Approval must be literal" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "memory-system/commands/index.md" "installer commands index fallback"
+  require_contains "$PROJECT_DIR/install.sh" "Compatibility markdown for older adapter-driven installs" "installer global runtime compatibility"
+  require_contains "$PROJECT_DIR/install.sh" "Existing files are preserved on reinstall" "installer global runtime compatibility"
+  require_contains "$PROJECT_DIR/install.sh" 'write_template_if_missing "$GLOBAL_DIR/boot.md"' "installer global runtime compatibility"
+  require_not_contains "$PROJECT_DIR/install.sh" "were refreshed with the latest MindLayer behavior rules" "installer global runtime compatibility"
 }
 
 # ---------------------------------------------------------------------------

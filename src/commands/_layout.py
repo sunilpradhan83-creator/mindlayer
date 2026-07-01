@@ -147,11 +147,20 @@ def session_write_dir(memory_dir: Path) -> Path:
 
 
 def archive_file(memory_dir: Path) -> Path:
-    """Archive file, preferring top-level `archive/archive.md` when present."""
+    """Archive file, preferring the top-level target archive when anchored.
+
+    Fresh ADR-0001 installs seed `archive/index.md` but do not create
+    `archive/archive.md` until there is durable archive content. Treat an
+    existing top-level archive directory as target-shaped when the legacy archive
+    is absent, so writers and status output stay in the target layout.
+    """
     target = _target_archive(memory_dir)
     if target.is_file():
         return target
-    return _paths.archive_file(memory_dir)
+    legacy = _paths.archive_file(memory_dir)
+    if target.parent.is_dir() and not legacy.parent.is_dir():
+        return target
+    return legacy
 
 
 def archive_dir(memory_dir: Path) -> Path:

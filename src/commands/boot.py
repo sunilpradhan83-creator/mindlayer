@@ -187,7 +187,7 @@ def run(project_root: Path) -> int:
     skipped.extend(
         [
             "deeper `.mindlayer/` index branches not needed for boot",
-            "`.mindlayer/pipeline/archive/archive.md` and `.mindlayer/local.md`",
+            f"`{display_memory_path(_layout.archive_file(memory_dir), memory_dir)}` and `.mindlayer/local.md`",
             "`README.md`, `docs/`, and adapters as memory sources",
         ]
     )
@@ -229,7 +229,7 @@ def run(project_root: Path) -> int:
     print(f"- Project memory: ~{project_share}%")
     print("- Other sources: 0% (README.md, docs/, and adapters skipped)")
     print("\nToken strategy:")
-    print("L0 boot: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress only.")
+    print("Executable boot: global runtime markdown when present, project indexes, identity, current work, and latest session cue only.")
     print("\nReady.")
     print("What would you like to work on?")
     return 0

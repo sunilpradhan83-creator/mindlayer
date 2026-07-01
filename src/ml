@@ -22,6 +22,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("boot", help="Print the MindLayer boot receipt")
+    subparsers.add_parser("init", help="Legacy alias for boot")
     subparsers.add_parser("diff", help="Show memory changes since the last session")
     subparsers.add_parser("status", help="Show memory health status")
 
@@ -126,7 +127,7 @@ def main(argv: list[str] | None = None) -> int:
 
     args = build_parser().parse_args(argv)
 
-    if args.command == "boot":
+    if args.command in {"boot", "init"}:
         return boot.run(root)
     if args.command == "diff":
         return diff.run(root)

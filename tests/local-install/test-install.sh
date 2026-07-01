@@ -579,17 +579,35 @@ check assert_lock_hash_for "$postblock_project/.mindlayer/adapters.lock" "CLAUDE
 check assert_lock_hash_for "$postblock_project/.mindlayer/adapters.lock" "AGENTS.md"
 check assert_contains "$postblock_project/.mindlayer/adapters.lock" "AGENTS.md=$prior_hash"
 
-scenario "managed template overwrite on reinstall"
+scenario "global compatibility markdown preserved on reinstall"
 managed_home="$SANDBOX/managed-home"
 managed_project="$SANDBOX/managed-project"
 managed_log_1="$SANDBOX/managed-install-1.log"
 managed_log_2="$SANDBOX/managed-install-2.log"
-mkdir -p "$managed_home/.mindlayer/memory-system" "$managed_home/.mindlayer/preferences" "$managed_project"
+mkdir -p "$managed_home/.mindlayer/memory-system/commands" "$managed_home/.mindlayer/preferences" "$managed_project"
 
 cat > "$managed_home/.mindlayer/boot.md" <<'EOF'
 # Old Boot
 
 old boot sentinel content
+EOF
+
+cat > "$managed_home/.mindlayer/router.md" <<'EOF'
+# Old Router
+
+old router sentinel content
+EOF
+
+cat > "$managed_home/.mindlayer/memory-system/per-turn.md" <<'EOF'
+# Old Per Turn
+
+old per-turn sentinel content
+EOF
+
+cat > "$managed_home/.mindlayer/memory-system/commands/init.md" <<'EOF'
+# Old Init Command
+
+old init sentinel content
 EOF
 
 cat > "$managed_home/.mindlayer/preferences/personal.md" <<'EOF'
@@ -601,8 +619,10 @@ EOF
 run_install "$managed_home" "$managed_project" "$managed_log_1" || true
 run_install "$managed_home" "$managed_project" "$managed_log_2" || true
 
-check assert_not_contains "$managed_home/.mindlayer/boot.md" "old boot sentinel content"
-check assert_contains "$managed_home/.mindlayer/boot.md" "first project-relevant request"
+check assert_contains "$managed_home/.mindlayer/boot.md" "old boot sentinel content"
+check assert_contains "$managed_home/.mindlayer/router.md" "old router sentinel content"
+check assert_contains "$managed_home/.mindlayer/memory-system/per-turn.md" "old per-turn sentinel content"
+check assert_contains "$managed_home/.mindlayer/memory-system/commands/init.md" "old init sentinel content"
 check assert_contains "$managed_home/.mindlayer/preferences/personal.md" "User custom preferences sentinel."
 
 scenario "boot contract"
@@ -611,6 +631,11 @@ check assert_file_exists "$fresh_home/.mindlayer/preferences/personal.md"
 check assert_not_exists "$fresh_home/.mindlayer/memory.md"
 check assert_contains "$fresh_project/AGENTS.md" "Commands and proactive behavior"
 check assert_not_contains "$fresh_project/AGENTS.md" "Context cost:"
+
+scenario "runtime boot does not require global compatibility markdown"
+rm -f "$fresh_home/.mindlayer/boot.md" "$fresh_home/.mindlayer/router.md"
+rm -rf "$fresh_home/.mindlayer/memory-system"
+check sh -c "cd '$fresh_project' && HOME='$fresh_home' '$fresh_home/.mindlayer/bin/ml' boot >/dev/null 2>&1"
 
 printf "\nMindLayer Local Install Readiness Summary\n"
 printf "Passed checks: %s\n" "$PASS_COUNT"

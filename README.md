@@ -72,7 +72,7 @@ MindLayer installs a local `ml` command runner plus markdown command specs that 
 - `ml script` — run the SCRIPT lifecycle commands (Signal → Cut → Refine → Implement → Prove → Transfer).
 - `ml onboard` — help populate MindLayer when installing into an existing project.
 
-Command specs live in `~/.mindlayer/memory-system/commands/` after install and ship from [`seed/adapters/memory-system/commands/`](seed/adapters/memory-system/commands/).
+Command specs live in `~/.mindlayer/memory-system/commands/` after install and ship from [`seed/adapters/memory-system/commands/`](seed/adapters/memory-system/commands/). Installed global runtime markdown is transitional compatibility output for current adapters, not a durable memory source.
 
 ## Effective Use
 

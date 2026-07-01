@@ -1143,51 +1143,53 @@ Do not write memory, adapter content, or durable context without explicit approv
 install_global() {
   mkdir_p "$GLOBAL_DIR"
 
-  # Managed system files — always updated on reinstall
-  write_managed_template "$GLOBAL_DIR/boot.md" "$GLOBAL_TEMPLATE_DIR/boot.md" "$global_boot"
-  write_managed_template "$GLOBAL_DIR/router.md" "$GLOBAL_TEMPLATE_DIR/router.md" "$global_router"
+  # Compatibility markdown for older adapter-driven installs. Create it when
+  # missing, but preserve existing files because executable runtime owns
+  # deterministic behavior under ADR-0001.
+  write_template_if_missing "$GLOBAL_DIR/boot.md" "$GLOBAL_TEMPLATE_DIR/boot.md" "$global_boot"
+  write_template_if_missing "$GLOBAL_DIR/router.md" "$GLOBAL_TEMPLATE_DIR/router.md" "$global_router"
 
-  # memory-system/ subfiles — managed system rules
+  # memory-system/ subfiles — compatibility output for older adapters.
   mkdir_p "$GLOBAL_DIR/memory-system"
-  write_managed_template "$GLOBAL_DIR/memory-system/per-turn.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn.md" "$global_memory_system_per_turn"
-  write_managed_template "$GLOBAL_DIR/memory-system/commands.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands.md" "$global_memory_system_commands"
-  write_managed_template "$GLOBAL_DIR/memory-system/read-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/read-write.md" "$global_memory_system_read_write"
-  write_managed_template "$GLOBAL_DIR/memory-system/schema.md" "$GLOBAL_TEMPLATE_DIR/memory-system/schema.md" "$global_memory_system_schema"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn.md" "$global_memory_system_per_turn"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands.md" "$global_memory_system_commands"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/read-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/read-write.md" "$global_memory_system_read_write"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/schema.md" "$GLOBAL_TEMPLATE_DIR/memory-system/schema.md" "$global_memory_system_schema"
 
   # memory-system/per-turn/ — lazy per-turn behavior modules
   mkdir_p "$GLOBAL_DIR/memory-system/per-turn"
-  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/load-announce.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/load-announce.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/memory-candidate.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/memory-candidate.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/retrieval.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/retrieval.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/lateral-intent.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/lateral-intent.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/session-warning.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/session-warning.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/per-turn/post-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/post-write.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/load-announce.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/load-announce.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/memory-candidate.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/memory-candidate.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/retrieval.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/retrieval.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/lateral-intent.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/lateral-intent.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/session-warning.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/session-warning.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/post-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/post-write.md" ""
 
   # Host hooks — thin tool-specific enforcement layers when supported.
   mkdir_p "$GLOBAL_DIR/memory-system/hooks"
-  write_managed_template "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$GLOBAL_TEMPLATE_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$claude_prompt_hook_template"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$GLOBAL_TEMPLATE_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$claude_prompt_hook_template"
   chmod +x "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" 2>/dev/null || true
 
-  # Canonical adapter templates — managed system files
+  # Canonical adapter templates — compatibility copies for adapter guards.
   mkdir_p "$GLOBAL_DIR/memory-system/templates"
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/AGENTS.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/AGENTS.md" "$adapter_agents_template"
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/CLAUDE.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/CLAUDE.md" "$adapter_claude_template"
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/copilot-instructions.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/copilot-instructions.md" "$adapter_copilot_template"
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/GEMINI.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/GEMINI.md" "$adapter_gemini_template"
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/cursor-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/cursor-mindlayer.md" "$adapter_cursor_template"
-  write_managed_template "$GLOBAL_DIR/memory-system/templates/windsurf-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/windsurf-mindlayer.md" "$adapter_windsurf_template"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/AGENTS.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/AGENTS.md" "$adapter_agents_template"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/CLAUDE.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/CLAUDE.md" "$adapter_claude_template"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/copilot-instructions.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/copilot-instructions.md" "$adapter_copilot_template"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/GEMINI.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/GEMINI.md" "$adapter_gemini_template"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/cursor-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/cursor-mindlayer.md" "$adapter_cursor_template"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/windsurf-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/windsurf-mindlayer.md" "$adapter_windsurf_template"
 
   # memory-system/commands/ — per-command spec files
   mkdir_p "$GLOBAL_DIR/memory-system/commands"
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/index.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/index.md" "$global_memory_system_commands_index"
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/init.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/init.md" "$global_memory_system_commands_init"
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/load.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/load.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/save.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/save.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/status.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/status.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/archive.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/archive.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/session.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/session.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/onboard.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/onboard.md" ""
-  write_managed_template "$GLOBAL_DIR/memory-system/commands/diff.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/diff.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/index.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/index.md" "$global_memory_system_commands_index"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/init.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/init.md" "$global_memory_system_commands_init"
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/load.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/load.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/save.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/save.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/status.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/status.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/archive.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/archive.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/session.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/session.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/onboard.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/onboard.md" ""
+  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/diff.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/diff.md" ""
 
   # preferences/ — agent-written cross-project knowledge, git-backed
   mkdir_p "$GLOBAL_DIR/preferences"
@@ -1466,7 +1468,7 @@ If this project already has context in README or docs, ask your AI tool to help 
 Session tip:
 MindLayer boot is cheap. Start a new session at each task boundary instead of compacting — boot restores project context from durable memory with zero history overhead.
 
-Note: ~/.mindlayer/boot.md, router.md, and memory-system/ subfiles were refreshed with the latest MindLayer behavior rules.
+Note: ~/.mindlayer/boot.md, router.md, and memory-system/ subfiles are compatibility output for adapter-driven hosts. Existing files are preserved on reinstall.
 EOF
 else
   echo "MindLayer installed."

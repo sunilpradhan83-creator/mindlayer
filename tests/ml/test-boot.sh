@@ -285,5 +285,80 @@ fi
 check "authored project summary used" assert_contains "$authored_output" "Sandbox project has real saved identity."
 check "empty identity not used when authored summary exists" assert_not_contains "$authored_output" "No substantive project identity saved yet."
 
+scenario "global runtime markdown absence is non-fatal"
+ABSENT_PROJECT="$SANDBOX/absent-project"
+ABSENT_HOME="$SANDBOX/absent-home"
+mkdir -p "$ABSENT_HOME/.mindlayer/preferences" "$ABSENT_PROJECT/.mindlayer/knowledge" "$ABSENT_PROJECT/.mindlayer/work/sessions"
+cat > "$ABSENT_PROJECT/.mindlayer/index.md" <<'EOF'
+# Project Memory Index
+
+- ml-project-absent | Project Identity | knowledge/project.md | Runtime absence project.
+- ml-work-current | Current Work | work/current.md | Runtime absence progress.
+EOF
+cat > "$ABSENT_PROJECT/.mindlayer/router.md" <<'EOF'
+# Project Router
+EOF
+cat > "$ABSENT_PROJECT/.mindlayer/knowledge/project.md" <<'EOF'
+# Project
+
+## Project Identity
+
+### Summary
+Runtime absence project identity.
+EOF
+mkdir -p "$ABSENT_PROJECT/.mindlayer/work"
+cat > "$ABSENT_PROJECT/.mindlayer/work/current.md" <<'EOF'
+# Current Work
+
+## Current Phase
+
+### Summary
+Runtime absence progress.
+
+### Details
+- Core command behavior should not require global runtime markdown.
+EOF
+
+absent_boot="$SANDBOX/boot-absent-global.out"
+if (cd "$ABSENT_PROJECT" && HOME="$ABSENT_HOME" python3 "$ROOT_DIR/src/ml" boot > "$absent_boot"); then
+  pass "$CURRENT_SCENARIO: boot exits successfully"
+else
+  fail "$CURRENT_SCENARIO: boot exits successfully"
+fi
+check "missing global boot reported" assert_contains "$absent_boot" '`~/.mindlayer/boot.md`'
+check "missing global router reported" assert_contains "$absent_boot" '`~/.mindlayer/router.md`'
+check "missing global per-turn reported" assert_contains "$absent_boot" '`~/.mindlayer/memory-system/per-turn.md`'
+check "project identity still loaded" assert_contains "$absent_boot" "Runtime absence project identity."
+check "target current work still loaded" assert_contains "$absent_boot" ".mindlayer/work/current.md"
+
+absent_init="$SANDBOX/init-absent-global.out"
+if (cd "$ABSENT_PROJECT" && HOME="$ABSENT_HOME" python3 "$ROOT_DIR/src/ml" init > "$absent_init"); then
+  pass "$CURRENT_SCENARIO: init alias exits successfully"
+else
+  fail "$CURRENT_SCENARIO: init alias exits successfully"
+fi
+check "init alias prints boot receipt" assert_contains "$absent_init" "MindLayer context loaded."
+
+if (cd "$ABSENT_PROJECT" && HOME="$ABSENT_HOME" python3 "$ROOT_DIR/src/ml" status > "$SANDBOX/status-absent-global.out"); then
+  pass "$CURRENT_SCENARIO: status exits successfully"
+else
+  fail "$CURRENT_SCENARIO: status exits successfully"
+fi
+if (cd "$ABSENT_PROJECT" && HOME="$ABSENT_HOME" python3 "$ROOT_DIR/src/ml" diff > "$SANDBOX/diff-absent-global.out"); then
+  pass "$CURRENT_SCENARIO: diff exits successfully"
+else
+  fail "$CURRENT_SCENARIO: diff exits successfully"
+fi
+if (cd "$ABSENT_PROJECT" && HOME="$ABSENT_HOME" python3 "$ROOT_DIR/src/ml" session --words 100 > "$SANDBOX/session-absent-global.out"); then
+  pass "$CURRENT_SCENARIO: session exits successfully"
+else
+  fail "$CURRENT_SCENARIO: session exits successfully"
+fi
+if (cd "$ABSENT_PROJECT" && HOME="$ABSENT_HOME" python3 "$ROOT_DIR/src/ml" load identity > "$SANDBOX/load-absent-global.out"); then
+  pass "$CURRENT_SCENARIO: load exits successfully"
+else
+  fail "$CURRENT_SCENARIO: load exits successfully"
+fi
+
 printf "\nSummary: %s passed, %s failed\n" "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]

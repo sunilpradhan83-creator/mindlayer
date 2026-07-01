@@ -107,10 +107,10 @@ Shows how much context the session has consumed and whether to compact or start 
       index.md
       auth.md                 ← decision captured in step 4
     risks.md
-  pipeline/
-    progress.md               ← current phase and next step
-    backlog.md
     roadmap.md
+  work/
+    current.md                ← current phase and next step
+    index.md                  ← work memory index
 ```
 
 Everything in `.mindlayer/` is plain markdown. Commit the shared files, ignore the private ones (see `.gitignore`).
