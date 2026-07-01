@@ -21,8 +21,7 @@ and adapter/runtime specs from `seed/adapters`. Full suite is green with 0 error
 0 warnings after Step 2c. Global runtime markdown was demoted through commit `0ff235a`
 and final compatibility removal is now decided: installs prune legacy global `boot.md`,
 `router.md`, and `memory-system/` while preserving user-owned `preferences/`. Current
-phase: finish the final removal slice, then move to MCP planning; MCP remains a later
-exposure layer, not an architecture fix.
+phase: start MCP planning; MCP remains a later exposure layer, not an architecture fix.
 
 ### Details
 - Completed 2026-07-01: Step 2a ADR migration foundation committed as `0df80fb`. Added
@@ -65,8 +64,10 @@ exposure layer, not an architecture fix.
   users depend on legacy global runtime markdown. Installer should prune
   `~/.mindlayer/boot.md`, `router.md`, and `memory-system/` on install while preserving
   user-owned `preferences/`.
-- Next: verify and commit the final global runtime-control-plane cleanup, then start the
-  read-only MCP resource spike.
+- Completed 2026-07-01: final global runtime-control-plane cleanup committed and pushed
+  as `871bd7e`. Live install was synced and legacy global `boot.md`, `router.md`, and
+  `memory-system/` were pruned locally.
+- Next: start the read-only MCP resource spike.
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.
