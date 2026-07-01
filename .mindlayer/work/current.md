@@ -13,14 +13,13 @@ status: in-progress
 source: conversation
 
 ### Summary
-ADR-0001 target architecture is frozen and committed on branch `adr-0001-architecture`
-(commit `c669261`; `main` untouched). Step 2a is complete and committed at `0df80fb`:
-the runtime now has a dual-layout read seam for legacy `pipeline/` and ADR-0001
-`work/`/top-level archive paths, plus read-only adapter status detection. Full suite was
-green when Step 2a landed; focused follow-up checks for truthful session-source boot
-reporting also passed. Current phase: Step 2b — consolidate `pipeline/` into
-`work/current.md` with explicit migration behavior. MCP work (Steps 3-4) follows the
-migration, not before.
+ADR-0001 target architecture is frozen and committed on branch `adr-0001-architecture`.
+Steps 2a, 2b, and 2c are complete and pushed through commit `2353eae`: runtime reads
+legacy and target layouts, this repo has dogfooded the `pipeline/` -> `work/` migration,
+and fresh installs now seed the ADR-0001 `work/current.md` layout from `seed/project`
+and adapter/runtime specs from `seed/adapters`. Full suite is green with 0 errors and
+0 warnings after Step 2c. Current phase: plan the heavier global runtime-control-plane
+migration before MCP work; MCP remains a later exposure layer, not an architecture fix.
 
 ### Details
 - Completed 2026-07-01: Step 2a ADR migration foundation committed as `0df80fb`. Added
@@ -30,10 +29,20 @@ migration, not before.
   legacy guard, adapter detector/no-writes behavior, mixed session history, and session
   write co-location. Follow-up fix made `ml boot` report the actual latest session source
   instead of hardcoding the legacy sessions path.
+- Completed 2026-07-01: Step 2b committed and pushed through `8433acc`. Added `ml migrate`
+  with dry-run/default and `--approve`, dogfooded this repo from `pipeline/` to
+  `work/current.md`/top-level `archive/`, cleaned W2 decision-file warnings, made
+  `ml script` and `ml archive` target-aware, fixed explicit archive index updates, and
+  preserved legacy compatibility.
+- Completed 2026-07-01: Step 2c committed and pushed as `2353eae`. Moved install seeds
+  from `project-template/` and `global-template/` to `seed/project/` and `seed/adapters/`,
+  made fresh project installs target-shaped (`work/current.md`, `work/index.md`,
+  `archive/index.md`, no fresh `pipeline/`), updated loader/lint/tests/docs references,
+  and synced the local runtime.
 - Completed 2026-07-01: committed ADR-0001 + typed-status schema (`c669261`), reviewed for consistency across index/architecture.md/schema/install.sh/lint.sh, and cleared the 13 spec-layout failures via a non-destructive live-runtime re-sync. Next work is Step 2 (ADR migration foundation), deferred to a fresh session; see `knowledge/sessions/2026-07-01.md` for the ordered 2a-2d slices.
 - Completed this session: created `knowledge/decisions/script-v0.1.md`, marked `script-v4.md` superseded, updated decisions index, rewrote canonical roadmap, mirrored public ROADMAP, added SCRIPT enforcement backlog item, and wrote the 2026-05-17 session summary.
 - Completed after Stage 0.0: Item 0 Day 1 - starter-content sentinel format chosen and boot truth fixes implemented so starter project/personal memory does not appear substantive.
-- Completed after Item 0 Day 1: fixed fresh installs so `.mindlayer/router.md` is created from `project-template/router.md`, with local install coverage for fresh and skip-flag installs.
+- Completed after Item 0 Day 1: fixed fresh installs so `.mindlayer/router.md` is created from the project seed, with local install coverage for fresh and skip-flag installs.
 - Completed after project router fix: fixed `ml diff` so entries moved into `.mindlayer/pipeline/archive/` report as archived instead of new, including Git rename handling and regression coverage.
 - Completed after `ml diff` fix: fixed `ml load` ranking so importance/recency metadata cannot rank entries without a real query hit, with regression coverage for unrelated high-importance preferences.
 - Completed after `ml load` ranking fix: fixed `ml load` section extraction so nested summaries stay attached to their parent heading and title/heading mismatches can resolve by entry id.
@@ -41,9 +50,9 @@ migration, not before.
 - Completed after `ml status` fix: fixed hierarchical `ml clean`, nearest-index `ml save`, README CLI/runtime drift, and README adapter drift; added regression/lint coverage.
 - Stage 0.1 baseline is frozen as a 0.1 Developer Preview, not a 1.0 launch.
 - Existing V4 runtime work remains shipped, but the next release focus is correctness, positioning, open-source hygiene, and rename.
-- Next: start Step 2b by designing the explicit migration from `pipeline/progress.md`,
-  `pipeline/backlog.md`, and `pipeline/signals.md` into `work/current.md`, including
-  archive/compression of the two known W2 files during the slice.
+- Next: plan the global runtime-control-plane migration. ADR-0001 still allows
+  `~/.mindlayer/boot.md`, `router.md`, and `memory-system/` during migration, but they
+  are not the target architecture; move them only through a team-reviewed follow-up.
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.

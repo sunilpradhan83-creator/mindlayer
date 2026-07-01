@@ -86,4 +86,4 @@ Two memory layers — global (`~/.mindlayer/`) and project (`.mindlayer/`) — w
 
 The install test suite (`tests/local-install/test-install.sh`) is the authoritative source of truth for installer behavior. If you are unsure whether a change is safe, check what the install tests cover.
 
-Command specs live in `global-template/memory-system/commands/` and are installed to `~/.mindlayer/memory-system/commands/`. Changing a command spec means changing the markdown in `global-template/` and the Python in `src/commands/`.
+Command specs ship from `seed/adapters/memory-system/commands/` and are installed to `~/.mindlayer/memory-system/commands/`. Changing a command spec means changing the markdown in `seed/adapters/` and the Python in `src/commands/`.

@@ -2,7 +2,7 @@
 
 MindLayer is moving toward a **0.1 Developer Preview**, not a 1.0 launch. The goal is to earn trust through correctness, dogfood, and external users before claiming stability.
 
-Canonical planning lives in `.mindlayer/pipeline/roadmap.md`. This file is the public, human-facing mirror.
+Canonical planning lives in `.mindlayer/knowledge/roadmap.md`. This file is the public, human-facing mirror.
 
 ---
 
