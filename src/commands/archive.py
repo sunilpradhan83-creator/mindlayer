@@ -6,8 +6,9 @@ from dataclasses import dataclass
 import re
 from pathlib import Path
 
+from . import _layout
 from ._index import extract_section, load_indexes
-from ._paths import archive_file, display_memory_path, is_protected, memory_dir_for, read_text, resolve_memory_file
+from ._paths import archive_file, display_memory_path, is_protected, memory_dir_for, read_text
 from ._write import approved
 
 ARCHIVE_PROTECTED = frozenset({
@@ -206,7 +207,7 @@ def _scan_hierarchical_candidates(memory_dir: Path) -> list[CleanCandidate]:
         file_name = entry.file
         if not file_name or file_name in ARCHIVE_PROTECTED:
             continue
-        source = resolve_memory_file(memory_dir, file_name)
+        source = _layout.resolve_memory_file(memory_dir, file_name)
         if not source.is_file():
             continue
         section = entry.section or entry.title
@@ -260,7 +261,7 @@ def _scan_candidates(memory_dir: Path) -> list[CleanCandidate]:
         if not file_name or file_name in ARCHIVE_PROTECTED:
             continue
 
-        source = resolve_memory_file(memory_dir, file_name)
+        source = _layout.resolve_memory_file(memory_dir, file_name)
         if status == "archived":
             if source.is_file():
                 candidates.append(CleanCandidate(
@@ -323,7 +324,7 @@ def _apply_candidate(memory_dir: Path, candidate: CleanCandidate) -> tuple[str, 
         _remove_full_index_entry(index_full, candidate.section)
         return "deleted", candidate.title
 
-    target = resolve_memory_file(memory_dir, candidate.file).resolve()
+    target = _layout.resolve_memory_file(memory_dir, candidate.file).resolve()
     try:
         target.relative_to(memory_dir.resolve())
     except ValueError:
@@ -408,7 +409,7 @@ def run(
     approve_all: bool = False,
 ) -> int:
     memory_dir = memory_dir_for(project_root, scope)
-    target = resolve_memory_file(memory_dir, file).resolve()
+    target = _layout.resolve_memory_file(memory_dir, file).resolve()
 
     try:
         target.relative_to(memory_dir.resolve())

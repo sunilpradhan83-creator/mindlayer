@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from . import _layout
 from ._index import extract_section, load_indexes, rank_entries, summarize_section
-from ._paths import resolve_memory_file
 
 
 def _source_for(project_root: Path, entry_file: str, source_index: Path | None) -> Path:
@@ -20,7 +20,7 @@ def _source_for(project_root: Path, entry_file: str, source_index: Path | None) 
     if repo_source.is_file():
         return repo_source
 
-    memory_source = resolve_memory_file(project_root / ".mindlayer", entry_file)
+    memory_source = _layout.resolve_memory_file(project_root / ".mindlayer", entry_file)
     if memory_source.is_file():
         return memory_source
 

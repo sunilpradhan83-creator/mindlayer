@@ -5,7 +5,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from ._paths import display_memory_path, is_protected, memory_dir_for, read_text, resolve_memory_file
+from . import _layout
+from ._paths import display_memory_path, is_protected, memory_dir_for, read_text
 from ._write import approved
 
 
@@ -78,7 +79,7 @@ def run(
     approve: bool = False,
 ) -> int:
     memory_dir = memory_dir_for(project_root, scope)
-    target = resolve_memory_file(memory_dir, file).resolve()
+    target = _layout.resolve_memory_file(memory_dir, file).resolve()
 
     try:
         target.relative_to(memory_dir.resolve())

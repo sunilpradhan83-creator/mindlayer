@@ -32,12 +32,49 @@ def _target_archive(memory_dir: Path) -> Path:
 
 
 def detect_layout(memory_dir: Path) -> str:
-    """Return "target" when ADR-0001 markers exist on disk, else "legacy"."""
-    if _target_work_dir(memory_dir).is_dir() or _target_current(memory_dir).is_file():
-        return "target"
-    if (memory_dir / "archive").is_dir():
+    """Return "target" only when the ADR-0001 anchor `work/current.md` exists.
+
+    Detection is file-based, not directory-based: an empty `work/` or top-level
+    `archive/` directory (a partially-created or seeded skeleton) no longer counts
+    as migrated. The single authoritative marker is the consolidated
+    `work/current.md`; without it the layout is still "legacy".
+    """
+    if _target_current(memory_dir).is_file():
         return "target"
     return "legacy"
+
+
+def resolve_memory_file(memory_dir: Path, file: str, prefer_existing: bool = True) -> Path:
+    """Resolve a bare memory filename, preferring the ADR-0001 target layout.
+
+    When the target file exists on disk it wins; otherwise this delegates to the
+    legacy `_paths.resolve_memory_file`. Consolidation collapses progress/backlog
+    into `work/current.md`, so several legacy names can resolve to the same file.
+    """
+    candidate = Path(file)
+    if candidate.is_absolute() or len(candidate.parts) > 1:
+        return _paths.resolve_memory_file(memory_dir, file, prefer_existing)
+
+    name = candidate.name
+    current = _target_current(memory_dir)
+    backlog = _target_work_dir(memory_dir) / "backlog.md"
+    roadmap = memory_dir / "knowledge" / "roadmap.md"
+
+    if name in {"progress.md", "signals.md"}:
+        if current.is_file():
+            return current
+    elif name == "backlog.md":
+        if backlog.is_file():
+            return backlog
+        if current.is_file():
+            return current
+    elif name == "roadmap.md":
+        if roadmap.is_file():
+            return roadmap
+    elif name == "archive.md":
+        return archive_file(memory_dir)
+
+    return _paths.resolve_memory_file(memory_dir, file, prefer_existing)
 
 
 def current_state_files(memory_dir: Path) -> list[Path]:

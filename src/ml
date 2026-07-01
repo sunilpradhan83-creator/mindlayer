@@ -13,7 +13,7 @@ for candidate in (HERE, HERE.parent / "lib", HERE.parent.parent / "lib"):
         sys.path.insert(0, str(candidate))
         break
 
-from commands import archive, boot, diff, load, save, script, session, status
+from commands import archive, boot, diff, load, migrate, save, script, session, status
 from commands._paths import project_root
 
 
@@ -53,6 +53,9 @@ def build_parser() -> argparse.ArgumentParser:
     save_parser.add_argument("--scope", choices=["project", "global"], default="project")
     save_parser.add_argument("--approval", default="")
     save_parser.add_argument("--approve", action="store_true")
+
+    migrate_parser = subparsers.add_parser("migrate", help="Migrate legacy pipeline/ layout to the ADR-0001 work/ layout")
+    migrate_parser.add_argument("--approve", action="store_true")
 
     clean_parser = subparsers.add_parser("clean", help="Scan memory and propose cleanup actions")
     clean_parser.add_argument("--approve-all", action="store_true")
@@ -156,6 +159,8 @@ def main(argv: list[str] | None = None) -> int:
             approval=args.approval,
             approve=args.approve,
         )
+    if args.command == "migrate":
+        return migrate.run(root, approve=args.approve)
     if args.command == "clean":
         return archive.clean(root, scope=args.scope, approve_all=args.approve_all)
     if args.command == "script":
