@@ -635,7 +635,7 @@ Bootstrap authority:
 1. Prefer executable `ml boot` / `ml init`.
 2. If the executable is unavailable, fall back gracefully to project `.mindlayer/`: read `.mindlayer/index.md`, project identity, and current progress.
 3. Load global user preferences from `~/.mindlayer/preferences/` only when needed and substantive.
-4. Treat `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/` as compatibility output only, not canonical required runtime control-plane files.
+4. Treat legacy `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/` files as non-canonical migration artifacts; installs prune them because executable `ml` runtime is authoritative.
 
 Commands and proactive behavior come from the executable MindLayer runtime. Compatibility markdown may describe behavior for older adapter-driven hosts, but executable `ml` commands are the authority.'
 
@@ -704,6 +704,11 @@ Do not write memory, adapter content, or durable context without explicit approv
 
 install_global() {
   mkdir_p "$GLOBAL_DIR"
+
+  # ADR-0001: global runtime markdown was a temporary compatibility layer.
+  # The executable runtime and managed hooks are authoritative now.
+  rm -f "$GLOBAL_DIR/boot.md" "$GLOBAL_DIR/router.md"
+  rm -rf "$GLOBAL_DIR/memory-system"
 
   # preferences/ — agent-written cross-project knowledge, git-backed
   mkdir_p "$GLOBAL_DIR/preferences"
@@ -982,7 +987,7 @@ If this project already has context in README or docs, ask your AI tool to help 
 Session tip:
 MindLayer boot is cheap. Start a new session at each task boundary instead of compacting — boot restores project context from durable memory with zero history overhead.
 
-Note: New installs do not create global runtime markdown (`~/.mindlayer/boot.md`, router.md, or memory-system/). Existing files are preserved if present, but executable runtime under ~/.mindlayer/bin and ~/.mindlayer/lib is authoritative.
+Note: Installs prune legacy global runtime markdown (`~/.mindlayer/boot.md`, router.md, and memory-system/). The executable runtime under ~/.mindlayer/bin and ~/.mindlayer/lib is authoritative.
 EOF
 else
   echo "MindLayer installed."

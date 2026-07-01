@@ -21,7 +21,7 @@ Run once per session before answering the first project-relevant request:
 
 Do not treat a plain greeting as a project-relevant request. On the first project-relevant request — including any question about what the project is, what it does, or what is in it — run this bootstrap and emit the boot receipt BEFORE giving your answer. Never answer a project question without booting first. Never ask the user if they want you to boot — just boot.
 
-Global `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/` files may exist during migration for compatibility with older adapters. They are not canonical required runtime control-plane files.
+Legacy global `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/` files may be encountered from older installs. They are non-canonical migration artifacts and installs prune them because executable `ml` runtime is authoritative.
 
 ## Adapter Guard
 

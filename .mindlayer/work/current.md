@@ -18,11 +18,11 @@ Steps 2a, 2b, and 2c are complete and pushed through commit `2353eae`: runtime r
 legacy and target layouts, this repo has dogfooded the `pipeline/` -> `work/` migration,
 and fresh installs now seed the ADR-0001 `work/current.md` layout from `seed/project`
 and adapter/runtime specs from `seed/adapters`. Full suite is green with 0 errors and
-0 warnings after Step 2c. Global runtime markdown is now compatibility output through
-commit `0ff235a`: executable runtime works without global `boot.md`, `router.md`, or
-`memory-system/`, while installs preserve those files for current adapter-driven hosts.
-Current phase: plan the heavier final cleanup/removal of global runtime-control-plane
-markdown before MCP work; MCP remains a later exposure layer, not an architecture fix.
+0 warnings after Step 2c. Global runtime markdown was demoted through commit `0ff235a`
+and final compatibility removal is now decided: installs prune legacy global `boot.md`,
+`router.md`, and `memory-system/` while preserving user-owned `preferences/`. Current
+phase: finish the final removal slice, then move to MCP planning; MCP remains a later
+exposure layer, not an architecture fix.
 
 ### Details
 - Completed 2026-07-01: Step 2a ADR migration foundation committed as `0df80fb`. Added
@@ -44,10 +44,12 @@ markdown before MCP work; MCP remains a later exposure layer, not an architectur
   and synced the local runtime.
 - Completed 2026-07-01: global runtime compatibility slice committed and pushed as
   `0ff235a`. Added `ml init` as a `ml boot` alias, made runtime commands operate without
-  global runtime markdown, preserved existing global `boot.md`/`router.md`/`memory-system/`
-  files on reinstall as compatibility output, resolved fresh target archives to
-  `archive/archive.md`, added `tests/migration/test-runtime-authority.sh`, and verified
-  the full suite with 0 lint errors, 0 warnings, and 0 failures after syncing live runtime.
+  global runtime markdown, initially preserved existing global
+  `boot.md`/`router.md`/`memory-system/` files on reinstall as compatibility output,
+  resolved fresh target archives to `archive/archive.md`, added
+  `tests/migration/test-runtime-authority.sh`, and verified the full suite with 0 lint
+  errors, 0 warnings, and 0 failures after syncing live runtime. That preservation policy
+  was superseded by the final prune decision below.
 - Completed 2026-07-01: committed ADR-0001 + typed-status schema (`c669261`), reviewed for consistency across index/architecture.md/schema/install.sh/lint.sh, and cleared the 13 spec-layout failures via a non-destructive live-runtime re-sync. Next work is Step 2 (ADR migration foundation), deferred to a fresh session; see `knowledge/sessions/2026-07-01.md` for the ordered 2a-2d slices.
 - Completed this session: created `knowledge/decisions/script-v0.1.md`, marked `script-v4.md` superseded, updated decisions index, rewrote canonical roadmap, mirrored public ROADMAP, added SCRIPT enforcement backlog item, and wrote the 2026-05-17 session summary.
 - Completed after Stage 0.0: Item 0 Day 1 - starter-content sentinel format chosen and boot truth fixes implemented so starter project/personal memory does not appear substantive.
@@ -59,10 +61,12 @@ markdown before MCP work; MCP remains a later exposure layer, not an architectur
 - Completed after `ml status` fix: fixed hierarchical `ml clean`, nearest-index `ml save`, README CLI/runtime drift, and README adapter drift; added regression/lint coverage.
 - Stage 0.1 baseline is frozen as a 0.1 Developer Preview, not a 1.0 launch.
 - Existing V4 runtime work remains shipped, but the next release focus is correctness, positioning, open-source hygiene, and rename.
-- Next: plan the final global runtime-control-plane cleanup. ADR-0001 still allows
-  `~/.mindlayer/boot.md`, `router.md`, and `memory-system/` as compatibility output
-  during migration, but they are not the target architecture; removal should be a
-  team-reviewed follow-up.
+- Completed 2026-07-01: final compatibility policy decided after confirming no current
+  users depend on legacy global runtime markdown. Installer should prune
+  `~/.mindlayer/boot.md`, `router.md`, and `memory-system/` on install while preserving
+  user-owned `preferences/`.
+- Next: verify and commit the final global runtime-control-plane cleanup, then start the
+  read-only MCP resource spike.
 
 ### When to use
 Use when orienting to the current project phase or deciding what to work on next.

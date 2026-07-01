@@ -23,6 +23,6 @@ Bootstrap authority:
 1. Prefer executable `ml boot` / `ml init`.
 2. If the executable is unavailable, fall back gracefully to project `.mindlayer/`: read `.mindlayer/index.md`, project identity, and current progress.
 3. Load global user preferences from `~/.mindlayer/preferences/` only when needed and substantive.
-4. Treat `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/` as compatibility output only, not canonical required runtime control-plane files.
+4. Treat legacy `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/` files as non-canonical migration artifacts; installs prune them because executable `ml` runtime is authoritative.
 
 Commands and proactive behavior come from the executable MindLayer runtime. Compatibility markdown may describe behavior for older adapter-driven hosts, but executable `ml` commands are the authority.

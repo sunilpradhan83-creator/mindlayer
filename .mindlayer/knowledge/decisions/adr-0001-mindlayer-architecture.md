@@ -115,7 +115,7 @@ Target global layout:
     └── playbook.md
 ```
 
-Global scope should not contain canonical project templates, runtime markdown control planes, or duplicated product architecture. `boot.md`, `router.md`, and `memory-system/` may exist during migration, but they are not the target architecture.
+Global scope should not contain canonical project templates, runtime markdown control planes, or duplicated product architecture. `boot.md`, `router.md`, and `memory-system/` were temporary compatibility output during migration; installs now prune them because the executable runtime and managed hooks are authoritative.
 
 Reusable working rules such as Critical Architect Mode belong in `~/.mindlayer/preferences/playbook.md`. A tool-specific skill can adapt that rule for one agent, but the global preference remains the source of truth.
 
@@ -204,7 +204,7 @@ Do this as an explicit migration, not as a hidden file shuffle:
 3. Migrate and consolidate `pipeline/` into `work/` through a migration command.
 4. Move durable archived content from current pipeline archive locations into top-level `.mindlayer/archive/`.
 5. Move install seeds from `project-template/` and `global-template/` into `seed/project/` and `seed/adapters/`.
-6. Remove global runtime markdown only after adapters and runtime boot no longer depend on it.
+6. Remove global runtime markdown after adapters and runtime boot no longer depend on it; prune legacy `~/.mindlayer/boot.md`, `router.md`, and `memory-system/` during install while preserving `preferences/`.
 
 ## Supersedes
 

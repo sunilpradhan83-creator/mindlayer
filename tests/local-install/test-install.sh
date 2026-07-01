@@ -583,7 +583,7 @@ check assert_lock_hash_for "$postblock_project/.mindlayer/adapters.lock" "CLAUDE
 check assert_lock_hash_for "$postblock_project/.mindlayer/adapters.lock" "AGENTS.md"
 check assert_contains "$postblock_project/.mindlayer/adapters.lock" "AGENTS.md=$prior_hash"
 
-scenario "global compatibility markdown preserved on reinstall"
+scenario "global compatibility markdown pruned on reinstall"
 managed_home="$SANDBOX/managed-home"
 managed_project="$SANDBOX/managed-project"
 managed_log_1="$SANDBOX/managed-install-1.log"
@@ -623,10 +623,9 @@ EOF
 run_install "$managed_home" "$managed_project" "$managed_log_1" || true
 run_install "$managed_home" "$managed_project" "$managed_log_2" || true
 
-check assert_contains "$managed_home/.mindlayer/boot.md" "old boot sentinel content"
-check assert_contains "$managed_home/.mindlayer/router.md" "old router sentinel content"
-check assert_contains "$managed_home/.mindlayer/memory-system/per-turn.md" "old per-turn sentinel content"
-check assert_contains "$managed_home/.mindlayer/memory-system/commands/init.md" "old init sentinel content"
+check assert_not_exists "$managed_home/.mindlayer/boot.md"
+check assert_not_exists "$managed_home/.mindlayer/router.md"
+check assert_not_exists "$managed_home/.mindlayer/memory-system"
 check assert_contains "$managed_home/.mindlayer/preferences/personal.md" "User custom preferences sentinel."
 
 scenario "boot contract"
@@ -650,7 +649,7 @@ if PATH="/usr/bin:/bin" HOME="$outro_home" bash "$ROOT_DIR/install.sh" --project
 else
   fail "$CURRENT_SCENARIO: installer exits successfully"
 fi
-check assert_contains "$outro_log" 'Note: New installs do not create global runtime markdown (`~/.mindlayer/boot.md`, router.md, or memory-system/).'
+check assert_contains "$outro_log" 'Note: Installs prune legacy global runtime markdown (`~/.mindlayer/boot.md`, router.md, and memory-system/).'
 check assert_not_contains "$outro_log" "Permission denied"
 
 printf "\nMindLayer Local Install Readiness Summary\n"

@@ -479,7 +479,7 @@ lint_repo() {
   require_not_contains "$PROJECT_DIR/install.sh" "global_router=" "installer removed global router fallback"
   require_not_contains "$PROJECT_DIR/install.sh" "global_memory_system_" "installer removed global memory-system fallbacks"
   require_not_contains "$PROJECT_DIR/install.sh" "global_index=" "installer removed global index fallback"
-  require_contains "$PROJECT_DIR/install.sh" "New installs do not create global runtime markdown" "installer global runtime compatibility"
+  require_contains "$PROJECT_DIR/install.sh" "Installs prune legacy global runtime markdown" "installer global runtime compatibility"
   require_contains "$PROJECT_DIR/install.sh" "executable runtime under ~/.mindlayer/bin and ~/.mindlayer/lib is authoritative" "installer global runtime compatibility"
   require_not_contains "$PROJECT_DIR/install.sh" "were refreshed with the latest MindLayer behavior rules" "installer global runtime compatibility"
 }
