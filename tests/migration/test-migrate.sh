@@ -266,6 +266,29 @@ check "archive does not target legacy pipeline/archive" assert_not_contains "$sm
 small_arch_short="$SANDBOX/small-archive-short.out"
 (cd "$SMALL" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" archive --file current.md --section 'Future Roadmap' --action archive > "$small_arch_short" 2>/dev/null)
 check "current.md shorthand resolves to work/current.md" assert_not_contains "$small_arch_short" "not found"
+small_arch_approved="$SANDBOX/small-archive-approved.out"
+(cd "$SMALL" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" archive --file current.md --section 'Future Roadmap' --action archive --approve-all > "$small_arch_approved" 2>/dev/null)
+check "approved archive updates work index row" grep -q "ml-20260101-backlog | Future Roadmap | archive/archive.md" "$SMALL/.mindlayer/work/index.md"
+check "approved archive appends section to top-level archive" assert_contains "$SMALL/.mindlayer/archive/archive.md" "BETABACKLOG"
+check "approved archive does not recreate pipeline" test ! -d "$SMALL/.mindlayer/pipeline"
+
+scenario "PARTIAL target work dir does not shadow legacy script state"
+PARTIAL="$SANDBOX/partial"
+build_fixture "$PARTIAL" 0
+mkdir -p "$PARTIAL/.mindlayer/work"
+cat > "$PARTIAL/.mindlayer/pipeline/signals/ml-signal-partial.md" <<'EOF'
+---
+id: ml-signal-partial
+title: Partial legacy signal
+created: 2026-01-01
+status: pending
+---
+
+# Partial legacy signal
+EOF
+partial_script="$SANDBOX/partial-script.out"
+(cd "$PARTIAL" && HOME="$SANDBOX/home" python3 "$ROOT_DIR/src/ml" script status > "$partial_script" 2>/dev/null)
+check "empty work dir does not hide legacy signals" assert_contains "$partial_script" "Signals: 1 pending"
 
 # ---------------------------------------------------------------------------
 # Fixture LARGE: padded progress forces backlog to split into work/backlog.md

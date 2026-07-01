@@ -189,6 +189,21 @@ def _remove_section_from_source(target: Path, section: str) -> list[str] | None:
     return block_lines
 
 
+def _source_index_for_target(memory_dir: Path, target: Path, section: str) -> tuple[Path | None, str]:
+    """Return the nearest summary index row that owns target+section, when known."""
+    target_resolved = target.resolve()
+    for entry in load_indexes(memory_dir.parent):
+        if entry.source_index is None:
+            continue
+        entry_section = entry.section or entry.title
+        if entry_section != section and entry.title != section:
+            continue
+        entry_target = _layout.resolve_memory_file(memory_dir, entry.file).resolve()
+        if entry_target == target_resolved:
+            return entry.source_index, entry.id
+    return None, ""
+
+
 def _section_metadata(text: str) -> dict[str, str]:
     fields: dict[str, str] = {}
     for raw in text.splitlines():
@@ -467,15 +482,22 @@ def run(
     target.write_text("\n".join(new_lines) + ("\n" if new_lines else ""), encoding="utf-8")
 
     index_path = memory_dir / "index.md"
+    source_index, entry_id = _source_index_for_target(memory_dir, target, section)
 
     if action == "archive":
         archive_path = _layout.archive_file(memory_dir)
         archive_rel = str(archive_path.relative_to(memory_dir))
         _append_to_archive(archive_path, block_lines)
-        _update_index_archived(index_path, section, archive_rel)
+        if source_index:
+            _update_index_id_archived(source_index, entry_id, archive_rel)
+        else:
+            _update_index_archived(index_path, section, archive_rel)
         print(f"Archived: '{section}' from {file} → {archive_rel}")
     elif action == "delete":
-        _remove_from_index(index_path, section)
+        if source_index:
+            _remove_id_from_index(source_index, entry_id)
+        else:
+            _remove_from_index(index_path, section)
         print(f"Deleted: '{section}' from {file}")
     else:
         print(f"Error: unknown action '{action}'. Use archive or delete.")

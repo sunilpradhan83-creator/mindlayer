@@ -166,9 +166,19 @@ def work_dir(memory_dir: Path) -> Path:
     (top-level in the target layout) is resolved separately via `archive_dir`.
     """
     target = _target_work_dir(memory_dir)
-    if target.is_dir():
+    target_anchors = [
+        _target_current(memory_dir),
+        target / "backlog.md",
+        target / "signals",
+        target / "stories",
+    ]
+    if any(path.exists() for path in target_anchors):
         return target
-    return _paths.pipeline_dir(memory_dir)
+
+    legacy = _paths.pipeline_dir(memory_dir)
+    if target.is_dir() and not legacy.is_dir():
+        return target
+    return legacy
 
 
 def is_session_path(path: str) -> bool:
