@@ -170,29 +170,12 @@ else
   fail "$CURRENT_SCENARIO: installer exits successfully"
 fi
 
-check assert_file_exists "$fresh_home/.mindlayer/boot.md"
-check assert_file_exists "$fresh_home/.mindlayer/router.md"
-check assert_dir_exists "$fresh_home/.mindlayer/memory-system"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/per-turn.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/read-write.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/schema.md"
-check assert_dir_exists "$fresh_home/.mindlayer/memory-system/commands"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/index.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/init.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/load.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/save.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/status.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/archive.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/session.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/commands/onboard.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/hooks/claude-user-prompt-submit.sh"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/AGENTS.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/CLAUDE.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/copilot-instructions.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/GEMINI.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/cursor-mindlayer.md"
-check assert_file_exists "$fresh_home/.mindlayer/memory-system/templates/windsurf-mindlayer.md"
+check assert_not_exists "$fresh_home/.mindlayer/boot.md"
+check assert_not_exists "$fresh_home/.mindlayer/router.md"
+check assert_not_exists "$fresh_home/.mindlayer/memory-system"
+check assert_file_exists "$fresh_home/.mindlayer/bin/ml"
+check assert_dir_exists "$fresh_home/.mindlayer/lib/commands"
+check assert_file_exists "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh"
 check assert_dir_exists "$fresh_home/.mindlayer/preferences"
 check assert_file_exists "$fresh_home/.mindlayer/preferences/index.md"
 check assert_file_exists "$fresh_home/.mindlayer/preferences/personal.md"
@@ -205,10 +188,6 @@ check assert_not_exists "$fresh_home/.mindlayer/anti-patterns.md"
 check assert_not_exists "$fresh_home/.mindlayer/prompts.md"
 check assert_not_exists "$fresh_home/.mindlayer/playbook.md"
 check assert_git_has_commit "$fresh_home/.mindlayer/preferences"
-check assert_contains "$fresh_home/.mindlayer/boot.md" "first project-relevant request"
-check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'Do not use `README.md` or `docs/` as memory input'
-check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" 'always check project `.mindlayer/knowledge/project.md`'
-check assert_contains "$fresh_home/.mindlayer/memory-system/read-write.md" "explicit approval"
 
 for file in router.md knowledge/project.md knowledge/index.md knowledge/decisions/index.md work/current.md work/index.md archive/index.md index.md; do
   check assert_file_exists "$fresh_project/.mindlayer/$file"
@@ -225,12 +204,12 @@ check assert_file_exists "$fresh_project/GEMINI.md"
 check assert_file_exists "$fresh_project/.cursor/rules/mindlayer.md"
 check assert_file_exists "$fresh_project/.windsurf/rules/mindlayer.md"
 check assert_file_exists "$fresh_project/.mindlayer/adapters.lock"
-check assert_files_equal "$fresh_home/.mindlayer/memory-system/templates/AGENTS.md" "$fresh_project/AGENTS.md"
-check assert_files_equal "$fresh_home/.mindlayer/memory-system/templates/CLAUDE.md" "$fresh_project/CLAUDE.md"
-check assert_files_equal "$fresh_home/.mindlayer/memory-system/templates/copilot-instructions.md" "$fresh_project/.github/copilot-instructions.md"
-check assert_files_equal "$fresh_home/.mindlayer/memory-system/templates/GEMINI.md" "$fresh_project/GEMINI.md"
-check assert_files_equal "$fresh_home/.mindlayer/memory-system/templates/cursor-mindlayer.md" "$fresh_project/.cursor/rules/mindlayer.md"
-check assert_files_equal "$fresh_home/.mindlayer/memory-system/templates/windsurf-mindlayer.md" "$fresh_project/.windsurf/rules/mindlayer.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/AGENTS.md" "$fresh_project/AGENTS.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/CLAUDE.md" "$fresh_project/CLAUDE.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/copilot-instructions.md" "$fresh_project/.github/copilot-instructions.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/GEMINI.md" "$fresh_project/GEMINI.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/cursor-mindlayer.md" "$fresh_project/.cursor/rules/mindlayer.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/windsurf-mindlayer.md" "$fresh_project/.windsurf/rules/mindlayer.md"
 check assert_lock_hash_for "$fresh_project/.mindlayer/adapters.lock" "AGENTS.md"
 check assert_lock_hash_for "$fresh_project/.mindlayer/adapters.lock" "CLAUDE.md"
 check assert_lock_hash_for "$fresh_project/.mindlayer/adapters.lock" ".github/copilot-instructions.md"
@@ -243,7 +222,7 @@ check assert_not_contains "$fresh_project/CLAUDE.md" "<!-- mindlayer:start -->"
 check assert_not_contains "$fresh_project/CLAUDE.md" "<!-- mindlayer:end -->"
 check assert_not_contains "$fresh_project/.github/copilot-instructions.md" "<!-- mindlayer:start -->"
 check assert_not_contains "$fresh_project/.github/copilot-instructions.md" "<!-- mindlayer:end -->"
-check assert_contains "$fresh_project/AGENTS.md" 'Read `~/.mindlayer/boot.md` first'
+check assert_contains "$fresh_project/AGENTS.md" 'Prefer executable `ml boot` / `ml init`'
 check assert_contains "$fresh_project/AGENTS.md" 'If the user invokes `ml boot` or `ml init`'
 check assert_contains "$fresh_project/AGENTS.md" 'Do not ask what `ml boot` means'
 check assert_contains "$fresh_project/AGENTS.md" "first project-relevant request"
@@ -255,9 +234,7 @@ check assert_contains "$fresh_project/CLAUDE.md" 'Do not ask what `ml boot` mean
 check assert_contains "$fresh_project/CLAUDE.md" "explicit approval"
 check assert_contains "$fresh_project/.claude/settings.local.json" "UserPromptSubmit"
 check assert_contains "$fresh_project/.claude/settings.local.json" "claude-user-prompt-submit.sh"
-check assert_contains "$fresh_home/.mindlayer/memory-system/hooks/claude-user-prompt-submit.sh" 'If the user prompt is `ml boot` or `ml init`'
-check assert_contains "$fresh_home/.mindlayer/memory-system/commands/index.md" '`ml boot`'
-check assert_contains "$fresh_home/.mindlayer/memory-system/commands/init.md" '# ml boot'
+check assert_contains "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" 'If the user prompt is `ml boot` or `ml init`'
 check assert_contains "$fresh_project/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter."
 check assert_contains "$fresh_project/.gitignore" ".mindlayer/local.md"
@@ -336,9 +313,9 @@ else
 fi
 
 check assert_file_exists "$bare_project/AGENTS.md"
-check assert_files_equal "$bare_home/.mindlayer/memory-system/templates/AGENTS.md" "$bare_project/AGENTS.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/AGENTS.md" "$bare_project/AGENTS.md"
 check assert_lock_hash_for "$bare_project/.mindlayer/adapters.lock" "AGENTS.md"
-check assert_contains "$bare_project/AGENTS.md" 'Read `~/.mindlayer/boot.md` first'
+check assert_contains "$bare_project/AGENTS.md" 'Prefer executable `ml boot` / `ml init`'
 check assert_contains "$bare_project/AGENTS.md" "Never answer a project question without booting first"
 check assert_not_exists "$bare_project/CLAUDE.md"
 check assert_not_exists "$bare_project/.github/copilot-instructions.md"
@@ -366,13 +343,11 @@ else
   fail "$CURRENT_SCENARIO: installer exits successfully"
 fi
 
-check assert_file_exists "$standalone_home/.mindlayer/memory-system/templates/AGENTS.md"
-check assert_contains "$standalone_home/.mindlayer/memory-system/templates/AGENTS.md" 'Read `~/.mindlayer/boot.md` first'
-check assert_contains "$standalone_home/.mindlayer/memory-system/hooks/claude-user-prompt-submit.sh" 'If the user prompt is `ml boot` or `ml init`'
-check assert_contains "$standalone_home/.mindlayer/memory-system/commands/index.md" "ml boot"
-check assert_contains "$standalone_home/.mindlayer/memory-system/commands/init.md" "# ml boot"
+check assert_not_exists "$standalone_home/.mindlayer/memory-system"
+check assert_file_exists "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh"
+check assert_contains "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" 'If the user prompt is `ml boot` or `ml init`'
 check assert_file_exists "$standalone_project/AGENTS.md"
-check assert_files_equal "$standalone_home/.mindlayer/memory-system/templates/AGENTS.md" "$standalone_project/AGENTS.md"
+check assert_contains "$standalone_project/AGENTS.md" 'Prefer executable `ml boot` / `ml init`'
 check assert_lock_hash_for "$standalone_project/.mindlayer/adapters.lock" "AGENTS.md"
 check assert_not_contains "$standalone_log" "Missing canonical adapter template"
 
@@ -444,15 +419,15 @@ else
 fi
 
 check assert_contains "$existing_home/.mindlayer/preferences.md" "Custom global preference sentinel."
-check assert_file_exists "$existing_home/.mindlayer/boot.md"
-check assert_contains "$existing_home/.mindlayer/boot.md" "first project-relevant request"
+check assert_not_exists "$existing_home/.mindlayer/boot.md"
+check assert_not_exists "$existing_home/.mindlayer/memory-system"
 check assert_contains "$existing_project/.mindlayer/knowledge/project.md" "Custom project memory sentinel."
-check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/AGENTS.md" "$existing_project/AGENTS.md"
-check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/CLAUDE.md" "$existing_project/CLAUDE.md"
-check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/copilot-instructions.md" "$existing_project/.github/copilot-instructions.md"
-check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/GEMINI.md" "$existing_project/GEMINI.md"
-check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/cursor-mindlayer.md" "$existing_project/.cursor/rules/mindlayer.md"
-check assert_files_equal "$existing_home/.mindlayer/memory-system/templates/windsurf-mindlayer.md" "$existing_project/.windsurf/rules/mindlayer.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/AGENTS.md" "$existing_project/AGENTS.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/CLAUDE.md" "$existing_project/CLAUDE.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/copilot-instructions.md" "$existing_project/.github/copilot-instructions.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/GEMINI.md" "$existing_project/GEMINI.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/cursor-mindlayer.md" "$existing_project/.cursor/rules/mindlayer.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/windsurf-mindlayer.md" "$existing_project/.windsurf/rules/mindlayer.md"
 check assert_contains "$existing_project/.gitignore" "node_modules/"
 check assert_not_contains "$existing_project/AGENTS.md" "<!-- mindlayer:start -->"
 check assert_not_contains "$existing_project/AGENTS.md" "<!-- mindlayer:end -->"
@@ -468,7 +443,6 @@ check assert_count 1 "$existing_project/.gitignore" ".mindlayer/local.md"
 check assert_count 1 "$existing_project/.gitignore" ".mindlayer/private/"
 check assert_count 1 "$existing_project/.gitignore" ".mindlayer/adapters.lock"
 check assert_count 1 "$existing_project/.gitignore" ".claude/settings.local.json"
-check assert_file_exists "$existing_home/.mindlayer/memory-system/commands/index.md"
 check assert_file_exists "$existing_project/.mindlayer/index.md"
 
 scenario "new tool detected on reinstall"
@@ -497,9 +471,9 @@ else
   fail "$CURRENT_SCENARIO: second installer run exits successfully"
 fi
 
-check assert_files_equal "$newtool_home/.mindlayer/memory-system/templates/AGENTS.md" "$newtool_project/AGENTS.md"
-check assert_files_equal "$newtool_home/.mindlayer/memory-system/templates/CLAUDE.md" "$newtool_project/CLAUDE.md"
-check assert_files_equal "$newtool_home/.mindlayer/memory-system/templates/GEMINI.md" "$newtool_project/GEMINI.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/AGENTS.md" "$newtool_project/AGENTS.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/CLAUDE.md" "$newtool_project/CLAUDE.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/GEMINI.md" "$newtool_project/GEMINI.md"
 check assert_contains "$newtool_project/.mindlayer/adapters.lock" "AGENTS.md=$agents_hash_before"
 check assert_contains "$newtool_project/.mindlayer/adapters.lock" "CLAUDE.md=$claude_hash_before"
 check assert_lock_hash_for "$newtool_project/.mindlayer/adapters.lock" "GEMINI.md"
@@ -537,7 +511,7 @@ else
   fail "$CURRENT_SCENARIO: installer exits successfully after locked drift"
 fi
 
-check assert_files_equal "$drift_home/.mindlayer/memory-system/templates/AGENTS.md" "$drift_project/AGENTS.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/AGENTS.md" "$drift_project/AGENTS.md"
 check assert_not_contains "$drift_project/AGENTS.md" "Prior locked template content."
 check assert_lock_hash_for "$drift_project/.mindlayer/adapters.lock" "AGENTS.md"
 check assert_lock_hash_for "$drift_project/.mindlayer/adapters.lock" "CLAUDE.md"
@@ -574,7 +548,7 @@ check assert_contains "$postblock_project/AGENTS.md" "Old MindLayer block conten
 check assert_contains "$postblock_project/AGENTS.md" "This content after the block must be preserved."
 check assert_contains "$postblock_project/AGENTS.md" "<!-- mindlayer:start -->"
 check assert_contains "$postblock_project/AGENTS.md" "<!-- mindlayer:end -->"
-check assert_files_equal "$postblock_home/.mindlayer/memory-system/templates/CLAUDE.md" "$postblock_project/CLAUDE.md"
+check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/CLAUDE.md" "$postblock_project/CLAUDE.md"
 check assert_lock_hash_for "$postblock_project/.mindlayer/adapters.lock" "CLAUDE.md"
 check assert_lock_hash_for "$postblock_project/.mindlayer/adapters.lock" "AGENTS.md"
 check assert_contains "$postblock_project/.mindlayer/adapters.lock" "AGENTS.md=$prior_hash"
@@ -626,7 +600,6 @@ check assert_contains "$managed_home/.mindlayer/memory-system/commands/init.md" 
 check assert_contains "$managed_home/.mindlayer/preferences/personal.md" "User custom preferences sentinel."
 
 scenario "boot contract"
-check assert_contains "$fresh_home/.mindlayer/boot.md" "first project-relevant request"
 check assert_file_exists "$fresh_home/.mindlayer/preferences/personal.md"
 check assert_not_exists "$fresh_home/.mindlayer/memory.md"
 check assert_contains "$fresh_project/AGENTS.md" "Commands and proactive behavior"

@@ -2,11 +2,11 @@
 
 <!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
 
-Read this file immediately after `~/.mindlayer/router.md`. Follow the load triggers below for project memory files.
+Project memory fallback router. Executable `ml` commands are the bootstrap and routing authority; use this file only when the executable is unavailable and project `.mindlayer/` files must be read directly.
 
 ## Auto-Load Behavior
 
-Load triggers fire automatically — no approval required for reads. After loading, append a one-line notification before the response:
+Load triggers fire automatically during fallback reads — no approval required for reads. After loading, append a one-line notification before the response:
 
 ```text
 Loaded: <file.md> — <reason>

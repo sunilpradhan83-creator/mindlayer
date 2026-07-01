@@ -428,7 +428,7 @@ lint_repo() {
   [ -f "$PROJECT_DIR/.cursor/rules/mindlayer.md" ] && require_same_file "$PROJECT_DIR/.cursor/rules/mindlayer.md" "$PROJECT_DIR/seed/adapters/memory-system/templates/cursor-mindlayer.md" "Cursor adapter"
   [ -f "$PROJECT_DIR/.windsurf/rules/mindlayer.md" ] && require_same_file "$PROJECT_DIR/.windsurf/rules/mindlayer.md" "$PROJECT_DIR/seed/adapters/memory-system/templates/windsurf-mindlayer.md" "Windsurf adapter"
 
-  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" 'Read `~/.mindlayer/boot.md` first' "ml init command"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" 'Run executable `ml boot` when available' "ml init command"
   require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" 'Do not use `README.md` or `docs/` as memory input.' "ml init command"
   require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" "not memory stores" "ml init command"
   require_contains "$PROJECT_DIR/seed/adapters/memory-system/commands/init.md" "Go outside MindLayer memory only when necessary" "ml init command"
@@ -468,11 +468,11 @@ lint_repo() {
   require_contains "$PROJECT_DIR/README.md" ".windsurf/rules/mindlayer.md" "README"
 
   # Installer — check canonical adapter template handling and embedded fallback vars
-  require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/AGENTS.md" "installer adapter templates"
-  require_contains "$PROJECT_DIR/install.sh" "memory-system/templates/CLAUDE.md" "installer adapter templates"
+  require_contains "$PROJECT_DIR/install.sh" 'install_canonical_adapter "AGENTS.md"' "installer adapter templates"
+  require_contains "$PROJECT_DIR/install.sh" 'install_canonical_adapter "CLAUDE.md"' "installer adapter templates"
   require_contains "$PROJECT_DIR/install.sh" "claude-user-prompt-submit.sh" "installer Claude hook"
   require_contains "$PROJECT_DIR/seed/adapters/memory-system/hooks/claude-user-prompt-submit.sh" "UserPromptSubmit" "Claude UserPromptSubmit hook"
-  require_contains "$PROJECT_DIR/seed/adapters/memory-system/hooks/claude-user-prompt-submit.sh" "Token Burned" "Claude UserPromptSubmit hook"
+  require_contains "$PROJECT_DIR/seed/adapters/memory-system/hooks/claude-user-prompt-submit.sh" "runtime authority" "Claude UserPromptSubmit hook"
   require_contains "$PROJECT_DIR/install.sh" ".mindlayer/adapters.lock" "installer adapter lock"
   require_contains "$PROJECT_DIR/install.sh" "sha256_file" "installer adapter lock"
   require_contains "$PROJECT_DIR/install.sh" "not durable memory stores or retrieval sources" "installer read-write fallback"
@@ -486,9 +486,8 @@ lint_repo() {
   require_contains "$PROJECT_DIR/install.sh" "literal explicit approval" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "Approval must be literal" "installer read-write fallback"
   require_contains "$PROJECT_DIR/install.sh" "memory-system/commands/index.md" "installer commands index fallback"
-  require_contains "$PROJECT_DIR/install.sh" "Compatibility markdown for older adapter-driven installs" "installer global runtime compatibility"
-  require_contains "$PROJECT_DIR/install.sh" "Existing files are preserved on reinstall" "installer global runtime compatibility"
-  require_contains "$PROJECT_DIR/install.sh" 'write_template_if_missing "$GLOBAL_DIR/boot.md"' "installer global runtime compatibility"
+  require_contains "$PROJECT_DIR/install.sh" "New installs do not create global runtime markdown" "installer global runtime compatibility"
+  require_contains "$PROJECT_DIR/install.sh" "executable runtime under ~/.mindlayer/bin and ~/.mindlayer/lib is authoritative" "installer global runtime compatibility"
   require_not_contains "$PROJECT_DIR/install.sh" "were refreshed with the latest MindLayer behavior rules" "installer global runtime compatibility"
 }
 

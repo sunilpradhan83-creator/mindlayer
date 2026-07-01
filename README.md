@@ -60,7 +60,8 @@ GEMINI.md
 
 ## Commands
 
-MindLayer installs a local `ml` command runner plus markdown command specs that define expected behavior:
+MindLayer installs a local `ml` command runner. Thin adapter files point agents at
+that executable runtime instead of duplicating behavior into tool-specific prompts:
 
 - `ml boot` — print the session boot receipt with minimal useful memory context.
 - `ml load <query>` — fetch specific memory using ranked index matches first. `ml retrieve <query>` is an alias.
@@ -72,11 +73,13 @@ MindLayer installs a local `ml` command runner plus markdown command specs that 
 - `ml script` — run the SCRIPT lifecycle commands (Signal → Cut → Refine → Implement → Prove → Transfer).
 - `ml onboard` — help populate MindLayer when installing into an existing project.
 
-Command specs live in `~/.mindlayer/memory-system/commands/` after install and ship from [`seed/adapters/memory-system/commands/`](seed/adapters/memory-system/commands/). Installed global runtime markdown is transitional compatibility output for current adapters, not a durable memory source.
+Behavior specs for adapters ship from [`seed/adapters/`](seed/adapters/). They are
+installer inputs and compatibility references, not durable memory sources.
 
 ## Effective Use
 
-Boot loads `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, the project router, `~/.mindlayer/memory-system/per-turn.md`, indexes, substantive user preferences, project identity, and current progress. Starter-only placeholders are skipped.
+Boot runs through `ml boot` / `ml init`, loading minimal useful context from global
+preferences and project `.mindlayer/` memory. Starter-only placeholders are skipped.
 
 Use `ml load <query>` instead of loading every memory file. Loading starts from indexes and loads only relevant sections.
 
@@ -139,7 +142,9 @@ Back it up with your normal dotfiles, encrypted backup, or a private personal re
 
 ## Safety
 
-The installer creates missing files and preserves existing content. It may refresh managed system files (`~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/`, and canonical adapter templates) while preserving user-owned preferences and memory.
+The installer creates missing files and preserves existing content. It refreshes the
+managed executable runtime under `~/.mindlayer/bin` and `~/.mindlayer/lib`, while
+preserving user-owned preferences and memory.
 
 Project adapters are frozen full-file templates tracked by `.mindlayer/adapters.lock`. Reinstall refreshes an adapter only when its hash matches the lock. If an adapter contains user-added content, install refuses to overwrite it and asks you to route that content through MindLayer first.
 

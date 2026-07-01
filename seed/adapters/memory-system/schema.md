@@ -6,7 +6,7 @@ Load this file when the user asks about lifecycle statuses, subdirectory rules, 
 
 ## Token Rules
 
-- Use L0 bootstrap for boot.md, router.md, and per-turn.md only.
+- Use executable `ml boot` for L0 bootstrap. Compatibility markdown is fallback guidance only.
 - Use L1 summaries and indexes for normal retrieval.
 - Use L2 full sections only when the query requires detail.
 - Do not load entire files by default.

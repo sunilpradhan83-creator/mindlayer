@@ -2,26 +2,25 @@
 
 <!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
 
-`ml boot` shows or reruns the MindLayer boot receipt. The primary path is automatic session-start or tool-preflight boot.
+`ml boot` shows or reruns the MindLayer boot receipt. The executable command is the bootstrap authority; automatic session-start or tool-preflight boot should delegate to it when possible.
 
 `ml init` is a legacy/manual refresh alias for `ml boot`.
 
 ## Procedure
 
-1. Read `~/.mindlayer/boot.md` first if available. If missing, fall back to project `.mindlayer/` files and note the missing global boot file.
-2. Read `~/.mindlayer/router.md` — global load and save triggers.
-3. Read `.mindlayer/router.md` — project load triggers. Skip if file does not exist.
-4. Read `~/.mindlayer/memory-system/per-turn.md` — always load, controls every response.
-5. Read project `.mindlayer/index.md` if available.
-6. Check `~/.mindlayer/preferences/personal.md` if available. Load only when it contains substantive user-written preferences; if missing or starter-only, report as skipped.
-7. Always check project `.mindlayer/knowledge/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
-8. If `.mindlayer/knowledge/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
-9. Read only the latest useful progress summary from project `.mindlayer/work/current.md`.
-10. Do not load empty scaffold files by default.
-11. Do not load `.mindlayer/local.md` by default.
-12. Do not use `README.md` or `docs/` as memory input.
-13. Treat tool adapters as thin instructions only — not memory stores.
-14. Go outside MindLayer memory only when necessary for the current task.
+1. Run executable `ml boot` when available and treat its receipt as authoritative.
+2. If the executable is unavailable, fall back to direct project `.mindlayer/` reads.
+3. Read project `.mindlayer/index.md` if available.
+4. Read `.mindlayer/router.md` if available for project load triggers.
+5. Check `~/.mindlayer/preferences/personal.md` if available. Load only when it contains substantive user-written preferences; if missing or starter-only, report as skipped.
+6. Always check project `.mindlayer/knowledge/project.md` for stable project identity, even when the project index marks it low importance or starter-like.
+7. If `.mindlayer/knowledge/project.md` contains only scaffold or placeholder content, report that project identity is missing or still starter-only.
+8. Read only the latest useful progress summary from project `.mindlayer/work/current.md`; if absent, fall back to legacy progress/backlog paths.
+9. Do not load empty scaffold files by default.
+10. Do not load `.mindlayer/local.md` by default.
+11. Do not use `README.md` or `docs/` as memory input.
+12. Treat tool adapters as thin instructions only — not memory stores.
+13. Go outside MindLayer memory only when necessary for the current task.
 
 ## Source Boundaries
 
@@ -34,7 +33,7 @@ When initializing inside the MindLayer repo:
 
 ## Token Discipline
 
-Keep token usage small. Always load `~/.mindlayer/boot.md` and `router.md` first (~350 tokens), then `memory-system/per-turn.md` (~600 tokens). Prefer index entries, section summaries, and targeted reads for everything else. Avoid loading full files, empty scaffolds, starter-only preferences, local notes, human docs, and adapter files by default.
+Keep token usage small. Prefer executable `ml boot`. During direct fallback, prefer index entries, section summaries, and targeted project reads. Avoid loading global runtime markdown, full files, empty scaffolds, starter-only preferences, local notes, human docs, and adapter files by default.
 
 ## Context Receipt
 
@@ -55,6 +54,6 @@ When exact host usage is unavailable, estimate tokens as words multiplied by rou
 
 ## Automatic Boot Contract
 
-MindLayer-aware adapters should trigger this procedure at session start or tool preflight when possible. If a host cannot run preflight hooks, run it before the first project-relevant request. A plain greeting is not project-relevant.
+MindLayer-aware adapters should trigger executable `ml boot` at session start or tool preflight when possible. If a host cannot run preflight hooks, run it before the first project-relevant request. If the executable is unavailable, use the direct `.mindlayer/` fallback above. A plain greeting is not project-relevant.
 
 `ml boot` is the manual command for showing or rerunning the boot receipt. `ml init` is a legacy alias.

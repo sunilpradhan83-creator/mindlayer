@@ -2,26 +2,26 @@
 
 <!-- managed by MindLayer installer — last_updated: YYYY-MM-DD -->
 
-Read this file first at every session start. Then read router.md. Then follow the load triggers.
+Compatibility bootstrap for hosts that cannot run `ml boot` directly. The executable `ml boot` / `ml init` command is the bootstrap authority; this markdown exists only as fallback guidance for adapter-driven hosts.
 
 ## Boot Sequence
 
-Run once per session, in order, before answering any request:
+Run once per session before answering the first project-relevant request:
 
-1. Read `~/.mindlayer/boot.md` — you are here.
-2. Read `~/.mindlayer/router.md` — global load and save triggers.
-3. Read `.mindlayer/router.md` — project load triggers. Skip if file does not exist.
-4. Read `~/.mindlayer/memory-system/per-turn.md` — always. Controls every response you generate.
-5. Read `~/.mindlayer/preferences/personal.md` — only if it contains non-scaffold content (file has real user preferences, not just the starter template).
-6. Read project `.mindlayer/index.md` — pointer-only boot catalog. Follow only the first-level subfolder pointers needed for the task; `index-full.md` is deprecated.
-7. Always check project `.mindlayer/knowledge/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only identity as missing. Load even if index marks it low importance; report as missing if placeholder-only.
-8. Load project progress and backlog — check `progress.md` and `backlog.md` for current phase and next action.
-9. Check `work/sessions/` — if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
-10. Check onboard status — scan `.mindlayer/index.md` for `id: ml-onboard-complete`. If absent AND `.mindlayer/knowledge/project.md` contains only placeholder/scaffold content, load `memory-system/commands/onboard.md` and fire the onboard flow on the first project-relevant turn. Surface in boot receipt as: `Onboarding: pending — ml onboard will run on first project-relevant request.`
-11. Run memory diff — load `memory-system/commands/diff.md` and compute what changed in `.mindlayer/` since the last session. Surface in boot receipt between `Current progress:` and `Context cost:`. Skip silently if no session file or git unavailable.
-12. Run adapter guard — compare known frozen adapter hashes against `.mindlayer/adapters.lock` using canonical templates from `~/.mindlayer/memory-system/templates/`. Complete this guard before answering the first project-relevant request.
+1. Run executable `ml boot` when available. Treat its receipt as authoritative.
+2. If `ml boot` is unavailable, fall back to project `.mindlayer/`: read `.mindlayer/index.md` — pointer-only boot catalog. Follow only the first-level subfolder pointers needed for the task; `index-full.md` is deprecated.
+3. Read `.mindlayer/router.md` when present for project load triggers.
+4. Always check project `.mindlayer/knowledge/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only identity as missing. Load even if index marks it low importance; report as missing if placeholder-only.
+5. Load current project progress from `.mindlayer/work/current.md`; if absent, fall back to legacy progress/backlog locations.
+6. Check `.mindlayer/work/sessions/` — if a recent session file exists, read only the `## Next` section and surface as a one-line cue in the boot receipt.
+7. Check `~/.mindlayer/preferences/personal.md` only if it exists and contains non-scaffold user preferences.
+8. Check onboard status — scan `.mindlayer/index.md` for `id: ml-onboard-complete`. If absent AND `.mindlayer/knowledge/project.md` contains only placeholder/scaffold content, run `ml onboard` or follow the onboard flow on the first project-relevant turn. Surface in boot receipt as: `Onboarding: pending — ml onboard will run on first project-relevant request.`
+9. Run memory diff through `ml diff` / executable boot behavior when available; otherwise compute what changed in `.mindlayer/` since the last session and surface it between `Current progress:` and `Context cost:`. Skip silently if no session file or git unavailable.
+10. Run adapter guard through executable runtime when available. If unavailable, compare known frozen adapter hashes against `.mindlayer/adapters.lock` using installed canonical adapter templates. Complete this guard before answering the first project-relevant request.
 
-Do not treat a plain greeting as a project-relevant request. On the first project-relevant request — including any question about what the project is, what it does, or what is in it — run the full boot sequence and emit the boot receipt BEFORE giving your answer. Never answer a project question without booting first. Never ask the user if they want you to boot — just boot.
+Do not treat a plain greeting as a project-relevant request. On the first project-relevant request — including any question about what the project is, what it does, or what is in it — run this bootstrap and emit the boot receipt BEFORE giving your answer. Never answer a project question without booting first. Never ask the user if they want you to boot — just boot.
+
+Global `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/` files may exist during migration for compatibility with older adapters. They are not canonical required runtime control-plane files.
 
 ## Adapter Guard
 
@@ -40,7 +40,7 @@ At boot, after loading memory and before answering the first project-relevant re
 1. For each known frozen adapter that exists in the project, hash the file.
 2. Compare each hash with `.mindlayer/adapters.lock`. A missing lock entry means the adapter is unverified.
 3. If all hashes match, proceed silently.
-4. If any hash mismatches or has no lock entry, diff the current file against the canonical template in `~/.mindlayer/memory-system/templates/`.
+4. If any hash mismatches or has no lock entry, diff the current file against the installed canonical adapter template.
 5. If the diff contains user-added content, alert the user, show the diff, and trigger the `ml save` flow to route that content to the correct MindLayer destination. Restore the adapter only after the user approves or skips the memory write.
 6. If the mismatch is pure template version drift with no user-added content, restore the canonical adapter silently.
 7. After restoring an adapter, update `.mindlayer/adapters.lock` with the new SHA-256 hash.
@@ -88,7 +88,7 @@ Context share (approximate context share by source):
 - Other sources: 0% (README.md, docs/, and adapters skipped)
 
 Token strategy:
-L0 boot: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress only.
+Executable boot: project index, project identity, current work, substantive preferences, and latest session cue only.
 
 Ready.
 What would you like to work on?

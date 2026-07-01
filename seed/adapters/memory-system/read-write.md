@@ -15,7 +15,7 @@ Load this file before any memory read or write operation — before proposing ml
 
 ## Read Rules
 
-- Read `~/.mindlayer/boot.md` first when initializing MindLayer behavior, then `router.md`, then follow load triggers.
+- Prefer executable `ml boot` when initializing MindLayer behavior. If unavailable, fall back to project `.mindlayer/` boot context and substantive global preferences.
 - Read `preferences/personal.md` during MindLayer boot only when it contains substantive user-written preferences. If it is missing or starter-only (the file exists but contains only MindLayer scaffold content with no real user data), report it as skipped or missing instead of loading it as useful context.
 - Read indexes before full memory files.
 - During MindLayer boot, always check project `.mindlayer/knowledge/project.md` for stable project identity even when the project index marks it low importance or starter-like; report placeholder-only project identity as missing or starter-only.

@@ -52,12 +52,6 @@ assert_core_synced() {
   cmp -s "$HOME/.mindlayer/memory-system/per-turn.md" "seed/adapters/memory-system/per-turn.md"
 }
 
-assert_router_has_module_trigger() {
-  module="$1"
-  grep -Fq "memory-system/per-turn/$module.md" "seed/adapters/router.md" &&
-    grep -Fq "memory-system/per-turn/$module.md" "$HOME/.mindlayer/router.md"
-}
-
 # ---------------------------------------------------------------------------
 # Load announcement assertions
 # ---------------------------------------------------------------------------
@@ -255,12 +249,6 @@ for module in $MODULES; do
     pass "$CURRENT_SCENARIO: live module synced: $module"
   else
     fail "$CURRENT_SCENARIO: live module synced: $module"
-  fi
-
-  if assert_router_has_module_trigger "$module" 2>/dev/null; then
-    pass "$CURRENT_SCENARIO: router trigger present: $module"
-  else
-    fail "$CURRENT_SCENARIO: router trigger present: $module"
   fi
 done
 

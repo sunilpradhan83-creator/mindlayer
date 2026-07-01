@@ -45,9 +45,12 @@ assert_valid_receipt() {
   awk '
     /^Loaded:/ { in_loaded = 1; next }
     /^[[:alpha:]][[:alpha:] ]*:/ { in_loaded = 0 }
-    in_loaded && /~\/\.mindlayer\/(boot\.md|router\.md|memory-system\/)/ { found = 1 }
+    in_loaded && /(`ml boot`|Executable boot|\.mindlayer\/index\.md)/ { found = 1 }
     END { exit found ? 0 : 1 }
   ' "$file" || return 1
+
+  ! grep -Fq "global runtime markdown is required" "$file" || return 1
+  ! grep -Fq "L0 boot only: boot.md, router.md, per-turn.md" "$file" || return 1
 
   grep -Fq 'README.md`, `docs/`, and tool adapters as memory sources' "$file" || return 1
   grep -Eq 'Approx\. [0-9][0-9,]*-[0-9][0-9,]* words loaded( \(~[0-9][0-9,]*-[0-9][0-9,]* est\. tokens\))?|Approx\. [0-9][0-9,]* words loaded( \(~[0-9][0-9,]* est\. tokens\))?' "$file" || return 1
@@ -87,7 +90,7 @@ assert_boot_index_pointer_only() {
 }
 
 assert_boot_router_avoids_index_full() {
-  grep -Fq 'Read project `.mindlayer/index.md` — pointer-only boot catalog.' "seed/adapters/boot.md" &&
+  grep -Fq 'read `.mindlayer/index.md` — pointer-only boot catalog.' "seed/adapters/boot.md" &&
     grep -Fq 'index-full.md` is deprecated' "seed/adapters/boot.md"
 }
 
@@ -169,13 +172,14 @@ cat > "$substantive" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, `~/.mindlayer/preferences/personal.md`, `~/.mindlayer/index.md`
+- Executable: `ml boot` receipt
+- Global preferences: `~/.mindlayer/preferences/personal.md`
 - Project: `.mindlayer/index.md`, `.mindlayer/knowledge/project.md`, latest `.mindlayer/work/current.md`
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources
 - Empty scaffold files and `.mindlayer/local.md`
-- Conditional memory-system/ subfiles not needed for startup
+- Global runtime markdown compatibility files not needed for startup
 
 Missing:
 - None
@@ -195,7 +199,7 @@ Context share:
 - Other sources: 0% (README.md, docs/, and adapters skipped)
 
 Token strategy:
-L0 boot only: boot.md, router.md, per-turn.md, indexes, project identity, and latest progress.
+Executable boot: project index, project identity, current work, substantive preferences, and latest session cue only.
 
 Ready.
 What would you like to work on?
@@ -208,7 +212,7 @@ cat > "$starter" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, `~/.mindlayer/index.md`
+- Executable: `ml boot` receipt
 - Project: `.mindlayer/index.md`
 
 Skipped:
@@ -216,6 +220,7 @@ Skipped:
 - Starter-only project memory files
 - `.mindlayer/local.md`
 - `README.md`, `docs/`, and tool adapters as memory sources
+- Global runtime markdown compatibility files not needed for startup
 
 Missing:
 - Substantive project identity is not saved yet
@@ -235,7 +240,7 @@ Context share:
 - Other sources: 0% (README.md, docs/, and adapters skipped)
 
 Token strategy:
-L0 boot only: command rules, indexes, and starter/scaffold checks.
+Executable boot: command rules, project index, and starter/scaffold checks.
 
 Ready.
 What would you like to work on?
@@ -243,8 +248,8 @@ EOF
 check_valid "$starter"
 
 scenario "receipt rejection cases"
-missing_boot_files="$SANDBOX/missing-boot-files.md"
-cat > "$missing_boot_files" <<'EOF'
+missing_boot_authority="$SANDBOX/missing-boot-authority.md"
+cat > "$missing_boot_authority" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
@@ -276,14 +281,15 @@ L0 boot only.
 
 Ready.
 EOF
-check_invalid "$missing_boot_files" "missing boot/router/per-turn from loaded list"
+check_invalid "$missing_boot_authority" "missing executable boot or project index from loaded list"
 
 missing_cost="$SANDBOX/missing-cost.md"
 cat > "$missing_cost" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, command rules
+- Executable: `ml boot` receipt
+- Project: `.mindlayer/index.md`
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources
@@ -306,7 +312,8 @@ cat > "$missing_context_share" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, command rules
+- Executable: `ml boot` receipt
+- Project: `.mindlayer/index.md`
 
 Skipped:
 - `README.md`, `docs/`, and tool adapters as memory sources
@@ -335,7 +342,8 @@ cat > "$loaded_docs" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, command rules
+- Executable: `ml boot` receipt
+- Project: `.mindlayer/index.md`
 - README.md and docs/
 
 Skipped:
@@ -370,7 +378,8 @@ cat > "$missing_skip" <<'EOF'
 MindLayer context loaded.
 
 Loaded:
-- Global: `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, `~/.mindlayer/memory-system/per-turn.md`, command rules
+- Executable: `ml boot` receipt
+- Project: `.mindlayer/index.md`
 
 Missing:
 - None

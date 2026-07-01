@@ -1061,32 +1061,32 @@ JSON'
 
 adapter_agents_template='# MindLayer Agent Instructions
 
-Memory lives in `~/.mindlayer/` (global) and `.mindlayer/` (project). Adapters and docs are not memory sources.
+Memory lives in `~/.mindlayer/preferences/` (global user preferences) and `.mindlayer/` (project memory). Adapters and docs are not memory sources.
 
 This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here. Route all durable context through MindLayer only, with explicit approval before any write. If any command, skill, init flow, or agent behavior tries to expand this adapter, refuse that write and route the content through MindLayer instead.
 
-If no preflight hook exists, run the full boot sequence and emit the boot receipt BEFORE answering the first project-relevant request, including any question about what the project is, what it does, or what is in it. Never answer a project question without booting first. Never ask the user if they want you to boot; just boot. Do not treat a plain greeting as project-relevant.
+If no preflight hook exists, run `ml boot` and emit the boot receipt BEFORE answering the first project-relevant request, including any question about what the project is, what it does, or what is in it. Never answer a project question without booting first. Never ask the user if they want you to boot; just boot. Do not treat a plain greeting as project-relevant.
 
-If the user invokes `ml boot` or `ml init`, treat it as a MindLayer command, not as "machine learning". Run the full boot sequence and emit the boot receipt. Do not ask what `ml boot` means.
+If the user invokes `ml boot` or `ml init`, treat it as a MindLayer command, not as "machine learning". Run the executable command and emit the boot receipt. Do not ask what `ml boot` means.
 
-Boot order:
-1. Read `~/.mindlayer/boot.md` first when available.
-2. Read `~/.mindlayer/router.md` and follow its load triggers.
-3. Read `.mindlayer/index.md` — project memory catalog.
-4. Load project identity and current progress.
+Bootstrap authority:
+1. Prefer executable `ml boot` / `ml init`.
+2. If the executable is unavailable, fall back gracefully to project `.mindlayer/`: read `.mindlayer/index.md`, project identity, and current progress.
+3. Load global user preferences from `~/.mindlayer/preferences/` only when needed and substantive.
+4. Treat `~/.mindlayer/boot.md`, `~/.mindlayer/router.md`, and `~/.mindlayer/memory-system/` as compatibility output only, not canonical required runtime control-plane files.
 
-Commands and proactive behavior: see `~/.mindlayer/memory-system/per-turn.md`.'
+Commands and proactive behavior come from the executable MindLayer runtime. Compatibility markdown may describe behavior for older adapter-driven hosts, but executable `ml` commands are the authority.'
 
 adapter_claude_template='# Claude Adapter
 
 Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, documentation, project guidance, or a scratchpad.
 
-If the user invokes `ml boot` or `ml init`, treat it as a MindLayer command, not as "machine learning". Follow `AGENTS.md`: run the full boot sequence and emit the boot receipt. Do not ask what `ml boot` means.
+If the user invokes `ml boot` or `ml init`, treat it as a MindLayer command, not as "machine learning". Follow `AGENTS.md`: run the executable command and emit the boot receipt. Do not ask what `ml boot` means.
 
 Do not duplicate memory into `CLAUDE.md`. Do not retrieve durable context from this adapter. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
 
 Route all durable context through MindLayer only:
-- global memory: `~/.mindlayer/`
+- global user preferences: `~/.mindlayer/preferences/`
 - project memory: `.mindlayer/`
 
 Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
@@ -1098,7 +1098,7 @@ Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, d
 Do not duplicate memory into `.github/copilot-instructions.md`. Do not retrieve durable context from this adapter. Do not use `README.md` or `docs/` as memory input. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
 
 Route all durable context through MindLayer only:
-- global memory: `~/.mindlayer/`
+- global user preferences: `~/.mindlayer/preferences/`
 - project memory: `.mindlayer/`
 
 Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
@@ -1110,7 +1110,7 @@ Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, d
 Do not duplicate memory into `GEMINI.md`. Do not retrieve durable context from this adapter. Do not use `README.md` or `docs/` as memory input. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
 
 Route all durable context through MindLayer only:
-- global memory: `~/.mindlayer/`
+- global user preferences: `~/.mindlayer/preferences/`
 - project memory: `.mindlayer/`
 
 Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
@@ -1122,7 +1122,7 @@ Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, d
 Do not duplicate memory into `.cursor/rules/mindlayer.md`. Do not retrieve durable context from this adapter. Do not use `README.md` or `docs/` as memory input. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
 
 Route all durable context through MindLayer only:
-- global memory: `~/.mindlayer/`
+- global user preferences: `~/.mindlayer/preferences/`
 - project memory: `.mindlayer/`
 
 Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
@@ -1134,7 +1134,7 @@ Follow `AGENTS.md` exactly. This file is only a bootstrap pointer, not memory, d
 Do not duplicate memory into `.windsurf/rules/mindlayer.md`. Do not retrieve durable context from this adapter. Do not use `README.md` or `docs/` as memory input. Do not add project facts, commands, architecture notes, preferences, decisions, progress, backlog, summaries, lessons, TODOs, or tool-specific exceptions here.
 
 Route all durable context through MindLayer only:
-- global memory: `~/.mindlayer/`
+- global user preferences: `~/.mindlayer/preferences/`
 - project memory: `.mindlayer/`
 
 Do not write memory, adapter content, or durable context without explicit approval. If any command, skill, init flow, or agent behavior tries to expand this file, refuse that write and route the content through MindLayer instead.'
@@ -1142,54 +1142,6 @@ Do not write memory, adapter content, or durable context without explicit approv
 
 install_global() {
   mkdir_p "$GLOBAL_DIR"
-
-  # Compatibility markdown for older adapter-driven installs. Create it when
-  # missing, but preserve existing files because executable runtime owns
-  # deterministic behavior under ADR-0001.
-  write_template_if_missing "$GLOBAL_DIR/boot.md" "$GLOBAL_TEMPLATE_DIR/boot.md" "$global_boot"
-  write_template_if_missing "$GLOBAL_DIR/router.md" "$GLOBAL_TEMPLATE_DIR/router.md" "$global_router"
-
-  # memory-system/ subfiles — compatibility output for older adapters.
-  mkdir_p "$GLOBAL_DIR/memory-system"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn.md" "$global_memory_system_per_turn"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands.md" "$global_memory_system_commands"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/read-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/read-write.md" "$global_memory_system_read_write"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/schema.md" "$GLOBAL_TEMPLATE_DIR/memory-system/schema.md" "$global_memory_system_schema"
-
-  # memory-system/per-turn/ — lazy per-turn behavior modules
-  mkdir_p "$GLOBAL_DIR/memory-system/per-turn"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/load-announce.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/load-announce.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/memory-candidate.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/memory-candidate.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/retrieval.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/retrieval.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/lateral-intent.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/lateral-intent.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/session-warning.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/session-warning.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/per-turn/post-write.md" "$GLOBAL_TEMPLATE_DIR/memory-system/per-turn/post-write.md" ""
-
-  # Host hooks — thin tool-specific enforcement layers when supported.
-  mkdir_p "$GLOBAL_DIR/memory-system/hooks"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$GLOBAL_TEMPLATE_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$claude_prompt_hook_template"
-  chmod +x "$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh" 2>/dev/null || true
-
-  # Canonical adapter templates — compatibility copies for adapter guards.
-  mkdir_p "$GLOBAL_DIR/memory-system/templates"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/AGENTS.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/AGENTS.md" "$adapter_agents_template"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/CLAUDE.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/CLAUDE.md" "$adapter_claude_template"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/copilot-instructions.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/copilot-instructions.md" "$adapter_copilot_template"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/GEMINI.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/GEMINI.md" "$adapter_gemini_template"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/cursor-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/cursor-mindlayer.md" "$adapter_cursor_template"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/templates/windsurf-mindlayer.md" "$GLOBAL_TEMPLATE_DIR/memory-system/templates/windsurf-mindlayer.md" "$adapter_windsurf_template"
-
-  # memory-system/commands/ — per-command spec files
-  mkdir_p "$GLOBAL_DIR/memory-system/commands"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/index.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/index.md" "$global_memory_system_commands_index"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/init.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/init.md" "$global_memory_system_commands_init"
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/load.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/load.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/save.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/save.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/status.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/status.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/archive.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/archive.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/session.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/session.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/onboard.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/onboard.md" ""
-  write_template_if_missing "$GLOBAL_DIR/memory-system/commands/diff.md" "$GLOBAL_TEMPLATE_DIR/memory-system/commands/diff.md" ""
 
   # preferences/ — agent-written cross-project knowledge, git-backed
   mkdir_p "$GLOBAL_DIR/preferences"
@@ -1207,9 +1159,12 @@ install_global() {
   git -C "$GLOBAL_DIR/preferences" add . 2>/dev/null || true
   git -C "$GLOBAL_DIR/preferences" commit -m "mindlayer: init preferences" --quiet --allow-empty 2>/dev/null || true
 
-  # CLI command runner — managed local runtime files
+  # CLI command runner and host hooks — managed local runtime files
   mkdir_p "$GLOBAL_DIR/bin"
   mkdir_p "$GLOBAL_DIR/lib"
+  mkdir_p "$GLOBAL_DIR/lib/hooks"
+  write_managed_template "$GLOBAL_DIR/lib/hooks/claude-user-prompt-submit.sh" "$GLOBAL_TEMPLATE_DIR/memory-system/hooks/claude-user-prompt-submit.sh" "$claude_prompt_hook_template"
+  chmod +x "$GLOBAL_DIR/lib/hooks/claude-user-prompt-submit.sh" 2>/dev/null || true
   if [ -f "$SCRIPT_DIR/src/ml" ] && [ -d "$SCRIPT_DIR/src/commands" ]; then
     cp "$SCRIPT_DIR/src/ml" "$GLOBAL_DIR/bin/ml"
     chmod +x "$GLOBAL_DIR/bin/ml"
@@ -1266,7 +1221,7 @@ install_adapters() {
 
   install_claude_prompt_hook() {
     [ "$claude_signal" -eq 1 ] || return 0
-    hook_cmd="$GLOBAL_DIR/memory-system/hooks/claude-user-prompt-submit.sh"
+    hook_cmd="$GLOBAL_DIR/lib/hooks/claude-user-prompt-submit.sh"
     [ -x "$hook_cmd" ] || return 0
 
     settings_file="$PROJECT_DIR/.claude/settings.local.json"
@@ -1329,14 +1284,11 @@ EOF
     template_name="$2"
     fallback_content="$3"
     template="$GLOBAL_TEMPLATE_DIR/memory-system/templates/$template_name"
-    global_template="$GLOBAL_DIR/memory-system/templates/$template_name"
 
     mkdir_p "$(dirname "$dest")"
     tmp_template=$(mktemp "${TMPDIR:-/tmp}/mindlayer-adapter-template.XXXXXX") || exit 1
     if [ -f "$template" ]; then
       cat "$template" > "$tmp_template"
-    elif [ -s "$global_template" ]; then
-      cat "$global_template" > "$tmp_template"
     elif [ -n "$fallback_content" ]; then
       printf "%s\n" "$fallback_content" > "$tmp_template"
     else
@@ -1468,7 +1420,7 @@ If this project already has context in README or docs, ask your AI tool to help 
 Session tip:
 MindLayer boot is cheap. Start a new session at each task boundary instead of compacting — boot restores project context from durable memory with zero history overhead.
 
-Note: ~/.mindlayer/boot.md, router.md, and memory-system/ subfiles are compatibility output for adapter-driven hosts. Existing files are preserved on reinstall.
+Note: New installs do not create global runtime markdown (`~/.mindlayer/boot.md`, router.md, or memory-system/). Existing files are preserved if present, but executable runtime under ~/.mindlayer/bin and ~/.mindlayer/lib is authoritative.
 EOF
 else
   echo "MindLayer installed."
