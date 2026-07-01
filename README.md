@@ -155,7 +155,7 @@ The installer never overwrites user-owned memory files, deletes files, moves fil
 Run the full test suite before contributing or releasing:
 
 ```sh
-bash tools/test.sh
+bash verify/test.sh
 ```
 
 Runs memory/adapter lint, sandboxed install tests, behavior contract tests, and `ml` CLI contract tests.
@@ -164,10 +164,10 @@ Optional live agent dogfood:
 
 ```sh
 # Claude (default)
-tools/dogfood.sh
+verify/dogfood.sh
 
 # Codex (requires bubblewrap on Linux: sudo apt install bubblewrap)
-AGENT_RUNNER=tools/dogfood-runners/codex.sh tools/dogfood.sh
+AGENT_RUNNER=verify/dogfood-runners/codex.sh verify/dogfood.sh
 ```
 
 ## Contributing

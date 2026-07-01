@@ -45,14 +45,14 @@ status: active
 source: manual
 
 ### Summary
-MindLayer dogfood testing uses two separate scripts with distinct purposes: `dogfood-boot.sh` (product gate, full isolation, API key) and `dogfood-live.sh` (personal health check, real HOME, OAuth).
+MindLayer dogfood testing uses `verify/dogfood.sh` with pluggable agent runners. Isolated runs are product gates; live real-HOME checks are personal health checks.
 
 ### Details
-- `tools/dogfood-boot.sh` — full HOME isolation + `ANTHROPIC_API_KEY`. Tests exactly what `install.sh` ships. Reproducible on any machine. CI-safe. Required before releases and on PRs touching `global-template/`.
-- `tools/dogfood-live.sh` — real HOME + OAuth. Tests the contributor's actual live `~/.mindlayer/` config. Zero setup. Personal sanity check, not a product gate.
+- `verify/dogfood.sh` with an isolated runner — full HOME isolation + agent credentials. Tests exactly what `install.sh` ships. Reproducible on any machine. CI-safe. Required before releases and on PRs touching `seed/adapters/` or install behavior.
+- Live real-HOME dogfood checks test the contributor's actual `~/.mindlayer/` config. Zero setup. Personal sanity check, not a product gate.
 - Separation is correct because: (a) the product gate must test what ships, not personal config, (b) the live check needs zero friction for daily use.
 - Docker was evaluated and rejected — security investment belongs at distribution layer (CODEOWNERS, signed releases), not dogfood layer. Docker would be security theater here.
-- Runners live in `tools/dogfood-runners/`: `claude.sh` (isolated), `claude-live.sh` (live), `codex.sh` (Codex, single-turn only).
+- Runners live in `verify/dogfood-runners/`: `claude.sh` and `codex.sh`.
 
 ### When to use
 Load when planning dogfood strategy, adding new agent runners, or evaluating CI integration.
@@ -79,7 +79,7 @@ In non-interactive (`-p`) mode, agents skip tool calls needed for boot unless `A
 - Fix: added "Never answer a project question without booting first. Never ask the user if they want you to boot — just boot." to both `install.sh` (AGENTS.md template) and `global-template/boot.md`.
 - Key insight: "boot before answering" is ambiguous. "boot BEFORE, then answer, never ask permission" is not.
 - Applies to all agents in non-interactive/headless mode — not Claude-specific.
-- Test fixtures in `tools/dogfood-fixtures/` give the sandbox project real identity (non-scaffold `project.md`, `index.md` with `ml-onboard-complete`) so the agent boots confidently without triggering the onboard flow.
+- Test fixtures in `verify/dogfood-fixtures/` give the sandbox project real identity (non-scaffold `project.md`, `index.md` with `ml-onboard-complete`) so the agent boots confidently without triggering the onboard flow.
 
 ### When to use
 Load when modifying AGENTS.md boot instructions, debugging boot receipt failures, or adding new agent runners.

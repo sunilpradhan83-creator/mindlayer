@@ -33,7 +33,7 @@ WARN_LINES=240
 
 usage() {
   cat <<'EOF'
-Usage: bash tools/lint.sh [options]
+Usage: bash verify/lint.sh [options]
 
 Options:
   --project <path>      Project root. Default: current directory.

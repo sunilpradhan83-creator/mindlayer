@@ -10,6 +10,7 @@ Versions follow [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 - CONTRIBUTING.md added.
+- Renamed top-level `tests/` and `tools/` into `verify/`, with `verify/test.sh` and `verify/lint.sh` as the validation entrypoints.
 
 ---
 

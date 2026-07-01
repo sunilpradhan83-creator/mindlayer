@@ -39,7 +39,7 @@ make_project() {
   mkdir -p "$case_dir"
   copy_path "$case_dir" ".github"
   copy_path "$case_dir" "seed/adapters"
-  copy_path "$case_dir" "tools"
+  copy_path "$case_dir" "verify"
   copy_path "$case_dir" "install.sh"
   copy_path "$case_dir" "AGENTS.md"
   copy_path "$case_dir" "CLAUDE.md"
@@ -73,7 +73,7 @@ assert_lint_passes() {
   label="$2"
   log="$case_dir/lint.log"
 
-  if ! bash "$case_dir/tools/lint.sh" --project "$case_dir" > "$log" 2>&1; then
+  if ! bash "$case_dir/verify/lint.sh" --project "$case_dir" > "$log" 2>&1; then
     printf "FAIL  %s\n" "$label"
     cat "$log"
     exit 1
@@ -91,7 +91,7 @@ assert_lint_fails_with() {
   label="$3"
   log="$case_dir/lint.log"
 
-  if bash "$case_dir/tools/lint.sh" --project "$case_dir" > "$log" 2>&1; then
+  if bash "$case_dir/verify/lint.sh" --project "$case_dir" > "$log" 2>&1; then
     printf "FAIL  %s\n" "$label"
     cat "$log"
     exit 1

@@ -56,10 +56,12 @@ assert_module_exists() {
 
 assert_module_synced() {
   module="$1"
+  [ ! -d "$HOME/.mindlayer/memory-system" ] && return 0
   cmp -s "$HOME/.mindlayer/memory-system/per-turn/$module.md" "seed/adapters/memory-system/per-turn/$module.md"
 }
 
 assert_core_synced() {
+  [ ! -d "$HOME/.mindlayer/memory-system" ] && return 0
   cmp -s "$HOME/.mindlayer/memory-system/per-turn.md" "seed/adapters/memory-system/per-turn.md"
 }
 
@@ -248,7 +250,7 @@ scenario "spec layout — core plus lazy modules"
 check "core per-turn exists with Token Burned contract" assert_core_per_turn_present "seed/adapters/memory-system/per-turn.md"
 check "core per-turn stays small" assert_core_per_turn_small "seed/adapters/memory-system/per-turn.md"
 check "Claude prompt hook injects per-turn reminder" assert_claude_hook_injects_per_turn_reminder "seed/adapters/memory-system/hooks/claude-user-prompt-submit.sh"
-check "live core synced with seed/adapters" assert_core_synced "seed/adapters/memory-system/per-turn.md"
+check "legacy live core absent or synced with seed/adapters" assert_core_synced "seed/adapters/memory-system/per-turn.md"
 
 for module in $MODULES; do
   if assert_module_exists "$module" 2>/dev/null; then
@@ -258,9 +260,9 @@ for module in $MODULES; do
   fi
 
   if assert_module_synced "$module" 2>/dev/null; then
-    pass "$CURRENT_SCENARIO: live module synced: $module"
+    pass "$CURRENT_SCENARIO: legacy live module absent or synced: $module"
   else
-    fail "$CURRENT_SCENARIO: live module synced: $module"
+    fail "$CURRENT_SCENARIO: legacy live module absent or synced: $module"
   fi
 done
 

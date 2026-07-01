@@ -20,14 +20,15 @@ and fresh installs now seed the ADR-0001 `work/current.md` layout from `seed/pro
 and adapter/runtime specs from `seed/adapters`. Full suite is green with 0 errors and
 0 warnings after Step 2c. Global runtime markdown was demoted through commit `0ff235a`
 and final compatibility removal is now decided: installs prune legacy global `boot.md`,
-`router.md`, and `memory-system/` while preserving user-owned `preferences/`. Current
-phase: start MCP planning; MCP remains a later exposure layer, not an architecture fix.
+`router.md`, and `memory-system/` while preserving user-owned `preferences/`. Verification
+layout is now resolved under top-level `verify/`. Current phase: start MCP planning; MCP
+remains a later exposure layer, not an architecture fix.
 
 ### Details
 - Completed 2026-07-01: Step 2a ADR migration foundation committed as `0df80fb`. Added
   `_layout.py` dual-layout resolvers, `_adapters.py` read-only adapter status detection,
   refactored boot/session/diff/status read paths through the seam, and added
-  `tests/migration/` coverage for layout detection, legacy compatibility, fresh-install
+  `verify/migration/` coverage for layout detection, legacy compatibility, fresh-install
   legacy guard, adapter detector/no-writes behavior, mixed session history, and session
   write co-location. Follow-up fix made `ml boot` report the actual latest session source
   instead of hardcoding the legacy sessions path.
@@ -39,14 +40,14 @@ phase: start MCP planning; MCP remains a later exposure layer, not an architectu
 - Completed 2026-07-01: Step 2c committed and pushed as `2353eae`. Moved install seeds
   from `project-template/` and `global-template/` to `seed/project/` and `seed/adapters/`,
   made fresh project installs target-shaped (`work/current.md`, `work/index.md`,
-  `archive/index.md`, no fresh `pipeline/`), updated loader/lint/tests/docs references,
+  `archive/index.md`, no fresh `pipeline/`), updated loader/lint/verify/docs references,
   and synced the local runtime.
 - Completed 2026-07-01: global runtime compatibility slice committed and pushed as
   `0ff235a`. Added `ml init` as a `ml boot` alias, made runtime commands operate without
   global runtime markdown, initially preserved existing global
   `boot.md`/`router.md`/`memory-system/` files on reinstall as compatibility output,
   resolved fresh target archives to `archive/archive.md`, added
-  `tests/migration/test-runtime-authority.sh`, and verified the full suite with 0 lint
+  `verify/migration/test-runtime-authority.sh`, and verified the full suite with 0 lint
   errors, 0 warnings, and 0 failures after syncing live runtime. That preservation policy
   was superseded by the final prune decision below.
 - Completed 2026-07-01: committed ADR-0001 + typed-status schema (`c669261`), reviewed for consistency across index/architecture.md/schema/install.sh/lint.sh, and cleared the 13 spec-layout failures via a non-destructive live-runtime re-sync. Next work is Step 2 (ADR migration foundation), deferred to a fresh session; see `knowledge/sessions/2026-07-01.md` for the ordered 2a-2d slices.
@@ -67,6 +68,8 @@ phase: start MCP planning; MCP remains a later exposure layer, not an architectu
 - Completed 2026-07-01: final global runtime-control-plane cleanup committed and pushed
   as `871bd7e`. Live install was synced and legacy global `boot.md`, `router.md`, and
   `memory-system/` were pruned locally.
+- Completed 2026-07-01: renamed top-level `tests/` and `tools/` into `verify/`, updated
+  docs/CI/memory references, and verified the suite through `verify/test.sh`.
 - Next: start the read-only MCP resource spike.
 
 ### When to use

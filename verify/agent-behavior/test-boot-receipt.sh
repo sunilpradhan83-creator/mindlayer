@@ -2,12 +2,12 @@
 # Contract tests for MindLayer boot receipt fixtures.
 #
 # These tests validate the structural shape of representative boot receipts
-# captured under tools/dogfood-fixtures/sessions/.
+# captured under verify/dogfood-fixtures/sessions/.
 
 set -u
 
 ROOT_DIR="$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)"
-FIXTURE_DIR="$ROOT_DIR/tools/dogfood-fixtures/sessions"
+FIXTURE_DIR="$ROOT_DIR/verify/dogfood-fixtures/sessions"
 
 PASS_COUNT=0
 FAIL_COUNT=0

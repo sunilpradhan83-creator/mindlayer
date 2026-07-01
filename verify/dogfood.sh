@@ -13,11 +13,11 @@
 # like Codex that do not support multi-turn sessions.
 #
 # Usage:
-#   tools/dogfood.sh
-#   AGENT_RUNNER=tools/dogfood-runners/codex.sh tools/dogfood.sh
+#   verify/dogfood.sh
+#   AGENT_RUNNER=verify/dogfood-runners/codex.sh verify/dogfood.sh
 #
 # Options (env vars):
-#   AGENT_RUNNER     Path to runner script (default: tools/dogfood-runners/claude.sh)
+#   AGENT_RUNNER     Path to runner script (default: verify/dogfood-runners/claude.sh)
 #   KEEP_TEST_DIR=1  Keep sandbox after run for inspection
 #   CLAUDE_BIN       Override claude binary path (default: claude)
 
@@ -26,7 +26,7 @@ set -eu
 ROOT_DIR="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
 SANDBOX="${TMPDIR:-/tmp}/mindlayer-live.$$"
 KEEP_TEST_DIR="${KEEP_TEST_DIR:-0}"
-AGENT_RUNNER="${AGENT_RUNNER:-tools/dogfood-runners/claude.sh}"
+AGENT_RUNNER="${AGENT_RUNNER:-verify/dogfood-runners/claude.sh}"
 
 export SANDBOX
 export REAL_HOME="$HOME"
@@ -93,7 +93,7 @@ HOME="$SANDBOX/home" bash "$ROOT_DIR/install.sh" \
   --no-onboard >/dev/null
 
 # Inject test fixtures into sandbox project only
-FIXTURES_DIR="$ROOT_DIR/tools/dogfood-fixtures"
+FIXTURES_DIR="$ROOT_DIR/verify/dogfood-fixtures"
 cp "$FIXTURES_DIR/project.md" "$SANDBOX/project/.mindlayer/knowledge/project.md"
 cp "$FIXTURES_DIR/index.md"   "$SANDBOX/project/.mindlayer/index.md"
 pass "MindLayer installed into sandbox project (global reads from real ~/.mindlayer/)"

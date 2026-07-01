@@ -23,7 +23,7 @@ INCLUDE_GLOBAL=1
 
 usage() {
   cat <<'EOF'
-Usage: bash tools/measure-tokens.sh [options]
+Usage: bash verify/measure-tokens.sh [options]
 
 Options:
   --project <path>    Project root. Default: current directory.

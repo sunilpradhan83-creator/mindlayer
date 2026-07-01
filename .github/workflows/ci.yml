@@ -23,7 +23,7 @@ jobs:
         run: bash install.sh --project . --no-onboard
 
       - name: Run test suite
-        run: bash tools/test.sh
+        run: bash verify/test.sh
 
       - name: Run strict lint
-        run: bash tools/lint.sh --project . --strict
+        run: bash verify/lint.sh --project . --strict

@@ -74,7 +74,7 @@ Scope:
 
 Exit criteria:
 - Full install -> boot -> load -> save -> status -> `ml script status` path works from public docs without maintainer help.
-- `tools/test.sh` passes and strict lint is clean.
+- `verify/test.sh` passes and strict lint is clean.
 - Fresh boot does not leak starter content and reports no missing project router.
 - README, ROADMAP, `.mindlayer/knowledge/project.md`, and this roadmap tell the same story.
 - Public launch waits for rc soak: 48-72 hours and at least 3 independent fresh installs.
@@ -164,7 +164,7 @@ Scope:
 - Define a Tool Plane threat model before choosing subprocess, `/tmp`, Docker, or another isolation backend.
 - Wrap test-suite and code-verification runs as MCP tools only after approval and isolation rules are settled.
 - Require approval gates on every write-capable tool.
-- Add behavior-contract tests for each tool, mirroring the existing `tools/test.sh` discipline.
+- Add behavior-contract tests for each tool, mirroring the existing `verify/test.sh` discipline.
 
 #### Phase M2 - Prompt Plane and Cutover (queued after cross-agent proof)
 Goal: move preset workflows into MCP prompts only when the supported agent clients can carry the contract.

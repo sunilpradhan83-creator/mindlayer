@@ -34,14 +34,14 @@ copy_path() {
 copy_path ".mindlayer"
 copy_path ".github"
 copy_path "seed/adapters"
-copy_path "tools"
+copy_path "verify"
 copy_path "install.sh"
 copy_path "AGENTS.md"
 copy_path "CLAUDE.md"
 
 sed -i '/proactive behavior/d' "$SANDBOX/project/AGENTS.md"
 
-if bash "$SANDBOX/project/tools/lint.sh" --project "$SANDBOX/project" > "$SANDBOX/lint.log" 2>&1; then
+if bash "$SANDBOX/project/verify/lint.sh" --project "$SANDBOX/project" > "$SANDBOX/lint.log" 2>&1; then
   printf "FAIL  expected lint to fail when AGENTS.md proactive behavior reference is removed\n"
   cat "$SANDBOX/lint.log"
   exit 1

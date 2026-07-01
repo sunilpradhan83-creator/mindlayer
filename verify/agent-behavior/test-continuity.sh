@@ -99,7 +99,7 @@ none="$SANDBOX/none.md"
 cat > "$none" <<'EOF'
 Backlog item: Automatic Session Initialization
 Task: Validate boot receipt contract
-  - Last result: `tools/test.sh` passed
+  - Last result: `verify/test.sh` passed
   - Next step: Commit changes
   - Status: completed
 

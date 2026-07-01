@@ -38,7 +38,7 @@ The test suite catches drift between `src/commands/` and the installed copy (`E8
 ## Running Tests
 
 ```sh
-bash tools/test.sh
+bash verify/test.sh
 ```
 
 This runs memory/adapter lint, sandboxed install tests, behavior contract tests, and `ml` CLI contract tests. All must pass before opening a PR.
@@ -46,19 +46,19 @@ This runs memory/adapter lint, sandboxed install tests, behavior contract tests,
 For lint only:
 
 ```sh
-bash tools/lint.sh --project .
+bash verify/lint.sh --project .
 ```
 
 For a live agent dogfood check (optional, requires API access):
 
 ```sh
-tools/dogfood.sh
+verify/dogfood.sh
 ```
 
 ## Code Style
 
 - Python for `src/commands/`. No external dependencies beyond the standard library.
-- Bash for `install.sh`, `tools/`, and `tests/`. POSIX-compatible where possible; bash extensions only when necessary.
+- Bash for `install.sh` and `verify/`. POSIX-compatible where possible; bash extensions only when necessary.
 - No comments explaining what the code does. A comment is only warranted when the why is non-obvious.
 - Keep memory files within the 300-line hard limit and 240-line warning threshold.
 
@@ -66,10 +66,10 @@ tools/dogfood.sh
 
 1. Open an issue first for anything beyond a one-line fix.
 2. Keep PRs small and focused. One concern per PR.
-3. `tools/test.sh` must pass with 0 errors.
-4. `tools/lint.sh --project . --strict` must pass.
+3. `verify/test.sh` must pass with 0 errors.
+4. `verify/lint.sh --project . --strict` must pass.
 5. If you change `src/commands/`, update `~/.mindlayer/lib/commands/` in your local env and verify `E8` passes.
-6. If you change installer behavior, add or update a scenario in `tests/local-install/test-install.sh`.
+6. If you change installer behavior, add or update a scenario in `verify/local-install/test-install.sh`.
 7. Update `CHANGELOG.md` under `[Unreleased]` with a one-line summary.
 
 ## Reporting Bugs
@@ -84,6 +84,6 @@ Use GitHub Issues. Include:
 
 Two memory layers — global (`~/.mindlayer/`) and project (`.mindlayer/`) — with thin tool adapters that are not memory stores. The `ml` CLI is the control plane. Writes require explicit human approval.
 
-The install test suite (`tests/local-install/test-install.sh`) is the authoritative source of truth for installer behavior. If you are unsure whether a change is safe, check what the install tests cover.
+The install test suite (`verify/local-install/test-install.sh`) is the authoritative source of truth for installer behavior. If you are unsure whether a change is safe, check what the install tests cover.
 
 Command specs ship from `seed/adapters/memory-system/commands/` and are installed to `~/.mindlayer/memory-system/commands/`. Changing a command spec means changing the markdown in `seed/adapters/` and the Python in `src/commands/`.

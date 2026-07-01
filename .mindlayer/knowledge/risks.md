@@ -93,7 +93,7 @@ The three core per-turn contracts — load announcement, memory candidate surfac
 
 ### Mitigation (current)
 - `per-turn.md` now owns all three contracts as explicit rules with formats and checklists (not vague guidance).
-- `tests/agent-behavior/test-per-turn.sh` — 61 deterministic contract tests covering happy paths, violations, and edge cases. Run via `tools/test.sh`.
+- `verify/agent-behavior/test-per-turn.sh` — 61 deterministic contract tests covering happy paths, violations, and edge cases. Run via `verify/test.sh`.
 - Router.md simplified — announcement format ownership consolidated into per-turn.md to eliminate rule fragmentation.
 
 ### Mitigation (future)

@@ -154,7 +154,7 @@ seed/
     thin adapter templates
 ```
 
-`src/` contains product behavior. `verify/` contains proof. `seed/` contains installable starting content. This replaces the conceptual split between `tests/` and `tools/` where both are mostly verifiers, and replaces `global-template/` and `project-template/` naming with clearer install seeds.
+`src/` contains product behavior. `verify/` contains proof. `seed/` contains installable starting content. This replaces the old conceptual split between `tests/` and `tools/` where both were mostly verifiers, and replaces `global-template/` and `project-template/` naming with clearer install seeds.
 
 ## Adapters
 
