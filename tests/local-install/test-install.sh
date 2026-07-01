@@ -228,12 +228,26 @@ check assert_contains "$fresh_project/AGENTS.md" 'Do not ask what `ml boot` mean
 check assert_contains "$fresh_project/AGENTS.md" "first project-relevant request"
 check assert_contains "$fresh_project/AGENTS.md" "Never answer a project question without booting first"
 check assert_contains "$fresh_project/AGENTS.md" "Never ask the user if they want you to boot"
+check assert_contains "$fresh_project/AGENTS.md" "If no per-turn hook injects a status reminder"
+check assert_contains "$fresh_project/AGENTS.md" 'Use a Markdown horizontal rule above `Token Burned:`'
+check assert_contains "$fresh_project/AGENTS.md" "use exactly two bullet lines"
+check assert_contains "$fresh_project/AGENTS.md" 'highlight the `Next Step` label with bold text'
+check assert_contains "$fresh_project/AGENTS.md" "Do not use Markdown headings or code formatting"
+check assert_contains "$fresh_project/AGENTS.md" "Token Burned:"
+check assert_contains "$fresh_project/AGENTS.md" "Last turn: ~N words, ~N est. tokens"
+check assert_contains "$fresh_project/AGENTS.md" "**Next Step**"
 check assert_contains "$fresh_project/CLAUDE.md" "Do not duplicate memory into"
 check assert_contains "$fresh_project/CLAUDE.md" 'If the user invokes `ml boot` or `ml init`'
 check assert_contains "$fresh_project/CLAUDE.md" 'Do not ask what `ml boot` means'
 check assert_contains "$fresh_project/CLAUDE.md" "explicit approval"
 check assert_contains "$fresh_project/.claude/settings.local.json" "UserPromptSubmit"
 check assert_contains "$fresh_project/.claude/settings.local.json" "claude-user-prompt-submit.sh"
+check assert_contains "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "Markdown horizontal rule"
+check assert_contains "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "Token Burned: as normal text"
+check assert_contains "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "exactly two bullet lines"
+check assert_contains "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "bold Next Step label"
+check assert_contains "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "Do not use Markdown headings or code formatting"
+check assert_contains "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" 'Executable `ml` commands remain the runtime authority'
 check assert_contains "$fresh_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" 'If the user prompt is `ml boot` or `ml init`'
 check assert_contains "$fresh_project/.github/copilot-instructions.md" 'Do not use `README.md` or `docs/` as memory input.'
 check assert_contains "$fresh_project/.github/copilot-instructions.md" "Do not retrieve durable context from this adapter."
@@ -317,6 +331,11 @@ check assert_files_equal "$ROOT_DIR/seed/adapters/memory-system/templates/AGENTS
 check assert_lock_hash_for "$bare_project/.mindlayer/adapters.lock" "AGENTS.md"
 check assert_contains "$bare_project/AGENTS.md" 'Prefer executable `ml boot` / `ml init`'
 check assert_contains "$bare_project/AGENTS.md" "Never answer a project question without booting first"
+check assert_contains "$bare_project/AGENTS.md" "If no per-turn hook injects a status reminder"
+check assert_contains "$bare_project/AGENTS.md" 'Use a Markdown horizontal rule above `Token Burned:`'
+check assert_contains "$bare_project/AGENTS.md" "use exactly two bullet lines"
+check assert_contains "$bare_project/AGENTS.md" 'highlight the `Next Step` label with bold text'
+check assert_contains "$bare_project/AGENTS.md" "Token Burned:"
 check assert_not_exists "$bare_project/CLAUDE.md"
 check assert_not_exists "$bare_project/.github/copilot-instructions.md"
 check assert_not_exists "$bare_project/GEMINI.md"
@@ -345,9 +364,20 @@ fi
 
 check assert_not_exists "$standalone_home/.mindlayer/memory-system"
 check assert_file_exists "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh"
+check assert_contains "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "Markdown horizontal rule"
+check assert_contains "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "Token Burned: as normal text"
+check assert_contains "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "exactly two bullet lines"
+check assert_contains "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "bold Next Step label"
+check assert_contains "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" "Do not use Markdown headings or code formatting"
+check assert_contains "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" 'Executable `ml` commands remain the runtime authority'
 check assert_contains "$standalone_home/.mindlayer/lib/hooks/claude-user-prompt-submit.sh" 'If the user prompt is `ml boot` or `ml init`'
 check assert_file_exists "$standalone_project/AGENTS.md"
 check assert_contains "$standalone_project/AGENTS.md" 'Prefer executable `ml boot` / `ml init`'
+check assert_contains "$standalone_project/AGENTS.md" "If no per-turn hook injects a status reminder"
+check assert_contains "$standalone_project/AGENTS.md" 'Use a Markdown horizontal rule above `Token Burned:`'
+check assert_contains "$standalone_project/AGENTS.md" "use exactly two bullet lines"
+check assert_contains "$standalone_project/AGENTS.md" 'highlight the `Next Step` label with bold text'
+check assert_contains "$standalone_project/AGENTS.md" "Token Burned:"
 check assert_lock_hash_for "$standalone_project/.mindlayer/adapters.lock" "AGENTS.md"
 check assert_not_contains "$standalone_log" "Missing canonical adapter template"
 
@@ -609,6 +639,19 @@ scenario "runtime boot does not require global compatibility markdown"
 rm -f "$fresh_home/.mindlayer/boot.md" "$fresh_home/.mindlayer/router.md"
 rm -rf "$fresh_home/.mindlayer/memory-system"
 check sh -c "cd '$fresh_project' && HOME='$fresh_home' '$fresh_home/.mindlayer/bin/ml' boot >/dev/null 2>&1"
+
+scenario "installer outro prints markdown paths literally"
+outro_home="$SANDBOX/outro-home"
+outro_project="$SANDBOX/outro-project"
+outro_log="$SANDBOX/outro-install.log"
+mkdir -p "$outro_home" "$outro_project"
+if PATH="/usr/bin:/bin" HOME="$outro_home" bash "$ROOT_DIR/install.sh" --project "$outro_project" > "$outro_log" 2>&1; then
+  pass "$CURRENT_SCENARIO: installer exits successfully"
+else
+  fail "$CURRENT_SCENARIO: installer exits successfully"
+fi
+check assert_contains "$outro_log" 'Note: New installs do not create global runtime markdown (`~/.mindlayer/boot.md`, router.md, or memory-system/).'
+check assert_not_contains "$outro_log" "Permission denied"
 
 printf "\nMindLayer Local Install Readiness Summary\n"
 printf "Passed checks: %s\n" "$PASS_COUNT"

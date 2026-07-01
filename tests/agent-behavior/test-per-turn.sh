@@ -34,6 +34,17 @@ assert_core_per_turn_present() {
     grep -Fq "memory-system/per-turn/" "$1"
 }
 
+assert_claude_hook_injects_per_turn_reminder() {
+  grep -Fq "Markdown horizontal rule" "$1" &&
+    grep -Fq "Token Burned: as normal text" "$1" &&
+    grep -Fq "exactly two bullet lines" "$1" &&
+    grep -Fq "~N words, ~N est. tokens" "$1" &&
+    grep -Fq "bold Next Step label" "$1" &&
+    grep -Fq "Do not use Markdown headings or code formatting" "$1" &&
+    grep -Fq 'Executable `ml` commands remain the runtime authority' "$1" &&
+    grep -Fq 'If the user prompt is `ml boot` or `ml init`' "$1"
+}
+
 assert_core_per_turn_small() {
   words=$(wc -w < "$1")
   [ "$words" -le 220 ]
@@ -236,6 +247,7 @@ printf "=======================================\n"
 scenario "spec layout — core plus lazy modules"
 check "core per-turn exists with Token Burned contract" assert_core_per_turn_present "seed/adapters/memory-system/per-turn.md"
 check "core per-turn stays small" assert_core_per_turn_small "seed/adapters/memory-system/per-turn.md"
+check "Claude prompt hook injects per-turn reminder" assert_claude_hook_injects_per_turn_reminder "seed/adapters/memory-system/hooks/claude-user-prompt-submit.sh"
 check "live core synced with seed/adapters" assert_core_synced "seed/adapters/memory-system/per-turn.md"
 
 for module in $MODULES; do
