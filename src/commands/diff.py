@@ -5,12 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from ._paths import archive_file, sessions_dir
+from . import _layout
 import subprocess
 
 
 def _latest_session(memory_dir: Path) -> Path | None:
-    sessions = sorted(sessions_dir(memory_dir).glob("????-??-??.md"))
+    sessions = _layout.session_files(memory_dir)
     return sessions[-1] if sessions else None
 
 
@@ -68,17 +68,16 @@ def summarize_diff(diff_text: str) -> str:
     old_file = ""
     new_file = ""
     current_entry_id = ""
-    archive_path = ".mindlayer/" + str(archive_file(Path(".mindlayer"))).split(".mindlayer/", 1)[1]
 
     def usable(path: str) -> bool:
         if not path or not path.startswith(".mindlayer/"):
             return False
-        if any(part in path for part in ("/knowledge/sessions/", "/cache/", "/tmp/", "/private/")):
+        if _layout.is_session_path(path) or any(part in path for part in ("/cache/", "/tmp/", "/private/")):
             return False
         return path != ".mindlayer/local.md"
 
     def is_archive(path: str) -> bool:
-        return path == archive_path or "/archive/" in path
+        return _layout.is_archive_path(path)
 
     for raw in diff_text.splitlines():
         if raw.startswith("--- a/"):

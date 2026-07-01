@@ -6,19 +6,19 @@ from datetime import date as _date
 from pathlib import Path
 import subprocess
 
-from . import archive
-from ._paths import knowledge_file, pipeline_file, sessions_dir
+from . import _layout, archive
+from ._paths import display_memory_path, knowledge_file
 from ._write import approved
 
 
 def run(project_root: Path, words: int = 0, context_window: int = 200_000) -> int:
     conversation_tokens = int(words * 1.3)
     loaded_words = 0
+    memory_dir = project_root / ".mindlayer"
     for path in [
-        project_root / ".mindlayer" / "index.md",
-        knowledge_file(project_root / ".mindlayer", "project.md"),
-        pipeline_file(project_root / ".mindlayer", "progress.md"),
-        pipeline_file(project_root / ".mindlayer", "backlog.md"),
+        memory_dir / "index.md",
+        knowledge_file(memory_dir, "project.md"),
+        *_layout.current_state_files(memory_dir),
     ]:
         if path.is_file():
             loaded_words += len(path.read_text(encoding="utf-8", errors="replace").split())
@@ -72,11 +72,13 @@ def write(
     approve: bool = False,
 ) -> int:
     date_str = session_date or str(_date.today())
-    sessions_dir_path = sessions_dir(project_root / ".mindlayer")
+    memory_dir = project_root / ".mindlayer"
+    sessions_dir_path = _layout.session_write_dir(memory_dir)
     session_file = sessions_dir_path / f"{date_str}.md"
+    dest_display = display_memory_path(session_file, memory_dir)
 
     print("Session Write Candidate:")
-    print(f"- Destination: .mindlayer/knowledge/sessions/{date_str}.md")
+    print(f"- Destination: {dest_display}")
     print("- Action: create or append")
     print(f"- Worked on: {', '.join(worked_on or ['(none)'])}")
     print(f"- Next: {', '.join(next_steps or ['(none)'])}")
@@ -103,7 +105,7 @@ def write(
     else:
         session_file.write_text(block + "\n", encoding="utf-8")
 
-    print(f"Session written: .mindlayer/knowledge/sessions/{date_str}.md")
+    print(f"Session written: {dest_display}")
     if completed:
         print("Memory check:")
         try:

@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ._paths import count_words, global_memory_dir, knowledge_file, pipeline_file, read_text, sessions_dir
+from . import _layout
+from ._paths import count_words, display_memory_path, global_memory_dir, knowledge_file, read_text
 from .diff import memory_diff
 
 EMPTY_PROJECT_IDENTITY = "No substantive project identity saved yet."
@@ -119,14 +120,16 @@ def _personal_is_substantive(text: str) -> bool:
     return False
 
 
-def _latest_next(project_root: Path) -> str:
-    sessions = sorted(sessions_dir(project_root / ".mindlayer").glob("????-??-??.md"))
+def _latest_next(project_root: Path) -> tuple[str, Path | None]:
+    memory_dir = project_root / ".mindlayer"
+    sessions = _layout.session_files(memory_dir)
     if not sessions:
-        return ""
-    text = read_text(sessions[-1])
+        return "", None
+    latest = sessions[-1]
+    text = read_text(latest)
     if "## Next" not in text:
-        return ""
-    return " ".join(line.strip("- ").strip() for line in text.split("## Next", 1)[1].splitlines() if line.strip())[:220]
+        return "", latest
+    return " ".join(line.strip("- ").strip() for line in text.split("## Next", 1)[1].splitlines() if line.strip())[:220], latest
 
 
 def run(project_root: Path) -> int:
@@ -139,16 +142,20 @@ def run(project_root: Path) -> int:
     global_words = 0
     project_words = 0
 
-    for label, path, bucket in [
+    load_rows = [
         ("`~/.mindlayer/boot.md`", global_dir / "boot.md", "global"),
         ("`~/.mindlayer/router.md`", global_dir / "router.md", "global"),
         ("`.mindlayer/router.md`", memory_dir / "router.md", "project"),
         ("`~/.mindlayer/memory-system/per-turn.md`", global_dir / "memory-system" / "per-turn.md", "global"),
         ("`.mindlayer/index.md`", memory_dir / "index.md", "project"),
         ("`.mindlayer/knowledge/project.md`", knowledge_file(memory_dir, "project.md"), "project"),
-        ("`.mindlayer/pipeline/progress.md`", pipeline_file(memory_dir, "progress.md"), "project"),
-        ("`.mindlayer/pipeline/backlog.md`", pipeline_file(memory_dir, "backlog.md"), "project"),
-    ]:
+    ]
+    # Current work state resolves to work/current.md (target) or pipeline/{progress,backlog}.md (legacy).
+    load_rows.extend(
+        (f"`{display_memory_path(path, memory_dir)}`", path, "project")
+        for path in _layout.current_state_files(memory_dir)
+    )
+    for label, path, bucket in load_rows:
         text, words = _read_if_file(path)
         if text:
             loaded.append(label)
@@ -168,13 +175,14 @@ def run(project_root: Path) -> int:
     else:
         skipped.append("`~/.mindlayer/preferences/personal.md` (missing or starter-only)")
 
-    latest_next = _latest_next(project_root)
+    latest_next, latest_next_path = _latest_next(project_root)
     if latest_next:
-        loaded.append("latest `.mindlayer/knowledge/sessions/YYYY-MM-DD.md` `## Next`")
+        latest_next_display = display_memory_path(latest_next_path, memory_dir) if latest_next_path else ".mindlayer/*/sessions/YYYY-MM-DD.md"
+        loaded.append(f"latest `{latest_next_display}` `## Next`")
         project_words += len(latest_next.split())
         word_total += len(latest_next.split())
     else:
-        skipped.append("`.mindlayer/knowledge/sessions/` (no latest Next section)")
+        skipped.append("session journals (no latest Next section)")
 
     skipped.extend(
         [
@@ -185,7 +193,7 @@ def run(project_root: Path) -> int:
     )
 
     understanding = _first_summary(knowledge_file(memory_dir, "project.md"))
-    progress = _progress_summary(pipeline_file(memory_dir, "progress.md"))
+    progress = _progress_summary(_layout.progress_file(memory_dir))
     if latest_next:
         progress = f"{progress} Latest session cue: {latest_next}"
 

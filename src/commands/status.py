@@ -7,7 +7,9 @@ from datetime import date
 from pathlib import Path
 import re
 
-from ._paths import archive_file, pipeline_file, read_text
+from . import _layout
+from ._adapters import adapter_status
+from ._paths import read_text
 from .diff import memory_diff
 
 STARTER_SENTINEL_PREFIX = "<!-- ml:starter:"
@@ -118,7 +120,7 @@ def _next_detail(text: str) -> str:
 
 
 def _continuity(memory_dir: Path) -> tuple[str, str]:
-    progress = pipeline_file(memory_dir, "progress.md")
+    progress = _layout.progress_file(memory_dir)
     if not progress.is_file():
         return "not recorded", "record current progress"
     text = read_text(progress)
@@ -131,7 +133,7 @@ def run(project_root: Path) -> int:
     memory_dir = project_root / ".mindlayer"
     files = sorted(
         path
-        for base in (memory_dir, memory_dir / "pipeline", memory_dir / "knowledge")
+        for base in (memory_dir, memory_dir / "pipeline", memory_dir / "knowledge", memory_dir / "work")
         for path in base.glob("*.md")
         if path.name not in {"archive.md", "local.md", "index-full.md"}
     )
@@ -161,9 +163,26 @@ def run(project_root: Path) -> int:
         if any((age or 0) > 90 for age in (_days_old(item) for item in _entry_dates(text))):
             stale_titles.append(path.name)
     print(f"Stale entries: {len(stale_titles)} flagged ({', '.join(stale_titles) if stale_titles else 'none'}) — say 'ml clean' to review")
-    print(f"Archived entries: {_archived_count(archive_file(memory_dir))} in pipeline/archive/archive.md (global: 0, project: {_archived_count(archive_file(memory_dir))})")
+    archive_path = _layout.archive_file(memory_dir)
+    archive_rel = str(archive_path.relative_to(memory_dir))
+    archived = _archived_count(archive_path)
+    print(f"Archived entries: {archived} in {archive_rel} (global: 0, project: {archived})")
     print("Conflicts:")
     print("- None detected")
+    print("Adapters:")
+    statuses = adapter_status(project_root)
+    present = [s for s in statuses if s.state != "absent"]
+    mismatched = [s.name for s in statuses if s.state == "mismatch"]
+    unverified = [s.name for s in statuses if s.state == "unverified"]
+    if not present:
+        print("- no adapters installed")
+    else:
+        matched = sum(1 for s in present if s.state == "match")
+        print(f"- {matched} match, {len(mismatched)} mismatch, {len(unverified)} unverified")
+        for name in mismatched:
+            print(f"- MISMATCH: {name} differs from adapters.lock — run boot adapter guard to review")
+        for name in unverified:
+            print(f"- UNVERIFIED: {name} has no adapters.lock entry")
     current_progress, next_action = _continuity(memory_dir)
     print("Continuity:")
     print("- pending approvals: None")
@@ -172,7 +191,7 @@ def run(project_root: Path) -> int:
     print(f"- next useful action: {next_action}")
     print("Context:")
     print("- files loaded: .mindlayer/*.md health metadata")
-    print("- files skipped: pipeline/archive/archive.md, local.md")
+    print(f"- files skipped: {archive_rel}, local.md")
     diff = memory_diff(project_root)
     if diff:
         print(diff)
